@@ -1,0 +1,81 @@
+---
+const tabs = ['Builds', 'Designs', 'Playground'];
+
+const projects = {
+  Builds: [
+    { title: 'Stelar', year: '2024', preview: 'linear' },
+    { title: 'Stelar', year: '2024', preview: 'linear' },
+    { title: 'Stelar', year: '2024', preview: 'linear' },
+  ],
+  Designs: [
+    { title: 'Nova UI', year: '2025', preview: 'gradient' },
+    { title: 'Pulse', year: '2024', preview: 'gradient' },
+  ],
+  Playground: [
+    { title: 'Shader Lab', year: '2025', preview: 'grid' },
+    { title: 'Play Mines', year: '2024', preview: 'grid' },
+  ],
+};
+---
+
+<section class="flex flex-col gap-8" id="projects">
+  <div class="flex flex-col gap-4">
+    <p class="m-0 text-base " style="color: var(--text-muted)">Projects</p>
+    <div class="flex h-[33px] items-center" role="tablist" aria-label="Project categories">
+      {tabs.map((tab, index) => (
+        <button
+          class={`tab ${index === 0 ? 'tab-active' : ''}`}
+          type="button"
+          role="tab"
+          aria-selected={index === 0}
+          data-tab-trigger
+          data-tab-id={tab}
+        >
+          {tab}
+        </button>
+      ))}
+    </div>
+  </div>
+
+  {tabs.map((tab) => (
+    <div
+      class="flex flex-col gap-6"
+      data-tab-panel
+      data-tab-id={tab}
+      hidden={tab !== 'Builds'}
+    >
+      {projects[tab].map((project) => (
+        <article class="rounded-2xl bg-[var(--surface)] border border-[var(--border-subtle)] shadow-xs p-1">
+          <div class="aspect-[587/330] rounded-xl bg-[var(--surface-raised)] opacity-80"></div>
+          <div class="flex h-[35px] items-center gap-2 rounded-xl px-2">
+            <h3 class="m-0 text-base " style="color: var(--text-primary)">{project.title}</h3>
+            <span class="text-xs" style="color: var(--text-faint)">• {project.year}</span>
+          </div>
+        </article>
+      ))}
+    </div>
+  ))}
+</section>
+
+<script>
+  const triggers = document.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
+  const panels = document.querySelectorAll<HTMLElement>('[data-tab-panel]');
+
+  const activateTab = (id: string) => {
+    triggers.forEach((trigger) => {
+      const isActive = trigger.dataset.tabId === id;
+      trigger.classList.toggle('tab-active', isActive);
+      trigger.setAttribute('aria-selected', String(isActive));
+    });
+    panels.forEach((panel) => {
+      panel.hidden = panel.dataset.tabId !== id;
+    });
+  };
+
+  triggers.forEach((trigger) => {
+    trigger.addEventListener('click', () => {
+      const id = trigger.dataset.tabId;
+      if (id) activateTab(id);
+    });
+  });
+</script>

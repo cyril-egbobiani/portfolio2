@@ -1,10 +1,11 @@
 ---
+import { Image } from 'astro:assets';
 import avatar from '../assets/images/avatar.png';
 import emailIcon from '../assets/images/email.svg?url';
 import githubIcon from '../assets/images/github.svg?url';
 import linkedinIcon from '../assets/images/linkedin.svg?url';
-import sunIcon from '../assets/images/sun.svg?url';
 import xIcon from '../assets/images/x.svg?url';
+import ThemeToggle from './ThemeToggle.astro';
 
 const socialLinks = [
   { label: 'X', href: 'https://x.com', icon: xIcon },
@@ -12,30 +13,30 @@ const socialLinks = [
   { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: linkedinIcon },
   { label: 'Email', href: 'mailto:hello@example.com', icon: emailIcon },
 ];
+
+
 ---
 
-<main class="min-h-screen bg-black px-3 py-2 font-[Geist,ui-sans-serif,system-ui,sans-serif] text-[#b0b0b0] sm:px-6 sm:py-6">
-  <div class="mx-auto flex w-full max-w-[660px] flex-col gap-6">
+<section class="flex flex-col gap-6">
+  <div class="flex w-full flex-col gap-6">
     <header class="flex w-full items-start justify-between">
-      <img class="size-[100px] rounded-[2rem] object-cover" src={avatar.src} alt="Cyril Egbobiani" />
-      <button class="flex size-8 items-center justify-center rounded-full bg-white/5 p-2 transition hover:bg-white/10" type="button" aria-label="Toggle theme" data-theme-toggle>
-        <img class="size-3" src={sunIcon} alt="" />
-      </button>
+      <Image class="size-[100px] rounded-[2rem] object-cover" src={avatar} alt="Cyril Egbobiani" width={100} height={100} loading="eager" fetchpriority="high" />
+      <ThemeToggle />
     </header>
 
-    <section class="rounded-lg bg-black pt-2 shadow-[0_1px_1px_rgba(0,0,0,0.05)]">
+    <section class="rounded-lg bg-[var(--surface)] pt-2" >
       <div class="flex flex-col gap-4 overflow-hidden py-3 text-base">
-        <p class="m-0 leading-5 text-[#6e6e6e]">Hey Good Morning!</p>
-        <p class="m-0 leading-6">I'm Cyril Egbobiani, a Software Engineer and Designer based in Lagos, Nigeria. My drive is in imagining and executing every creative thought in him to better this world.</p>
-        <p class="m-0 font-medium leading-6">To me, design and code are two sides of the same coin and balancing both has been an awesome journey.</p>
-        <p class="m-0 font-medium leading-6">I'm glad you dropped by. Relax, look around, and let's talk about building things that matter.</p>
+        <p class="m-0 leading-5 text-[var(--text-muted)]">Hey Good Morning!</p>
+        <p class="m-0 leading-6 text-[var(--text-secondary)]">I'm Cyril Egbobiani, a Software Engineer and Designer based in Lagos, Nigeria. My drive is in imagining and executing every creative thought in him to better this world.</p>
+        <p class="m-0  leading-6 text-[var(--text-secondary)]">To me, design and code are two sides of the same coin and balancing both has been an awesome journey.</p>
+        <p class="m-0  leading-6 text-[var(--text-secondary)]">I'm glad you dropped by. Relax, look around, and let's talk about building things that matter.</p>
       </div>
 
       <nav class="py-3" aria-label="Social links">
-        <div class="rounded-full border border-[#090808] bg-[#040404] p-1">
+        <div class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1">
           <div class="flex gap-2">
             {socialLinks.map((link) => (
-              <a class="flex min-w-0 flex-1 items-center justify-center rounded-full bg-[#0c0c0c] px-3 py-1.5 transition hover:bg-[#191919]" href={link.href} aria-label={link.label}>
+              <a class="flex min-w-0 flex-1 items-center justify-center rounded-full bg-[var(--surface-interactive)] px-3 py-1.5 transition hover:bg-[var(--surface-subtle)]" href={link.href} aria-label={link.label}>
                 <img class="size-[14px]" src={link.icon} alt="" />
               </a>
             ))}
@@ -43,13 +44,38 @@ const socialLinks = [
         </div>
       </nav>
     </section>
+
+    {false && <section class="pt-8" id="projects">
+      <div class="mb-5 flex items-end justify-between">
+        <div>
+          <p class="mb-1 text-xs uppercase tracking-[0.18em] text-[#6e6e6e]">Selected work</p>
+          <h2 class="m-0 text-xl  text-white">Featured projects</h2>
+        </div>
+        <span class="text-sm text-[#6e6e6e]">2024 — 2026</span>
+      </div>
+
+      <div class="grid gap-3 sm:grid-cols-2">
+        {projects.map((project, index) => (
+          <article class="group overflow-hidden rounded-xl border border-white/10 bg-[#080808] transition hover:-translate-y-1 hover:border-white/20">
+            <div class={`h-36 bg-gradient-to-br ${project.accent} p-4`}>
+              <span class="inline-flex size-8 items-center justify-center rounded-lg border border-white/15 bg-black/20 text-sm text-white/80">0{index + 1}</span>
+            </div>
+            <div class="p-4">
+              <h3 class="m-0 text-base  text-white">{project.title}</h3>
+              <p class="mb-4 mt-2 text-sm leading-6 text-[#9b9b9b]">{project.description}</p>
+              <ul class="mb-4 flex list-none flex-wrap gap-1.5 p-0">
+                {project.stack.map((technology) => (
+                  <li class="rounded-full border border-white/10 px-2 py-1 text-xs text-[#b0b0b0]">{technology}</li>
+                ))}
+              </ul>
+              <div class="flex gap-4 text-sm ">
+                <a class="text-white no-underline hover:text-[#b0b0b0]" href="#projects">View project ↗</a>
+                <a class="text-[#8d8d8d] no-underline hover:text-white" href="#projects">Source</a>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>}
   </div>
-</main>
-
-<script>
-  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
-
-  button?.addEventListener('click', () => {
-    document.documentElement.classList.toggle('light');
-  });
-</script>
+</section>

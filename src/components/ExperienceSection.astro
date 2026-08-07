@@ -1,0 +1,35 @@
+---
+import { Image } from 'astro:assets';
+import ieslLogo from '../assets/images/iesl-logo.png';
+import firstBankLogo from '../assets/images/first-bank-logo.png';
+import arrowIcon from '../assets/images/down-arrow.svg?url';
+
+const experience = [
+  { company: 'International Energy Services Limited', role: 'Frontend Developer & Product Designer', dates: '2026 – Now', logo: ieslLogo },
+  { company: 'Freelance', role: 'Software Developer & Designer', dates: '2025 – Now' },
+  { company: 'First Bank Digital Innovation Lab', role: 'Mobile Developer Intern', dates: '2024 – 2024', logo: firstBankLogo },
+];
+---
+
+<section class="flex flex-col gap-8" id="experience">
+  <h2 class="m-0 text-base " style="color: var(--text-muted)">Experience</h2>
+  <div class="flex flex-col gap-10">
+    {experience.map((item) => (
+      <article class="flex gap-6">
+        <div class="flex size-[60px] shrink-0 items-center justify-center rounded-2xl border-2 p-3" style="border-color: var(--border-logo); background: var(--surface-raised); box-shadow: var(--shadow-logo)">
+          {item.logo ? <Image class="size-full object-contain" src={item.logo} alt="" width={36} height={36} /> : <span class="text-lg" style="color: var(--text-secondary)">◌</span>}
+        </div>
+        <div class="min-w-0 flex-1 py-1">
+          <div class="flex items-center justify-between gap-3">
+            <h3 class="m-0 text-base " style="color: var(--text-primary)">{item.company}</h3>
+            <img class="size-3" style="color: var(--text-muted)" src={arrowIcon} alt="" />
+          </div>
+          <div class="mt-1 flex items-start justify-between gap-3" style="color: var(--text-muted)">
+            <p class="m-0 text-base leading-6">{item.role}</p>
+            <p class="m-0 shrink-0 text-sm leading-6">{item.dates}</p>
+          </div>
+        </div>
+      </article>
+    ))}
+  </div>
+</section>

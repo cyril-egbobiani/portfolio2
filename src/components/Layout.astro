@@ -14,9 +14,27 @@ const { title } = Astro.props;
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500&display=swap" rel="stylesheet" />
   </head>
 
-  <body>
-      <main>
-        <slot />
-      </main>
-    </body>
-  </html>
+<body>
+    <script is:inline>
+      // Prevent flash of wrong theme by applying the saved preference before paint.
+      (function () {
+        try {
+          var saved = localStorage.getItem('portfolio-theme');
+          if (saved === 'light' || saved === 'dark') {
+            document.documentElement.dataset.theme = saved;
+          } else {
+            document.documentElement.dataset.theme =
+              window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches
+                ? 'light'
+                : 'dark';
+          }
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      })();
+    </script>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>

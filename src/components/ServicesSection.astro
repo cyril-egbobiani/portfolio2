@@ -1,0 +1,10 @@
+---
+const services = ['Mobile Development', 'Web Development', 'Product Design', 'Design Engineering'];
+---
+
+<section class="flex flex-col gap-4" id="services">
+  <h2 class="m-0 text-base " style="color: var(--text-muted)">Services Provided</h2>
+  <ul class="m-0 flex list-none flex-col gap-4 p-0 text-base" style="color: var(--text-secondary)">
+    {services.map((service) => <li>{service}</li>)}
+  </ul>
+</section>

@@ -1,56 +1,22 @@
 ---
 import Layout from '../components/Layout.astro';
-import ProjectCard from '../components/ProjectCard.astro';
 import PortfolioIntro from '../components/PortfolioIntro.astro';
-import type { Project } from '../types/project';
-
-const projects: Project[] = [
-  {
-    title: 'Personal Portfolios ok tthen',
-    description: 'A modern portfolio built with Astro and minimal design.',
-    url: '#',
-  },
-  {
-    title: 'UX Case Study',
-    description: 'Showcase of a product redesign and interaction system.',
-    url: '#',
-  },
-];
-
-const skills: string[] = ['Astro', 'TypeScript', 'Tailwind CSS', 'Responsive design'];
+import ProjectsSection from '../components/ProjectsSection.astro';
+import ServicesSection from '../components/ServicesSection.astro';
+import ExperienceSection from '../components/ExperienceSection.astro';
+import ContactSection from '../components/ContactSection.astro';
+import PortfolioFooter from '../components/PortfolioFooter.astro';
 ---
 
-{false && <Layout title="Portfolio | Home">
-  <section class="px-6 py-24">
-    <div class="mx-auto max-w-4xl">
-      <p class="eyebrow text-xl">Hello, I’m  eg</p>
-      <h1 class="m-0 text-[clamp(3rem,4vw,5rem)] leading-[0.95]">Build fast, polished web experiences.</h1>
-      <p class="mb-8 mt-6 max-w-3xl text-lg leading-8 text-slate-600">I create portfolio sites, UI components, and thoughtful web interactions using Astro.</p>
-      <div class="actions">
-        <a class="inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-4 font-semibold text-white transition duration-200 ease-in-out hover:bg-brand-700" href="#projects">See projects</a>
-      </div>
-    </div>
-  </section>
-
-  <section id="projects" class="mx-auto max-w-4xl px-6 py-20">
-    <h2>Featured work</h2>
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2">
-      {projects.map((project) => (
-        <ProjectCard project={project} />
-      ))}
-    </div>
-  </section>
-
-  <section class="mx-auto max-w-4xl px-6 py-20">
-    <h2>Skills</h2>
-    <ul class="mt-6 flex list-none flex-wrap gap-3 p-0">
-      {skills.map((skill) => (
-        <li class="rounded-full bg-white px-4 py-2 text-sm shadow-[0_8px_24px_rgba(15,23,42,0.06)]">{skill}</li>
-      ))}
-    </ul>
-  </section>
-</Layout>}
-
 <Layout title="Cyril Egbobiani | Software Engineer & Designer">
-  <PortfolioIntro />
+  <main class="bg-[var(--surface)] px-4 pt-[100px] font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
+    <div class="mx-auto flex w-full max-w-[660px] flex-col gap-36">
+      <PortfolioIntro />
+      <ProjectsSection />
+      <ServicesSection />
+      <ExperienceSection />
+      <ContactSection />
+      <PortfolioFooter />
+    </div>
+  </main>
 </Layout>

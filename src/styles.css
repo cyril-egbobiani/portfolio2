@@ -1,22 +1,118 @@
-
 @import "tailwindcss";
+@config "../tailwind.config.js";
 
-@theme {
-  --color-brand-50: #eff6ff;
-  --color-brand-100: #dbeafe;
-  --color-brand-500: #3b82f6;
-  --color-brand-600: #2563eb;
-  --color-brand-700: #1d4ed8;
-  --shadow-soft: 0 20px 50px rgba(15, 23, 42, 0.08);
+/* ---------------------------------------------------------------------------
+   DESIGN TOKENS
+   Semantic tokens define the design system. Each token resolves to a
+   different value depending on the active theme (light or dark).
+   Light theme is the default (:root), dark theme is applied when the
+   <html> element carries `data-theme="dark"`.
+--------------------------------------------------------------------------- */
+
+:root {
+  color-scheme: light;
+
+  /* Surfaces – layered backgrounds */
+  --surface: #ffffff;
+  --surface-subtle: #f6f6f7;
+  --surface-interactive: #ffffff;
+  --surface-raised: #ffffff;
+  --surface-inverse: #171717;
+
+  /* Text hierarchy */
+  --text-primary: #171717;
+  --text-secondary: #4F4F4F;
+  --text-muted: #919191;
+  --text-faint: #9b9ba1;
+  --text-on-accent: #ffffff;
+  --text-on-inverse: #f5f5f5;
+
+  /* Borders */
+  --border-subtle: #F6F7F7;
+  --border-default: #d4d4d8;
+  --border-strong: #a1a1aa;
+
+/* Accents */
+  --accent: #2563eb;
+  --accent-hover: #1d4ed8;
+  --accent-soft: #eff6ff;
+  --rose: #F43F5E;
+  --rose-hover: #e11d48;
+
+  /* Logo chip (Figma Frame 1000002566) */
+  --border-logo: #e8e8e8;
+  --shadow-logo: 0 4px 4px rgba(0, 0, 0, 0.05), 0 1.5px 0 rgba(0, 0, 0, 0.2);
+
+  /* Feedback & misc */
+  --success: #16a34a;
+  --warning: #d97706;
+  --danger: #dc2626;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(23, 23, 23, 0.04), 0 8px 24px rgba(23, 23, 23, 0.06);
+  --shadow-card-hover: 0 2px 4px rgba(23, 23, 23, 0.06), 0 16px 40px rgba(23, 23, 23, 0.12);
+
+  /* Typography */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
+
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  /* Surfaces */
+  --surface: #000000;
+  --surface-subtle: #040404;
+  --surface-interactive: #0C0C0C;
+  --surface-raised: #17171a;
+  --surface-inverse: #f5f5f5;
+
+  /* Text hierarchy */
+  --text-primary: #f5f5f5;
+  --text-secondary: #B0B0B0;
+  --text-muted: #6E6E6E;
+  --text-faint: #6e6e73;
+  --text-on-accent: #ffffff;
+  --text-on-inverse: #171717;
+
+  /* Borders */
+  --border-subtle: #090808;
+  --border-default: #2e2e33;
+  --border-strong: #3f3f46;
+
+/* Accents */
+  --accent: #3b82f6;
+  --accent-hover: #60a5fa;
+  --accent-soft: rgba(59, 130, 246, 0.14);
+  --rose: #F43F5E;
+  --rose-hover: #fda4af;
+
+  /* Logo chip (Figma Frame 1000002566) */
+  --border-logo: #171717;
+  --shadow-logo: 0 4px 4px rgba(255, 255, 255, 0.05), 0 1.5px 0 rgba(255, 255, 255, 0.2);
+
+  /* Feedback & misc */
+  --success: #4ade80;
+  --warning: #fbbf24;
+  --danger: #f87171;
+
+  /* Shadows */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
+  --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 40px rgba(0, 0, 0, 0.5);
+
+  /* Typography */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   BASE
+--------------------------------------------------------------------------- */
 
 @layer base {
   :root {
-    color-scheme: dark;
-    color: #b0b0b0;
-    background: #000;
-    font-family: Geist, ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-sans);
     line-height: 1.6;
+    color: var(--text-primary);
+    background: var(--surface);
   }
 
   html {
@@ -26,7 +122,10 @@
   body {
     margin: 0;
     min-height: 100vh;
-    @apply bg-black text-[#b0b0b0] antialiased;
+    background: var(--surface);
+    color: var(--text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   *,
@@ -34,7 +133,30 @@
   *::after {
     box-sizing: border-box;
   }
+
+  a {
+    color: inherit;
+  }
+
+::selection {
+    background: var(--accent-soft);
+    color: var(--text-primary);
+  }
+
+  /* Smooth transition when switching themes */
+  html[data-theme] {
+    transition: background-color 200ms ease, color 200ms ease;
+  }
+
+  body,
+  html[data-theme] body {
+    transition: background-color 200ms ease, color 200ms ease;
+  }
 }
+
+/* ---------------------------------------------------------------------------
+   COMPONENTS
+--------------------------------------------------------------------------- */
 
 @layer components {
   .hero {
@@ -46,20 +168,29 @@
   }
 
   .eyebrow {
-    @apply uppercase tracking-[0.24em] text-xs mb-4 text-brand-600;
+    @apply uppercase tracking-[0.24em] text-xs mb-4;
+    color: var(--text-muted);
   }
 
   h1 {
     @apply m-0 leading-[0.95];
     font-size: clamp(3rem, 4vw, 5rem);
+    color: var(--text-primary);
   }
 
   .lead {
-    @apply max-w-3xl text-lg leading-8 text-slate-600 mt-6 mb-8;
+    @apply max-w-3xl text-lg leading-8 mt-6 mb-8;
+    color: var(--text-secondary);
   }
 
   .button {
-    @apply inline-flex items-center justify-center rounded-full bg-brand-600 px-6 py-4 font-semibold text-white transition duration-200 ease-in-out hover:bg-brand-700;
+    @apply inline-flex items-center justify-center rounded-full px-6 py-4 font-semibold transition duration-200 ease-in-out;
+    background: var(--accent);
+    color: var(--text-on-accent);
+  }
+
+  .button:hover {
+    background: var(--accent-hover);
   }
 
   .section {
@@ -75,22 +206,102 @@
   }
 
   .skill-list li {
-    @apply rounded-full bg-white px-4 py-2 shadow-[0_8px_24px_rgba(15,23,42,0.06)] text-sm;
+    @apply rounded-full px-4 py-2 text-sm;
+    background: var(--surface-subtle);
+    color: var(--text-secondary);
   }
 
   .card {
-    @apply rounded-[1.25rem] bg-white border border-slate-200 shadow-soft transition duration-200 ease-in-out;
+    @apply rounded-[1.25rem] border transition duration-200 ease-in-out;
+    background: var(--surface-raised);
+    border-color: var(--border-subtle);
+    box-shadow: var(--shadow-card);
   }
 
   .card:hover {
-    @apply translate-y-[-4px] shadow-[0_24px_60px_rgba(15,23,42,0.12)];
+    @apply translate-y-[-4px];
+    border-color: var(--border-default);
+    box-shadow: var(--shadow-card-hover);
   }
 
   .card-link {
-    @apply text-brand-600 font-semibold no-underline;
+    @apply font-semibold no-underline;
+    color: var(--accent);
   }
 
   .card-link:hover {
     @apply underline;
+    color: var(--accent-hover);
+  }
+
+  /* Theme toggle button */
+  .theme-toggle {
+    @apply inline-flex size-11 items-center justify-center rounded-full border transition duration-200;
+    background: var(--surface-subtle);
+    border-color: var(--border-subtle);
+    color: var(--text-primary);
+    cursor: pointer;
+  }
+
+  .theme-toggle:hover {
+    border-color: var(--border-default);
+    background: var(--surface-interactive);
+  }
+
+/* Tab bar used in Projects section */
+  .tab {
+    position: relative;
+    @apply h-full px-2 text-sm  transition-colors;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .tab::after {
+    content: '';
+    position: absolute;
+    left: 0.5rem;
+    right: 0.5rem;
+    bottom: 0;
+    height: 2px;
+    border-radius: 9999px;
+    background: var(--rose);
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 200ms ease;
+  }
+
+  .tab-active {
+    color: var(--text-primary);
+  }
+
+  .tab-active::after {
+    transform: scaleX(1);
+  }
+
+  .tab:hover {
+    color: var(--text-primary);
+  }
+
+  /* Tab panel fade-in when switching categories */
+  [data-tab-panel] {
+    animation: tabFade 200ms ease;
+  }
+
+  @keyframes tabFade {
+    from {
+      opacity: 0;
+      transform: translateY(4px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  /* Smooth color transitions when switching themes */
+  [data-theme] * {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
   }
 }

@@ -8,10 +8,10 @@ interface Props {
 const { project } = Astro.props as Props;
 ---
 
-<article class="rounded-[1.25rem] border border-slate-300/40 bg-white p-7 shadow-[0_20px_50px_rgba(15,23,42,0.08)] transition-[transform,box-shadow] duration-[250ms] ease-in-out hover:-translate-y-1 hover:shadow-[0_24px_60px_rgba(15,23,42,0.12)]">
-  <h3 class="mb-3 text-xl font-semibold">{project.title}</h3>
-  <p class="mb-5 leading-7 text-slate-600">{project.description}</p>
-  <a class="font-semibold text-blue-600 no-underline hover:underline" href={project.url}>
+<article class="card p-7">
+  <h3 class="mb-3 text-xl font-semibold" style="color: var(--text-primary)">{project.title}</h3>
+  <p class="mb-5 leading-7" style="color: var(--text-secondary)">{project.description}</p>
+  <a class="card-link" href={project.url}>
     View project →
   </a>
 </article>
