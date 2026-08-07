@@ -1,0 +1,14 @@
+---
+const links = [
+  { label: 'Projects', href: '#projects' },
+  { label: 'Services', href: '#services' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<nav class="quick-links" aria-label="Quick links">
+  {links.map((link) => (
+    <a class="quick-links__item" href={link.href}>{link.label}</a>
+  ))}
+</nav>

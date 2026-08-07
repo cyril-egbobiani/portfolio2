@@ -25,11 +25,11 @@ const socialLinks = [
     </header>
 
     <section class="rounded-lg bg-[var(--surface)] pt-2" >
-      <div class="flex flex-col gap-4 overflow-hidden py-3 text-base">
-        <p class="m-0 leading-5 text-[var(--text-muted)]">Hey Good Morning!</p>
-        <p class="m-0 leading-6 text-[var(--text-secondary)]">I'm Cyril Egbobiani, a Software Engineer and Designer based in Lagos, Nigeria. My drive is in imagining and executing every creative thought in him to better this world.</p>
-        <p class="m-0  leading-6 text-[var(--text-secondary)]">To me, design and code are two sides of the same coin and balancing both has been an awesome journey.</p>
-        <p class="m-0  leading-6 text-[var(--text-secondary)]">I'm glad you dropped by. Relax, look around, and let's talk about building things that matter.</p>
+      <div class="t-stagger flex flex-col gap-4 overflow-hidden py-3 text-base">
+        <p class="t-stagger-line t-stagger-line--1 m-0 leading-5 text-[var(--text-muted)]">Hey Good Morning!</p>
+        <p class="t-stagger-line t-stagger-line--2 m-0 leading-6 text-[var(--text-secondary)]">I'm Cyril Egbobiani, a Software Engineer and Designer based in Lagos, Nigeria. My drive is in imagining and executing every creative thought in him to better this world.</p>
+        <p class="t-stagger-line t-stagger-line--3 m-0 leading-6 text-[var(--text-secondary)]">To me, design and code are two sides of the same coin and balancing both has been an awesome journey.</p>
+        <p class="t-stagger-line t-stagger-line--4 m-0 leading-6 text-[var(--text-secondary)]">I'm glad you dropped by. Relax, look around, and let's talk about building things that matter.</p>
       </div>
 
       <nav class="py-3" aria-label="Social links">
@@ -44,6 +44,15 @@ const socialLinks = [
         </div>
       </nav>
     </section>
+
+<script>
+  const block = document.querySelector<HTMLElement>('.t-stagger');
+  if (block) {
+    requestAnimationFrame(() => {
+      block.classList.add('is-shown');
+    });
+  }
+</script>
 
     {false && <section class="pt-8" id="projects">
       <div class="mb-5 flex items-end justify-between">

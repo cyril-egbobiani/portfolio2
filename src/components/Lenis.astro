@@ -1,0 +1,41 @@
+<script>
+  import Lenis from 'lenis';
+
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!prefersReducedMotion) {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      smoothWheel: true,
+      touchMultiplier: 1.5,
+    });
+
+    // Drive Lenis with requestAnimationFrame
+    function raf(time: number) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Smooth-scroll to anchors when quick-links are clicked
+    const links = document.querySelectorAll<HTMLAnchorElement>(
+      'a[data-smooth-scroll], .quick-links a[href^="#"]'
+    );
+    links.forEach((link) => {
+      link.addEventListener('click', (event) => {
+        const target = document.querySelector(link.getAttribute('href')!);
+        if (target) {
+          event.preventDefault();
+          lenis.scrollTo(target as HTMLElement, { offset: -20 });
+        }
+      });
+    });
+
+    // Expose for potential programmatic use
+    (window as unknown as { __lenis: Lenis }).__lenis = lenis;
+  } else {
+    // Restore native scroll for reduced-motion users
+    document.documentElement.style.scrollBehavior = 'auto';
+  }
+</script>

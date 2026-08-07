@@ -21,7 +21,8 @@ const projects = {
 <section class="flex flex-col gap-8" id="projects">
   <div class="flex flex-col gap-4">
     <p class="m-0 text-base " style="color: var(--text-muted)">Projects</p>
-    <div class="flex h-[33px] items-center" role="tablist" aria-label="Project categories">
+    <div class="tabs-bar" role="tablist" aria-label="Project categories">
+      <span class="tabs-pill" aria-hidden="true"></span>
       {tabs.map((tab, index) => (
         <button
           class={`tab ${index === 0 ? 'tab-active' : ''}`}
@@ -58,8 +59,29 @@ const projects = {
 </section>
 
 <script>
+  const bar = document.querySelector<HTMLElement>('.tabs-bar');
+  const pill = bar?.querySelector<HTMLElement>('.tabs-pill');
   const triggers = document.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
   const panels = document.querySelectorAll<HTMLElement>('[data-tab-panel]');
+
+  const movePill = (tab: HTMLButtonElement, animate: boolean) => {
+    if (!pill || !bar) return;
+    if (!animate) {
+      const prev = pill.style.transition;
+      pill.style.transition = 'none';
+      pill.style.transform = `translateX(${tab.offsetLeft}px)`;
+      pill.style.width = `${tab.offsetWidth}px`;
+      void pill.offsetWidth;
+      pill.style.transition = prev;
+    } else {
+      pill.style.transform = `translateX(${tab.offsetLeft}px)`;
+      pill.style.width = `${tab.offsetWidth}px`;
+    }
+  };
+
+  const activeTrigger = () =>
+    [...triggers].find((t) => t.getAttribute('aria-selected') === 'true') ||
+    triggers[0];
 
   const activateTab = (id: string) => {
     triggers.forEach((trigger) => {
@@ -70,6 +92,8 @@ const projects = {
     panels.forEach((panel) => {
       panel.hidden = panel.dataset.tabId !== id;
     });
+    const active = [...triggers].find((t) => t.dataset.tabId === id);
+    if (active) movePill(active, true);
   };
 
   triggers.forEach((trigger) => {
@@ -77,5 +101,15 @@ const projects = {
       const id = trigger.dataset.tabId;
       if (id) activateTab(id);
     });
+  });
+
+  // Position the pill without animating on first paint + resize
+  requestAnimationFrame(() => {
+    const active = activeTrigger();
+    if (active) movePill(active, false);
+  });
+  window.addEventListener('resize', () => {
+    const active = activeTrigger();
+    if (active) movePill(active, false);
   });
 </script>

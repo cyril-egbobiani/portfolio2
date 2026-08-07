@@ -6,10 +6,11 @@ import ServicesSection from '../components/ServicesSection.astro';
 import ExperienceSection from '../components/ExperienceSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
+import QuickLinks from '../components/QuickLinks.astro';
 ---
 
 <Layout title="Cyril Egbobiani | Software Engineer & Designer">
-  <main class="bg-[var(--surface)] px-4 pt-[100px] font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
+  <main class="bg-[var(--surface)] px-4 pt-[100px] pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
     <div class="mx-auto flex w-full max-w-[660px] flex-col gap-36">
       <PortfolioIntro />
       <ProjectsSection />
@@ -19,4 +20,5 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
       <PortfolioFooter />
     </div>
   </main>
+  <QuickLinks />
 </Layout>
