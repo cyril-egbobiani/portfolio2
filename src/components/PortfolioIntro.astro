@@ -1,0 +1,55 @@
+---
+import avatar from '../assets/images/avatar.png';
+import emailIcon from '../assets/images/email.svg?url';
+import githubIcon from '../assets/images/github.svg?url';
+import linkedinIcon from '../assets/images/linkedin.svg?url';
+import sunIcon from '../assets/images/sun.svg?url';
+import xIcon from '../assets/images/x.svg?url';
+
+const socialLinks = [
+  { label: 'X', href: 'https://x.com', icon: xIcon },
+  { label: 'GitHub', href: 'https://github.com', icon: githubIcon },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com', icon: linkedinIcon },
+  { label: 'Email', href: 'mailto:hello@example.com', icon: emailIcon },
+];
+---
+
+<main class="min-h-screen bg-black px-3 py-2 font-[Geist,ui-sans-serif,system-ui,sans-serif] text-[#b0b0b0] sm:px-6 sm:py-6">
+  <div class="mx-auto flex w-full max-w-[660px] flex-col gap-6">
+    <header class="flex w-full items-start justify-between">
+      <img class="size-[100px] rounded-[2rem] object-cover" src={avatar.src} alt="Cyril Egbobiani" />
+      <button class="flex size-8 items-center justify-center rounded-full bg-white/5 p-2 transition hover:bg-white/10" type="button" aria-label="Toggle theme" data-theme-toggle>
+        <img class="size-3" src={sunIcon} alt="" />
+      </button>
+    </header>
+
+    <section class="rounded-lg bg-black pt-2 shadow-[0_1px_1px_rgba(0,0,0,0.05)]">
+      <div class="flex flex-col gap-4 overflow-hidden py-3 text-base">
+        <p class="m-0 leading-5 text-[#6e6e6e]">Hey Good Morning!</p>
+        <p class="m-0 leading-6">I'm Cyril Egbobiani, a Software Engineer and Designer based in Lagos, Nigeria. My drive is in imagining and executing every creative thought in him to better this world.</p>
+        <p class="m-0 font-medium leading-6">To me, design and code are two sides of the same coin and balancing both has been an awesome journey.</p>
+        <p class="m-0 font-medium leading-6">I'm glad you dropped by. Relax, look around, and let's talk about building things that matter.</p>
+      </div>
+
+      <nav class="py-3" aria-label="Social links">
+        <div class="rounded-full border border-[#090808] bg-[#040404] p-1">
+          <div class="flex gap-2">
+            {socialLinks.map((link) => (
+              <a class="flex min-w-0 flex-1 items-center justify-center rounded-full bg-[#0c0c0c] px-3 py-1.5 transition hover:bg-[#191919]" href={link.href} aria-label={link.label}>
+                <img class="size-[14px]" src={link.icon} alt="" />
+              </a>
+            ))}
+          </div>
+        </div>
+      </nav>
+    </section>
+  </div>
+</main>
+
+<script>
+  const button = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
+
+  button?.addEventListener('click', () => {
+    document.documentElement.classList.toggle('light');
+  });
+</script>
