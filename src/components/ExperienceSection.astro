@@ -2,9 +2,15 @@
 import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
 import firstBankLogo from '../assets/images/first-bank-logo.png';
-import arrowIcon from '../assets/images/down-arrow.svg?url';
 
-const experience = [
+interface ExperienceItem {
+  company: string;
+  role: string;
+  dates: string;
+  logo?: ImageMetadata;
+}
+
+const experience: ExperienceItem[] = [
   { company: 'International Energy Services Limited', role: 'Frontend Developer & Product Designer', dates: '2026 – Now', logo: ieslLogo },
   { company: 'Freelance', role: 'Software Developer & Designer', dates: '2025 – Now' },
   { company: 'First Bank Digital Innovation Lab', role: 'Mobile Developer Intern', dates: '2024 – 2024', logo: firstBankLogo },
@@ -13,23 +19,203 @@ const experience = [
 
 <section class="flex flex-col gap-8" id="experience">
   <h2 class="m-0 text-base " style="color: var(--text-muted)">Experience</h2>
-  <div class="flex flex-col gap-10">
-    {experience.map((item) => (
-      <article class="flex gap-6">
-        <div class="flex size-[60px] shrink-0 items-center justify-center rounded-2xl border-2 p-3" style="border-color: var(--border-logo); background: var(--surface-raised); box-shadow: var(--shadow-logo)">
-          {item.logo ? <Image class="size-full object-contain" src={item.logo} alt="" width={36} height={36} /> : <span class="text-lg" style="color: var(--text-secondary)">◌</span>}
+
+  <ol class="experience-list" data-experience-list>
+    {experience.map((item, index) => (
+      <li class="experience-item" data-experience-item>
+        <div class="experience-item__logo" aria-hidden="true">
+          {item.logo ? (
+            <Image class="size-full object-contain" src={item.logo} alt="" width={36} height={36} />
+          ) : (
+            <span class="experience-item__fallback">◌</span>
+          )}
         </div>
-        <div class="min-w-0 flex-1 py-1">
-          <div class="flex items-center justify-between gap-3">
-            <h3 class="m-0 text-base " style="color: var(--text-primary)">{item.company}</h3>
-            <img class="size-3" style="color: var(--text-muted)" src={arrowIcon} alt="" />
+
+        <div class="experience-item__body">
+          <div class="experience-item__top">
+            <h3 class="experience-item__company">{item.company}</h3>
           </div>
-          <div class="mt-1 flex items-start justify-between gap-3" style="color: var(--text-muted)">
-            <p class="m-0 text-base leading-6">{item.role}</p>
-            <p class="m-0 shrink-0 text-sm leading-6">{item.dates}</p>
+          <div class="experience-item__meta">
+            <p class="experience-item__role">{item.role}</p>
+            <p class="experience-item__dates">{item.dates}</p>
           </div>
         </div>
-      </article>
+      </li>
     ))}
-  </div>
+  </ol>
 </section>
+
+<style>
+  .experience-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+  }
+
+  .experience-item {
+    position: relative;
+    display: flex;
+    gap: 1.25rem;
+    padding: 0.5rem 0.25rem;
+    border-radius: 1rem;
+  }
+
+  /* Timeline rail — a subtle gradient guide-line on the left */
+  .experience-item__rail {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: calc(29px + 0.5rem);
+    width: 1px;
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--border-default) 12%,
+      var(--border-default) 88%,
+      transparent
+    );
+    opacity: 0.6;
+  }
+
+  .experience-list > :first-child .experience-item__rail {
+    background: linear-gradient(
+      to bottom,
+      var(--border-default) 24%,
+      var(--border-default) 88%,
+      transparent
+    );
+  }
+
+  .experience-list > :last-child .experience-item__rail {
+    background: linear-gradient(
+      to bottom,
+      transparent,
+      var(--border-default) 12%,
+      var(--border-default) 60%
+    );
+  }
+
+  /* Logo chip sitting on the rail */
+  .experience-item__logo {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex: none;
+    align-items: center;
+    justify-content: center;
+    width: 58px;
+    height: 58px;
+    padding: 0.75rem;
+    border-radius: 1rem;
+    border: 2px solid var(--border-logo);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-logo);
+  }
+
+  .experience-item__fallback {
+    font-size: 1.125rem;
+    line-height: 1;
+    color: var(--text-secondary);
+  }
+
+  .experience-item__body {
+    min-width: 0;
+    flex: 1;
+    padding-top: 0.25rem;
+  }
+
+  .experience-item__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+  }
+
+  .experience-item__company {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.4;
+    font-weight: 400;
+    color: var(--text-primary);
+  }
+
+  .experience-item__meta {
+    margin-top: 0.25rem;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .experience-item__role {
+    margin: 0;
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+
+  .experience-item__dates {
+    margin: 0;
+    flex: none;
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
+
+  /* Staggered reveal: hidden until scrolled into view.
+     Text-reveal distance is --distance-medium (12px). Duration uses
+     the --duration-very-slow token (500ms). Per-item offset steps by
+     --duration-stagger (40ms) using the --index set by JS. */
+  .experience-item {
+    opacity: 0;
+    transform: translateY(var(--distance-medium));
+    transition:
+      opacity var(--duration-very-slow) var(--ease-smooth-out),
+      transform var(--duration-very-slow) var(--ease-smooth-out);
+    transition-delay: calc(var(--index) * var(--duration-stagger));
+  }
+
+  .experience-item[data-visible='true'] {
+    opacity: 1;
+    transform: translateY(0);
+    /* Stagger delay is one-shot: once revealed, clear it. */
+    transition-delay: 0s;
+  }
+
+  /* Reduced motion: show instantly, no transforms */
+  @media (prefers-reduced-motion: reduce) {
+    .experience-item {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+  }
+</style>
+
+<script>
+  const items = Array.from(
+    document.querySelectorAll<HTMLElement>('[data-experience-item]')
+  );
+
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.setAttribute('data-visible', 'true');
+            observer.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
+    );
+
+    items.forEach((item, index) => item.style.setProperty('--index', String(index)));
+    items.forEach((item) => observer.observe(item));
+  } else {
+    items.forEach((item) => item.setAttribute('data-visible', 'true'));
+  }
+</script>
+</content>

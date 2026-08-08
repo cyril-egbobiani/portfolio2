@@ -1,4 +1,4 @@
-@import "tailwindcss";
+﻿@import "tailwindcss";
 @config "../tailwind.config.js";
 
 /* ---------------------------------------------------------------------------
@@ -57,60 +57,56 @@
 
   /* Text hierarchy */
   --text-primary: #171717;
-  --text-secondary: #4F4F4F;
+  --text-secondary: #4f4f4f;
   --text-muted: #919191;
   --text-faint: #9b9ba1;
   --text-on-accent: #ffffff;
   --text-on-inverse: #f5f5f5;
 
   /* Borders */
-  --border-subtle: #F6F7F7;
+  --border-subtle: #f6f7f7;
   --border-default: #d4d4d8;
   --border-strong: #a1a1aa;
 
-/* Accents */
+  /* Accents */
   --accent: #2563eb;
   --accent-hover: #1d4ed8;
   --accent-soft: #eff6ff;
-  --rose: #F43F5E;
+  --rose: #f43f5e;
   --rose-hover: #e11d48;
 
   /* Logo chip (Figma Frame 1000002566) */
   --border-logo: #e8e8e8;
   --shadow-logo: 0 4px 4px rgba(0, 0, 0, 0.05), 0 1.5px 0 rgba(0, 0, 0, 0.2);
 
-/* Feedback & misc */
+  /* Feedback & misc */
   --success: #16a34a;
   --warning: #d97706;
   --danger: #dc2626;
-
-  /* Quick links nav (Figma Frame) */
-  --quick-bg: #ffffff;
-  --quick-border: #e5e5e7;
-  --quick-shadow: 0 8px 24px rgba(23, 23, 23, 0.12);
 
   /* Shadows */
   --shadow-card: 0 1px 2px rgba(23, 23, 23, 0.04), 0 8px 24px rgba(23, 23, 23, 0.06);
   --shadow-card-hover: 0 2px 4px rgba(23, 23, 23, 0.06), 0 16px 40px rgba(23, 23, 23, 0.12);
 
   /* Typography */
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", "Georgia", serif;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"] {
   color-scheme: dark;
 
   /* Surfaces */
   --surface: #000000;
-  --surface-subtle: #040404;
-  --surface-interactive: #0C0C0C;
+  --surface-subtle: #090908;
+  --surface-interactive: #0c0c0c;
   --surface-raised: #17171a;
   --surface-inverse: #f5f5f5;
 
   /* Text hierarchy */
   --text-primary: #f5f5f5;
-  --text-secondary: #B0B0B0;
-  --text-muted: #6E6E6E;
+  --text-secondary: #b0b0b0;
+  --text-muted: #6e6e6e;
   --text-faint: #6e6e73;
   --text-on-accent: #ffffff;
   --text-on-inverse: #171717;
@@ -120,33 +116,29 @@
   --border-default: #2e2e33;
   --border-strong: #3f3f46;
 
-/* Accents */
+  /* Accents */
   --accent: #3b82f6;
   --accent-hover: #60a5fa;
   --accent-soft: rgba(59, 130, 246, 0.14);
-  --rose: #F43F5E;
+  --rose: #f43f5e;
   --rose-hover: #fda4af;
 
   /* Logo chip (Figma Frame 1000002566) */
   --border-logo: #171717;
   --shadow-logo: 0 4px 4px rgba(255, 255, 255, 0.05), 0 1.5px 0 rgba(255, 255, 255, 0.2);
 
-/* Feedback & misc */
+  /* Feedback & misc */
   --success: #4ade80;
   --warning: #fbbf24;
   --danger: #f87171;
-
-  /* Quick links nav (Figma Frame) */
-  --quick-bg: #040404;
-  --quick-border: #090808;
-  --quick-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
 
   /* Shadows */
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
   --shadow-card-hover: 0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 40px rgba(0, 0, 0, 0.5);
 
   /* Typography */
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", "Georgia", serif;
 }
 
 /* ---------------------------------------------------------------------------
@@ -156,12 +148,14 @@
 @layer base {
   :root {
     font-family: var(--font-sans);
+    font-weight: 450;
     line-height: 1.6;
     color: var(--text-primary);
     background: var(--surface);
+    letter-spacing: -0.011em;
   }
 
-html {
+  html {
     /* Lenis handles smooth scrolling; disable native CSS smooth scroll to avoid conflict */
     scroll-behavior: auto;
   }
@@ -185,8 +179,10 @@ html {
     min-height: 100vh;
     background: var(--surface);
     color: var(--text-primary);
+    font-weight: 450;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    letter-spacing: -0.011em;
   }
 
   *,
@@ -199,19 +195,23 @@ html {
     color: inherit;
   }
 
-::selection {
+  ::selection {
     background: var(--accent-soft);
     color: var(--text-primary);
   }
 
   /* Smooth transition when switching themes */
   html[data-theme] {
-    transition: background-color 200ms ease, color 200ms ease;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
   }
 
   body,
   html[data-theme] body {
-    transition: background-color 200ms ease, color 200ms ease;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease;
   }
 }
 
@@ -231,12 +231,19 @@ html {
   .eyebrow {
     @apply uppercase tracking-[0.24em] text-xs mb-4;
     color: var(--text-muted);
+    font-family: var(--font-sans);
+    letter-spacing: 0.24em;
   }
 
-  h1 {
-    @apply m-0 leading-[0.95];
-    font-size: clamp(3rem, 4vw, 5rem);
-    color: var(--text-primary);
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-display);
+    font-weight: 450;
+    letter-spacing: -0.01em;
   }
 
   .lead {
@@ -295,70 +302,39 @@ html {
     color: var(--accent-hover);
   }
 
-  /* Theme toggle button */
+  /* Theme toggle button — inline within the nav bar */
   .theme-toggle {
-    @apply inline-flex size-11 items-center justify-center rounded-full border transition duration-200;
-    background: var(--surface-subtle);
-    border-color: var(--border-subtle);
-    color: var(--text-primary);
-    cursor: pointer;
-  }
-
-  .theme-toggle:hover {
-    border-color: var(--border-default);
-    background: var(--surface-interactive);
-  }
-
-/* Quick links — bottom-fixed nav (Figma Frame) */
-  .quick-links {
-    position: fixed;
-    bottom: 16px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 50;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    gap: 4px;
-    padding: 4px;
-    width: auto;
-    height: 42px;
-    background: var(--quick-bg);
-    border: 1px solid var(--quick-border);
-    border-radius: 9999px;
-    box-shadow: var(--quick-shadow);
-  }
-
-  .quick-links__item {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    padding: 0 14px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    color: var(--text-muted);
-    text-decoration: none;
+    flex-shrink: 0;
+    width: 36px;
+    height: 36px;
+    padding: 0;
+    border: none;
     border-radius: 9999px;
-    white-space: nowrap;
+    background: var(--surface-subtle);
+    color: var(--text-muted);
+    cursor: pointer;
     transition:
-      background-color var(--duration-fast) var(--ease-smooth-out),
-      color var(--duration-fast) var(--ease-smooth-out);
+      color var(--duration-fast) var(--ease-smooth-out),
+      background-color var(--duration-fast) var(--ease-smooth-out);
   }
 
-  .quick-links__item:hover,
-  .quick-links__item.is-active {
+  .theme-toggle:hover {
     color: var(--text-primary);
     background: var(--surface-interactive);
   }
 
-  /* In dark theme the pill is near-black; items read better at higher opacity */
-  [data-theme='dark'] .quick-links {
-    --text-muted: #9b9ba1;
-    --text-primary: #f5f5f5;
+  /* Smaller icons inside the toggle */
+  .theme-toggle .theme-toggle__icon {
+    width: 20px;
+    height: 20px;
   }
 
-/* Theme toggle icon swap (transitions.dev "icon swap") */
+  /* Quick links — styled by the scoped <style> in QuickLinks.astro */
+
+  /* Theme toggle icon swap (transitions.dev "icon swap") */
   .theme-toggle__stage {
     position: relative;
     display: inline-flex;
@@ -410,7 +386,7 @@ html {
     opacity: 1;
   }
 
-/* Tab bar used in Projects section — sliding pill (transitions.dev "tabs sliding") */
+  /* Tab bar used in Projects section — sliding pill (transitions.dev "tabs sliding") */
   .tabs-bar {
     position: relative;
     display: inline-flex;
@@ -441,7 +417,8 @@ html {
     color: var(--text-primary);
   }
 
-  /* The sliding pill: width + transform written inline by JS */
+  /* The sliding pill: width + transform written inline by JS.
+     Uses a snappy cubic-bezier so the pill glides smoothly between tabs. */
   .tabs-pill {
     position: absolute;
     top: 2px;
@@ -454,14 +431,14 @@ html {
     box-shadow: var(--shadow-card);
     transform: translateX(0);
     transition:
-      transform var(--duration-fast) var(--ease-smooth-out),
-      width var(--duration-fast) var(--ease-smooth-out);
+      transform 320ms var(--ease-smooth-out),
+      width 320ms var(--ease-smooth-out);
     will-change: transform, width;
     z-index: 0;
     pointer-events: none;
   }
 
-/* Texts reveal (transitions.dev "texts reveal") — staggered blurred rise */
+  /* Texts reveal (transitions.dev "texts reveal") — staggered blurred rise */
   .t-stagger {
     display: flex;
     flex-direction: column;
@@ -480,9 +457,15 @@ html {
     will-change: transform, opacity, filter;
   }
 
-  .t-stagger-line--2 { transition-delay: var(--stagger-stagger); }
-  .t-stagger-line--3 { transition-delay: calc(var(--stagger-stagger) * 2); }
-  .t-stagger-line--4 { transition-delay: calc(var(--stagger-stagger) * 3); }
+  .t-stagger-line--2 {
+    transition-delay: var(--stagger-stagger);
+  }
+  .t-stagger-line--3 {
+    transition-delay: calc(var(--stagger-stagger) * 2);
+  }
+  .t-stagger-line--4 {
+    transition-delay: calc(var(--stagger-stagger) * 3);
+  }
 
   .t-stagger.is-shown .t-stagger-line {
     opacity: 1;
@@ -501,28 +484,52 @@ html {
     transition-delay: 0s;
   }
 
-  /* Tab panel fade-in when switching categories */
-  [data-tab-panel] {
-    animation: tabFade var(--duration-fast) ease;
+  /* Tab panel transitions — leave (fade/shrink) then enter (rise/blur).
+     Animations only run when JS adds .is-leaving / .is-entering; panels
+     do NOT animate on plain visibility toggles. */
+  [data-tab-panel].is-leaving {
+    animation: tabLeave var(--duration-fast) var(--ease-smooth-out) forwards;
   }
 
-  @keyframes tabFade {
+  [data-tab-panel].is-entering {
+    animation: tabEnter var(--duration-medium) var(--ease-smooth-out) both;
+  }
+
+  @keyframes tabLeave {
+    from {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(calc(var(--distance-micro) * -1));
+      filter: blur(var(--blur-small));
+    }
+  }
+
+  @keyframes tabEnter {
     from {
       opacity: 0;
-      transform: translateY(var(--distance-micro));
+      transform: translateY(var(--distance-base));
+      filter: blur(var(--blur-small));
     }
     to {
       opacity: 1;
       transform: none;
+      filter: blur(0);
     }
   }
 
   /* Smooth color transitions when switching themes */
   [data-theme] * {
-    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+    transition:
+      background-color 200ms ease,
+      color 200ms ease,
+      border-color 200ms ease;
   }
 
-@media (prefers-reduced-motion: reduce) {
+  @media (prefers-reduced-motion: reduce) {
     .tabs-pill,
     .tab,
     [data-tab-panel],

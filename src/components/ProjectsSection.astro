@@ -20,8 +20,8 @@ const projects = {
 
 <section class="flex flex-col gap-8" id="projects">
   <div class="flex flex-col gap-4">
-    <p class="m-0 text-base " style="color: var(--text-muted)">Projects</p>
-    <div class="tabs-bar" role="tablist" aria-label="Project categories">
+    <p class="m-0 text-base " style="color: var(--text-muted)">Work</p>
+    <div class="tabs-bar w-fit" role="tablist" aria-label="Project categories">
       <span class="tabs-pill" aria-hidden="true"></span>
       {tabs.map((tab, index) => (
         <button
@@ -84,16 +84,22 @@ const projects = {
     triggers[0];
 
   const activateTab = (id: string) => {
+    const nextTrigger = [...triggers].find((t) => t.dataset.tabId === id);
+
+    // Update active states
     triggers.forEach((trigger) => {
       const isActive = trigger.dataset.tabId === id;
       trigger.classList.toggle('tab-active', isActive);
       trigger.setAttribute('aria-selected', String(isActive));
     });
+
+    // Slide the pill immediately on click for a smooth, responsive feel
+    if (nextTrigger) movePill(nextTrigger, true);
+
+    // Swap which panel is visible (no leave/enter animation on content)
     panels.forEach((panel) => {
       panel.hidden = panel.dataset.tabId !== id;
     });
-    const active = [...triggers].find((t) => t.dataset.tabId === id);
-    if (active) movePill(active, true);
   };
 
   triggers.forEach((trigger) => {

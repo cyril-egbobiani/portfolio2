@@ -1,0 +1,171 @@
+---
+import Layout from '../components/Layout.astro';
+import '../styles.css';
+
+const details = [
+  { label: 'Name', value: 'Cyril Egbobiani' },
+  { label: 'Role', value: 'Software Engineer & Designer' },
+  { label: 'Location', value: 'Lagos, Nigeria' },
+  { label: 'Email', value: 'egbobianicyril@gmail.com' },
+];
+
+const skills = ['React', 'TypeScript', 'UI Design', 'Product Design', 'Motion'];
+
+const socials = [
+  { label: 'GitHub', href: 'https://github.com' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com' },
+  { label: 'X', href: 'https://x.com' },
+  { label: 'Email', href: 'mailto:egbobianicyril@gmail.com' },
+];
+---
+
+<Layout title="About | Cyril Egbobiani">
+  <main class="bg-[var(--surface)] px-4 pt-16 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
+    <div class="mx-auto w-full max-w-[560px]">
+      <!-- Back link -->
+      <a href="/" class="back-link" aria-label="Back to home">
+        <span aria-hidden="true">←</span>&nbsp;Home
+      </a>
+
+      <!-- Profile header -->
+      <header class="mt-16 flex flex-col gap-6">
+        <img
+          src="/images/avatar.png"
+          alt="Cyril Egbobiani"
+          class="profile-avatar"
+          width="72"
+          height="72"
+        />
+        <div class="flex flex-col gap-1.5">
+          <h1 class="m-0 text-2xl font-medium tracking-tight" style="color: var(--text-primary)">
+            Cyril Egbobiani
+          </h1>
+          <p class="m-0 text-sm" style="color: var(--text-muted)">
+            Software Engineer &amp; Designer
+          </p>
+        </div>
+      </header>
+
+      <!-- Bio -->
+      <section class="mt-8 flex flex-col gap-4 text-[15px] leading-7" style="color: var(--text-secondary)">
+        <p class="m-0">
+          I'm a software engineer and designer who loves building clean, thoughtful
+          digital products. I focus on the intersection of engineering and design
+          to craft experiences that feel polished and performant.
+        </p>
+        <p class="m-0" style="color: var(--text-muted)">
+          Currently based in Lagos, working across the web, product, and design.
+        </p>
+      </section>
+
+      <!-- Divider -->
+      <hr class="mt-12 mb-10 border-0 border-t border-[var(--border-subtle)]" />
+
+      <!-- About details -->
+      <section class="flex flex-col">
+        <p class="m-0 mb-4 text-xs uppercase tracking-[0.18em]" style="color: var(--text-muted)">
+          About
+        </p>
+        <div class="flex flex-col">
+          {details.map((item) => (
+            <div
+              class="flex items-baseline justify-between gap-6 border-b border-[var(--border-subtle)] py-3.5 last:border-b-0"
+            >
+              <span class="shrink-0 text-sm" style="color: var(--text-muted)">{item.label}</span>
+              <span
+                class={`text-right text-sm ${item.label === 'Email' ? 'font-medium' : ''}`}
+                style={item.label === 'Email'
+                  ? 'color: var(--rose)'
+                  : 'color: var(--text-primary)'}
+              >
+                {item.value}
+              </span>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="mt-12 flex flex-col">
+        <p class="m-0 mb-3 text-xs uppercase tracking-[0.18em]" style="color: var(--text-muted)">
+          Skills
+        </p>
+        <p class="m-0 text-sm leading-6" style="color: var(--text-secondary)">
+          {skills.join(' · ')}
+        </p>
+      </section>
+
+      <!-- Socials -->
+      <section class="mt-12 flex flex-col">
+        <p class="m-0 mb-3 text-xs uppercase tracking-[0.18em]" style="color: var(--text-muted)">
+          Elsewhere
+        </p>
+        <div class="flex flex-col">
+          {socials.map((social) => (
+            <a
+              href={social.href}
+              class="social-link border-b border-[var(--border-subtle)] py-3 text-sm first:pt-0"
+              style="color: var(--text-secondary)"
+            >
+              {social.label}
+            </a>
+          ))}
+        </div>
+      </section>
+
+      <!-- Footer -->
+      <footer class="mt-16">
+        <a href="#" class="back-top" aria-label="Back to top">
+          Back to top <span aria-hidden="true">↑</span>
+        </a>
+      </footer>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-smooth-out);
+  }
+
+  .back-link:hover {
+    color: var(--text-primary);
+  }
+
+  .profile-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 9999px;
+    object-fit: cover;
+    border: 1px solid var(--border-subtle);
+  }
+
+  .social-link {
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-smooth-out);
+  }
+
+  .social-link:hover {
+    color: var(--text-primary);
+  }
+
+  .back-top {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color var(--duration-fast) var(--ease-smooth-out);
+  }
+
+  .back-top:hover {
+    color: var(--text-primary);
+  }
+</style>

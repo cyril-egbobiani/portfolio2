@@ -5,7 +5,6 @@ import emailIcon from '../assets/images/email.svg?url';
 import githubIcon from '../assets/images/github.svg?url';
 import linkedinIcon from '../assets/images/linkedin.svg?url';
 import xIcon from '../assets/images/x.svg?url';
-import ThemeToggle from './ThemeToggle.astro';
 
 const socialLinks = [
   { label: 'X', href: 'https://x.com', icon: xIcon },
@@ -21,16 +20,14 @@ const socialLinks = [
   <div class="flex w-full flex-col gap-6">
     <header class="flex w-full items-start justify-between">
       <Image class="size-[100px] rounded-[2rem] object-cover" src={avatar} alt="Cyril Egbobiani" width={100} height={100} loading="eager" fetchpriority="high" />
-      <ThemeToggle />
     </header>
 
     <section class="rounded-lg bg-[var(--surface)] pt-2" >
-      <div class="t-stagger flex flex-col gap-4 overflow-hidden py-3 text-base">
+      <div class="t-stagger flex flex-col gap-8 overflow-hidden py-3 text-base">
         <p class="t-stagger-line t-stagger-line--1 m-0 leading-5 text-[var(--text-muted)]">Hey Good Morning!</p>
         <p class="t-stagger-line t-stagger-line--2 m-0 leading-6 text-[var(--text-secondary)]">I'm Cyril Egbobiani, a Software Engineer and Designer based in Lagos, Nigeria. My drive is in imagining and executing every creative thought in him to better this world.</p>
         <p class="t-stagger-line t-stagger-line--3 m-0 leading-6 text-[var(--text-secondary)]">To me, design and code are two sides of the same coin and balancing both has been an awesome journey.</p>
-        <p class="t-stagger-line t-stagger-line--4 m-0 leading-6 text-[var(--text-secondary)]">I'm glad you dropped by. Relax, look around, and let's talk about building things that matter.</p>
-      </div>
+       </div>
 
       <nav class="py-3" aria-label="Social links">
         <div class="rounded-full border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1">

@@ -1,14 +1,222 @@
 ---
+// Quick links — sticky glass top navigation with a scroll-spy that
+// highlights the active section via a sliding indicator.
+// The profile "About" link routes to /profile.
+import ThemeToggle from './ThemeToggle.astro';
+
 const links = [
-  { label: 'Projects', href: '#projects' },
-  { label: 'Services', href: '#services' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'Contact', href: '#contact' },
+  { label: 'Work', href: '#projects', external: false },
+  { label: 'Experience', href: '#experience', external: false },
+  { label: 'Contact', href: '#contact', external: false },
+  { label: 'About', href: '/profile', external: true },
 ];
 ---
 
 <nav class="quick-links" aria-label="Quick links">
-  {links.map((link) => (
-    <a class="quick-links__item" href={link.href}>{link.label}</a>
-  ))}
+  <a class="quick-links__brand" href="/" aria-label="Home">
+<svg width="178" height="80" viewBox="0 0 178 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M129.633 26.6667C129.633 29.1213 131.568 31.1112 133.954 31.1112C136.341 31.1112 138.276 29.1213 138.276 26.6667V4.44447C138.276 1.98985 140.21 0 142.597 0H172.846C175.232 0 177.166 1.98985 177.166 4.44447V31.1112C177.166 33.5657 175.232 35.5553 172.846 35.5553H157.721C155.334 35.5553 153.4 37.5453 153.4 40V75.5553C153.4 78.01 151.465 80 149.079 80H116.669C114.283 80 112.349 78.01 112.349 75.5553V40C112.349 37.5453 110.414 35.5553 108.027 35.5553H95.0635C92.6768 35.5553 90.7422 33.5657 90.7422 31.1112V4.44447C90.7422 1.98985 92.6768 0 95.0635 0H125.312C127.698 0 129.633 1.98985 129.633 4.44447V26.6667Z" fill="var(--surface-inverse)"/>
+<path d="M82.0977 0C84.4841 0.000204078 86.4189 1.9899 86.4189 4.44434V31.1113C86.4189 33.5656 84.4841 35.5555 82.0977 35.5557H43.3433C40.8841 35.5557 38.8906 37.5492 38.8906 40.0083C38.8906 42.4674 40.8841 44.4609 43.3433 44.4609H82.0977C84.4842 44.4611 86.4189 46.4511 86.4189 48.9053V75.5723C86.4188 78.0267 84.4841 80.0164 82.0977 80.0166H12.958C10.5716 80.0166 8.63689 78.0268 8.63672 75.5723V75.4287C8.63672 73.0454 6.70463 71.1133 4.32129 71.1133C1.93474 71.1133 0 69.1226 0 66.668L0 13.335C6.85263e-05 10.8804 1.93479 8.89062 4.32129 8.89062C6.70463 8.89062 8.63672 6.95854 8.63672 4.5752V4.44434C8.63679 1.98978 10.5715 0 12.958 0H82.0977Z" fill="var(--surface-inverse)"/>
+</svg>
+  </a>
+
+  <div class="quick-links__menu">
+    <span class="quick-links__pill" aria-hidden="true"></span>
+    {links.map((link) => (
+      <a
+        class="quick-links__item"
+        href={link.href}
+        data-quick-link
+        data-scroll-link
+      >
+        {link.label}
+      </a>
+    ))}
+  </div>
+  <ThemeToggle />
 </nav>
+
+<style>
+  .quick-links {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    height: 56px;
+    padding: 0;
+    -webkit-backdrop-filter: blur(14px) saturate(150%);
+  }
+
+  .quick-links__brand {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 0 6px;
+    text-decoration: none;
+    color: var(--text-primary);
+    border-radius: 0.9rem;
+  }
+
+  .quick-links__brand svg {
+    display: block;
+    height: 40px;
+    width: auto;
+    object-fit: contain;
+  }
+
+  .quick-links__menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    padding: 4px;
+    border-radius: 9999px;
+    background: var(--surface-subtle);
+  }
+
+  .quick-links__item {
+    position: relative;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 14px;
+    min-height: 32px;
+    font-size: 0.875rem;
+    font-weight: 450;
+    letter-spacing: -0.01em;
+    color: var(--text-secondary);
+    text-decoration: none;
+    border-radius: 9999px;
+    white-space: nowrap;
+    transition:
+      color var(--duration-fast) var(--ease-smooth-out);
+  }
+
+  /* Hover in: quick + direct. */
+  .quick-links__item:hover {
+    color: var(--text-primary);
+  }
+
+  /* Active (scroll-spy): filled pill + explicit color. */
+  .quick-links__item.is-active {
+    color: var(--text-primary);
+  }
+
+  /* Sliding pill behind the active item — reuse the project's
+     transitions.dev "sliding tabs" motion (250ms, smooth ease out). */
+  .quick-links__pill {
+    position: absolute;
+    top: 4px;
+    left: 0;
+    height: calc(100% - 8px);
+    background: var(--surface-interactive);
+    border: 1px solid var(--border-subtle);
+    border-radius: 9999px;
+    box-shadow: var(--shadow-card);
+    transform: translateX(0);
+    transition:
+      transform var(--duration-fast) var(--ease-smooth-out),
+      width var(--duration-fast) var(--ease-smooth-out);
+    will-change: transform, width;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* Mobile: shrink logo + nav items so the bar doesn't overflow */
+  @media (max-width: 640px) {
+    .quick-links {
+      height: 48px;
+      gap: 0.5rem;
+      padding: 0 4px;
+    }
+
+    .quick-links__brand {
+      padding: 0 4px;
+    }
+
+    .quick-links__brand svg {
+      height: 28px;
+    }
+
+    .quick-links__menu {
+      gap: 1px;
+      padding: 3px;
+    }
+
+    .quick-links__item {
+      padding: 4px 8px;
+      min-height: 30px;
+      font-size: 0.75rem;
+    }
+
+    .quick-links__pill {
+      top: 3px;
+      height: calc(100% - 6px);
+    }
+  }
+
+  @media (max-width: 380px) {
+    .quick-links__item {
+      padding: 4px 6px;
+      font-size: 0.7rem;
+    }
+  }
+
+</style>
+
+<script>
+  // Scroll-spy: highlight the quick link of the currently visible section,
+  // and move the sliding pill under the active item.
+  const anchors = Array.from(
+    document.querySelectorAll<HTMLAnchorElement>('[data-quick-link]')
+  );
+  const menu = document.querySelector<HTMLElement>('.quick-links__menu');
+  const pill = document.querySelector<HTMLElement>('.quick-links__pill');
+
+  const scrollLinks = anchors.filter((a) => a.hasAttribute('data-scroll-link'));
+
+  const setActive = (id: string) => {
+    anchors.forEach((link) => {
+      const isActive = link.getAttribute('href') === `#${id}`;
+      link.classList.toggle('is-active', isActive);
+    });
+
+    // Move the pill under the active in-page link.
+    const active = scrollLinks.find((l) => l.getAttribute('href') === `#${id}`);
+    if (pill && menu && active) {
+      const menuRect = menu.getBoundingClientRect();
+      const itemRect = active.getBoundingClientRect();
+      const offsetLeft = itemRect.left - menuRect.left;
+      pill.style.width = `${itemRect.width}px`;
+      pill.style.transform = `translateX(${offsetLeft}px)`;
+    }
+  };
+
+  const sections = scrollLinks
+    .map((link) => {
+      const id = link.getAttribute('href')?.slice(1);
+      return id ? document.getElementById(id) : null;
+    })
+    .filter((el): el is HTMLElement => Boolean(el));
+
+  const onScroll = () => {
+    const scrollPos = window.scrollY + window.innerHeight * 0.4;
+    let current = sections[0]?.id ?? '';
+    for (const section of sections) {
+      if (section.offsetTop <= scrollPos) {
+        current = section.id;
+      }
+    }
+    setActive(current);
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  onScroll();
+</script>
+</content>
