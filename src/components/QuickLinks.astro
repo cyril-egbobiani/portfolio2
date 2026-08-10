@@ -43,7 +43,6 @@ const links = [
     gap: 1rem;
     height: 56px;
     padding: 0;
-    -webkit-backdrop-filter: blur(14px) saturate(150%);
   }
 
   .quick-links__brand {
@@ -54,7 +53,15 @@ const links = [
     padding: 0 6px;
     text-decoration: none;
     color: var(--text-primary);
-    border-radius: 0.9rem;
+    border-radius: 6px;
+    /* Exact property — never 'all'. Only transform needs to animate. */
+    transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* Brand: press feedback only — no hover lift.
+     Logo is clicked often; animation should confirm the press, not decorate the hover. */
+  .quick-links__brand:active {
+    transform: scale(0.97);
   }
 
   .quick-links__brand svg {
@@ -70,8 +77,9 @@ const links = [
     align-items: center;
     gap: 2px;
     padding: 4px;
-    border-radius: 9999px;
+    border-radius: 6px;
     background: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
   }
 
   .quick-links__item {
@@ -84,46 +92,58 @@ const links = [
     min-height: 32px;
     font-size: 0.875rem;
     font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--text-secondary);
+    letter-spacing: -0.02em;
+    color: var(--text-muted);
     text-decoration: none;
-    border-radius: 9999px;
+    border-radius: 4px;
     white-space: nowrap;
+    /* Exact properties — color + transform only. Never 'all'. */
     transition:
-      color var(--duration-fast) var(--ease-smooth-out);
+      color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Hover in: quick + direct. */
-  .quick-links__item:hover {
-    color: var(--text-primary);
+  /* Hover: color shift only — no transform.
+     Nav items are hovered tens of times per session.
+     Per frequency framework: "remove or drastically reduce." */
+  @media (hover: hover) and (pointer: fine) {
+    .quick-links__item:hover {
+      color: var(--text-primary);
+    }
   }
 
-  /* Active (scroll-spy): filled pill + explicit color. */
+  /* Press feedback: scale down to confirm the click was registered.
+     "Buttons must feel responsive to press." — applies to all pressable elements. */
+  .quick-links__item:active {
+    transform: scale(0.97);
+  }
+
+  /* Active (scroll-spy): color contrast only — NO font-weight change.
+     Changing font-weight causes layout shift (text reflows, pill jumps). */
   .quick-links__item.is-active {
     color: var(--text-primary);
   }
 
-  /* Sliding pill behind the active item — reuse the project's
-     transitions.dev "sliding tabs" motion (250ms, smooth ease out). */
+  /* Sliding pill — 200ms snappy ease-out. Tab indicators should feel
+     direct and mechanical, not decorative. */
   .quick-links__pill {
     position: absolute;
     top: 4px;
     left: 0;
     height: calc(100% - 8px);
     background: var(--surface-interactive);
-    border: 1px solid var(--border-subtle);
-    border-radius: 9999px;
-    box-shadow: var(--shadow-card);
+    border: 1px solid var(--border-default);
+    border-radius: 4px;
     transform: translateX(0);
     transition:
-      transform var(--duration-fast) var(--ease-smooth-out),
-      width var(--duration-fast) var(--ease-smooth-out);
+      transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      width 200ms cubic-bezier(0.23, 1, 0.32, 1);
     will-change: transform, width;
     pointer-events: none;
     z-index: 0;
   }
 
-  /* Mobile: shrink logo + nav items so the bar doesn't overflow */
+  /* Mobile */
   @media (max-width: 640px) {
     .quick-links {
       height: 48px;
@@ -215,4 +235,3 @@ const links = [
   window.addEventListener('resize', onScroll, { passive: true });
   onScroll();
 </script>
-</content>

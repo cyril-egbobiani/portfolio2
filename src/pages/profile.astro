@@ -1,171 +1,188 @@
 ---
 import Layout from '../components/Layout.astro';
+import ThemeToggle from '../components/ThemeToggle.astro';
+import PortfolioFooter from '../components/PortfolioFooter.astro';
 import '../styles.css';
 
-const details = [
-  { label: 'Name', value: 'Cyril Egbobiani' },
-  { label: 'Role', value: 'Software Engineer & Designer' },
-  { label: 'Location', value: 'Lagos, Nigeria' },
-  { label: 'Email', value: 'egbobianicyril@gmail.com' },
-];
-
-const skills = ['React', 'TypeScript', 'UI Design', 'Product Design', 'Motion'];
-
-const socials = [
-  { label: 'GitHub', href: 'https://github.com' },
-  { label: 'LinkedIn', href: 'https://www.linkedin.com' },
-  { label: 'X', href: 'https://x.com' },
-  { label: 'Email', href: 'mailto:egbobianicyril@gmail.com' },
+const interests = [
+  {
+    title: 'Photography',
+    subtitle: 'Street & portraiture',
+    image: 'https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&w=600&q=80',
+    tag: 'Visuals',
+  },
+  {
+    title: 'Football',
+    subtitle: 'Tactics & matchdays',
+    image: 'https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&w=600&q=80',
+    tag: 'Sport',
+  },
+  {
+    title: 'Cooking',
+    subtitle: 'Culinary experiments',
+    image: 'https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80',
+    tag: 'Craft',
+  },
+  {
+    title: 'Cars',
+    subtitle: 'Automotive design',
+    image: 'https://images.unsplash.com/photo-1617814076367-b759c7d7e738?auto=format&fit=crop&w=600&q=80',
+    tag: 'Engineering',
+  },
 ];
 ---
 
-<Layout title="About | Cyril Egbobiani">
-  <main class="bg-[var(--surface)] px-4 pt-16 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
-    <div class="mx-auto w-full max-w-[560px]">
-      <!-- Back link -->
-      <a href="/" class="back-link" aria-label="Back to home">
-        <span aria-hidden="true">←</span>&nbsp;Home
-      </a>
+<Layout title="Profile | Cyril Egbobiani">
+  <main class="min-h-screen bg-[var(--surface)] px-4 pt-8 sm:pt-12 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
+    <div class="mx-auto flex w-full max-w-[660px] flex-col gap-8">
 
-      <!-- Profile header -->
-      <header class="mt-16 flex flex-col gap-6">
-        <img
-          src="/images/avatar.png"
-          alt="Cyril Egbobiani"
-          class="profile-avatar"
-          width="72"
-          height="72"
-        />
-        <div class="flex flex-col gap-1.5">
-          <h1 class="m-0 text-2xl font-medium tracking-tight" style="color: var(--text-primary)">
-            Cyril Egbobiani
-          </h1>
-          <p class="m-0 text-sm" style="color: var(--text-muted)">
-            Software Engineer &amp; Designer
-          </p>
-        </div>
-      </header>
-
-      <!-- Bio -->
-      <section class="mt-8 flex flex-col gap-4 text-[15px] leading-7" style="color: var(--text-secondary)">
-        <p class="m-0">
-          I'm a software engineer and designer who loves building clean, thoughtful
-          digital products. I focus on the intersection of engineering and design
-          to craft experiences that feel polished and performant.
-        </p>
-        <p class="m-0" style="color: var(--text-muted)">
-          Currently based in Lagos, working across the web, product, and design.
-        </p>
-      </section>
-
-      <!-- Divider -->
-      <hr class="mt-12 mb-10 border-0 border-t border-[var(--border-subtle)]" />
-
-      <!-- About details -->
-      <section class="flex flex-col">
-        <p class="m-0 mb-4 text-xs uppercase tracking-[0.18em]" style="color: var(--text-muted)">
-          About
-        </p>
-        <div class="flex flex-col">
-          {details.map((item) => (
-            <div
-              class="flex items-baseline justify-between gap-6 border-b border-[var(--border-subtle)] py-3.5 last:border-b-0"
-            >
-              <span class="shrink-0 text-sm" style="color: var(--text-muted)">{item.label}</span>
-              <span
-                class={`text-right text-sm ${item.label === 'Email' ? 'font-medium' : ''}`}
-                style={item.label === 'Email'
-                  ? 'color: var(--rose)'
-                  : 'color: var(--text-primary)'}
-              >
-                {item.value}
-              </span>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <!-- Skills -->
-      <section class="mt-12 flex flex-col">
-        <p class="m-0 mb-3 text-xs uppercase tracking-[0.18em]" style="color: var(--text-muted)">
-          Skills
-        </p>
-        <p class="m-0 text-sm leading-6" style="color: var(--text-secondary)">
-          {skills.join(' · ')}
-        </p>
-      </section>
-
-      <!-- Socials -->
-      <section class="mt-12 flex flex-col">
-        <p class="m-0 mb-3 text-xs uppercase tracking-[0.18em]" style="color: var(--text-muted)">
-          Elsewhere
-        </p>
-        <div class="flex flex-col">
-          {socials.map((social) => (
-            <a
-              href={social.href}
-              class="social-link border-b border-[var(--border-subtle)] py-3 text-sm first:pt-0"
-              style="color: var(--text-secondary)"
-            >
-              {social.label}
-            </a>
-          ))}
-        </div>
-      </section>
-
-      <!-- Footer -->
-      <footer class="mt-16">
-        <a href="#" class="back-top" aria-label="Back to top">
-          Back to top <span aria-hidden="true">↑</span>
+      <!-- Top Row: Back Button (Left) & Theme Toggle (Right) -->
+      <nav class="flex w-full items-center justify-between" aria-label="Profile navigation">
+        <a
+          href="/"
+          class="profile-standalone-back-btn group flex size-9 items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] text-[var(--text-muted)] transition-all duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          aria-label="Back to home"
+        >
+          <svg class="size-4 opacity-70 transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+          </svg>
         </a>
-      </footer>
+
+        <ThemeToggle />
+      </nav>
+
+      <!-- Main Profile Column with Staggered Motion Entrance -->
+      <div class="t-stagger flex flex-col gap-14">
+
+        <!-- 1. Hero Framed Photo Banner -->
+        <section class="t-stagger-line t-stagger-line--1 group relative overflow-hidden rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] transition-all duration-300 ease-[var(--ease-smooth-out)]">
+          <img
+            src="https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=1200&q=80"
+            alt="Cyril Egbobiani"
+            class="h-[280px] w-full object-cover object-center transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02] sm:h-[340px]"
+            loading="eager"
+          />
+          <div class="absolute inset-0 bg-gradient-to-t from-[rgba(13,13,13,0.7)] via-transparent to-transparent opacity-80"></div>
+          <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-[var(--text-muted)]">
+            <span class="font-mono text-[11px]">CYRIL EGBOBIANI</span>
+            <span class="font-mono text-[11px]">LAGOS, NG 🇳🇬</span>
+          </div>
+        </section>
+
+        <!-- 2. Editorial Narrative Statement -->
+        <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-5">
+          <h1 class="m-0 font-display text-2xl sm:text-3xl font-normal leading-[1.25] tracking-[-0.04em] text-[var(--text-primary)]">
+            Design curiosity came first. Code gave it a way to become <span class="italic font-normal text-[var(--text-primary)]">more</span> useful.
+          </h1>
+          <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+            I've always liked making things, pulling them apart, and understanding why they work. That started with sketching, physical objects, and small experiments. Software made that curiosity feel bigger because the idea, interaction, and final experience can all live in the same medium.
+          </p>
+        </section>
+
+        <!-- Hair-Line Separator (Benji.org Cadence) -->
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+
+        <!-- 3. Interests Section (Unified Design System Skin) -->
+        <section class="t-stagger-line t-stagger-line--3 flex flex-col gap-6">
+          <div class="flex items-center justify-between">
+            <h2 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+              Beyond code & design
+            </h2>
+            <span class="text-xs text-[var(--text-faint)] font-mono">04 INTERESTS</span>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {interests.map((item) => (
+              <div class="interest-card group relative flex h-[110px] w-full overflow-hidden rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]">
+                
+                <!-- Left Details -->
+                <div class="z-10 flex flex-col justify-between pr-4">
+                  <span class="font-mono text-[10px] uppercase tracking-normal text-[var(--text-muted)]">
+                    {item.tag}
+                  </span>
+                  <div class="flex flex-col">
+                    <span class="font-display text-lg font-normal tracking-[-0.03em] text-[var(--text-primary)] transition-colors duration-200 group-hover:text-white">
+                      {item.title}
+                    </span>
+                    <span class="text-xs text-[var(--text-muted)] font-sans">
+                      {item.subtitle}
+                    </span>
+                  </div>
+                </div>
+
+                <!-- Right Thumbnail Image (Masked Split View) -->
+                <div class="absolute right-0 top-0 bottom-0 h-full w-[42%] overflow-hidden">
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    class="h-full w-full object-cover object-center grayscale contrast-[1.05] opacity-60 transition-all duration-500 ease-[var(--ease-smooth-out)] group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <!-- Gradient Blend to Surface -->
+                  <div class="absolute inset-0 bg-gradient-to-r from-[var(--surface-subtle)] via-transparent to-transparent group-hover:from-[var(--surface-interactive)]"></div>
+                </div>
+
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <!-- Hair-Line Separator -->
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+
+        <!-- 4. Contact Section (Harmonized with Home Page Contact) -->
+        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4">
+          <h2 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+            Contact
+          </h2>
+          <div class="flex flex-col gap-3 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+            <p class="m-0">
+              I’m basically everywhere but primarily, I’m on{' '}
+              <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--text-primary)] transition hover:opacity-80">X</a>,{' '}
+              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--text-primary)] transition hover:opacity-80">LinkedIn</a> and{' '}
+              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--text-primary)] transition hover:opacity-80">GitHub</a>.
+            </p>
+            <p class="m-0 flex items-center gap-1.5">
+              <span>You can reach me out on</span>
+              <a href="mailto:egbobianicyril@gmail.com" class="font-medium text-[var(--rose)] transition hover:opacity-85">
+                egbobianicyril@gmail.com
+              </a>
+            </p>
+          </div>
+        </section>
+
+        <!-- 5. Footer Stamp -->
+        <PortfolioFooter />
+
+      </div>
+
     </div>
   </main>
 </Layout>
 
 <style>
-  .back-link {
-    display: inline-flex;
-    align-items: center;
-    width: fit-content;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color var(--duration-fast) var(--ease-smooth-out);
+  /* Kinetic Micro-Interactions matching Home Design Language */
+  .profile-standalone-back-btn:active {
+    transform: scale(0.95);
   }
 
-  .back-link:hover {
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .interest-card:hover {
+      transform: translateY(-2px) scale(1.015);
+    }
   }
 
-  .profile-avatar {
-    width: 72px;
-    height: 72px;
-    border-radius: 9999px;
-    object-fit: cover;
-    border: 1px solid var(--border-subtle);
-  }
-
-  .social-link {
-    text-decoration: none;
-    transition: color var(--duration-fast) var(--ease-smooth-out);
-  }
-
-  .social-link:hover {
-    color: var(--text-primary);
-  }
-
-  .back-top {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    transition: color var(--duration-fast) var(--ease-smooth-out);
-  }
-
-  .back-top:hover {
-    color: var(--text-primary);
+  .interest-card:active {
+    transform: scale(0.97);
   }
 </style>
+
+<script>
+  // Stagger reveal animation matching Home intro
+  const block = document.querySelector<HTMLElement>('.t-stagger');
+  if (block) {
+    requestAnimationFrame(() => {
+      block.classList.add('is-shown');
+    });
+  }
+</script>

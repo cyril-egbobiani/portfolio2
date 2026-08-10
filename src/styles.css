@@ -1,4 +1,4 @@
-﻿@import "tailwindcss";
+@import "tailwindcss";
 @config "../tailwind.config.js";
 
 /* ---------------------------------------------------------------------------
@@ -12,9 +12,9 @@
 :root {
   color-scheme: light;
 
-  /* ── Motion tokens (transitions.dev shared scale) ─────────────
-     Centralized duration/easing/distance/scale/blur scale so all
-     transitions stay consistent and tunable in one place. */
+  /* ── Motion tokens ───────────────────────────────────────────
+     Premium easing: cubic-bezier(0.16, 1, 0.3, 1) — the benji.org
+     kinetic signature. Fast attack, slow settle. */
   --duration-stagger: 40ms;
   --duration-micro: 80ms;
   --duration-quick: 150ms;
@@ -22,7 +22,7 @@
   --duration-medium: 350ms;
   --duration-slow: 400ms;
   --duration-very-slow: 500ms;
-  --ease-smooth-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-smooth-out: cubic-bezier(0.16, 1, 0.3, 1);
   --ease-in-out: ease-in-out;
   --ease-out: ease-out;
   --ease-linear: linear;
@@ -41,108 +41,108 @@
   --blur-medium: 3px;
   --blur-large: 8px;
 
-  /* Texts reveal (transitions.dev) */
+  /* Texts reveal */
   --stagger-dur: 500ms;
   --stagger-distance: 12px;
   --stagger-stagger: 40ms;
   --stagger-blur: 3px;
-  --stagger-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --stagger-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* Surfaces – layered backgrounds */
+  /* Surfaces – light */
   --surface: #ffffff;
-  --surface-subtle: #f6f6f7;
-  --surface-interactive: #ffffff;
+  --surface-subtle: #f5f5f5;
+  --surface-interactive: #fafafa;
   --surface-raised: #ffffff;
-  --surface-inverse: #171717;
+  --surface-inverse: #0d0d0d;
 
   /* Text hierarchy */
-  --text-primary: #171717;
-  --text-secondary: #4f4f4f;
-  --text-muted: #919191;
-  --text-faint: #9b9ba1;
+  --text-primary: #111111;
+  --text-secondary: #555555;
+  --text-muted: #888888;
+  --text-faint: #aaaaaa;
   --text-on-accent: #ffffff;
   --text-on-inverse: #f5f5f5;
 
   /* Borders */
-  --border-subtle: #f6f7f7;
-  --border-default: #d4d4d8;
-  --border-strong: #a1a1aa;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-default: rgba(0, 0, 0, 0.12);
+  --border-strong: rgba(0, 0, 0, 0.22);
 
-  /* Accents */
-  --accent: #2563eb;
-  --accent-hover: #1d4ed8;
-  --accent-soft: #eff6ff;
+  /* Accents — neutral white for dark, subtle for light */
+  --accent: #111111;
+  --accent-hover: #333333;
+  --accent-soft: rgba(0, 0, 0, 0.04);
   --rose: #f43f5e;
   --rose-hover: #e11d48;
 
-  /* Logo chip (Figma Frame 1000002566) */
-  --border-logo: #e8e8e8;
-  --shadow-logo: 0 4px 4px rgba(0, 0, 0, 0.05), 0 1.5px 0 rgba(0, 0, 0, 0.2);
+  /* Logo chip */
+  --border-logo: rgba(0, 0, 0, 0.08);
+  --shadow-logo: none;
 
-  /* Feedback & misc */
+  /* Feedback */
   --success: #16a34a;
   --warning: #d97706;
   --danger: #dc2626;
 
-  /* Shadows */
-  --shadow-card:
-    0 1px 2px rgba(23, 23, 23, 0.04), 0 8px 24px rgba(23, 23, 23, 0.06);
-  --shadow-card-hover:
-    0 2px 4px rgba(23, 23, 23, 0.06), 0 16px 40px rgba(23, 23, 23, 0.12);
+  /* Shadows — minimal, no heavy drop shadows */
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.06);
 
   /* Typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", "Georgia", serif;
+  --font-sans: "Host Grotesk", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Host Grotesk", "Inter", sans-serif;
 }
 
+/* ═══════════════════════════════════════════════════════════════
+   DARK THEME — #0D0D0D Pure Neutral Canvas
+   Zero blue tints. Zero AI-generic dark mode. Pure grayscale.
+   ═══════════════════════════════════════════════════════════════ */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Surfaces */
-  --surface: #000000;
-  --surface-subtle: #090908;
-  --surface-interactive: #0c0c0c;
-  --surface-raised: #17171a;
+  /* Canvas: #0D0D0D — pure matte black, not blue, not gray */
+  --surface: #0d0d0d;
+  --surface-subtle: #161616;
+  --surface-interactive: #1a1a1a;
+  --surface-raised: #161616;
   --surface-inverse: #f5f5f5;
 
-  /* Text hierarchy */
-  --text-primary: #f5f5f5;
-  --text-secondary: #b0b0b0;
-  --text-muted: #6e6e6e;
-  --text-faint: #6e6e73;
+  /* Text: Pure white headings (#FFFFFF), neutral silver body (#999) */
+  --text-primary: #ffffff;
+  --text-secondary: #999999;
+  --text-muted: #666666;
+  --text-faint: #444444;
   --text-on-accent: #ffffff;
-  --text-on-inverse: #171717;
+  --text-on-inverse: #0d0d0d;
 
-  /* Borders */
-  --border-subtle: #090808;
-  --border-default: #2e2e33;
-  --border-strong: #3f3f46;
+  /* Borders: Hair-line rgba white, nearly invisible */
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
 
-  /* Accents */
-  --accent: #3b82f6;
-  --accent-hover: #60a5fa;
-  --accent-soft: rgba(59, 130, 246, 0.14);
+  /* Accents — pure white in dark mode */
+  --accent: #ffffff;
+  --accent-hover: #cccccc;
+  --accent-soft: rgba(255, 255, 255, 0.06);
   --rose: #f43f5e;
   --rose-hover: #fda4af;
 
-  /* Logo chip (Figma Frame 1000002566) */
-  --border-logo: #171717;
-  --shadow-logo:
-    0 4px 4px rgba(255, 255, 255, 0.05), 0 1.5px 0 rgba(255, 255, 255, 0.2);
+  /* Logo chip */
+  --border-logo: rgba(255, 255, 255, 0.06);
+  --shadow-logo: none;
 
-  /* Feedback & misc */
+  /* Feedback */
   --success: #4ade80;
   --warning: #fbbf24;
   --danger: #f87171;
 
-  /* Shadows */
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.4), 0 8px 24px rgba(0, 0, 0, 0.35);
-  --shadow-card-hover:
-    0 2px 4px rgba(0, 0, 0, 0.5), 0 16px 40px rgba(0, 0, 0, 0.5);
+  /* NO drop shadows — flat surfaces only */
+  --shadow-card: none;
+  --shadow-card-hover: none;
 
   /* Typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", "Georgia", serif;
+  --font-sans: "Host Grotesk", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Host Grotesk", "Inter", sans-serif;
 }
 
 /* ---------------------------------------------------------------------------
@@ -152,7 +152,7 @@
 @layer base {
   :root {
     font-family: var(--font-sans);
-    font-weight: 500;
+    font-weight: 400;
     line-height: 1.6;
     color: var(--text-primary);
     background: var(--surface);
@@ -183,7 +183,7 @@
     min-height: 100vh;
     background: var(--surface);
     color: var(--text-primary);
-    font-weight: 500;
+    font-weight: 400;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
@@ -207,15 +207,15 @@
   /* Smooth transition when switching themes */
   html[data-theme] {
     transition:
-      background-color 200ms ease,
-      color 200ms ease;
+      background-color var(--duration-medium) var(--ease-smooth-out),
+      color var(--duration-medium) var(--ease-smooth-out);
   }
 
   body,
   html[data-theme] body {
     transition:
-      background-color 200ms ease,
-      color 200ms ease;
+      background-color var(--duration-medium) var(--ease-smooth-out),
+      color var(--duration-medium) var(--ease-smooth-out);
   }
 }
 
@@ -239,6 +239,7 @@
     letter-spacing: 0.24em;
   }
 
+  /* Host Grotesk typography: weight 400, tight tracking */
   h1,
   h2,
   h3,
@@ -246,8 +247,8 @@
   h5,
   h6 {
     font-family: var(--font-display);
-    font-weight: 500;
-    letter-spacing: -0.01em;
+    font-weight: 400;
+    letter-spacing: -0.04em;
   }
 
   .lead {
@@ -255,14 +256,18 @@
     color: var(--text-secondary);
   }
 
+  /* Button: premium easing, NO ease-in-out */
   .button {
-    @apply inline-flex items-center justify-center rounded-full px-6 py-4 font-semibold transition duration-200 ease-in-out;
+    @apply inline-flex items-center justify-center px-6 py-4 font-semibold;
+    border-radius: 6px;
     background: var(--accent);
     color: var(--text-on-accent);
+    transition: all var(--duration-medium) var(--ease-smooth-out);
   }
 
   .button:hover {
     background: var(--accent-hover);
+    transform: translateY(-2px) scale(1.015);
   }
 
   .section {
@@ -278,32 +283,34 @@
   }
 
   .skill-list li {
-    @apply rounded-full px-4 py-2 text-sm;
+    @apply px-4 py-2 text-sm;
+    border-radius: 6px;
     background: var(--surface-subtle);
     color: var(--text-secondary);
   }
 
+  /* Card: sharp 6px radius, hair-line border, NO drop shadows */
   .card {
-    @apply rounded-[1.25rem] border transition duration-200 ease-in-out;
+    border-radius: 6px;
+    border: 1px solid var(--border-subtle);
     background: var(--surface-raised);
-    border-color: var(--border-subtle);
-    box-shadow: var(--shadow-card);
+    transition: all var(--duration-medium) var(--ease-smooth-out);
   }
 
   .card:hover {
-    @apply translate-y-[-4px];
+    transform: translateY(-3px) scale(1.015);
     border-color: var(--border-default);
-    box-shadow: var(--shadow-card-hover);
   }
 
   .card-link {
     @apply font-semibold no-underline;
-    color: var(--accent);
+    color: var(--text-primary);
+    transition: color var(--duration-fast) var(--ease-smooth-out);
   }
 
   .card-link:hover {
     @apply underline;
-    color: var(--accent-hover);
+    color: var(--text-secondary);
   }
 
   /* Theme toggle button — inline within the nav bar */
@@ -315,19 +322,18 @@
     width: 36px;
     height: 36px;
     padding: 0;
-    border: none;
-    border-radius: 9999px;
-    background: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    background: transparent;
     color: var(--text-muted);
     cursor: pointer;
-    transition:
-      color var(--duration-fast) var(--ease-smooth-out),
-      background-color var(--duration-fast) var(--ease-smooth-out);
+    transition: all var(--duration-fast) var(--ease-smooth-out);
   }
 
   .theme-toggle:hover {
     color: var(--text-primary);
-    background: var(--surface-interactive);
+    border-color: var(--border-default);
+    transform: translateY(-2px);
   }
 
   /* Smaller icons inside the toggle */
@@ -338,7 +344,7 @@
 
   /* Quick links — styled by the scoped <style> in QuickLinks.astro */
 
-  /* Theme toggle icon swap (transitions.dev "icon swap") */
+  /* Theme toggle icon swap */
   .theme-toggle__stage {
     position: relative;
     display: inline-flex;
@@ -354,8 +360,8 @@
     width: 16px;
     height: 16px;
     transition:
-      transform var(--duration-medium) var(--ease-smooth-out),
-      opacity var(--duration-medium) var(--ease-smooth-out);
+      transform var(--duration-fast) var(--ease-smooth-out),
+      opacity var(--duration-fast) var(--ease-smooth-out);
     will-change: transform, opacity;
   }
 
@@ -390,7 +396,7 @@
     opacity: 1;
   }
 
-  /* Tab bar used in Projects section — sliding pill (transitions.dev "tabs sliding") */
+  /* Tab bar — sliding pill */
   .tabs-bar {
     position: relative;
     display: inline-flex;
@@ -398,8 +404,9 @@
     height: 33px;
     gap: 2px;
     padding: 2px;
-    border-radius: 9999px;
+    border-radius: 6px;
     background: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
   }
 
   .tab {
@@ -411,7 +418,7 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    border-radius: 9999px;
+    border-radius: 4px;
     z-index: 1;
     transition: color var(--duration-fast) var(--ease-smooth-out);
   }
@@ -421,8 +428,7 @@
     color: var(--text-primary);
   }
 
-  /* The sliding pill: width + transform written inline by JS.
-     Uses a snappy cubic-bezier so the pill glides smoothly between tabs. */
+  /* Sliding pill — sharp 4px radius, flat border, no shadow */
   .tabs-pill {
     position: absolute;
     top: 2px;
@@ -431,18 +437,17 @@
     width: 0;
     background: var(--surface-interactive);
     border: 1px solid var(--border-subtle);
-    border-radius: 9999px;
-    box-shadow: var(--shadow-card);
+    border-radius: 4px;
     transform: translateX(0);
     transition:
-      transform 320ms var(--ease-smooth-out),
-      width 320ms var(--ease-smooth-out);
+      transform var(--duration-fast) var(--ease-smooth-out),
+      width var(--duration-fast) var(--ease-smooth-out);
     will-change: transform, width;
     z-index: 0;
     pointer-events: none;
   }
 
-  /* Texts reveal (transitions.dev "texts reveal") — staggered blurred rise */
+  /* Texts reveal — staggered blurred rise */
   .t-stagger {
     display: flex;
     flex-direction: column;
@@ -464,9 +469,11 @@
   .t-stagger-line--2 {
     transition-delay: var(--stagger-stagger);
   }
+
   .t-stagger-line--3 {
     transition-delay: calc(var(--stagger-stagger) * 2);
   }
+
   .t-stagger-line--4 {
     transition-delay: calc(var(--stagger-stagger) * 3);
   }
@@ -482,15 +489,13 @@
     transform: translateY(0);
     filter: blur(0);
     transition:
-      opacity 200ms ease,
+      opacity var(--duration-quick) var(--ease-smooth-out),
       transform 0s linear,
       filter 0s linear;
     transition-delay: 0s;
   }
 
-  /* Tab panel transitions — leave (fade/shrink) then enter (rise/blur).
-     Animations only run when JS adds .is-leaving / .is-entering; panels
-     do NOT animate on plain visibility toggles. */
+  /* Tab panel transitions */
   [data-tab-panel].is-leaving {
     animation: tabLeave var(--duration-fast) var(--ease-smooth-out) forwards;
   }
@@ -505,6 +510,7 @@
       transform: none;
       filter: blur(0);
     }
+
     to {
       opacity: 0;
       transform: translateY(calc(var(--distance-micro) * -1));
@@ -518,6 +524,7 @@
       transform: translateY(var(--distance-base));
       filter: blur(var(--blur-small));
     }
+
     to {
       opacity: 1;
       transform: none;
@@ -525,15 +532,16 @@
     }
   }
 
-  /* Smooth color transitions when switching themes */
+  /* Theme color transitions */
   [data-theme] * {
     transition:
-      background-color 200ms ease,
-      color 200ms ease,
-      border-color 200ms ease;
+      background-color var(--duration-fast) var(--ease-smooth-out),
+      color var(--duration-fast) var(--ease-smooth-out),
+      border-color var(--duration-fast) var(--ease-smooth-out);
   }
 
   @media (prefers-reduced-motion: reduce) {
+
     .tabs-pill,
     .tab,
     [data-tab-panel],
@@ -541,6 +549,7 @@
       transition: none !important;
       animation: none !important;
     }
+
     .t-stagger-line {
       opacity: 1;
       transform: none;
