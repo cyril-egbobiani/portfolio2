@@ -15,67 +15,47 @@ const socialLinks = [
 <section class="flex flex-col gap-6">
   <div class="flex w-full flex-col gap-8">
 
-    <!-- HEADER: Avatar + Time-aware greeting (benji.org / ana.sh pattern) -->
-    <header class="flex w-full items-start justify-between">
-      <img
-        class="size-[72px] sm:size-[88px] rounded-full object-cover"
-        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200&auto=format&fit=crop&q=80"
-        alt="Cyril Egbobiani"
-        width="72"
-        height="72"
-        loading="eager"
-      />
-
-      <!-- Time-aware greeting: font-mono turns it into a dev-signature micro-detail -->
-      <p
-        id="greeting-label"
-        class="self-end font-mono text-xs sm:text-sm text-[var(--text-muted)] tracking-wide"
-        aria-live="polite"
+    <!-- HEADER: Avatar with 3D Tilt & Cursor Glare -->
+    <header class="flex w-full items-center justify-between">
+      <div
+        class="avatar-tilt-card group relative size-[72px] sm:size-[88px] cursor-pointer overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-subtle)] shadow-sm"
+        data-avatar-tilt
       >
-        Good morning.
-      </p>
+        <img
+          class="size-full rounded-3xl object-cover object-center scale-[1.08] transition-transform duration-300 group-hover:scale-[1.14]"
+          src="/images/cyril.e.png"
+          alt="Cyril Egbobiani"
+          width="88"
+          height="88"
+          loading="eager"
+        />
+        <!-- Spotlight Glare Overlay -->
+        <div class="avatar-tilt-glare absolute inset-0 pointer-events-none rounded-3xl" data-avatar-glare></div>
+      </div>
     </header>
 
     <!-- MAIN CONTENT: Staggered reveal, proper typographic hierarchy -->
     <div class="t-stagger flex flex-col gap-5">
 
-      <!--
-        PASS 3 CHANGE: Name elevated to h1 — first scannable identity anchor.
-        BEFORE: Buried mid-sentence in body prose.
-        AFTER: Standalone h1, tracking-tight, --text-primary.
-        PRINCIPLE: Typographic hierarchy — visual weight must encode information priority.
-      -->
-      <h1 class="t-stagger-line t-stagger-line--1 m-0 text-xl sm:text-2xl font-semibold leading-none tracking-[-0.015em] text-[var(--text-primary)]">
+      <!-- Name Header (Inter Display: benji.org / rauno.me editorial signature) -->
+      <h1 class="t-stagger-line t-stagger-line--1 m-0 text-2xl sm:text-3xl font-semibold leading-tight tracking-[-0.04em] text-[var(--text-primary)]">
         Cyril Egbobiani
       </h1>
 
-      <!--
-        PASS 3 CHANGE: Role + location as a distinct second tier.
-        BEFORE: Merged into body prose ("I'm Cyril Egbobiani, a Software Engineer…")
-        AFTER: Compact, factual eyebrow — benji.org's "Born in London" density.
-        PRINCIPLE: Short, factual metadata reads faster than embedded prose.
-      -->
+      <!-- Role + Location -->
       <p class="t-stagger-line t-stagger-line--2 m-0 text-sm sm:text-base leading-snug text-[var(--text-muted)]">
         Software Engineer & Designer · Lagos, Nigeria&nbsp;🇳🇬
       </p>
 
-      <!-- Hair-line separator — rgba(255,255,255,0.06), invisible from distance -->
+      <!-- Hair-line separator -->
       <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
-      <!--
-        PASS 3 CHANGE: Grammar corrected ("in him" → removed), copy tightened.
-        BEFORE: "every creative thought in him to better this world."
-        AFTER: First-person, precise, no filler.
-        PRINCIPLE: Copy errors are trust-signal failures on credibility-first profiles.
-      -->
+      <!-- Bio Copy -->
       <p class="t-stagger-line t-stagger-line--3 m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
         My drive is in imagining and executing every creative idea to make things better. Design and code are two sides of the same coin — and balancing both has been an extraordinary journey.
       </p>
 
-      <!--
-        PASS 3 CHANGE: Icon + label instead of icon-only pills.
-        Sharp 4px radius, hair-line border, premium easing hover lift.
-      -->
+      <!-- Social Links -->
       <nav class="pt-1" aria-label="Social links">
         <div class="flex flex-wrap gap-2">
           {socialLinks.map((link) => (
@@ -95,8 +75,40 @@ const socialLinks = [
   </div>
 </section>
 
+<style>
+  /* 3D Tilt Card & Glare Styles */
+  .avatar-tilt-card {
+    perspective: 600px;
+    transform-style: preserve-3d;
+    will-change: transform;
+    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+    isolation: isolate;
+    -webkit-mask-image: -webkit-radial-gradient(white, black);
+  }
+
+  .avatar-tilt-card:hover {
+    border-color: var(--border-default);
+  }
+
+  .avatar-tilt-glare {
+    opacity: 0;
+    background: radial-gradient(
+      circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
+      rgba(255, 255, 255, 0.4) 0%,
+      rgba(255, 255, 255, 0.1) 45%,
+      transparent 70%
+    );
+    mix-blend-mode: overlay;
+    transition: opacity 250ms ease;
+  }
+
+  .avatar-tilt-card:hover .avatar-tilt-glare {
+    opacity: 1;
+  }
+</style>
+
 <script>
-  // Stagger reveal — existing transitions.dev pattern
+  // Stagger reveal
   const block = document.querySelector<HTMLElement>('.t-stagger');
   if (block) {
     requestAnimationFrame(() => {
@@ -104,15 +116,26 @@ const socialLinks = [
     });
   }
 
-  // Time-aware greeting — contextual micro-credibility signal (ana.sh / benji.org pattern)
-  const greetingEl = document.getElementById('greeting-label');
-  if (greetingEl) {
-    const hour = new Date().getHours();
-    const key =
-      hour >= 5 && hour < 12 ? 'Good morning.'
-      : hour >= 12 && hour < 17 ? 'Good afternoon.'
-      : hour >= 17 && hour < 21 ? 'Good evening.'
-      : 'Still up.';
-    greetingEl.textContent = key;
+  // 3D Card Hover Tilt + Glare Effect (transitions-dev pattern)
+  const avatarCard = document.querySelector<HTMLElement>('[data-avatar-tilt]');
+  if (avatarCard) {
+    const maxTilt = 18; // Max tilt angle in degrees
+
+    avatarCard.addEventListener('mousemove', (e) => {
+      const rect = avatarCard.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top) / rect.height;
+
+      const tiltX = (y - 0.5) * -maxTilt;
+      const tiltY = (x - 0.5) * maxTilt;
+
+      avatarCard.style.transform = `perspective(600px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(1.06, 1.06, 1.06)`;
+      avatarCard.style.setProperty('--mouse-x', `${(x * 100).toFixed(1)}%`);
+      avatarCard.style.setProperty('--mouse-y', `${(y * 100).toFixed(1)}%`);
+    });
+
+    avatarCard.addEventListener('mouseleave', () => {
+      avatarCard.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+    });
   }
 </script>

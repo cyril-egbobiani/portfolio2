@@ -1,0 +1,358 @@
+---
+import Layout from '../../components/Layout.astro';
+import ThemeToggle from '../../components/ThemeToggle.astro';
+import PortfolioFooter from '../../components/PortfolioFooter.astro';
+import '../../styles.css';
+
+export function getStaticPaths() {
+  const projects = [
+    {
+      slug: 'cybertron-ai',
+      title: 'Cybertron AI',
+      category: 'Builds',
+      year: '2025',
+      role: 'Lead Design Engineer',
+      stack: ['TypeScript', 'React', 'Node.js', 'Tailwind'],
+      description: 'Autonomous code intelligence studio & agent workflow engine.',
+      longDescription: 'Cybertron AI is an advanced agentic development environment designed for high-velocity software engineering. Built to bridge human intent with autonomous code generation, it features real-time canvas visualization, instant terminal command execution, and deep AST refactoring capabilities.',
+      highlights: [
+        'Built custom agent orchestration engine using TypeScript and Node.js.',
+        'Designed high-contrast editorial UI inspired by benji.org and ana.sh.',
+        'Implemented real-time WebSocket telemetry and subagent status streams.',
+        'Optimized canvas rendering performance achieving steady 60fps animations.',
+      ],
+      image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
+        'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'stelar-studio',
+      nextTitle: 'Stelar Studio',
+    },
+    {
+      slug: 'stelar-studio',
+      title: 'Stelar Studio',
+      category: 'Builds',
+      year: '2024',
+      role: 'WebGL & Frontend Developer',
+      stack: ['Astro', 'WebGL', 'Tailwind', 'Three.js'],
+      description: 'High-performance WebGL canvas animation & interactive physics engine.',
+      longDescription: 'Stelar Studio is an interactive WebGL canvas playground exploring fluid dynamics, particle simulations, and real-time GPU shaders for modern web applications.',
+      highlights: [
+        'Created custom GLSL fragment shaders for interactive noise and bloom.',
+        'Integrated spring physics for smooth cursor distortion effects.',
+        'Zero-dependency particle engine handling 50,000+ active particles.',
+      ],
+      image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'firstbank-mobile',
+      nextTitle: 'FirstBank Mobile',
+    },
+    {
+      slug: 'firstbank-mobile',
+      title: 'FirstBank Mobile',
+      category: 'Builds',
+      year: '2024',
+      role: 'Mobile Developer Intern',
+      stack: ['React Native', 'TypeScript', 'Design System'],
+      description: 'Fintech mobile banking application redesign & design system.',
+      longDescription: 'A comprehensive mobile banking experience refactor focused on biometric authentication security, instant fund transfers, and accessibility compliance for millions of active users.',
+      highlights: [
+        'Redesigned core account dashboard and transfer checkout flows.',
+        'Architected cross-platform React Native design system components.',
+        'Improved app cold start performance by 35%.',
+      ],
+      image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'nova-design-system',
+      nextTitle: 'Nova Design System',
+    },
+    {
+      slug: 'nova-design-system',
+      title: 'Nova Design System',
+      category: 'Designs',
+      year: '2025',
+      role: 'Principal UI/UX Designer',
+      stack: ['Figma', 'Tokens', 'UI/UX', 'Astro'],
+      description: 'Editorial token design system with dark mode priority & motion guidelines.',
+      longDescription: 'Nova is a production-ready design token architecture built for high-contrast dark interfaces. It establishes mathematical corner radiuses, semantic color tokens, and motion timings.',
+      highlights: [
+        'Created 100+ accessible Figma component primitives.',
+        'Implemented token pipeline transforming JSON design tokens to CSS variables.',
+        'Built motion token scale for 60fps micro-interactions.',
+      ],
+      image: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'pulse-analytics',
+      nextTitle: 'Pulse Analytics',
+    },
+    {
+      slug: 'pulse-analytics',
+      title: 'Pulse Analytics',
+      category: 'Designs',
+      year: '2024',
+      role: 'Product Designer',
+      stack: ['Product Design', 'Data Viz', 'Figma'],
+      description: 'Real-time telemetry dashboard for cloud infrastructure monitoring.',
+      longDescription: 'Pulse Analytics provides cloud operations teams with live infrastructure metrics, server latency graphs, and automated anomaly detection alerts.',
+      highlights: [
+        'Designed real-time canvas chart widgets for high-throughput metric streams.',
+        'Streamlined incident response user flows reducing mean-time-to-resolution.',
+      ],
+      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'shader-lab',
+      nextTitle: 'Shader Lab',
+    },
+    {
+      slug: 'shader-lab',
+      title: 'Shader Lab',
+      category: 'Playground',
+      year: '2025',
+      role: 'Creative Technologist',
+      stack: ['Three.js', 'GLSL', 'Shaders'],
+      description: 'Interactive GLSL raymarching fragments and post-processing filters.',
+      longDescription: 'An experimental shader laboratory featuring custom WebGL fragment shaders, raymarched signed distance functions (SDFs), and chromatic aberration post-processing filters.',
+      highlights: [
+        'Authored GLSL shaders for volumetric lighting and noise distortion.',
+        'Live code editor interface with instant hot-reloading GLSL canvas.',
+      ],
+      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'kinetic-type',
+      nextTitle: 'Kinetic Type',
+    },
+    {
+      slug: 'kinetic-type',
+      title: 'Kinetic Type',
+      category: 'Playground',
+      year: '2024',
+      role: 'Design Engineer',
+      stack: ['Canvas API', 'Physics', 'TypeScript'],
+      description: 'Variable font spring physics engine driven by cursor velocity.',
+      longDescription: 'A kinetic typography experiment exploring real-time text distortion, spring physics simulation, and cursor proximity forces.',
+      highlights: [
+        'Simulated spring physics on glyph control points in HTML5 Canvas.',
+        'Cursor velocity vector calculations for dynamic text deformation.',
+      ],
+      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+      gallery: [
+        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
+      ],
+      link: 'https://github.com',
+      nextSlug: 'cybertron-ai',
+      nextTitle: 'Cybertron AI',
+    },
+  ];
+
+  return projects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+---
+
+<Layout title={`${project.title} | Cyril Egbobiani`}>
+  <main class="min-h-screen bg-[var(--surface)] px-4 pt-8 sm:pt-12 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
+    <div class="mx-auto flex w-full max-w-[660px] flex-col gap-10">
+
+      <!-- Top Row: Back Button (Left) & Theme Toggle (Right) -->
+      <nav class="flex w-full items-center justify-between" aria-label="Project navigation">
+        <a
+          href="/#projects"
+          class="project-back-btn group flex size-9 items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] text-[var(--text-muted)] transition-all duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          aria-label="Back to work section"
+        >
+          <svg class="size-4 opacity-70 transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          </svg>
+        </a>
+
+        <ThemeToggle />
+      </nav>
+
+      <!-- Main Project Description Content with Staggered Entrance -->
+      <article class="t-stagger flex flex-col gap-10">
+
+        <!-- 1. Hero Framed Preview Banner (Border radius math: R_outer 16px - Padding 8px = R_inner 8px) -->
+        <header class="t-stagger-line t-stagger-line--1 group relative overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 transition-all duration-300 ease-[var(--ease-smooth-out)]">
+          <div class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[8px] bg-[var(--surface-interactive)]">
+            <img
+              src={project.image}
+              alt={project.title}
+              class="h-full w-full object-cover object-center contrast-[1.03] opacity-90 transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02]"
+              loading="eager"
+            />
+            <div class="absolute inset-0 bg-gradient-to-t from-[rgba(13,13,13,0.7)] via-transparent to-transparent opacity-60"></div>
+          </div>
+        </header>
+
+        <!-- 2. Project Title & Overview -->
+        <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-4">
+          <div class="flex items-center gap-3">
+            <span class="font-mono text-xs uppercase tracking-normal text-[var(--text-muted)]">
+              {project.category}
+            </span>
+            <span class="text-xs text-[var(--text-faint)] font-mono">•</span>
+            <span class="font-mono text-xs text-[var(--text-muted)]">
+              {project.year}
+            </span>
+          </div>
+
+          <h1 class="m-0 font-display text-2xl sm:text-4xl font-normal leading-[1.2] tracking-[-0.03em] text-[var(--text-primary)]">
+            {project.title}
+          </h1>
+
+          <p class="m-0 text-base sm:text-lg leading-relaxed text-[var(--text-secondary)]">
+            {project.description}
+          </p>
+        </section>
+
+        <!-- Hair-Line Separator -->
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+
+        <!-- 3. Metadata Table Grid (Role, Timeline, Stack, Action CTA) -->
+        <section class="t-stagger-line t-stagger-line--3 grid grid-cols-2 gap-4 rounded-[12px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:grid-cols-4 sm:p-5">
+          <div class="flex flex-col gap-1">
+            <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">ROLE</span>
+            <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.role}</span>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">TIMELINE</span>
+            <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.year}</span>
+          </div>
+
+          <div class="flex flex-col gap-1">
+            <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">STACK</span>
+            <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.stack.join(' · ')}</span>
+          </div>
+
+          <div class="flex flex-col gap-1 sm:items-end sm:justify-center">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-interactive)] px-3 py-1.5 font-mono text-xs text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:scale-[1.02]"
+            >
+              <span>Visit Project</span>
+              <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+              </svg>
+            </a>
+          </div>
+        </section>
+
+        <!-- 4. Deep-Dive Case Study Narrative -->
+        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-5 pt-2">
+          <h2 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+            Overview & Architecture
+          </h2>
+          <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+            {project.longDescription}
+          </p>
+
+          <div class="flex flex-col gap-3 pt-2">
+            <h3 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+              Key Highlights
+            </h3>
+            <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
+              {project.highlights.map((item, idx) => (
+                <li class="flex items-start gap-3 text-sm text-[var(--text-secondary)]">
+                  <span class="font-mono text-xs text-[var(--text-muted)] pt-0.5">0{idx + 1}</span>
+                  <span class="leading-relaxed">{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </section>
+
+        <!-- 5. Visual Gallery (Formula: R_outer 16px - Padding 8px = R_inner 8px) -->
+        {project.gallery && project.gallery.length > 0 && (
+          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
+            <h2 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+              Visual Gallery
+            </h2>
+            <div class="flex flex-col gap-4">
+              {project.gallery.map((imgUrl) => (
+                <div class="overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2">
+                  <div class="aspect-[16/9] w-full overflow-hidden rounded-[8px] bg-[var(--surface-interactive)]">
+                    <img
+                      src={imgUrl}
+                      alt={`${project.title} preview`}
+                      class="h-full w-full object-cover object-center opacity-90 transition-transform duration-500 hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        <!-- Hair-Line Separator -->
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+
+        <!-- 6. Next Project Navigation Link -->
+        <footer class="t-stagger-line t-stagger-line--4 flex items-center justify-between pt-2">
+          <a
+            href={`/projects/${project.nextSlug}`}
+            class="group inline-flex items-center gap-2 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-4 py-2.5 no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]"
+          >
+            <div class="flex flex-col">
+              <span class="font-mono text-[10px] uppercase tracking-normal text-[var(--text-muted)]">NEXT PROJECT</span>
+              <span class="font-display text-sm font-normal text-[var(--text-primary)] group-hover:text-white">
+                {project.nextTitle}
+              </span>
+            </div>
+            <svg class="size-4 text-[var(--text-muted)] transition-transform duration-200 group-hover:translate-x-1 group-hover:text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            </svg>
+          </a>
+
+          <a href="/#projects" class="font-mono text-xs text-[var(--text-muted)] hover:text-[var(--text-primary)]">
+            Back to all projects
+          </a>
+        </footer>
+
+      </article>
+
+      <PortfolioFooter />
+
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .project-back-btn:active {
+    transform: scale(0.95);
+  }
+</style>
+
+<script>
+  // Stagger reveal animation matching Home intro
+  const block = document.querySelector<HTMLElement>('.t-stagger');
+  if (block) {
+    requestAnimationFrame(() => {
+      block.classList.add('is-shown');
+    });
+  }
+</script>

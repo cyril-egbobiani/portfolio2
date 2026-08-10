@@ -1,7 +1,6 @@
 ---
-// Quick links — sticky glass top navigation with a scroll-spy that
-// highlights the active section via a sliding indicator.
-// The profile "About" link routes to /profile.
+// Quick links — floating glass top navigation dock (navbar.gallery inspired)
+// Highlights the active section via a sliding pill indicator and embeds an inline ThemeToggle.
 import ThemeToggle from './ThemeToggle.astro';
 
 const links = [
@@ -13,62 +12,88 @@ const links = [
 ---
 
 <nav class="quick-links" aria-label="Quick links">
-  <a class="quick-links__brand" href="/" aria-label="Home">
-  </a>
+  <div class="quick-links__dock">
+    
+    <!-- Home Brand Micro Icon -->
 
-  <div class="quick-links__menu">
-    <span class="quick-links__pill" aria-hidden="true"></span>
-    {links.map((link) => (
-      <a
-        class="quick-links__item"
-        href={link.href}
-        data-quick-link
-        data-scroll-link
-      >
-        {link.label}
-      </a>
-    ))}
+    <!-- Nav Items Menu -->
+    <div class="quick-links__menu">
+      <span class="quick-links__pill" aria-hidden="true"></span>
+      {links.map((link) => (
+        <a
+          class="quick-links__item"
+          href={link.href}
+          data-quick-link
+          data-scroll-link
+        >
+          {link.label}
+        </a>
+      ))}
+    </div>
+
+    <div class="quick-links__divider" role="separator"></div>
+
+    <!-- Integrated Inline Theme Toggle -->
+    <div class="quick-links__toggle-wrapper">
+      <ThemeToggle />
+    </div>
+
   </div>
-  <ThemeToggle />
 </nav>
 
 <style>
+  /* Floating Top Dock (Navbar.gallery floating island pattern) */
   .quick-links {
     position: sticky;
-    top: 0;
+    top: 12px;
     z-index: 50;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 1rem;
-    height: 56px;
-    padding: 0;
+    justify-content: center;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .quick-links__dock {
+    pointer-events: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 40px;
+    padding: 0 6px;
+    border-radius: 9999px;
+    background: var(--surface-subtle);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    transition:
+      border-color var(--duration-fast) var(--ease-smooth-out),
+      background-color var(--duration-fast) var(--ease-smooth-out);
+  }
+
+  .quick-links__dock:hover {
+    border-color: var(--border-default);
   }
 
   .quick-links__brand {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    height: 100%;
-    padding: 0 6px;
+    height: 28px;
+    padding: 0 8px;
     text-decoration: none;
-    color: var(--text-primary);
-    border-radius: 6px;
-    /* Exact property — never 'all'. Only transform needs to animate. */
+    border-radius: 9999px;
     transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Brand: press feedback only — no hover lift.
-     Logo is clicked often; animation should confirm the press, not decorate the hover. */
   .quick-links__brand:active {
-    transform: scale(0.97);
+    transform: scale(0.94);
   }
 
-  .quick-links__brand svg {
-    display: block;
-    height: 40px;
-    width: auto;
-    object-fit: contain;
+  .quick-links__divider {
+    width: 1px;
+    height: 14px;
+    background: var(--border-subtle);
+    flex-shrink: 0;
   }
 
   .quick-links__menu {
@@ -76,10 +101,6 @@ const links = [
     display: flex;
     align-items: center;
     gap: 2px;
-    padding: 4px;
-    border-radius: 6px;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border-subtle);
   }
 
   .quick-links__item {
@@ -88,52 +109,44 @@ const links = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 14px;
-    min-height: 32px;
-    font-size: 0.875rem;
-    font-weight: 500;
-    letter-spacing: -0.02em;
+    padding: 4px 12px;
+    min-height: 28px;
+    font-size: 0.8125rem;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--text-muted);
     text-decoration: none;
-    border-radius: 4px;
+    border-radius: 9999px;
     white-space: nowrap;
-    /* Exact properties — color + transform only. Never 'all'. */
     transition:
       color 200ms cubic-bezier(0.23, 1, 0.32, 1),
       transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Hover: color shift only — no transform.
-     Nav items are hovered tens of times per session.
-     Per frequency framework: "remove or drastically reduce." */
   @media (hover: hover) and (pointer: fine) {
     .quick-links__item:hover {
       color: var(--text-primary);
     }
   }
 
-  /* Press feedback: scale down to confirm the click was registered.
-     "Buttons must feel responsive to press." — applies to all pressable elements. */
   .quick-links__item:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
 
-  /* Active (scroll-spy): color contrast only — NO font-weight change.
-     Changing font-weight causes layout shift (text reflows, pill jumps). */
   .quick-links__item.is-active {
     color: var(--text-primary);
+    font-weight: 500;
   }
 
-  /* Sliding pill — 200ms snappy ease-out. Tab indicators should feel
-     direct and mechanical, not decorative. */
+  /* Sliding pill behind the active item */
   .quick-links__pill {
     position: absolute;
-    top: 4px;
+    top: 0;
     left: 0;
-    height: calc(100% - 8px);
-    background: var(--surface-interactive);
-    border: 1px solid var(--border-default);
-    border-radius: 4px;
+    height: 100%;
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 9999px;
     transform: translateX(0);
     transition:
       transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
@@ -143,51 +156,60 @@ const links = [
     z-index: 0;
   }
 
+  .quick-links__toggle-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Compact Theme Toggle override inside dock */
+  .quick-links__toggle-wrapper :global(.theme-toggle) {
+    width: 28px;
+    height: 28px;
+    border: none;
+    background: transparent;
+    border-radius: 9999px;
+  }
+
+  .quick-links__toggle-wrapper :global(.theme-toggle:hover) {
+    background: var(--surface-interactive);
+    transform: scale(1.05);
+  }
+
   /* Mobile */
   @media (max-width: 640px) {
     .quick-links {
-      height: 48px;
-      gap: 0.5rem;
+      top: 8px;
+    }
+
+    .quick-links__dock {
+      height: 36px;
       padding: 0 4px;
+      gap: 2px;
     }
 
     .quick-links__brand {
-      padding: 0 4px;
-    }
-
-    .quick-links__brand svg {
-      height: 28px;
-    }
-
-    .quick-links__menu {
-      gap: 1px;
-      padding: 3px;
+      padding: 0 6px;
+      height: 24px;
     }
 
     .quick-links__item {
-      padding: 4px 8px;
-      min-height: 30px;
+      padding: 3px 8px;
+      min-height: 24px;
       font-size: 0.75rem;
-    }
-
-    .quick-links__pill {
-      top: 3px;
-      height: calc(100% - 6px);
     }
   }
 
   @media (max-width: 380px) {
     .quick-links__item {
-      padding: 4px 6px;
+      padding: 3px 6px;
       font-size: 0.7rem;
     }
   }
-
 </style>
 
 <script>
-  // Scroll-spy: highlight the quick link of the currently visible section,
-  // and move the sliding pill under the active item.
+  // Scroll-spy: highlight active section link and slide the pill
   const anchors = Array.from(
     document.querySelectorAll<HTMLAnchorElement>('[data-quick-link]')
   );
@@ -202,7 +224,6 @@ const links = [
       link.classList.toggle('is-active', isActive);
     });
 
-    // Move the pill under the active in-page link.
     const active = scrollLinks.find((l) => l.getAttribute('href') === `#${id}`);
     if (pill && menu && active) {
       const menuRect = menu.getBoundingClientRect();

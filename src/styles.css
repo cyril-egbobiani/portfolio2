@@ -2,12 +2,28 @@
 @config "../tailwind.config.js";
 
 /* ---------------------------------------------------------------------------
+   CUSTOM LOCAL FONT DECLARATION
+   Place your .woff2 / .ttf font file inside: public/fonts/YourFont.woff2
+--------------------------------------------------------------------------- */
+@font-face {
+  font-family: "Array";
+  src:
+    url("/fonts/Array_Complete/Array_Complete/Fonts/WEB/fonts/Array-Semibold.woff2") format("woff2"),
+    url("/fonts/Array_Complete/Array_Complete/Fonts/WEB/fonts/Array-Semibold.woff") format("woff"),
+    url("/fonts/Array_Complete/Array_Complete/Fonts/OTF/Array-Semibold.otf") format("opentype"),
+    url("/fonts/Array_Complete/Array_Complete/Fonts/WEB/fonts/Array-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* ---------------------------------------------------------------------------
    DESIGN TOKENS
    Semantic tokens define the design system. Each token resolves to a
    different value depending on the active theme (light or dark).
    Light theme is the default (:root), dark theme is applied when the
    <html> element carries `data-theme="dark"`.
---------------------------------------------------------------------------- */
+   --------------------------------------------------------------------------- */
 
 :root {
   color-scheme: light;
@@ -89,8 +105,9 @@
   --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.06);
 
   /* Typography */
-  --font-sans: "Host Grotesk", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Host Grotesk", "Inter", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", sans-serif;
+  --font-name: "Inter", sans-serif;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -141,8 +158,9 @@
   --shadow-card-hover: none;
 
   /* Typography */
-  --font-sans: "Host Grotesk", "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Host Grotesk", "Inter", sans-serif;
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Inter", sans-serif;
+  --font-name: "Inter", sans-serif;
 }
 
 /* ---------------------------------------------------------------------------
@@ -204,18 +222,11 @@
     color: var(--text-primary);
   }
 
-  /* Smooth transition when switching themes */
-  html[data-theme] {
-    transition:
-      background-color var(--duration-medium) var(--ease-smooth-out),
-      color var(--duration-medium) var(--ease-smooth-out);
-  }
-
+  /* Instant theme switching (no delayed color transitions) */
+  html[data-theme],
   body,
   html[data-theme] body {
-    transition:
-      background-color var(--duration-medium) var(--ease-smooth-out),
-      color var(--duration-medium) var(--ease-smooth-out);
+    transition: none;
   }
 }
 
@@ -324,7 +335,7 @@
     padding: 0;
     border: 1px solid var(--border-subtle);
     border-radius: 6px;
-    background: transparent;
+    background: var(--surface);
     color: var(--text-muted);
     cursor: pointer;
     transition: all var(--duration-fast) var(--ease-smooth-out);
@@ -332,6 +343,7 @@
 
   .theme-toggle:hover {
     color: var(--text-primary);
+    background: var(--surface-interactive);
     border-color: var(--border-default);
     transform: translateY(-2px);
   }
@@ -396,7 +408,7 @@
     opacity: 1;
   }
 
-  /* Tab bar — sliding pill */
+  /* Tab bar — sliding pill (R_outer 8px - padding 2px = R_inner 6px) */
   .tabs-bar {
     position: relative;
     display: inline-flex;
@@ -404,7 +416,7 @@
     height: 33px;
     gap: 2px;
     padding: 2px;
-    border-radius: 6px;
+    border-radius: 8px;
     background: var(--surface-subtle);
     border: 1px solid var(--border-subtle);
   }
@@ -418,7 +430,7 @@
     background: transparent;
     border: none;
     cursor: pointer;
-    border-radius: 4px;
+    border-radius: 6px;
     z-index: 1;
     transition: color var(--duration-fast) var(--ease-smooth-out);
   }
@@ -428,7 +440,7 @@
     color: var(--text-primary);
   }
 
-  /* Sliding pill — sharp 4px radius, flat border, no shadow */
+  /* Sliding pill — R_inner 6px = R_outer 8px - padding 2px */
   .tabs-pill {
     position: absolute;
     top: 2px;
@@ -437,7 +449,7 @@
     width: 0;
     background: var(--surface-interactive);
     border: 1px solid var(--border-subtle);
-    border-radius: 4px;
+    border-radius: 6px;
     transform: translateX(0);
     transition:
       transform var(--duration-fast) var(--ease-smooth-out),
@@ -532,13 +544,7 @@
     }
   }
 
-  /* Theme color transitions */
-  [data-theme] * {
-    transition:
-      background-color var(--duration-fast) var(--ease-smooth-out),
-      color var(--duration-fast) var(--ease-smooth-out),
-      border-color var(--duration-fast) var(--ease-smooth-out);
-  }
+
 
   @media (prefers-reduced-motion: reduce) {
 

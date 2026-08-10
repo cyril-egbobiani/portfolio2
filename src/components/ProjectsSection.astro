@@ -4,56 +4,56 @@ const tabs = ['Builds', 'Designs', 'Playground'];
 const projects = {
   Builds: [
     {
+      slug: 'cybertron-ai',
       title: 'Cybertron AI',
       year: '2025',
       description: 'Autonomous code intelligence studio & agent workflow engine.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
     },
     {
+      slug: 'stelar-studio',
       title: 'Stelar Studio',
       year: '2024',
       description: 'High-performance WebGL canvas animation & interactive physics engine.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1000&q=80',
     },
     {
+      slug: 'firstbank-mobile',
       title: 'FirstBank Mobile',
       year: '2024',
       description: 'Fintech mobile banking application redesign & design system.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1000&q=80',
     },
   ],
   Designs: [
     {
+      slug: 'nova-design-system',
       title: 'Nova Design System',
       year: '2025',
       description: 'Editorial token design system with dark mode priority & motion guidelines.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1000&q=80',
     },
     {
+      slug: 'pulse-analytics',
       title: 'Pulse Analytics',
       year: '2024',
       description: 'Real-time telemetry dashboard for cloud infrastructure monitoring.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80',
     },
   ],
   Playground: [
     {
+      slug: 'shader-lab',
       title: 'Shader Lab',
       year: '2025',
       description: 'Interactive GLSL raymarching fragments and post-processing filters.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
     },
     {
+      slug: 'kinetic-type',
       title: 'Kinetic Type',
       year: '2024',
       description: 'Variable font spring physics engine driven by cursor velocity.',
-      link: '#',
       image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80',
     },
   ],
@@ -64,7 +64,7 @@ const projects = {
   
   <!-- Section Header + Sliding Tabs Bar -->
   <div class="flex items-center justify-between gap-4">
-    <h2 class="m-0 text-base font-normal tracking-[-0.015em] text-[var(--text-muted)]">Work</h2>
+    <h2 class="m-0 font-sans text-sm sm:text-base font-normal tracking-tight text-[var(--text-muted)]">Work</h2>
 
     <!-- Sliding Pill Tabs Bar -->
     <div class="tabs-bar w-fit" role="tablist" aria-label="Project categories">
@@ -94,10 +94,13 @@ const projects = {
         hidden={tab !== 'Builds'}
       >
         {projects[tab].map((project) => (
-          <article class="project-card group relative flex flex-col overflow-hidden rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]">
+          <a
+            href={`/projects/${project.slug}`}
+            class="project-card group relative flex flex-col overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]"
+          >
             
-            <!-- Project Preview Image Frame with Refined Roundness -->
-            <div class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[10px] bg-[var(--surface-interactive)]">
+            <!-- Project Preview Image Frame (R_inner 8px = R_outer 16px - Padding 8px) -->
+            <div class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[8px] bg-[var(--surface-interactive)]">
               <img
                 src={project.image}
                 alt={project.title}
@@ -118,16 +121,14 @@ const projects = {
                 <h3 class="m-0 font-display text-base sm:text-lg font-normal tracking-[-0.02em] text-[var(--text-primary)] transition-colors group-hover:text-white">
                   {project.title}
                 </h3>
-                <a
-                  href={project.link}
-                  class="project-link inline-flex items-center gap-1 font-mono text-xs text-[var(--text-muted)] no-underline transition-colors hover:text-[var(--text-primary)]"
-                  aria-label={`View ${project.title}`}
+                <span
+                  class="project-link inline-flex items-center gap-1 font-mono text-xs text-[var(--text-muted)] transition-colors group-hover:text-[var(--text-primary)]"
                 >
                   <span>View</span>
-                  <svg class="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
+                  <svg class="size-3.5 transition-transform duration-200 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
                   </svg>
-                </a>
+                </span>
               </div>
 
               <p class="m-0 text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)]">
@@ -135,7 +136,7 @@ const projects = {
               </p>
             </div>
 
-          </article>
+          </a>
         ))}
       </div>
     ))}
