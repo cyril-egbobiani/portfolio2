@@ -260,14 +260,33 @@ const { project } = Astro.props;
           </a>
         </section>
 
-        <!-- 4. Deep-Dive Case Study Narrative -->
-        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
-          <h2 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
-            Overview & Architecture
-          </h2>
-          <div class="prose prose-invert max-w-none text-sm sm:text-base leading-relaxed text-[var(--text-secondary)] space-y-4">
-            <p>{project.longDescription}</p>
+        <!-- 4. Deep-Dive Case Study Narrative & Key Highlights -->
+        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-5 pt-2">
+          <div class="flex flex-col gap-2">
+            <h2 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
+              Overview & Architecture
+            </h2>
+            <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+              {project.longDescription}
+            </p>
           </div>
+
+          <!-- Key Deliverables & Technical Highlights -->
+          {project.highlights && project.highlights.length > 0 && (
+            <div class="flex flex-col gap-3 pt-1">
+              <h3 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
+                Key Highlights
+              </h3>
+              <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
+                {project.highlights.map((item, idx) => (
+                  <li class="flex items-start gap-3 text-xs sm:text-sm text-[var(--text-secondary)]">
+                    <span class="font-mono text-[11px] tabular-nums text-[var(--text-muted)] pt-0.5 shrink-0">0{idx + 1}</span>
+                    <span class="leading-relaxed">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
         </section>
 
         <!-- 5. Visual Gallery (Zoomable Framed Media Containers) -->
