@@ -212,20 +212,20 @@ const { project } = Astro.props;
         <!-- 2. Project Title & Overview -->
         <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-4">
           <div class="flex items-center gap-3">
-            <span class="font-mono text-xs uppercase tracking-normal text-[var(--text-muted)]">
+            <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
               {project.category}
             </span>
             <span class="text-xs text-[var(--text-faint)] font-mono">•</span>
-            <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">
+            <span class="font-mono tabular-nums text-[11px] text-[var(--text-muted)]">
               {project.year}
             </span>
           </div>
 
-          <h1 class="m-0 font-display text-2xl sm:text-4xl font-normal leading-[1.2] tracking-[-0.03em] text-[var(--text-primary)]">
+          <h1 class="m-0 font-display text-2xl sm:text-3xl font-normal leading-[1.25] tracking-[-0.04em] text-[var(--text-primary)]">
             {project.title}
           </h1>
 
-          <p class="m-0 text-base sm:text-lg leading-relaxed text-[var(--text-secondary)]">
+          <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
             {project.description}
           </p>
         </section>
@@ -237,12 +237,12 @@ const { project } = Astro.props;
         <section class="t-stagger-line t-stagger-line--3 flex flex-wrap items-center justify-between gap-4 border-b border-dashed border-[var(--border-subtle)] py-4 my-1">
           <div class="flex items-center gap-6 sm:gap-10">
             <div class="flex flex-col gap-0.5">
-              <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">ROLE</span>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">ROLE</span>
               <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.role}</span>
             </div>
 
             <div class="flex flex-col gap-0.5">
-              <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">TIMELINE</span>
+              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">TIMELINE</span>
               <span class="font-mono tabular-nums text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.year}</span>
             </div>
           </div>
@@ -261,8 +261,8 @@ const { project } = Astro.props;
         </section>
 
         <!-- 4. Deep-Dive Case Study Narrative -->
-        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-5 pt-2">
-          <h2 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
+          <h2 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
             Overview & Architecture
           </h2>
           <div class="prose prose-invert max-w-none text-sm sm:text-base leading-relaxed text-[var(--text-secondary)] space-y-4">
@@ -272,8 +272,8 @@ const { project } = Astro.props;
 
         <!-- 5. Visual Gallery (Zoomable Framed Media Containers) -->
         {project.gallery && project.gallery.length > 0 && (
-          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-5 pt-4">
-            <h2 class="m-0 text-xs font-mono uppercase tracking-normal text-[var(--text-muted)]">
+          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-4">
+            <h2 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
               Visual Gallery
             </h2>
             <div class="flex flex-col gap-6">
@@ -301,7 +301,7 @@ const { project } = Astro.props;
         <!-- 6. Next Project Showcase Banner -->
         <footer class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
           <div class="flex items-center justify-between">
-            <span class="font-mono text-xs text-[var(--text-muted)]">UP NEXT</span>
+            <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">UP NEXT</span>
             <a href="/#projects" class="font-mono text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">
               Back to all projects ↗
             </a>
@@ -312,8 +312,8 @@ const { project } = Astro.props;
             class="group flex items-center justify-between gap-4 rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]"
           >
             <div class="flex flex-col gap-1">
-              <span class="font-mono text-[10px] uppercase tracking-normal text-[var(--text-muted)]">NEXT CASE STUDY</span>
-              <span class="font-display text-lg sm:text-xl font-normal text-[var(--text-primary)] transition-colors group-hover:text-white">
+              <span class="font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)]">NEXT CASE STUDY</span>
+              <span class="font-display text-base sm:text-lg font-normal tracking-[-0.03em] text-[var(--text-primary)]">
                 {project.nextTitle}
               </span>
             </div>
