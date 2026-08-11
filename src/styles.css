@@ -105,10 +105,10 @@
   --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.06);
 
   /* Typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", sans-serif;
-  --font-name: "Inter", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Geist", sans-serif;
+  --font-name: "Geist", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -159,10 +159,10 @@
   --shadow-card-hover: none;
 
   /* Typography */
-  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Inter", sans-serif;
-  --font-name: "Inter", sans-serif;
-  --font-mono: ui-monospace, SFMono-Regular, "JetBrains Mono", "Fira Code", Menlo, Monaco, Consolas, monospace;
+  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Geist", sans-serif;
+  --font-name: "Geist", sans-serif;
+  --font-mono: "DM Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
 /* ---------------------------------------------------------------------------
@@ -172,7 +172,7 @@
 @layer base {
   :root {
     font-family: var(--font-sans);
-    font-weight: 400;
+    font-weight: 500;
     line-height: 1.6;
     color: var(--text-primary);
     background: var(--surface);
@@ -203,7 +203,7 @@
     min-height: 100vh;
     background: var(--surface);
     color: var(--text-primary);
-    font-weight: 400;
+    font-weight: 500;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
@@ -222,6 +222,11 @@
   ::selection {
     background: var(--accent-soft);
     color: var(--text-primary);
+  }
+
+  /* Theme Adaptive SVG logo helper: automatically inverts monochrome logos in dark theme */
+  [data-theme="dark"] .theme-adaptive-svg {
+    filter: invert(1) brightness(1.2);
   }
 
   /* Instant theme switching (no delayed color transitions) */

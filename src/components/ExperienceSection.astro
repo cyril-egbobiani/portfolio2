@@ -2,16 +2,17 @@
 import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
 import firstBankLogo from '../assets/images/first-bank-logo.png';
+import globeSvg from '../assets/images/globe.svg';
 
 interface ExperienceItem {
   company: string;
   role: string;
   dates: string;
   location?: string;
-  logo?: ImageMetadata;
+  logo?: ImageMetadata | string;
+  themeAdaptive?: boolean; // Set to true for single-color SVG logos that should adapt to light/dark mode
   description: string;
   highlights: string[];
-  stack: string[];
 }
 
 const experience: ExperienceItem[] = [
@@ -21,25 +22,26 @@ const experience: ExperienceItem[] = [
     dates: '2026 – Present',
     location: 'Lagos, Nigeria',
     logo: ieslLogo,
+    themeAdaptive: false,
     description: 'Leading digital product design and frontend architecture for enterprise energy management systems.',
     highlights: [
       'Architected high-throughput web dashboards handling real-time telemetry datasets.',
       'Established tokenized design system streamlining cross-team UI development.',
       'Optimized client-side rendering pipeline to achieve steady 60fps canvas performance.',
     ],
-    stack: ['Astro', 'TypeScript', 'Tailwind CSS', 'Figma', 'Node.js'],
   },
   {
     company: 'Freelance',
     role: 'Software Developer & Designer',
     dates: '2025 – Present',
     location: 'Remote',
+    logo: globeSvg,
+    themeAdaptive: true,
     description: 'Designing and engineering bespoke digital experiences, brand identities, and WebGL canvases for global clients.',
     highlights: [
       'Delivered 10+ custom web apps with dark mode priority and kinetic micro-interactions.',
       'Collaborated directly with founders on product positioning and UI engineering.',
     ],
-    stack: ['React', 'Next.js', 'TypeScript', 'Three.js', 'CSS Physics'],
   },
   {
     company: 'First Bank Digital Innovation Lab',
@@ -47,12 +49,12 @@ const experience: ExperienceItem[] = [
     dates: '2024 – 2024',
     location: 'Lagos, Nigeria',
     logo: firstBankLogo,
+    themeAdaptive: false,
     description: 'Contributed to the core mobile banking application refactor and cross-platform design system components.',
     highlights: [
       'Redesigned checkout and fund transfer confirmation user flows.',
       'Improved React Native app cold-start launch speed by 35%.',
     ],
-    stack: ['React Native', 'TypeScript', 'Design Systems', 'Figma'],
   },
 ];
 ---
@@ -66,7 +68,7 @@ const experience: ExperienceItem[] = [
   <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)]" data-experience-list>
     {experience.map((item, index) => (
       <div
-        class="experience-card group relative flex flex-col overflow-hidden rounded-[12px] py-4 px-2 sm:px-3 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none"
+        class="experience-card group relative flex flex-col overflow-hidden py-4 px-2 sm:px-3 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none"
         data-experience-item
         data-visible="false"
         role="button"
@@ -76,9 +78,21 @@ const experience: ExperienceItem[] = [
         <!-- Card Header Row -->
         <div class="flex items-start gap-3.5 sm:gap-4">
           <!-- Logo Badge: Clean subtle hairline frame (54px x 54px, 14px radius, 10px padding) -->
-          <div class="experience-badge flex size-[54px] shrink-0 items-center justify-center rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-[10px] transition-transform duration-200 group-hover:scale-[1.03]">
+          <div class={`experience-badge flex size-[54px] shrink-0 items-center justify-center rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2.5 transition-transform duration-200 group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
             {item.logo ? (
-              <Image class="size-[34px] object-contain shrink-0" src={item.logo} alt={item.company} width={34} height={34} />
+              typeof item.logo === 'string' ? (
+                <img
+                  src={item.logo}
+                  alt={item.company}
+                  class={`max-h-full max-w-full h-auto w-auto object-contain shrink-0 ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
+                />
+              ) : (
+                <Image
+                  class={`max-h-full max-w-full h-auto w-auto object-contain shrink-0 ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
+                  src={item.logo}
+                  alt={item.company}
+                />
+              )
             ) : (
               <span class="font-mono text-base font-semibold text-[var(--text-secondary)]">CY</span>
             )}
