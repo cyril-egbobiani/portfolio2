@@ -1,21 +1,19 @@
 ---
-// Quick links — floating glass top navigation dock (navbar.gallery inspired)
-// Highlights the active section via a sliding pill indicator and embeds an inline ThemeToggle.
+// Quick links — floating glass bottom navigation dock (macOS dock inspired)
+// Uses Heroicons for clean icon representation with floating tooltips and sliding pill indicator.
 import ThemeToggle from './ThemeToggle.astro';
 
 const links = [
-  { label: 'Work', href: '#projects', external: false },
-  { label: 'Experience', href: '#experience', external: false },
-  { label: 'Contact', href: '#contact', external: false },
-  { label: 'About', href: '/profile', external: true },
+  { label: 'Work', href: '#projects', external: false, icon: 'folder' },
+  { label: 'Experience', href: '#experience', external: false, icon: 'briefcase' },
+  { label: 'Contact', href: '#contact', external: false, icon: 'envelope' },
+  { label: 'About', href: '/profile', external: true, icon: 'avatar', avatarSrc: '/images/cyril.e.png' },
 ];
 ---
 
-<nav class="quick-links" aria-label="Quick links">
+<nav class="quick-links" aria-label="Quick links navigation">
   <div class="quick-links__dock">
     
-    <!-- Home Brand Micro Icon -->
-
     <!-- Nav Items Menu -->
     <div class="quick-links__menu">
       <span class="quick-links__pill" aria-hidden="true"></span>
@@ -23,10 +21,39 @@ const links = [
         <a
           class="quick-links__item"
           href={link.href}
+          aria-label={link.label}
           data-quick-link
-          data-scroll-link
+          data-scroll-link={!link.external ? '' : undefined}
         >
-          {link.label}
+          <span class="quick-links__icon-wrapper" aria-hidden="true">
+            {link.icon === 'folder' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+              </svg>
+            )}
+            {link.icon === 'briefcase' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M15.75 5.25a3 3 0 0 0-3-3h-1.5a3 3 0 0 0-3 3v1.5H4.5A2.25 2.25 0 0 0 2.25 9v9A2.25 2.25 0 0 0 4.5 20.25h15A2.25 2.25 0 0 0 21.75 18V9A2.25 2.25 0 0 0 19.5 6.75h-3.75v-1.5Zm-6 0a1.5 1.5 0 0 1 1.5-1.5h1.5a1.5 1.5 0 0 1 1.5 1.5v1.5h-4.5v-1.5Z" />
+                <path d="M3 13h18" />
+              </svg>
+            )}
+            {link.icon === 'envelope' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5H4.5a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+              </svg>
+            )}
+            {link.icon === 'avatar' && link.avatarSrc && (
+              <img
+                class="quick-links__avatar-img"
+                src={link.avatarSrc}
+                alt=""
+                width="20"
+                height="20"
+                loading="eager"
+              />
+            )}
+          </span>
+          <span class="quick-links__tooltip" role="tooltip">{link.label}</span>
         </a>
       ))}
     </div>
@@ -42,15 +69,17 @@ const links = [
 </nav>
 
 <style>
-  /* Floating Top Dock (Navbar.gallery floating island pattern) */
+  /* Floating Bottom Dock (macOS dock island pattern) */
   .quick-links {
-    position: sticky;
-    top: 12px;
+    position: fixed;
+    bottom: 20px;
+    bottom: max(20px, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
     z-index: 50;
     display: flex;
     align-items: center;
     justify-content: center;
-    width: 100%;
     pointer-events: none;
   }
 
@@ -59,8 +88,8 @@ const links = [
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    height: 40px;
-    padding: 0 6px;
+    height: 44px;
+    padding:  6px;
     border-radius: 9999px;
     background: var(--surface-subtle);
     backdrop-filter: blur(16px) saturate(180%);
@@ -74,26 +103,12 @@ const links = [
     border-color: var(--border-default);
   }
 
-  .quick-links__brand {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 28px;
-    padding: 0 8px;
-    text-decoration: none;
-    border-radius: 9999px;
-    transition: transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .quick-links__brand:active {
-    transform: scale(0.94);
-  }
-
   .quick-links__divider {
     width: 1px;
-    height: 14px;
+    height: 16px;
     background: var(--border-subtle);
     flex-shrink: 0;
+    margin: 0 2px;
   }
 
   .quick-links__menu {
@@ -109,33 +124,83 @@ const links = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 4px 12px;
-    min-height: 28px;
-    font-size: 0.8125rem;
-    font-weight: 400;
-    letter-spacing: -0.01em;
-    color: var(--text-muted);
+    width: 36px;
+    height: 36px;
+    padding:  6px;
+    color: var(--text-primary);
     text-decoration: none;
     border-radius: 9999px;
-    white-space: nowrap;
     transition:
       color 200ms cubic-bezier(0.23, 1, 0.32, 1),
       transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
+  .quick-links__icon-wrapper {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .quick-links__icon {
+    width: 18px;
+    height: 18px;
+    stroke-width: 1.8;
+    flex-shrink: 0;
+  }
+
+  .quick-links__avatar-img {
+    width: 20px;
+    height: 20px;
+    border-radius: 9999px;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+
+  /* Floating Tooltip */
+  .quick-links__tooltip {
+    position: absolute;
+    bottom: calc(100% + 10px);
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    padding: 3px 8px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+    background: var(--surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 6px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+      opacity 160ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 160ms cubic-bezier(0.23, 1, 0.32, 1),
+      visibility 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
   @media (hover: hover) and (pointer: fine) {
+    .quick-links__item:hover .quick-links__tooltip,
+    .quick-links__item:focus-visible .quick-links__tooltip {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(-50%) translateY(0);
+    }
+
     .quick-links__item:hover {
       color: var(--text-primary);
     }
   }
 
   .quick-links__item:active {
-    transform: scale(0.96);
+    transform: scale(0.92);
   }
 
   .quick-links__item.is-active {
     color: var(--text-primary);
-    font-weight: 500;
   }
 
   /* Sliding pill behind the active item */
@@ -145,7 +210,6 @@ const links = [
     left: 0;
     height: 100%;
     background: var(--surface);
-    border: 1px solid var(--border-subtle);
     border-radius: 9999px;
     transform: translateX(0);
     transition:
@@ -164,46 +228,53 @@ const links = [
 
   /* Compact Theme Toggle override inside dock */
   .quick-links__toggle-wrapper :global(.theme-toggle) {
-    width: 28px;
-    height: 28px;
+    width: 36px;
+    height: 36px;
     border: none;
     background: transparent;
     border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition:
+      color 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   .quick-links__toggle-wrapper :global(.theme-toggle:hover) {
-    background: var(--surface-interactive);
-    transform: scale(1.05);
+    color: var(--text-primary);
   }
 
-  /* Mobile */
+  .quick-links__toggle-wrapper :global(.theme-toggle:active) {
+    transform: scale(0.92);
+  }
+
+  /* Mobile adjustments */
   @media (max-width: 640px) {
     .quick-links {
-      top: 8px;
+      bottom: 16px;
+      bottom: max(16px, env(safe-area-inset-bottom));
     }
 
     .quick-links__dock {
-      height: 36px;
+      height: 40px;
       padding: 0 4px;
-      gap: 2px;
-    }
-
-    .quick-links__brand {
-      padding: 0 6px;
-      height: 24px;
     }
 
     .quick-links__item {
-      padding: 3px 8px;
-      min-height: 24px;
-      font-size: 0.75rem;
+      width: 32px;
+      height: 32px;
     }
-  }
 
-  @media (max-width: 380px) {
-    .quick-links__item {
-      padding: 3px 6px;
-      font-size: 0.7rem;
+    .quick-links__icon {
+      width: 16px;
+      height: 16px;
+    }
+
+    .quick-links__toggle-wrapper :global(.theme-toggle) {
+      width: 32px;
+      height: 32px;
     }
   }
 </style>

@@ -1,6 +1,7 @@
 ---
 import Layout from '../components/Layout.astro';
 import ThemeToggle from '../components/ThemeToggle.astro';
+import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
 import '../styles.css';
 
@@ -92,7 +93,7 @@ const interests = [
 
           <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {interests.map((item) => (
-              <div class="interest-card group relative flex h-[110px] w-full overflow-hidden rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]">
+              <div class="interest-card group relative flex h-[110px] w-full overflow-hidden rounded-[12px] bg-[var(--surface-subtle)] p-4 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)]">
                 
                 <!-- Left Details -->
                 <div class="z-10 flex flex-col justify-between pr-4">
@@ -129,24 +130,10 @@ const interests = [
         <!-- Hair-Line Separator -->
         <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
-        <!-- 4. Contact Section (Harmonized with Home Page Contact) -->
-        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4">
-          
-          <div class="flex flex-col gap-3 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
-            <p class="m-0">
-              I’m basically everywhere but primarily, I’m on{' '}
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--text-primary)] transition hover:opacity-80">X</a>,{' '}
-              <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--text-primary)] transition hover:opacity-80">LinkedIn</a> and{' '}
-              <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="font-medium text-[var(--text-primary)] transition hover:opacity-80">GitHub</a>.
-            </p>
-            <p class="m-0 flex items-center gap-1.5">
-              <span>You can reach me out on</span>
-              <a href="mailto:egbobianicyril@gmail.com" class="font-medium text-[var(--rose)] transition hover:opacity-85">
-                egbobianicyril@gmail.com
-              </a>
-            </p>
-          </div>
-        </section>
+        <!-- 4. Contact Section -->
+        <div class="t-stagger-line t-stagger-line--4">
+          <ContactSection />
+        </div>
 
         <!-- 5. Footer Stamp -->
         <PortfolioFooter />

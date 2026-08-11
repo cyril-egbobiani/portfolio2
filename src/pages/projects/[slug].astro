@@ -212,7 +212,7 @@ const { project } = Astro.props;
               {project.category}
             </span>
             <span class="text-xs text-[var(--text-faint)] font-mono">•</span>
-            <span class="font-mono text-xs text-[var(--text-muted)]">
+            <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">
               {project.year}
             </span>
           </div>
@@ -229,8 +229,8 @@ const { project } = Astro.props;
         <!-- Hair-Line Separator -->
         <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
-        <!-- 3. Metadata Table Grid (Role, Timeline, Stack, Action CTA) -->
-        <section class="t-stagger-line t-stagger-line--3 grid grid-cols-2 gap-4 rounded-[12px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:grid-cols-4 sm:p-5">
+        <!-- 3. Metadata Table Grid (Role, Timeline, Action CTA) -->
+        <section class="t-stagger-line t-stagger-line--3 grid grid-cols-2 gap-4 rounded-[12px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:grid-cols-3 sm:p-5">
           <div class="flex flex-col gap-1">
             <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">ROLE</span>
             <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.role}</span>
@@ -241,17 +241,12 @@ const { project } = Astro.props;
             <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.year}</span>
           </div>
 
-          <div class="flex flex-col gap-1">
-            <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">STACK</span>
-            <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.stack.join(' · ')}</span>
-          </div>
-
           <div class="flex flex-col gap-1 sm:items-end sm:justify-center">
             <a
               href={project.link}
               target="_blank"
               rel="noopener noreferrer"
-              class="inline-flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-interactive)] px-3 py-1.5 font-mono text-xs text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:scale-[1.02]"
+              class="inline-flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-interactive)] px-3 py-1.5 font-sans text-xs font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:scale-[1.02]"
             >
               <span>Visit Project</span>
               <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">

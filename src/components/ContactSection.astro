@@ -1,72 +1,114 @@
-<section class="flex flex-col gap-6" id="contact">
-<h2 class="m-0 font-sans text-sm sm:text-base font-normal tracking-tight text-[var(--text-muted)]">Contact</h2>
-  <div class="flex flex-col gap-4 text-base leading-5" style="color: var(--text-muted)">
-    <p class="m-0">I’m basically everywhere but primarily, I’m on <a class=" no-underline transition hover:opacity-80" href="https://x.com" style="color: var(--text-primary)">X</a>, <a class=" no-underline transition hover:opacity-80" href="https://www.linkedin.com" style="color: var(--text-primary)">LinkedIn</a> and <a class=" no-underline transition hover:opacity-80" href="https://github.com" style="color: var(--text-primary)">GitHub</a>.</p>
-    <p class="m-0 flex items-center gap-1">
-      <a class="no-underline transition hover:opacity-80" href="mailto:egbobianicyril@gmail.com" style="color: var(--rose)">egbobianicyril@gmail.com</a>
-<button
-        class="copy-btn"
-        type="button"
-        aria-label="Copy email address"
-        data-copy-btn
-      >
-        <span class="copy-btn__stage" aria-hidden="true">
-          <!-- Copy icon (Hero Icons) -->
-          <svg class="copy-btn__icon copy-btn__icon--copy" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
-          </svg>
-          <!-- Check icon (Hero Icons) -->
-          <svg class="copy-btn__icon copy-btn__icon--check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="m4.5 12.75 6 6 9-13.5" />
-          </svg>
-        </span>
-      </button>
-    </p>
+---
+// ContactSection.astro — Editorial Contact Card (benji.org + ana.sh hybrid)
+// Features interactive email copy-to-clipboard trigger, live availability badge, and social action buttons.
+---
+
+<section class="flex flex-col gap-4" id="contact">
+  <!-- Section Header with Refined Availability Aura Badge -->
+  <div class="flex items-center justify-between">
+    <h2 class="m-0 font-sans text-sm font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+      Contact
+    </h2>
+    <div class="flex items-center gap-2 text-xs text-[var(--text-muted)]">
+      <span class="relative flex size-2 items-center justify-center">
+        <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
+        <span class="relative inline-flex size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></span>
+      </span>
+      <span class="font-mono text-[11px]">Available for projects</span>
+    </div>
   </div>
 
+  <!-- Contact Section Container (Borderless Layout) -->
+  <div class="contact-card flex flex-col gap-4 py-1">
+    <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+      Whether you have a project idea, a design inquiry, or just want to connect — my inbox is always open.
+    </p>
 
+    <!-- Email & Social Actions -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
+      
+      <!-- Interactive Email Copy Pill -->
+      <div
+        class="email-box group relative flex items-center justify-between gap-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 cursor-pointer select-none transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)]"
+        data-copy-box
+        role="button"
+        tabindex="0"
+        aria-label="Copy email address"
+      >
+        <div class="flex items-center gap-2 min-w-0">
+          <svg class="size-4 shrink-0 opacity-60 text-[var(--text-primary)] transition-opacity group-hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5H4.5a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+          </svg>
+          <span class="truncate font-mono text-xs sm:text-sm text-[var(--text-primary)]">
+            egbobianicyril@gmail.com
+          </span>
+        </div>
+
+        <div class="copy-btn flex items-center gap-1 rounded-[4px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-2 py-1 text-xs text-[var(--text-muted)] transition-all duration-160 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)]">
+          <span class="copy-btn__stage relative flex size-3.5 items-center justify-center" aria-hidden="true">
+            <!-- Copy icon -->
+            <svg class="copy-btn__icon copy-btn__icon--copy size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 0 1-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 0 1 1.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 0 0-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 0 1-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 0 0-3.375-3.375h-1.5a1.125 1.125 0 0 1-1.125-1.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H9.75" />
+            </svg>
+            <!-- Check icon -->
+            <svg class="copy-btn__icon copy-btn__icon--check size-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="m4.5 12.75 6 6 9-13.5" />
+            </svg>
+          </span>
+          <span class="copy-btn__label font-sans text-[11px] font-medium">Copy</span>
+        </div>
+      </div>
+
+      <!-- Social Action Buttons -->
+      <div class="flex items-center gap-2">
+        <a
+          href="https://x.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+        >
+          X
+        </a>
+        <a
+          href="https://www.linkedin.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+        >
+          LinkedIn
+        </a>
+        <a
+          href="https://github.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+        >
+          GitHub
+        </a>
+      </div>
+
+    </div>
+  </div>
 </section>
 
 <style>
-.copy-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 24px;
-    height: 24px;
-    padding: 0;
-    background: transparent;
-    border: none;
-    color: var(--rose);
-    cursor: pointer;
-    transition: color var(--duration-fast) var(--ease-smooth-out);
+  .contact-card:hover {
+    border-color: var(--border-default);
   }
 
-  .copy-btn:hover {
-    color: var(--rose-hover);
-  }
-
-  .copy-btn__stage {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 16px;
-    height: 16px;
-    overflow: hidden;
+  .email-box:active,
+  .social-pill:active {
+    transform: scale(0.98);
   }
 
   .copy-btn__icon {
     position: absolute;
-    width: 16px;
-    height: 16px;
     transition:
-      transform var(--duration-medium) var(--ease-smooth-out),
-      opacity var(--duration-medium) var(--ease-smooth-out);
+      transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1);
     will-change: transform, opacity;
   }
 
-  /* Copy icon default state */
   .copy-btn__icon--copy {
     transform: rotate(0deg) scale(1);
     opacity: 1;
@@ -77,50 +119,39 @@
     opacity: 0;
   }
 
-  /* When copied, swap to check */
-  .copy-btn.is-copied .copy-btn__icon--copy {
+  .email-box.is-copied .copy-btn__icon--copy {
     transform: rotate(-90deg) scale(0.4);
     opacity: 0;
   }
 
-  .copy-btn.is-copied .copy-btn__icon--check {
+  .email-box.is-copied .copy-btn__icon--check {
     transform: rotate(0deg) scale(1);
     opacity: 1;
   }
 
-.copy-btn.is-copied {
-    color: var(--rose);
+  .email-box.is-copied .copy-btn__label {
+    color: var(--text-primary);
   }
 
-
+  @media (hover: hover) and (pointer: fine) {
+    .social-pill:hover,
+    .email-box:hover {
+      transform: translateY(-1px);
+    }
+  }
 </style>
 
 <script>
-  const btn = document.querySelector<HTMLButtonElement>('[data-copy-btn]');
-  const toast = document.querySelector<HTMLElement>('[data-toast]');
+  const box = document.querySelector<HTMLElement>('[data-copy-box]');
+  const label = box?.querySelector<HTMLElement>('.copy-btn__label');
   const email = 'egbobianicyril@gmail.com';
 
-  let toastTimer: number | undefined;
-
-  const showToast = () => {
-    if (!toast) return;
-    toast.hidden = false;
-    // Force reflow so the transition plays when re-showing
-    void toast.offsetWidth;
-    toast.classList.add('is-visible');
-    window.clearTimeout(toastTimer);
-    toastTimer = window.setTimeout(() => {
-      toast.classList.remove('is-visible');
-    }, 2000);
-  };
-
-  if (btn) {
-    btn.addEventListener('click', async () => {
-      if (btn.classList.contains('is-copied')) return;
+  if (box && label) {
+    const handleCopy = async () => {
+      if (box.classList.contains('is-copied')) return;
       try {
         await navigator.clipboard.writeText(email);
       } catch {
-        // Fallback for older browsers
         const ta = document.createElement('textarea');
         ta.value = email;
         document.body.appendChild(ta);
@@ -128,9 +159,21 @@
         document.execCommand('copy');
         document.body.removeChild(ta);
       }
-      btn.classList.add('is-copied');
-      showToast();
-      setTimeout(() => btn.classList.remove('is-copied'), 1600);
+      box.classList.add('is-copied');
+      label.textContent = 'Copied!';
+
+      setTimeout(() => {
+        box.classList.remove('is-copied');
+        label.textContent = 'Copy';
+      }, 1800);
+    };
+
+    box.addEventListener('click', handleCopy);
+    box.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleCopy();
+      }
     });
   }
 </script>

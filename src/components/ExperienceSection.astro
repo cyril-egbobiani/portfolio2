@@ -7,186 +7,170 @@ interface ExperienceItem {
   company: string;
   role: string;
   dates: string;
+  location?: string;
   logo?: ImageMetadata;
+  description: string;
+  highlights: string[];
+  stack: string[];
 }
 
 const experience: ExperienceItem[] = [
-  { company: 'International Energy Services Limited', role: 'Frontend Developer & Product Designer', dates: '2026 – Now', logo: ieslLogo },
-  { company: 'Freelance', role: 'Software Developer & Designer', dates: '2025 – Now' },
-  { company: 'First Bank Digital Innovation Lab', role: 'Mobile Developer Intern', dates: '2024 – 2024', logo: firstBankLogo },
+  {
+    company: 'International Energy Services Limited',
+    role: 'Frontend Developer & Product Designer',
+    dates: '2026 – Present',
+    location: 'Lagos, Nigeria',
+    logo: ieslLogo,
+    description: 'Leading digital product design and frontend architecture for enterprise energy management systems.',
+    highlights: [
+      'Architected high-throughput web dashboards handling real-time telemetry datasets.',
+      'Established tokenized design system streamlining cross-team UI development.',
+      'Optimized client-side rendering pipeline to achieve steady 60fps canvas performance.',
+    ],
+    stack: ['Astro', 'TypeScript', 'Tailwind CSS', 'Figma', 'Node.js'],
+  },
+  {
+    company: 'Freelance',
+    role: 'Software Developer & Designer',
+    dates: '2025 – Present',
+    location: 'Remote',
+    description: 'Designing and engineering bespoke digital experiences, brand identities, and WebGL canvases for global clients.',
+    highlights: [
+      'Delivered 10+ custom web apps with dark mode priority and kinetic micro-interactions.',
+      'Collaborated directly with founders on product positioning and UI engineering.',
+    ],
+    stack: ['React', 'Next.js', 'TypeScript', 'Three.js', 'CSS Physics'],
+  },
+  {
+    company: 'First Bank Digital Innovation Lab',
+    role: 'Mobile Developer Intern',
+    dates: '2024 – 2024',
+    location: 'Lagos, Nigeria',
+    logo: firstBankLogo,
+    description: 'Contributed to the core mobile banking application refactor and cross-platform design system components.',
+    highlights: [
+      'Redesigned checkout and fund transfer confirmation user flows.',
+      'Improved React Native app cold-start launch speed by 35%.',
+    ],
+    stack: ['React Native', 'TypeScript', 'Design Systems', 'Figma'],
+  },
 ];
 ---
 
-<section class="flex flex-col gap-8" id="experience">
-  <h2 class="m-0 font-sans text-sm sm:text-base font-normal tracking-tight text-[var(--text-muted)]">Experience</h2>
+<section class="flex flex-col gap-5" id="experience">
+  <div class="flex items-center justify-between">
+    <h2 class="m-0 font-sans text-sm sm:text-base font-normal tracking-tight text-[var(--text-muted)]">Experience</h2>
+    <span class="font-mono text-[11px] text-[var(--text-faint)]">TAP TO EXPAND</span>
+  </div>
 
-  <ol class="experience-list" data-experience-list>
+  <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)]" data-experience-list>
     {experience.map((item, index) => (
-      <li class="experience-item" data-experience-item>
-        <div class="experience-item__logo" aria-hidden="true">
-          {item.logo ? (
-            <Image class="size-full object-contain" src={item.logo} alt="" width={36} height={36} />
-          ) : (
-            <span class="experience-item__fallback">◌</span>
-          )}
+      <div
+        class="experience-card group relative flex flex-col overflow-hidden rounded-[12px] py-4 px-2 sm:px-3 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none"
+        data-experience-item
+        data-visible="false"
+        role="button"
+        tabindex="0"
+        aria-expanded="false"
+      >
+        <!-- Card Header Row -->
+        <div class="flex items-start gap-3.5 sm:gap-4">
+          <!-- Logo Badge: Clean subtle hairline frame (54px x 54px, 14px radius, 10px padding) -->
+          <div class="experience-badge flex size-[54px] shrink-0 items-center justify-center rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-[10px] transition-transform duration-200 group-hover:scale-[1.03]">
+            {item.logo ? (
+              <Image class="size-[34px] object-contain shrink-0" src={item.logo} alt={item.company} width={34} height={34} />
+            ) : (
+              <span class="font-mono text-base font-semibold text-[var(--text-secondary)]">CY</span>
+            )}
+          </div>
+
+          <!-- Role Summary Header -->
+          <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="m-0 font-display text-base sm:text-lg font-normal tracking-[-0.02em] text-[var(--text-primary)] transition-colors group-hover:text-white">
+                {item.company}
+              </h3>
+              
+              <!-- Rotating Chevron Indicator -->
+              <svg class="experience-chevron size-4 shrink-0 text-[var(--text-muted)] opacity-60 transition-all duration-300 ease-[var(--ease-smooth-out)] group-hover:opacity-100 group-hover:text-[var(--text-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+              </svg>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-[var(--text-muted)]">
+              <span>{item.role}</span>
+              <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">{item.dates}</span>
+            </div>
+          </div>
         </div>
 
-        <div class="experience-item__body">
-          <div class="experience-item__top">
-            <h3 class="experience-item__company">{item.company}</h3>
-          </div>
-          <div class="experience-item__meta">
-            <p class="experience-item__role">{item.role}</p>
-            <p class="experience-item__dates">{item.dates}</p>
+        <!-- Expandable Role Drawer (0fr -> 1fr CSS Grid Animation) -->
+        <div class="experience-drawer grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-[var(--ease-smooth-out)]">
+          <div class="overflow-hidden">
+            <div class="flex flex-col gap-4 pt-4 mt-3.5 border-t border-dashed border-[var(--border-subtle)]">
+              <p class="m-0 text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)]">
+                {item.description}
+              </p>
+
+              <!-- Highlights Bullet List -->
+              <div class="flex flex-col gap-2">
+                <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">Key Deliverables & Impact</span>
+                <ul class="m-0 flex list-none flex-col gap-2 p-0">
+                  {item.highlights.map((h, i) => (
+                    <li class="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--text-secondary)]">
+                      <span class="font-mono tabular-nums text-xs text-[var(--text-muted)] pt-0.5">0{i + 1}</span>
+                      <span class="leading-relaxed">{h}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-      </li>
+
+      </div>
     ))}
-  </ol>
+  </div>
 </section>
 
 <style>
-  .experience-list {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    display: flex;
-    flex-direction: column;
-    gap: 2.5rem;
+  .experience-card:active {
+    transform: scale(0.985);
   }
 
-  .experience-item {
-    position: relative;
-    display: flex;
-    gap: 1.25rem;
-    padding: 0.5rem 0.25rem;
-    border-radius: 1rem;
+  .experience-card[aria-expanded="true"] {
+    border-color: var(--border-default);
+    background-color: var(--surface-interactive);
   }
 
-  /* Timeline rail — a subtle gradient guide-line on the left */
-  .experience-item__rail {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: calc(29px + 0.5rem);
-    width: 1px;
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      var(--border-default) 12%,
-      var(--border-default) 88%,
-      transparent
-    );
-    opacity: 0.6;
+  .experience-card[aria-expanded="true"] .experience-drawer {
+    grid-template-rows: 1fr;
   }
 
-  .experience-list > :first-child .experience-item__rail {
-    background: linear-gradient(
-      to bottom,
-      var(--border-default) 24%,
-      var(--border-default) 88%,
-      transparent
-    );
+  .experience-card[aria-expanded="true"] .experience-chevron {
+    transform: rotate(180deg);
   }
 
-  .experience-list > :last-child .experience-item__rail {
-    background: linear-gradient(
-      to bottom,
-      transparent,
-      var(--border-default) 12%,
-      var(--border-default) 60%
-    );
-  }
-
-  /* Logo chip sitting on the rail */
-  .experience-item__logo {
-    position: relative;
-    z-index: 1;
-    display: flex;
-    flex: none;
-    align-items: center;
-    justify-content: center;
-    width: 58px;
-    height: 58px;
-    padding: 0.75rem;
-    border-radius: 1rem;
-    border: 2px solid var(--border-logo);
-    background: var(--surface-raised);
-    box-shadow: var(--shadow-logo);
-  }
-
-  .experience-item__fallback {
-    font-size: 1.125rem;
-    line-height: 1;
-    color: var(--text-secondary);
-  }
-
-  .experience-item__body {
-    min-width: 0;
-    flex: 1;
-    padding-top: 0.25rem;
-  }
-
-  .experience-item__top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
-  }
-
-  .experience-item__company {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.4;
-    font-weight: 400;
-    color: var(--text-primary);
-  }
-
-  .experience-item__meta {
-    margin-top: 0.25rem;
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 0.75rem;
-    color: var(--text-muted);
-  }
-
-  .experience-item__role {
-    margin: 0;
-    font-size: 1rem;
-    line-height: 1.5;
-  }
-
-  .experience-item__dates {
-    margin: 0;
-    flex: none;
-    font-size: 0.875rem;
-    line-height: 1.5;
-  }
-
-  /* Staggered reveal: hidden until scrolled into view.
-     Text-reveal distance is --distance-medium (12px). Duration uses
-     the --duration-very-slow token (500ms). Per-item offset steps by
-     --duration-stagger (40ms) using the --index set by JS. */
-  .experience-item {
+  /* Staggered reveal */
+  .experience-card {
     opacity: 0;
     transform: translateY(var(--distance-medium));
     transition:
       opacity var(--duration-very-slow) var(--ease-smooth-out),
-      transform var(--duration-very-slow) var(--ease-smooth-out);
+      transform var(--duration-very-slow) var(--ease-smooth-out),
+      border-color 200ms ease,
+      background-color 200ms ease;
     transition-delay: calc(var(--index) * var(--duration-stagger));
   }
 
-  .experience-item[data-visible='true'] {
+  .experience-card[data-visible='true'] {
     opacity: 1;
     transform: translateY(0);
-    /* Stagger delay is one-shot: once revealed, clear it. */
     transition-delay: 0s;
   }
 
-  /* Reduced motion: show instantly, no transforms */
   @media (prefers-reduced-motion: reduce) {
-    .experience-item {
+    .experience-card {
       opacity: 1;
       transform: none;
       transition: none;
@@ -195,10 +179,11 @@ const experience: ExperienceItem[] = [
 </style>
 
 <script>
-  const items = Array.from(
+  const cards = Array.from(
     document.querySelectorAll<HTMLElement>('[data-experience-item]')
   );
 
+  // IntersectionObserver for staggered reveal
   if ('IntersectionObserver' in window) {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -212,10 +197,25 @@ const experience: ExperienceItem[] = [
       { threshold: 0.15, rootMargin: '0px 0px -40px 0px' }
     );
 
-    items.forEach((item, index) => item.style.setProperty('--index', String(index)));
-    items.forEach((item) => observer.observe(item));
+    cards.forEach((card, index) => card.style.setProperty('--index', String(index)));
+    cards.forEach((card) => observer.observe(card));
   } else {
-    items.forEach((item) => item.setAttribute('data-visible', 'true'));
+    cards.forEach((card) => card.setAttribute('data-visible', 'true'));
   }
+
+  // Tap / Click Accordion Drawer Toggle
+  cards.forEach((card) => {
+    const toggle = () => {
+      const isExpanded = card.getAttribute('aria-expanded') === 'true';
+      card.setAttribute('aria-expanded', String(!isExpanded));
+    };
+
+    card.addEventListener('click', toggle);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        toggle();
+      }
+    });
+  });
 </script>
-</content>
