@@ -41,7 +41,7 @@ const interests = [
       <nav class="flex w-full items-center justify-between" aria-label="Profile navigation">
         <a
           href="/"
-          class="profile-standalone-back-btn group flex size-9 items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] text-[var(--text-muted)] transition-all duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          class="profile-standalone-back-btn group flex size-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-subtle)] text-[var(--text-muted)] transition-all duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
           aria-label="Back to home"
         >
           <svg class="size-4 opacity-70 transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -64,10 +64,7 @@ const interests = [
             loading="eager"
           />
           <div class="absolute inset-0 bg-gradient-to-t from-[rgba(13,13,13,0.7)] via-transparent to-transparent opacity-80"></div>
-          <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between text-xs text-[var(--text-muted)]">
-            <span class="font-mono text-[11px]">CYRIL EGBOBIANI</span>
-            <span class="font-mono text-[11px]">LAGOS, NG </span>
-          </div>
+         
         </section>
 
         <!-- 2. Editorial Narrative Statement -->
@@ -101,7 +98,7 @@ const interests = [
                     {item.tag}
                   </span>
                   <div class="flex flex-col">
-                    <span class="font-display text-lg font-normal tracking-[-0.03em] text-[var(--text-primary)] transition-colors duration-200 group-hover:text-white">
+                    <span class="font-display text-lg font-normal tracking-[-0.03em] text-[var(--text-primary)]">
                       {item.title}
                     </span>
                     <span class="text-xs text-[var(--text-muted)] font-sans">
