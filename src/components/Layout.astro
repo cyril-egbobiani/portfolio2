@@ -2,14 +2,61 @@
 import '../styles.css';
 import Lenis from './Lenis.astro';
 
-const { title } = Astro.props;
+const {
+  title = 'Cyril Egbobiani | Software Engineer & Designer',
+  description = 'Software Engineer & Designer based in Lagos, Nigeria. Crafting high-performance web applications, tokenized design systems, mobile apps, and WebGL experiences.',
+  image = '/images/profile-1.png',
+} = Astro.props;
+
+const siteUrl = 'https://portfolio-screeching.brimble.app';
+const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 ---
 
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Primary SEO Title & Meta Description -->
     <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <link rel="canonical" href={canonicalUrl} />
+
+    <!-- OpenGraph Metadata -->
+    <meta property="og:site_name" content="Cyril Egbobiani Portfolio" />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:image" content={`${siteUrl}${image}`} />
+
+    <!-- Twitter Card Metadata -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl}${image}`} />
+
+    <!-- Structured Data (JSON-LD Person Schema) -->
+    <script type="application/ld+json" is:inline set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Cyril Egbobiani",
+      "url": siteUrl,
+      "jobTitle": "Software Engineer & Designer",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Lagos",
+        "addressCountry": "Nigeria"
+      },
+      "sameAs": [
+        "https://github.com",
+        "https://linkedin.com",
+        "https://x.com"
+      ]
+    })} />
+
+    <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
     <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;600;700&family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300;1,400;1,500&family=Geist:wght@100..900&family=Mansalva&display=swap" rel="stylesheet" />

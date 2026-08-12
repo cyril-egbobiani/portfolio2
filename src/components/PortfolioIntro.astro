@@ -16,22 +16,22 @@ const socialLinks = [
 <section class="flex flex-col gap-6">
   <div class="flex w-full flex-col gap-8">
 
-    <!-- HEADER: Avatar with 3D Tilt & Cursor Glare -->
+    <!-- HEADER: Avatar with Refined 3D Tilt & Tactile Press Motion -->
     <header class="flex w-full items-center justify-between">
       <div
-        class="avatar-tilt-card group relative size-[72px] sm:size-[88px] mt-35 cursor-pointer overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-subtle)] shadow-sm"
+        class="avatar-tilt-card group relative size-[72px] sm:size-[88px] mt-35 cursor-pointer overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-subtle)] shadow-sm select-none"
         data-avatar-tilt
       >
         <img
-          class="size-full object-cover object-center scale-[1.08] transition-transform duration-300 group-hover:scale-[1.14]"
+          class="avatar-img size-full object-cover object-center scale-[1.03] transition-transform duration-300 group-hover:scale-[1.06]"
           src={profileImg}
           alt="Cyril Egbobiani"
           width="88"
           height="88"
           loading="eager"
-        />`
+        />
         <!-- Spotlight Glare Overlay -->
-        <div class="avatar-tilt-glare absolute inset-0 pointer-events-none rounded-3xl" data-avatar-glare></div>
+        <div class="avatar-tilt-glare absolute inset-0 pointer-events-none rounded-2xl" data-avatar-glare></div>
       </div>
     </header>
 
@@ -77,14 +77,18 @@ const socialLinks = [
 </section>
 
 <style>
-  /* 3D Tilt Card & Glare Styles */
+<style>
+  /* Refined 3D Avatar Physics Card (Emil Kowalski Design Engineering Rules) */
   .avatar-tilt-card {
-    perspective: 600px;
+    perspective: 800px;
     transform-style: preserve-3d;
     will-change: transform;
-    transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease;
+    transition:
+      border-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
     isolation: isolate;
     -webkit-mask-image: -webkit-radial-gradient(white, black);
+    touch-action: manipulation;
   }
 
   .avatar-tilt-card:hover {
@@ -95,16 +99,22 @@ const socialLinks = [
     opacity: 0;
     background: radial-gradient(
       circle at var(--mouse-x, 50%) var(--mouse-y, 50%),
-      rgba(255, 255, 255, 0.4) 0%,
-      rgba(255, 255, 255, 0.1) 45%,
+      rgba(255, 255, 255, 0.25) 0%,
+      rgba(255, 255, 255, 0.08) 40%,
       transparent 70%
     );
     mix-blend-mode: overlay;
-    transition: opacity 250ms ease;
+    transition: opacity 200ms ease;
   }
 
   .avatar-tilt-card:hover .avatar-tilt-glare {
     opacity: 1;
+  }
+
+  /* Tactile Press State */
+  .avatar-tilt-card:active,
+  .avatar-tilt-card.is-pressed {
+    transform: perspective(800px) scale3d(0.96, 0.96, 0.96) !important;
   }
 </style>
 
@@ -117,26 +127,99 @@ const socialLinks = [
     });
   }
 
-  // 3D Card Hover Tilt + Glare Effect (transitions-dev pattern)
+  // Refined Lerp Physics Engine (Emil Kowalski Motion Scale)
   const avatarCard = document.querySelector<HTMLElement>('[data-avatar-tilt]');
   if (avatarCard) {
-    const maxTilt = 18; // Max tilt angle in degrees
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let targetTransX = 0;
+    let targetTransY = 0;
+    let currentTransX = 0;
+    let currentTransY = 0;
+    let isHovered = false;
+    let isPressed = false;
+    let rafId: number | null = null;
+
+    const maxTilt = 12; // Refined tilt angle in degrees
+    const maxTrans = 4; // Subtle 4px translation
+    const lerpFactor = 0.16; // Snappy smooth momentum factor
+
+    const updatePhysics = () => {
+      currentX += (targetX - currentX) * lerpFactor;
+      currentY += (targetY - currentY) * lerpFactor;
+      currentTransX += (targetTransX - currentTransX) * lerpFactor;
+      currentTransY += (targetTransY - currentTransY) * lerpFactor;
+
+      if (!isPressed) {
+        if (isHovered) {
+          avatarCard.style.transform = `perspective(800px) translate3d(${currentTransX.toFixed(2)}px, ${currentTransY.toFixed(2)}px, 6px) rotateX(${currentY.toFixed(2)}deg) rotateY(${currentX.toFixed(2)}deg) scale3d(1.025, 1.025, 1.025)`;
+        } else {
+          avatarCard.style.transform = `perspective(800px) translate3d(${currentTransX.toFixed(2)}px, ${currentTransY.toFixed(2)}px, 0px) rotateX(${currentY.toFixed(2)}deg) rotateY(${currentX.toFixed(2)}deg) scale3d(1, 1, 1)`;
+        }
+      }
+
+      const isSettled =
+        Math.abs(targetX - currentX) < 0.01 &&
+        Math.abs(targetY - currentY) < 0.01 &&
+        Math.abs(targetTransX - currentTransX) < 0.01 &&
+        Math.abs(targetTransY - currentTransY) < 0.01;
+
+      if (!isSettled || isHovered) {
+        rafId = requestAnimationFrame(updatePhysics);
+      } else {
+        rafId = null;
+      }
+    };
+
+    const startPhysicsLoop = () => {
+      if (!rafId) {
+        rafId = requestAnimationFrame(updatePhysics);
+      }
+    };
 
     avatarCard.addEventListener('mousemove', (e) => {
       const rect = avatarCard.getBoundingClientRect();
-      const x = (e.clientX - rect.left) / rect.width;
-      const y = (e.clientY - rect.top) / rect.height;
+      const relX = (e.clientX - rect.left) / rect.width;
+      const relY = (e.clientY - rect.top) / rect.height;
 
-      const tiltX = (y - 0.5) * -maxTilt;
-      const tiltY = (x - 0.5) * maxTilt;
+      targetX = (relX - 0.5) * maxTilt;
+      targetY = (relY - 0.5) * -maxTilt;
+      targetTransX = (relX - 0.5) * maxTrans;
+      targetTransY = (relY - 0.5) * maxTrans;
 
-      avatarCard.style.transform = `perspective(600px) rotateX(${tiltX.toFixed(2)}deg) rotateY(${tiltY.toFixed(2)}deg) scale3d(1.06, 1.06, 1.06)`;
-      avatarCard.style.setProperty('--mouse-x', `${(x * 100).toFixed(1)}%`);
-      avatarCard.style.setProperty('--mouse-y', `${(y * 100).toFixed(1)}%`);
+      avatarCard.style.setProperty('--mouse-x', `${(relX * 100).toFixed(1)}%`);
+      avatarCard.style.setProperty('--mouse-y', `${(relY * 100).toFixed(1)}%`);
+
+      isHovered = true;
+      startPhysicsLoop();
     });
 
     avatarCard.addEventListener('mouseleave', () => {
-      avatarCard.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+      isHovered = false;
+      targetX = 0;
+      targetY = 0;
+      targetTransX = 0;
+      targetTransY = 0;
+      startPhysicsLoop();
     });
+
+    // Tactile Press Feedback (Emil Kowalski Rule: instant responsive press scale)
+    avatarCard.addEventListener('pointerdown', () => {
+      isPressed = true;
+      avatarCard.classList.add('is-pressed');
+    });
+
+    const releasePress = () => {
+      if (isPressed) {
+        isPressed = false;
+        avatarCard.classList.remove('is-pressed');
+        startPhysicsLoop();
+      }
+    };
+
+    window.addEventListener('pointerup', releasePress);
+    window.addEventListener('pointercancel', releasePress);
   }
 </script>

@@ -178,11 +178,11 @@ const { project } = Astro.props;
       <nav class="flex w-full items-center justify-between" aria-label="Project navigation">
         <a
           href="/#projects"
-          class="project-back-btn group flex size-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-subtle)] text-[var(--text-muted)] transition-all duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          class="group inline-flex size-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] no-underline transition-all duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-[2px] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)] active:scale-[0.92]"
           aria-label="Back to work section"
         >
-          <svg class="size-4 opacity-70 transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:opacity-100" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
+          <svg class="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M15.75 19.5L8.25 12l7.5-7.5" />
           </svg>
         </a>
 
