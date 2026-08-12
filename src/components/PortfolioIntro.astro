@@ -3,6 +3,7 @@ import emailIcon from '../assets/images/email.svg?url';
 import githubIcon from '../assets/images/github.svg?url';
 import linkedinIcon from '../assets/images/linkedin.svg?url';
 import xIcon from '../assets/images/x.svg?url';
+import profileImg from '../assets/images/profile-.png?url';
 
 const socialLinks = [
   { label: 'X', href: 'https://x.com', icon: xIcon },
@@ -18,17 +19,17 @@ const socialLinks = [
     <!-- HEADER: Avatar with 3D Tilt & Cursor Glare -->
     <header class="flex w-full items-center justify-between">
       <div
-        class="avatar-tilt-card group relative size-[72px] sm:size-[88px] mt-35 cursor-pointer overflow-hidden rounded-3xl border border-[var(--border-subtle)] bg-[var(--surface-subtle)] shadow-sm"
+        class="avatar-tilt-card group relative size-[72px] sm:size-[88px] mt-35 cursor-pointer overflow-hidden rounded-2xl border border-[var(--border-subtle)] bg-[var(--surface-subtle)] shadow-sm"
         data-avatar-tilt
       >
         <img
-          class="size-full rounded-3xl object-cover object-center scale-[1.08] transition-transform duration-300 group-hover:scale-[1.14]"
-          src="/images/cyril.e.png"
+          class="size-full object-cover object-center scale-[1.08] transition-transform duration-300 group-hover:scale-[1.14]"
+          src={profileImg}
           alt="Cyril Egbobiani"
           width="88"
           height="88"
           loading="eager"
-        />
+        />`
         <!-- Spotlight Glare Overlay -->
         <div class="avatar-tilt-glare absolute inset-0 pointer-events-none rounded-3xl" data-avatar-glare></div>
       </div>
@@ -37,8 +38,8 @@ const socialLinks = [
     <!-- MAIN CONTENT: Staggered reveal, proper typographic hierarchy -->
     <div class="t-stagger flex flex-col gap-5">
 
-      <!-- Name Header (Inter Display: benji.org / rauno.me editorial signature) -->
-      <h1 class="t-stagger-line t-stagger-line--1 m-0 text-2xl sm:text-3xl font-semibold leading-tight tracking-[-0.04em] text-[var(--text-primary)]">
+      <!-- Name Header (Handwritten Mansalva Signature) -->
+      <h1 class="t-stagger-line t-stagger-line--1 m-0 text-3xl sm:text-4xl font-normal leading-tight text-[var(--text-primary)] font-['Mansalva',cursive]">
         Cyril Egbobiani
       </h1>
 

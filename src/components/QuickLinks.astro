@@ -2,12 +2,13 @@
 // Quick links — floating glass bottom navigation dock (macOS dock inspired)
 // Uses Heroicons for clean icon representation with floating tooltips and sliding pill indicator.
 import ThemeToggle from './ThemeToggle.astro';
+import profileImg from '../assets/images/profile-.png?url';
 
 const links = [
   { label: 'Work', href: '#projects', external: false, icon: 'folder' },
   { label: 'Experience', href: '#experience', external: false, icon: 'briefcase' },
+  { label: 'About', href: '#about', external: false, icon: 'avatar', avatarSrc: profileImg },
   { label: 'Contact', href: '#contact', external: false, icon: 'envelope' },
-  { label: 'About', href: '/profile', external: true, icon: 'avatar', avatarSrc: '/images/cyril.e.png' },
 ];
 ---
 
@@ -88,7 +89,7 @@ const links = [
     display: inline-flex;
     align-items: center;
     gap: 4px;
-    height: 44px;
+    height: fit-content;
     padding:  6px;
     border-radius: 9999px;
     background: var(--surface-subtle);
