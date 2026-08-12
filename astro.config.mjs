@@ -2,7 +2,11 @@ import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
-  site: 'http://localhost:3000',
+  site: 'https://portfolio-screeching.brimble.app',
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'hover',
+  },
   markdown: {
     syntaxHighlight: 'shiki',
   },
