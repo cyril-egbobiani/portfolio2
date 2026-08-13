@@ -27,11 +27,9 @@
     toggle?.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
     toggle?.classList.toggle('is-swapped', theme === 'dark');
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        document.documentElement.classList.remove('theme-switching');
-      });
-    });
+    setTimeout(() => {
+      document.documentElement.classList.remove('theme-switching');
+    }, 120);
   };
 
   const savedTheme = localStorage.getItem(themeKey);

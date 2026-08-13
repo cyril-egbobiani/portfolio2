@@ -229,15 +229,15 @@
     filter: invert(1) brightness(1.2);
   }
 
-  /* Instant theme switching (no delayed color transitions for ANY UI component) */
+  /* Instant theme switching (zero delay / duration for ANY UI component on theme toggle) */
   html.theme-switching,
   html.theme-switching *,
   html.theme-switching *::before,
-  html.theme-switching *::after,
-  html[data-theme],
-  body,
-  html[data-theme] body {
+  html.theme-switching *::after {
     transition: none !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+    animation-duration: 0s !important;
   }
 }
 
