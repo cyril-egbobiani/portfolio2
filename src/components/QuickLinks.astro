@@ -28,19 +28,19 @@ const links = [
         >
           <span class="quick-links__icon-wrapper" aria-hidden="true">
             {link.icon === 'folder' && (
-              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M2.25 12.75V12A2.25 2.25 0 0 1 4.5 9.75h15A2.25 2.25 0 0 1 21.75 12v.75m-8.69-6.44-2.12-2.12a1.5 1.5 0 0 0-1.061-.44H4.5A2.25 2.25 0 0 0 2.25 6v12a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9a2.25 2.25 0 0 0-2.25-2.25h-5.379a1.5 1.5 0 0 1-1.06-.44Z" />
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a1.5 1.5 0 0 1-1.06-.44L10.94 3.44A1.5 1.5 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Z" />
               </svg>
             )}
             {link.icon === 'briefcase' && (
-              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M15.75 5.25a3 3 0 0 0-3-3h-1.5a3 3 0 0 0-3 3v1.5H4.5A2.25 2.25 0 0 0 2.25 9v9A2.25 2.25 0 0 0 4.5 20.25h15A2.25 2.25 0 0 0 21.75 18V9A2.25 2.25 0 0 0 19.5 6.75h-3.75v-1.5Zm-6 0a1.5 1.5 0 0 1 1.5-1.5h1.5a1.5 1.5 0 0 1 1.5 1.5v1.5h-4.5v-1.5Z" />
-                <path d="M3 13h18" />
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M4.5 7.5A2.25 2.25 0 0 0 2.25 9.75v8.25A2.25 2.25 0 0 0 4.5 20.25h15a2.25 2.25 0 0 0 2.25-2.25V9.75A2.25 2.25 0 0 0 19.5 7.5h-3.75V5.25a2.25 2.25 0 0 0-2.25-2.25h-3a2.25 2.25 0 0 0-2.25 2.25V7.5H4.5ZM10.5 5.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V7.5h-4.5V5.25Z" />
               </svg>
             )}
             {link.icon === 'envelope' && (
-              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5H4.5a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
+                <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
               </svg>
             )}
             {link.icon === 'avatar' && link.avatarSrc && (
@@ -59,7 +59,6 @@ const links = [
       ))}
     </div>
 
-    <div class="quick-links__divider" role="separator"></div>
 
     <!-- Integrated Inline Theme Toggle -->
     <div class="quick-links__toggle-wrapper">
@@ -88,10 +87,10 @@ const links = [
     pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    gap: 4px;
     height: fit-content;
-    padding:  6px;
+    padding: 4px 5px;
     border-radius: 9999px;
+    border: 1px solid var(--border-subtle);
     background: var(--surface-subtle);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
@@ -116,7 +115,6 @@ const links = [
     position: relative;
     display: flex;
     align-items: center;
-    gap: 2px;
   }
 
   .quick-links__item {
@@ -127,8 +125,8 @@ const links = [
     justify-content: center;
     width: 36px;
     height: 36px;
-    padding:  6px;
-    color: var(--text-primary);
+    padding: 6px;
+    color: var(--text-secondary);
     text-decoration: none;
     border-radius: 9999px;
     transition:
@@ -147,7 +145,6 @@ const links = [
   .quick-links__icon {
     width: 18px;
     height: 18px;
-    stroke-width: 1.8;
     flex-shrink: 0;
   }
 
@@ -204,7 +201,7 @@ const links = [
     color: var(--text-primary);
   }
 
-  /* Sliding pill behind the active item */
+  /* Clean sliding active pill */
   .quick-links__pill {
     position: absolute;
     top: 0;
@@ -212,6 +209,7 @@ const links = [
     height: 100%;
     background: var(--surface);
     border-radius: 9999px;
+    border: 1px solid var(--border-subtle);
     transform: translateX(0);
     transition:
       transform 200ms cubic-bezier(0.23, 1, 0.32, 1),

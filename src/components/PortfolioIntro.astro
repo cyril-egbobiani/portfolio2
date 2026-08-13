@@ -35,16 +35,16 @@ const socialLinks = [
       </div>
     </header>
 
-    <!-- MAIN CONTENT: Staggered reveal, proper typographic hierarchy -->
-    <div class="t-stagger flex flex-col gap-5">
+    <!-- MAIN CONTENT: Clean, instant editorial hierarchy without stagger animation -->
+    <div class="flex flex-col gap-5">
 
       <!-- Name Header (Handwritten Shantell Sans Signature) -->
-      <h1 class="t-stagger-line t-stagger-line--1 m-0 text-3xl font-medium leading-tight text-[var(--text-primary)] font-['Shantell_Sans',cursive]">
+      <h1 class="m-0 text-3xl font-medium leading-tight text-[var(--text-primary)] font-['Shantell_Sans',cursive]">
         Cyril Egbobiani
       </h1>
 
       <!-- Role + Location -->
-      <p class="t-stagger-line t-stagger-line--2 m-0 text-sm sm:text-base leading-snug text-[var(--text-muted)]">
+      <p class="m-0 text-sm sm:text-base leading-snug text-[var(--text-muted)]">
         Software Engineer & Designer · Lagos, Nigeria
       </p>
 
@@ -52,7 +52,7 @@ const socialLinks = [
       <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
       <!-- Bio Copy -->
-      <p class="t-stagger-line t-stagger-line--3 m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+      <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
         My drive is in imagining and executing every creative idea to make things better. Design and code are two sides of the same coin and balancing both has been an extraordinary journey.
       </p>
 
@@ -76,7 +76,6 @@ const socialLinks = [
   </div>
 </section>
 
-<style>
 <style>
   /* Refined 3D Avatar Physics Card (Emil Kowalski Design Engineering Rules) */
   .avatar-tilt-card {
@@ -119,14 +118,6 @@ const socialLinks = [
 </style>
 
 <script>
-  // Stagger reveal
-  const block = document.querySelector<HTMLElement>('.t-stagger');
-  if (block) {
-    requestAnimationFrame(() => {
-      block.classList.add('is-shown');
-    });
-  }
-
   // Refined Lerp Physics Engine (Emil Kowalski Motion Scale)
   const avatarCard = document.querySelector<HTMLElement>('[data-avatar-tilt]');
   if (avatarCard) {
