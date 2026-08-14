@@ -97,14 +97,14 @@ const projects: Record<string, Project[]> = {
   
   <!-- Section Header + Sliding Tabs Bar -->
   <div class="flex items-center justify-between gap-4">
-    <h2 class="m-0 font-sans text-sm sm:text-base font-normal tracking-tight text-[var(--text-muted)]">Work</h2>
+    <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">Work</h2>
 
     <!-- Sliding Pill Tabs Bar -->
     <div class="tabs-bar w-fit" role="tablist" aria-label="Project categories">
       <span class="tabs-pill" aria-hidden="true"></span>
       {tabs.map((tab, index) => (
         <button
-          class={`tab ${index === 0 ? 'tab-active' : ''}`}
+          class={`tab font-mono text-xs font-medium ${index === 0 ? 'tab-active' : ''}`}
           type="button"
           role="tab"
           aria-selected={index === 0}
@@ -130,7 +130,7 @@ const projects: Record<string, Project[]> = {
           /* Pure Visual Gallery (Sharp Rectangular Design Frames inspired by design.gallery) */
           projects[tab].map((project) => (
             <div
-              class="design-thumb-card group relative overflow-hidden transition-all duration-300 ease-[var(--ease-smooth-out)] cursor-zoom-in"
+              class="design-thumb-card group relative overflow-hidden transition-all duration-300 ease-[var(--ease-smooth-out)] cursor-zoom-in rounded-[10px] border border-[var(--border-subtle)] hover:border-[var(--border-default)]"
               data-spring-zoom-trigger
               data-zoom-src={project.image}
               data-zoom-title={project.title}
@@ -158,7 +158,7 @@ const projects: Record<string, Project[]> = {
             <a
               href={`/projects/${project.slug}`}
               data-astro-prefetch
-              class="project-card group relative flex flex-col justify-between overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]"
+              class="project-card group relative flex flex-col justify-between overflow-hidden rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.985]"
             >
               <div class={`relative ${project.aspect || 'aspect-[4/3]'} w-full overflow-hidden rounded-[8px] bg-[var(--surface-interactive)] border border-[var(--border-subtle)]`}>
                 {project.video ? (
@@ -182,12 +182,12 @@ const projects: Record<string, Project[]> = {
               </div>
 
               <!-- Bottom Content & Action Trigger Row -->
-              <div class="flex items-end justify-between gap-3 pt-2 pb-0.5 px-1">
+              <div class="flex items-end justify-between gap-3 pt-2.5 pb-0.5 px-1">
                 <div class="flex flex-col gap-0.5 min-w-0">
-                  <h3 class="m-0 font-display text-base font-normal tracking-[-0.03em] text-[var(--text-primary)] truncate">
+                  <h3 class="m-0 font-sans text-[15px] sm:text-[16px] font-medium tracking-[-0.02em] text-[var(--text-primary)] truncate">
                     {project.title}
                   </h3>
-                  <p class="m-0 text-xs text-[var(--text-muted)] truncate">
+                  <p class="m-0 font-sans text-[13px] sm:text-[13.5px] text-[var(--text-muted)] truncate">
                     {project.description}
                   </p>
                 </div>

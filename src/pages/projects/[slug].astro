@@ -212,38 +212,38 @@ const { project } = Astro.props;
         <!-- 2. Project Title & Overview -->
         <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-4">
           <div class="flex items-center gap-3">
-            <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
+            <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
               {project.category}
             </span>
             <span class="text-xs text-[var(--text-faint)] font-mono">•</span>
-            <span class="font-mono tabular-nums text-[11px] text-[var(--text-muted)]">
+            <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">
               {project.year}
             </span>
           </div>
 
-          <h1 class="m-0 font-display text-2xl sm:text-3xl font-normal leading-[1.25] tracking-[-0.04em] text-[var(--text-primary)]">
+          <h1 class="m-0 font-display text-2xl sm:text-3xl font-semibold leading-[1.25] tracking-[-0.04em] text-[var(--text-primary)]">
             {project.title}
           </h1>
 
-          <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+          <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
             {project.description}
           </p>
         </section>
 
         <!-- Hair-Line Separator -->
-        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
 
         <!-- 3. Metadata Table Bar (Role, Timeline, Action CTA) -->
         <section class="t-stagger-line t-stagger-line--3 flex flex-wrap items-center justify-between gap-4 border-b border-dashed border-[var(--border-subtle)] py-4 my-1">
           <div class="flex items-center gap-6 sm:gap-10">
             <div class="flex flex-col gap-0.5">
-              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">ROLE</span>
-              <span class="text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.role}</span>
+              <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">ROLE</span>
+              <span class="text-sm font-medium text-[var(--text-primary)]">{project.role}</span>
             </div>
 
             <div class="flex flex-col gap-0.5">
-              <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">TIMELINE</span>
-              <span class="font-mono tabular-nums text-xs sm:text-sm font-medium text-[var(--text-primary)]">{project.year}</span>
+              <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">TIMELINE</span>
+              <span class="font-mono tabular-nums text-sm font-medium text-[var(--text-primary)]">{project.year}</span>
             </div>
           </div>
 
@@ -251,7 +251,7 @@ const { project } = Astro.props;
             href={project.link}
             target="_blank"
             rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3.5 py-1.5 font-sans text-xs font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:scale-[1.02]"
+            class="inline-flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3.5 py-1.5 font-mono text-xs font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:-translate-y-0.5 active:scale-[0.97]"
           >
             <span>Visit Project</span>
             <svg class="size-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -263,10 +263,10 @@ const { project } = Astro.props;
         <!-- 4. Deep-Dive Case Study Narrative & Key Highlights -->
         <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-5 pt-2">
           <div class="flex flex-col gap-2">
-            <h2 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
+            <h2 class="m-0 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
               Overview & Architecture
             </h2>
-            <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+            <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
               {project.longDescription}
             </p>
           </div>
@@ -274,13 +274,13 @@ const { project } = Astro.props;
           <!-- Key Deliverables & Technical Highlights -->
           {project.highlights && project.highlights.length > 0 && (
             <div class="flex flex-col gap-3 pt-1">
-              <h3 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
+              <h3 class="m-0 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
                 Key Highlights
               </h3>
               <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
                 {project.highlights.map((item, idx) => (
-                  <li class="flex items-start gap-3 text-xs sm:text-sm text-[var(--text-secondary)]">
-                    <span class="font-mono text-[11px] tabular-nums text-[var(--text-muted)] pt-0.5 shrink-0">0{idx + 1}</span>
+                  <li class="flex items-start gap-3 text-[14px] sm:text-[14.5px] text-[var(--text-secondary)]">
+                    <span class="font-mono text-xs tabular-nums text-[var(--text-muted)] pt-0.5 shrink-0">0{idx + 1}</span>
                     <span class="leading-relaxed">{item}</span>
                   </li>
                 ))}
@@ -292,7 +292,7 @@ const { project } = Astro.props;
         <!-- 5. Visual Gallery (Zoomable Framed Media Containers) -->
         {project.gallery && project.gallery.length > 0 && (
           <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-4">
-            <h2 class="m-0 font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">
+            <h2 class="m-0 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
               Visual Gallery
             </h2>
             <div class="flex flex-col gap-6">
@@ -315,12 +315,12 @@ const { project } = Astro.props;
         )}
 
         <!-- Hair-Line Separator -->
-        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
 
         <!-- 6. Next Project Showcase Banner -->
         <footer class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
           <div class="flex items-center justify-between">
-            <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">UP NEXT</span>
+            <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">UP NEXT</span>
             <a href="/#projects" class="font-mono text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">
               Back to all projects ↗
             </a>
@@ -328,11 +328,11 @@ const { project } = Astro.props;
 
           <a
             href={`/projects/${project.nextSlug}`}
-            class="group flex items-center justify-between gap-4 rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]"
+            class="group flex items-center justify-between gap-4 rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.985]"
           >
             <div class="flex flex-col gap-1">
-              <span class="font-mono text-[10px] uppercase tracking-wider text-[var(--text-muted)]">NEXT CASE STUDY</span>
-              <span class="font-display text-base sm:text-lg font-normal tracking-[-0.03em] text-[var(--text-primary)]">
+              <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">NEXT CASE STUDY</span>
+              <span class="font-sans text-base sm:text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 {project.nextTitle}
               </span>
             </div>

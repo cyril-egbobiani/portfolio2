@@ -61,14 +61,14 @@ const experience: ExperienceItem[] = [
 
 <section class="flex flex-col gap-5" id="experience">
   <div class="flex items-center justify-between">
-    <h2 class="m-0 font-sans text-sm sm:text-base font-normal tracking-tight text-[var(--text-muted)]">Experience</h2>
-    <span class="font-mono text-[11px] text-[var(--text-faint)]">TAP TO EXPAND</span>
+    <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">Experience</h2>
+    <span class="font-mono text-xs text-[var(--text-muted)] opacity-70">TAP TO EXPAND</span>
   </div>
 
   <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)]" data-experience-list>
     {experience.map((item, index) => (
       <div
-        class="experience-card group relative flex flex-col overflow-hidden py-4 px-2 sm:px-3 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none"
+        class="experience-card group relative flex flex-col overflow-hidden py-4 px-2 sm:px-3 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none rounded-[6px]"
         data-experience-item
         data-visible="false"
         role="button"
@@ -101,7 +101,7 @@ const experience: ExperienceItem[] = [
           <!-- Role Summary Header -->
           <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
             <div class="flex items-center justify-between gap-2">
-              <h3 class="m-0 font-display text-base sm:text-lg font-normal tracking-[-0.02em] text-[var(--text-primary)]">
+              <h3 class="m-0 font-sans text-[15.5px] sm:text-[17px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                 {item.company}
               </h3>
               
@@ -111,9 +111,9 @@ const experience: ExperienceItem[] = [
               </svg>
             </div>
 
-            <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm text-[var(--text-muted)]">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[13.5px] sm:text-sm text-[var(--text-muted)]">
               <span>{item.role}</span>
-              <span class="font-mono tabular-nums text-[11px] text-[var(--text-muted)]">{item.dates}</span>
+              <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">{item.dates}</span>
             </div>
           </div>
         </div>
@@ -122,16 +122,16 @@ const experience: ExperienceItem[] = [
         <div class="experience-drawer grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-[var(--ease-smooth-out)]">
           <div class="overflow-hidden">
             <div class="flex flex-col gap-4 pt-4 mt-3.5 border-t border-dashed border-[var(--border-subtle)]">
-              <p class="m-0 text-xs sm:text-sm leading-relaxed text-[var(--text-secondary)]">
+              <p class="m-0 font-sans text-[14px] sm:text-[14.5px] leading-relaxed text-[var(--text-secondary)]">
                 {item.description}
               </p>
 
               <!-- Highlights Bullet List -->
               <div class="flex flex-col gap-2">
-                <span class="font-mono text-[11px] uppercase tracking-normal text-[var(--text-muted)]">Key Deliverables & Impact</span>
+                <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">Key Deliverables & Impact</span>
                 <ul class="m-0 flex list-none flex-col gap-2 p-0">
                   {item.highlights.map((h, i) => (
-                    <li class="flex items-start gap-2.5 text-xs sm:text-sm text-[var(--text-secondary)]">
+                    <li class="flex items-start gap-2.5 text-[13.5px] sm:text-[14px] text-[var(--text-secondary)]">
                       <span class="font-mono tabular-nums text-xs text-[var(--text-muted)] pt-0.5">0{i + 1}</span>
                       <span class="leading-relaxed">{h}</span>
                     </li>

@@ -6,7 +6,7 @@
 <section class="flex flex-col gap-4" id="contact">
   <!-- Section Header with Refined Availability Aura Badge -->
   <div class="flex items-center justify-between">
-    <h2 class="m-0 font-sans text-sm font-semibold tracking-[-0.03em] text-[var(--text-primary)]">
+    <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">
       Contact
     </h2>
     <div class="flex items-center gap-2 text-xs text-[var(--text-muted)]">
@@ -14,13 +14,13 @@
         <span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75"></span>
         <span class="relative inline-flex size-2 rounded-full bg-emerald-400 shadow-[0_0_8px_rgba(52,211,153,0.6)]"></span>
       </span>
-      <span class="font-mono text-[11px]">Available for projects</span>
+      <span class="font-mono text-xs text-[var(--text-muted)]">Available for projects</span>
     </div>
   </div>
 
   <!-- Contact Section Container (Borderless Layout) -->
   <div class="contact-card flex flex-col gap-4 py-1">
-    <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+    <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
       Whether you have a project idea, a design inquiry, or just want to connect — my inbox is always open.
     </p>
 
@@ -29,7 +29,7 @@
       
       <!-- Interactive Email Copy Pill -->
       <div
-        class="email-box group relative flex items-center justify-between gap-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 cursor-pointer select-none transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)]"
+        class="email-box group relative flex items-center justify-between gap-3 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3 py-2 cursor-pointer select-none transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
         data-copy-box
         role="button"
         tabindex="0"
@@ -39,12 +39,12 @@
           <svg class="size-4 shrink-0 opacity-60 text-[var(--text-primary)] transition-opacity group-hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <path d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25H4.5a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5H4.5a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
           </svg>
-          <span class="truncate font-mono text-xs sm:text-sm text-[var(--text-primary)]">
+          <span class="truncate font-mono text-[13.5px] sm:text-sm text-[var(--text-primary)]">
             egbobianicyril@gmail.com
           </span>
         </div>
 
-        <div class="copy-btn flex items-center gap-1 rounded-[4px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-2 py-1 text-xs text-[var(--text-muted)] transition-all duration-160 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)]">
+        <div class="copy-btn flex items-center gap-1 rounded-[4px] border border-[var(--border-subtle)] bg-[var(--surface)] px-2 py-1 text-xs text-[var(--text-muted)] transition-all duration-160 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)]">
           <span class="copy-btn__stage relative flex size-3.5 items-center justify-center" aria-hidden="true">
             <!-- Copy icon -->
             <svg class="copy-btn__icon copy-btn__icon--copy size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -55,7 +55,7 @@
               <path d="m4.5 12.75 6 6 9-13.5" />
             </svg>
           </span>
-          <span class="copy-btn__label font-sans text-[11px] font-medium">Copy</span>
+          <span class="copy-btn__label font-mono text-xs font-medium">Copy</span>
         </div>
       </div>
 
@@ -65,7 +65,7 @@
           href="https://x.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3 py-2 font-mono text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
         >
           X
         </a>
@@ -73,7 +73,7 @@
           href="https://www.linkedin.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3 py-2 font-mono text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
         >
           LinkedIn
         </a>
@@ -81,7 +81,7 @@
           href="https://github.com"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface)] px-3 py-2 text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+          class="social-pill flex items-center justify-center rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3 py-2 font-mono text-xs font-medium text-[var(--text-muted)] no-underline transition-all duration-160 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
         >
           GitHub
         </a>

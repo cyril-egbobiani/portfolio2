@@ -35,24 +35,24 @@ const socialLinks = [
       </div>
     </header>
 
-    <!-- MAIN CONTENT: Clean, instant editorial hierarchy without stagger animation -->
+    <!-- MAIN CONTENT: Clean, instant editorial hierarchy with calibrated typography -->
     <div class="flex flex-col gap-5">
 
-      <!-- Name Header (Handwritten Shantell Sans Signature) -->
-      <h1 class="m-0 text-2xl font-medium leading-tight text-[var(--text-primary)] font-['Shantell_Sans',cursive]">
+      <!-- Name Header (Crisp, authoritative editorial display font) -->
+      <h1 class="m-0 font-display text-[26px] sm:text-[32px] font-normal tracking-[-0.015em] leading-[1.2] text-[var(--text-primary)]">
         Cyril Egbobiani
       </h1>
 
       <!-- Role + Location -->
-      <p class="m-0 text-sm sm:text-base leading-snug text-[var(--text-muted)]">
+      <p class="m-0 font-sans text-sm sm:text-[14.5px] leading-snug text-[var(--text-muted)] font-normal">
         Software Engineer & Designer · Lagos, Nigeria
       </p>
 
-      <!-- Hair-line separator -->
-      <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
+      <!-- Hair-line separator with faded gradient mask -->
+      <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
 
-      <!-- Bio Copy -->
-      <p class="m-0 text-sm sm:text-base leading-relaxed text-[var(--text-secondary)]">
+      <!-- Bio Copy (Calibrated 15.5px with comfortable 1.62 leading) -->
+      <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
         My drive is in imagining and executing every creative idea to make things better. Design and code are two sides of the same coin and balancing both has been an extraordinary journey.
       </p>
 
@@ -61,11 +61,11 @@ const socialLinks = [
         <div class="flex flex-wrap gap-2">
           {socialLinks.map((link) => (
             <a
-              class="group flex items-center gap-1.5 rounded-[4px] border border-[var(--border-subtle)] bg-transparent px-3 py-1.5 text-xs font-medium text-[var(--text-muted)] transition-all duration-[var(--duration-medium)] ease-[var(--ease-smooth-out)] hover:-translate-y-[3px] hover:scale-[1.015] hover:border-[var(--border-default)] hover:text-[var(--text-primary)]"
+              class="group flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3 py-1.5 font-mono text-xs font-medium text-[var(--text-muted)] transition-[transform,border-color,color] duration-160 ease-[var(--ease-smooth-out)] hover:-translate-y-0.5 hover:border-[var(--border-default)] hover:text-[var(--text-primary)] active:scale-[0.97]"
               href={link.href}
               aria-label={link.label}
             >
-              <img class="size-[12px] shrink-0 opacity-50 transition-opacity duration-[var(--duration-fast)] group-hover:opacity-100" src={link.icon} alt="" />
+              <img class="size-[12px] shrink-0 opacity-50 transition-opacity duration-150 group-hover:opacity-100" src={link.icon} alt="" />
               <span>{link.label}</span>
             </a>
           ))}
