@@ -192,122 +192,151 @@ const { project } = Astro.props;
       <!-- Main Project Description Content with Staggered Entrance -->
       <article class="t-stagger flex flex-col gap-10">
 
-        <!-- 1. Hero Framed Preview Banner -->
-        <header class="t-stagger-line t-stagger-line--1 group relative overflow-hidden rounded-[16px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 transition-all duration-300 ease-[var(--ease-smooth-out)]">
+        <!-- 1. Project Title & High-Level Summary -->
+        <header class="t-stagger-line t-stagger-line--1 flex flex-col gap-3">
+          <h1 class="m-0 font-display text-3xl sm:text-4xl font-extrabold leading-[1.12] tracking-[-0.04em] text-[var(--text-primary)]">
+            {project.title}
+          </h1>
+
+          <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.68] text-[var(--text-secondary)] font-normal">
+            {project.description}
+          </p>
+        </header>
+
+        <!-- 2. Architectural Spec-Sheet Table & Editorial Link -->
+        <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-5">
+          <!-- Spec Table -->
+          <div class="flex flex-col border-y border-[var(--border-subtle)] divide-y divide-[var(--border-subtle)]">
+            <!-- Row: Role -->
+            <div class="flex items-center justify-between py-2.5 text-xs">
+              <span class="flex items-center gap-2 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
+                <span class="size-1 rounded-full bg-[var(--text-muted)] opacity-70"></span>
+                Role
+              </span>
+              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">
+                {project.role}
+              </span>
+            </div>
+
+            <!-- Row: Timeline -->
+            <div class="flex items-center justify-between py-2.5 text-xs">
+              <span class="flex items-center gap-2 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
+                <span class="size-1 rounded-full bg-[var(--text-muted)] opacity-70"></span>
+                Timeline
+              </span>
+              <span class="font-mono tabular-nums text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">
+                {project.year}
+              </span>
+            </div>
+
+            <!-- Row: Tech Stack -->
+            {project.stack && project.stack.length > 0 && (
+              <div class="flex items-center justify-between py-2.5 text-xs gap-4">
+                <span class="flex items-center gap-2 shrink-0 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
+                  <span class="size-1 rounded-full bg-[var(--text-muted)] opacity-70"></span>
+                  Tech Stack
+                </span>
+                <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)] text-right">
+                  {project.stack.join(', ')}
+                </span>
+              </div>
+            )}
+
+            <!-- Row: Category -->
+            <div class="flex items-center justify-between py-2.5 text-xs">
+              <span class="flex items-center gap-2 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
+                <span class="size-1 rounded-full bg-[var(--text-muted)] opacity-70"></span>
+                Category
+              </span>
+              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">
+                {project.category}
+              </span>
+            </div>
+          </div>
+
+          <!-- Editorial Underlined CTA Link -->
+          <div class="pt-1">
+            <a
+              href={project.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="group inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] border-b border-[var(--text-primary)] pb-0.5 transition-colors duration-200 hover:border-[var(--text-muted)] hover:text-[var(--text-muted)] active:opacity-70"
+            >
+              <span>View Full Project</span>
+              <span class="inline-block transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:translate-x-1">→</span>
+            </a>
+          </div>
+        </section>
+
+        <!-- 3. Hero Framed Preview Banner -->
+        <section class="t-stagger-line t-stagger-line--2 group relative overflow-hidden rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1.5 transition-all duration-300 ease-[var(--ease-smooth-out)]">
           <div
-            class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[8px] bg-[var(--surface-interactive)] cursor-zoom-in"
+            class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[6px] bg-[var(--surface-interactive)] cursor-zoom-in"
             data-spring-zoom-trigger
             data-zoom-src={project.image}
           >
             <img
               src={project.image}
               alt={project.title}
-              class="h-full w-full object-cover object-center contrast-[1.03] opacity-90 transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02]"
+              class="h-full w-full object-cover object-center contrast-[1.02] opacity-95 transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.015]"
               loading="eager"
             />
-            <div class="absolute inset-0 bg-gradient-to-t from-[rgba(13,13,13,0.7)] via-transparent to-transparent opacity-60"></div>
           </div>
-        </header>
-
-        <!-- 2. Project Title & Overview -->
-        <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-4">
-          <div class="flex items-center gap-3">
-            <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
-              {project.category}
-            </span>
-            <span class="text-xs text-[var(--text-faint)] font-mono">•</span>
-            <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">
-              {project.year}
-            </span>
-          </div>
-
-          <h1 class="m-0 font-display text-2xl sm:text-3xl font-semibold leading-[1.25] tracking-[-0.04em] text-[var(--text-primary)]">
-            {project.title}
-          </h1>
-
-          <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
-            {project.description}
-          </p>
         </section>
 
         <!-- Hair-Line Separator -->
-        <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
-
-        <!-- 3. Metadata Table Bar (Role, Timeline, Action CTA) -->
-        <section class="t-stagger-line t-stagger-line--3 flex flex-wrap items-center justify-between gap-4 border-b border-dashed border-[var(--border-subtle)] py-4 my-1">
-          <div class="flex items-center gap-6 sm:gap-10">
-            <div class="flex flex-col gap-0.5">
-              <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">ROLE</span>
-              <span class="text-sm font-medium text-[var(--text-primary)]">{project.role}</span>
-            </div>
-
-            <div class="flex flex-col gap-0.5">
-              <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">TIMELINE</span>
-              <span class="font-mono tabular-nums text-sm font-medium text-[var(--text-primary)]">{project.year}</span>
-            </div>
-          </div>
-
-          <a
-            href={project.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            class="inline-flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3.5 py-1.5 font-mono text-xs font-medium text-[var(--text-primary)] no-underline transition-all duration-200 hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:-translate-y-0.5 active:scale-[0.97]"
-          >
-            <span>Visit Project</span>
-            <svg class="size-3.5 text-[var(--text-muted)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 19.5l15-15m0 0H8.25m11.25 0v11.25" />
-            </svg>
-          </a>
-        </section>
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
         <!-- 4. Deep-Dive Case Study Narrative & Key Highlights -->
-        <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-5 pt-2">
-          <div class="flex flex-col gap-2">
-            <h2 class="m-0 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
+        <section class="t-stagger-line t-stagger-line--3 flex flex-col gap-6">
+          <div class="flex flex-col gap-3">
+            <h2 class="m-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
               Overview & Architecture
             </h2>
-            <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
+            <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.68] text-[var(--text-secondary)] font-normal">
               {project.longDescription}
             </p>
           </div>
 
           <!-- Key Deliverables & Technical Highlights -->
           {project.highlights && project.highlights.length > 0 && (
-            <div class="flex flex-col gap-3 pt-1">
-              <h3 class="m-0 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
+            <div class="flex flex-col gap-3 pt-2">
+              <h3 class="m-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
                 Key Highlights
               </h3>
-              <ul class="m-0 flex list-none flex-col gap-2.5 p-0">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {project.highlights.map((item, idx) => (
-                  <li class="flex items-start gap-3 text-[14px] sm:text-[14.5px] text-[var(--text-secondary)]">
-                    <span class="font-mono text-xs tabular-nums text-[var(--text-muted)] pt-0.5 shrink-0">0{idx + 1}</span>
-                    <span class="leading-relaxed">{item}</span>
-                  </li>
+                  <div class="flex flex-col gap-2 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-3.5 transition-colors duration-200 hover:border-[var(--border-default)]">
+                    <span class="font-mono text-xs font-medium text-[var(--text-muted)]">0{idx + 1}</span>
+                    <span class="font-sans text-[13.5px] sm:text-[14px] leading-relaxed text-[var(--text-secondary)]">{item}</span>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </div>
           )}
         </section>
 
         <!-- 5. Visual Gallery (Zoomable Framed Media Containers) -->
         {project.gallery && project.gallery.length > 0 && (
-          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-4">
-            <h2 class="m-0 font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">
+          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
+            <h2 class="m-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
               Visual Gallery
             </h2>
             <div class="flex flex-col gap-6">
               {project.gallery.map((imgUrl) => (
                 <div
-                  class="relative aspect-[16/9] w-full overflow-hidden rounded-[12px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] cursor-zoom-in"
+                  class="relative aspect-[16/9] w-full overflow-hidden rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1.5 cursor-zoom-in group"
                   data-spring-zoom-trigger
                   data-zoom-src={imgUrl}
                 >
-                  <img
-                    src={imgUrl}
-                    alt={`${project.title} preview`}
-                    class="h-full w-full object-cover object-center opacity-90 transition-transform duration-500 hover:scale-105"
-                    loading="lazy"
-                  />
+                  <div class="relative h-full w-full overflow-hidden rounded-[6px]">
+                    <img
+                      src={imgUrl}
+                      alt={`${project.title} preview`}
+                      class="h-full w-full object-cover object-center opacity-95 transition-transform duration-500 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02]"
+                      loading="lazy"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
@@ -315,12 +344,12 @@ const { project } = Astro.props;
         )}
 
         <!-- Hair-Line Separator -->
-        <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
+        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
         <!-- 6. Next Project Showcase Banner -->
-        <footer class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
+        <footer class="t-stagger-line t-stagger-line--4 flex flex-col gap-4">
           <div class="flex items-center justify-between">
-            <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">UP NEXT</span>
+            <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">UP NEXT</span>
             <a href="/#projects" class="font-mono text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">
               Back to all projects ↗
             </a>
@@ -328,18 +357,18 @@ const { project } = Astro.props;
 
           <a
             href={`/projects/${project.nextSlug}`}
-            class="group flex items-center justify-between gap-4 rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.985]"
+            class="group flex items-center justify-between gap-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.985]"
           >
             <div class="flex flex-col gap-1">
-              <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">NEXT CASE STUDY</span>
-              <span class="font-sans text-base sm:text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">NEXT CASE STUDY</span>
+              <span class="font-display text-lg sm:text-xl font-bold tracking-[-0.03em] text-[var(--text-primary)]">
                 {project.nextTitle}
               </span>
             </div>
 
             <!-- Tactile Circular Arrow Button -->
-            <div class="flex size-9 shrink-0 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-primary)] transition-all duration-300 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-strong)] group-hover:scale-110">
-              <svg class="size-4 transition-transform duration-300 group-hover:translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <div class="flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] transition-all duration-300 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)] group-hover:translate-x-1">
+              <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
               </svg>
             </div>
@@ -357,7 +386,7 @@ const { project } = Astro.props;
 <!-- Fullscreen FLIP Spring Zoom Backdrop -->
 <div
   id="spring-zoom-backdrop"
-  class="spring-zoom-backdrop fixed inset-0 z-40 bg-[rgba(13,13,13,0.92)] backdrop-blur-xl transition-opacity duration-300 opacity-0 pointer-events-none"
+  class="spring-zoom-backdrop fixed inset-0 z-40 bg-[rgba(13,13,13,0.94)] backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none"
   aria-hidden="true"
 ></div>
 
