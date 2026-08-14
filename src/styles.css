@@ -128,7 +128,7 @@
 
   /* Typography */
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Gambarino", "Geist", Georgia, serif;
+  --font-display: "Instrument Sans", "Geist", sans-serif;
   --font-mono: "DM Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
@@ -181,7 +181,7 @@
 
   /* Typography */
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Gambarino", "Geist", Georgia, serif;
+  --font-display: "Instrument Sans", "Geist", sans-serif;
   --font-mono: "DM Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
@@ -285,7 +285,7 @@
     font-family: var(--font-display);
   }
 
-  /* Display typography: weight 400, tight tracking */
+  /* Display typography: weight 600, tight tracking */
   h1,
   h2,
   h3,
@@ -293,8 +293,8 @@
   h5,
   h6 {
     font-family: var(--font-display);
-    font-weight: 400;
-    letter-spacing: -0.02em;
+    font-weight: 600;
+    letter-spacing: -0.035em;
   }
 
   .lead {
