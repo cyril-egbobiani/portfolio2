@@ -1,5 +1,5 @@
 ---
-// ProfileSection.astro — Story & Personal Interests section (integrated onto homepage)
+// ProfileSection.astro — Story & Personal Interests section
 import photographyImg from '../assets/images/Image (Photography).png?url';
 import footballImg from '../assets/images/image (Football).png?url';
 import cookingImg from '../assets/images/Image (Cooking).png?url';
@@ -11,7 +11,6 @@ const interests = [
     title: 'Photography',
     subtitle: 'Capturing the soul of my city',
     image: photographyImg,
-   
   },
   {
     title: 'Football',
@@ -31,7 +30,7 @@ const interests = [
 ];
 ---
 
-<section class="flex flex-col gap-10" id="about">
+<section class="flex flex-col gap-9" id="about">
   
   <!-- Section Header -->
   <div class="flex items-center justify-between">
@@ -39,19 +38,18 @@ const interests = [
   </div>
 
   <!-- Hero Framed Banner -->
-  <div class="group relative overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] transition-all duration-300 ease-[var(--ease-smooth-out)]">
+  <div class="group relative overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] transition-[border-color] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)]">
     <img
       src={profile}
       alt="Cyril Egbobiani workspace"
-      class="h-[200px] sm:h-[280px] w-full object-cover object-center transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02]"
+      class="h-[200px] sm:h-[280px] w-full object-cover object-center opacity-95 transition-[transform,opacity] duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02] group-hover:opacity-100"
       loading="lazy"
     />
   </div>
 
   <!-- Editorial Narrative Statement -->
   <div class="flex flex-col gap-4">
-  
-    <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
+    <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.65] text-[var(--text-secondary)] font-normal">
       I've always liked making things, pulling them apart, and understanding why they work. That started with sketching, physical objects, and small experiments. Software made that curiosity feel bigger because the idea, interaction, and final experience can all live in the same medium.
     </p>
   </div>
@@ -60,39 +58,39 @@ const interests = [
   <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
 
   <!-- Beyond Code & Design (Personal Interests Grid) -->
-  <div class="flex flex-col gap-5">
+  <div class="flex flex-col gap-4">
     <div class="flex items-center">
       <h3 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">
         Beyond code & design
       </h3>
     </div>
 
-    <div class="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
       {interests.map((item) => (
-        <div class="interest-card group relative flex h-[105px] w-full overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-3.5 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)]">
+        <div class="interest-card group relative flex h-[100px] w-full overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-3.5 transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.98] select-none cursor-default">
           
           <!-- Left Details -->
-          <div class="z-10 flex flex-col justify-end pr-4">
+          <div class="z-10 flex flex-col justify-end pr-4 min-w-0">
             <div class="flex flex-col">
-              <span class="font-sans text-[15px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+              <span class="font-sans text-[15px] font-medium tracking-[-0.02em] text-[var(--text-primary)] truncate">
                 {item.title}
               </span>
-              <span class="text-xs text-[var(--text-muted)] font-sans">
+              <span class="text-xs text-[var(--text-muted)] font-sans truncate">
                 {item.subtitle}
               </span>
             </div>
           </div>
 
           <!-- Right Thumbnail Image (Masked Split View) -->
-          <div class="absolute right-0 top-0 bottom-0 h-full w-[42%] overflow-hidden">
+          <div class="absolute right-0 top-0 bottom-0 h-full w-[42%] overflow-hidden pointer-events-none">
             <img
               src={item.image}
               alt={item.title}
-              class="h-full w-full object-cover object-center grayscale contrast-[1.05] opacity-60 transition-all duration-500 ease-[var(--ease-smooth-out)] group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
+              class="h-full w-full object-cover object-center grayscale contrast-[1.05] opacity-60 transition-[filter,opacity,transform] duration-350 ease-[var(--ease-smooth-out)] group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
               loading="lazy"
             />
             <!-- Gradient Blend to Surface -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[var(--surface-subtle)] via-transparent to-transparent group-hover:from-[var(--surface-interactive)]"></div>
+            <div class="absolute inset-0 bg-gradient-to-r from-[var(--surface-subtle)] via-transparent to-transparent transition-colors duration-200 group-hover:from-[var(--surface-interactive)]"></div>
           </div>
 
         </div>

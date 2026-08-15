@@ -10,7 +10,7 @@ interface ExperienceItem {
   dates: string;
   location?: string;
   logo?: ImageMetadata | string;
-  themeAdaptive?: boolean; // Set to true for single-color SVG logos that should adapt to light/dark mode
+  themeAdaptive?: boolean;
   description: string;
   highlights: string[];
 }
@@ -62,23 +62,23 @@ const experience: ExperienceItem[] = [
 <section class="flex flex-col gap-5" id="experience">
   <div class="flex items-center justify-between">
     <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">Experience</h2>
-    <span class="font-mono text-xs text-[var(--text-muted)] opacity-70">TAP TO EXPAND</span>
   </div>
 
-  <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)]" data-experience-list>
+  <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)] border-y border-dashed border-[var(--border-subtle)]" data-experience-list>
     {experience.map((item, index) => (
       <div
-        class="experience-card group relative flex flex-col overflow-hidden py-4 px-2 sm:px-3 transition-all duration-300 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none rounded-[6px]"
+        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-2 sm:px-3 transition-[background-color,border-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none rounded-[6px] active:scale-[0.995]"
         data-experience-item
         data-visible="false"
+        data-expanded={index === 0 ? 'true' : 'false'}
         role="button"
         tabindex="0"
-        aria-expanded="false"
+        aria-expanded={index === 0 ? 'true' : 'false'}
       >
         <!-- Card Header Row -->
         <div class="flex items-start gap-3.5 sm:gap-4">
-          <!-- Logo Badge: Clean subtle hairline frame (54px x 54px, 14px radius, 10px padding) -->
-          <div class={`experience-badge flex size-[54px] shrink-0 items-center justify-center rounded-[14px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2.5 transition-transform duration-200 group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
+          <!-- Logo Badge: Subtle hairline frame (48px x 48px, 12px radius) -->
+          <div class={`experience-badge flex size-[46px] sm:size-[50px] shrink-0 items-center justify-center rounded-[12px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
             {item.logo ? (
               typeof item.logo === 'string' ? (
                 <img
@@ -94,24 +94,26 @@ const experience: ExperienceItem[] = [
                 />
               )
             ) : (
-              <span class="font-mono text-base font-semibold text-[var(--text-secondary)]">CY</span>
+              <span class="font-mono text-sm font-semibold text-[var(--text-secondary)]">CY</span>
             )}
           </div>
 
           <!-- Role Summary Header -->
           <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
             <div class="flex items-center justify-between gap-2">
-              <h3 class="m-0 font-sans text-[15.5px] sm:text-[17px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+              <h3 class="m-0 font-sans text-[15px] sm:text-[16px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                 {item.company}
               </h3>
               
               <!-- Rotating Chevron Indicator -->
-              <svg class="experience-chevron size-4 shrink-0 text-[var(--text-muted)] opacity-60 transition-all duration-300 ease-[var(--ease-smooth-out)] group-hover:opacity-100 group-hover:text-[var(--text-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
-              </svg>
+              <div class="experience-chevron-box flex size-6 items-center justify-center rounded-full text-[var(--text-muted)] transition-[color,transform] duration-200 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)]">
+                <svg class="experience-chevron size-3.5 transition-transform duration-250 ease-[var(--ease-smooth-out)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
+                </svg>
+              </div>
             </div>
 
-            <div class="flex flex-wrap items-center justify-between gap-2 text-[13.5px] sm:text-sm text-[var(--text-muted)]">
+            <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-[13.5px] text-[var(--text-muted)]">
               <span>{item.role}</span>
               <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">{item.dates}</span>
             </div>
@@ -119,16 +121,20 @@ const experience: ExperienceItem[] = [
         </div>
 
         <!-- Expandable Role Drawer (0fr -> 1fr CSS Grid Animation) -->
-        <div class="experience-drawer grid grid-rows-[0fr] transition-[grid-template-rows] duration-300 ease-[var(--ease-smooth-out)]">
+        <div
+          class="experience-drawer grid transition-[grid-template-rows,opacity] duration-250 ease-[var(--ease-smooth-out)]"
+          style={index === 0 ? 'grid-template-rows: 1fr; opacity: 1;' : 'grid-template-rows: 0fr; opacity: 0;'}
+          data-experience-content
+        >
           <div class="overflow-hidden">
-            <div class="flex flex-col gap-4 pt-4 mt-3.5 border-t border-dashed border-[var(--border-subtle)]">
-              <p class="m-0 font-sans text-[14px] sm:text-[14.5px] leading-relaxed text-[var(--text-secondary)]">
+            <div class="flex flex-col gap-3 pt-3 pb-1 pl-[58px] sm:pl-[64px]">
+              <p class="m-0 font-sans text-[14px] sm:text-[14.5px] leading-[1.65] text-[var(--text-secondary)] font-normal">
                 {item.description}
               </p>
 
               <!-- Highlights Bullet List -->
-              <div class="flex flex-col gap-2">
-                <span class="font-mono text-xs uppercase tracking-wider text-[var(--text-muted)]">Key Deliverables & Impact</span>
+              <div class="flex flex-col gap-2 pt-1">
+                <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">Key Impact</span>
                 <ul class="m-0 flex list-none flex-col gap-2 p-0">
                   {item.highlights.map((h, i) => (
                     <li class="flex items-start gap-2.5 text-[13.5px] sm:text-[14px] text-[var(--text-secondary)]">
@@ -148,31 +154,22 @@ const experience: ExperienceItem[] = [
 </section>
 
 <style>
-  .experience-card:active {
-    transform: scale(0.985);
-  }
-
-  .experience-card[aria-expanded="true"] {
-    border-color: var(--border-default);
-    background-color: var(--surface-interactive);
-  }
-
-  .experience-card[aria-expanded="true"] .experience-drawer {
-    grid-template-rows: 1fr;
-  }
-
-  .experience-card[aria-expanded="true"] .experience-chevron {
+  /* Chevron rotation state when expanded */
+  .experience-card[data-expanded="true"] .experience-chevron {
     transform: rotate(180deg);
   }
 
-  /* Staggered reveal */
+  .experience-card[data-expanded="true"] {
+    background-color: var(--surface-interactive);
+  }
+
+  /* Staggered scroll reveal */
   .experience-card {
     opacity: 0;
     transform: translateY(var(--distance-medium));
     transition:
       opacity var(--duration-very-slow) var(--ease-smooth-out),
       transform var(--duration-very-slow) var(--ease-smooth-out),
-      border-color 200ms ease,
       background-color 200ms ease;
     transition-delay: calc(var(--index) * var(--duration-stagger));
   }
@@ -219,16 +216,39 @@ const experience: ExperienceItem[] = [
 
   // Tap / Click Accordion Drawer Toggle
   cards.forEach((card) => {
-    const toggle = () => {
-      const isExpanded = card.getAttribute('aria-expanded') === 'true';
-      card.setAttribute('aria-expanded', String(!isExpanded));
+    const toggle = (expand: boolean) => {
+      card.setAttribute('data-expanded', String(expand));
+      card.setAttribute('aria-expanded', String(expand));
+      const drawer = card.querySelector<HTMLElement>('[data-experience-content]');
+      if (drawer) {
+        drawer.style.gridTemplateRows = expand ? '1fr' : '0fr';
+        drawer.style.opacity = expand ? '1' : '0';
+      }
     };
 
-    card.addEventListener('click', toggle);
+    card.addEventListener('click', () => {
+      const isExpanded = card.getAttribute('data-expanded') === 'true';
+
+      // Accordion collapse others
+      cards.forEach((other) => {
+        if (other !== card) {
+          other.setAttribute('data-expanded', 'false');
+          other.setAttribute('aria-expanded', 'false');
+          const otherDrawer = other.querySelector<HTMLElement>('[data-experience-content]');
+          if (otherDrawer) {
+            otherDrawer.style.gridTemplateRows = '0fr';
+            otherDrawer.style.opacity = '0';
+          }
+        }
+      });
+
+      toggle(!isExpanded);
+    });
+
     card.addEventListener('keydown', (e) => {
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
-        toggle();
+        card.click();
       }
     });
   });

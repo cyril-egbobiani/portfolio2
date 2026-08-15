@@ -13,7 +13,7 @@ import '../styles.css';
       <header class="flex w-full items-center justify-between">
         <a
           href="/"
-          class="group inline-flex size-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] no-underline transition-all duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-[2px] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)] active:scale-[0.92]"
+          class="group inline-flex size-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] no-underline transition-[transform,border-color,background-color,color] duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-[2px] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)] active:scale-[0.92]"
           aria-label="Back to home"
         >
           <svg class="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
@@ -37,7 +37,7 @@ import '../styles.css';
 
         <!-- Heading & Copy -->
         <div class="flex flex-col gap-3">
-          <h1 class="m-0 font-display text-3xl sm:text-4xl font-semibold tracking-[-0.05em] text-[var(--text-primary)]">
+          <h1 class="m-0 font-display text-3xl sm:text-4xl font-bold tracking-normal text-[var(--text-primary)]">
             Lost in space
           </h1>
           <p class="m-0 max-w-md font-sans text-[15.5px] sm:text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
@@ -49,7 +49,7 @@ import '../styles.css';
         <div class="pt-2">
           <a
             href="/"
-            class="group inline-flex items-center gap-2 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-4 py-2.5 font-mono text-xs font-medium text-[var(--text-primary)] no-underline transition-all duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
+            class="group inline-flex items-center gap-2 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-4 py-2.5 font-mono text-xs font-medium text-[var(--text-primary)] no-underline transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
           >
             <svg class="size-4 text-[var(--text-muted)] transition-transform duration-200 group-hover:-translate-x-0.5 group-hover:text-[var(--text-primary)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
