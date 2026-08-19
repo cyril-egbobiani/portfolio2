@@ -1,14 +1,18 @@
 ---
-// Quick links — floating glass bottom navigation dock (macOS dock inspired)
-// Uses Heroicons for clean icon representation with floating tooltips and sliding pill indicator.
+// Quick links — floating bottom navigation dock.
+// Icons are hand-drawn line marks in the same language as the plant and the
+// service marks: no fill, 1.6 stroke, round caps, slightly uneven contours.
+// Every section with an id is represented here, so the scroll-spy never
+// reports a section the dock cannot show.
 import ThemeToggle from './ThemeToggle.astro';
 import profileImg from '../assets/images/profile-.png?url';
 
 const links = [
-  { label: 'Work', href: '#projects', external: false, icon: 'folder' },
-  { label: 'Experience', href: '#experience', external: false, icon: 'briefcase' },
+  { label: 'Work', href: '#projects', external: false, icon: 'work' },
+  { label: 'Services', href: '#services', external: false, icon: 'services' },
+  { label: 'Experience', href: '#experience', external: false, icon: 'experience' },
   { label: 'About', href: '#about', external: false, icon: 'avatar', avatarSrc: profileImg },
-  { label: 'Contact', href: '#contact', external: false, icon: 'envelope' },
+  { label: 'Contact', href: '#contact', external: false, icon: 'contact' },
 ];
 ---
 
@@ -27,20 +31,27 @@ const links = [
           data-scroll-link={!link.external ? '' : undefined}
         >
           <span class="quick-links__icon-wrapper" aria-hidden="true">
-            {link.icon === 'folder' && (
-              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M19.5 21a3 3 0 0 0 3-3V9a3 3 0 0 0-3-3h-5.379a1.5 1.5 0 0 1-1.06-.44L10.94 3.44A1.5 1.5 0 0 0 9.879 3H4.5a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h15Z" />
+            {link.icon === 'work' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.4 8.2c0-1 .8-1.8 1.8-1.7l4.3.1c.5 0 1 .3 1.3.7l.9 1.3 6.9.2c1 0 1.8.9 1.7 1.9l-.3 7.6c0 1-.9 1.8-1.9 1.7l-13.4-.3c-1 0-1.8-.9-1.7-1.9z" />
               </svg>
             )}
-            {link.icon === 'briefcase' && (
-              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M4.5 7.5A2.25 2.25 0 0 0 2.25 9.75v8.25A2.25 2.25 0 0 0 4.5 20.25h15a2.25 2.25 0 0 0 2.25-2.25V9.75A2.25 2.25 0 0 0 19.5 7.5h-3.75V5.25a2.25 2.25 0 0 0-2.25-2.25h-3a2.25 2.25 0 0 0-2.25 2.25V7.5H4.5ZM10.5 5.25a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V7.5h-4.5V5.25Z" />
+            {link.icon === 'services' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M5.2 9.4 12 5.4l6.9 4.1-6.8 4z" />
+                <path d="M5.2 14.4 12 18.4l6.9-4" />
               </svg>
             )}
-            {link.icon === 'envelope' && (
-              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M1.5 8.67v8.58a3 3 0 0 0 3 3h15a3 3 0 0 0 3-3V8.67l-8.928 5.493a3 3 0 0 1-3.144 0L1.5 8.67Z" />
-                <path d="M22.5 6.908V6.75a3 3 0 0 0-3-3h-15a3 3 0 0 0-3 3v.158l9.714 5.978a1.5 1.5 0 0 0 1.572 0L22.5 6.908Z" />
+            {link.icon === 'experience' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.6 9.4c0-1 .8-1.8 1.8-1.8h13.3c1 0 1.8.8 1.8 1.8v8.3c0 1-.9 1.8-1.9 1.7l-13.2-.2c-1 0-1.8-.8-1.8-1.8z" />
+                <path d="M9.2 7.4V5.9c0-.7.6-1.3 1.3-1.3h3c.7 0 1.3.6 1.3 1.3v1.5" />
+              </svg>
+            )}
+            {link.icon === 'contact' && (
+              <svg class="quick-links__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3.4 7.8c0-1 .8-1.8 1.8-1.8h13.6c1 0 1.8.8 1.8 1.8v8.5c0 1-.8 1.8-1.8 1.8H5.2c-1 0-1.8-.8-1.8-1.8z" />
+                <path d="m3.9 7.6 7.4 4.9c.5.3 1 .3 1.5 0l7.3-4.8" />
               </svg>
             )}
             {link.icon === 'avatar' && link.avatarSrc && (
@@ -197,6 +208,14 @@ const links = [
     transform: scale(0.92);
   }
 
+  /* The pill background swallows the browser default ring, so draw our own */
+  .quick-links__item:focus-visible,
+  .quick-links__toggle-wrapper :global(.theme-toggle:focus-visible) {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+    color: var(--text-primary);
+  }
+
   .quick-links__item.is-active {
     color: var(--text-primary);
   }
@@ -292,6 +311,12 @@ const links = [
     anchors.forEach((link) => {
       const isActive = link.getAttribute('href') === `#${id}`;
       link.classList.toggle('is-active', isActive);
+      // Position must be exposed to assistive tech, not just conveyed by colour
+      if (isActive) {
+        link.setAttribute('aria-current', 'true');
+      } else {
+        link.removeAttribute('aria-current');
+      }
     });
 
     const active = scrollLinks.find((l) => l.getAttribute('href') === `#${id}`);
@@ -312,8 +337,23 @@ const links = [
     .filter((el): el is HTMLElement => Boolean(el));
 
   const onScroll = () => {
-    const scrollPos = window.scrollY + window.innerHeight * 0.4;
-    let current = sections[0]?.id ?? '';
+    if (!sections.length) return;
+
+    // The final section starts below the maximum scroll position, so it can
+    // never cross a threshold. Anchor it to the bottom of the page instead.
+    const atBottom =
+      window.innerHeight + window.scrollY >=
+      document.documentElement.scrollHeight - 8;
+
+    if (atBottom) {
+      setActive(sections[sections.length - 1].id);
+      return;
+    }
+
+    // Keep the lookahead well under the height of the shortest section,
+    // otherwise a short section is skipped before the reader reaches it.
+    const scrollPos = window.scrollY + window.innerHeight * 0.28;
+    let current = sections[0].id;
     for (const section of sections) {
       if (section.offsetTop <= scrollPos) {
         current = section.id;

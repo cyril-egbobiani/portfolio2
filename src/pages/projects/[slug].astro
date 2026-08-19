@@ -5,159 +5,90 @@ import PortfolioFooter from '../../components/PortfolioFooter.astro';
 import '../../styles.css';
 
 export function getStaticPaths() {
+  // NOTE: slugs must stay in sync with src/components/ProjectsSection.astro
+  // `role`, `year` and `stack` are placeholders pending confirmation.
   const projects = [
     {
-      slug: 'cybertron-ai',
-      title: 'Cybertron AI',
+      slug: 'forge',
+      title: 'Forge',
       category: 'Builds',
-      year: '2025',
-      role: 'Lead Design Engineer',
-      stack: ['TypeScript', 'React', 'Node.js', 'Tailwind'],
-      description: 'Autonomous code intelligence studio & agent workflow engine.',
-      longDescription: 'Cybertron AI is an advanced agentic development environment designed for high-velocity software engineering. Built to bridge human intent with autonomous code generation, it features real-time canvas visualization, instant terminal command execution, and deep AST refactoring capabilities.',
+      tone: 'a',
+      year: '2026',
+      role: 'Design & Development',
+      stack: ['React Native', 'Expo', 'TypeScript'],
+      description: 'A spiritual app for kids — games, teachings, devotions and a church prayer wall.',
+      longDescription:
+        'Most faith apps for kids are a wall of text and good intentions. Forge teaches through games and short devotions instead of reading. It also carries a prayer section that surfaces the prayer chat from your own church — because when someone asks you to pray for a person, you usually have no idea what you are actually praying about.',
       highlights: [
-        'Built custom agent orchestration engine using TypeScript and Node.js.',
-        'Designed high-contrast editorial UI inspired by benji.org and ana.sh.',
-        'Implemented real-time WebSocket telemetry and subagent status streams.',
-        'Optimized canvas rendering performance achieving steady 60fps animations.',
+        'Teaching delivered through games and short devotions rather than long reading.',
+        'Prayer wall shows your own church prayer chat, so prayer has real context.',
+        'Devotions and teachings structured for a young attention span.',
       ],
-      image: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
-        'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'stelar-studio',
-      nextTitle: 'Stelar Studio',
+      gallery: [],
+      link: '',
+      nextSlug: '9to5er',
+      nextTitle: '9to5er',
     },
     {
-      slug: 'stelar-studio',
-      title: 'Stelar Studio',
+      slug: '9to5er',
+      title: '9to5er',
       category: 'Builds',
+      tone: 'b',
+      year: '2026',
+      role: 'Design & Development',
+      stack: ['Astro', 'TypeScript', 'Postgres'],
+      description: 'Deep-dives on agencies, for people about to join one.',
+      longDescription:
+        'Joining a new agency you are mostly guessing — what they really do, how they work, how organised they actually are. You can ask a general chatbot and get a confident summary of nothing. 9to5er goes narrow instead: structured breakdowns of specific agencies, their workflow and their structure. Being genuinely useful about a small thing beats being vague about everything.',
+      highlights: [
+        'Structured agency breakdowns covering workflow, structure and how teams operate.',
+        'Deliberately narrow and accountable rather than a general answer engine.',
+        'Built for people entering the field or moving between agencies.',
+      ],
+      gallery: [],
+      link: '',
+      nextSlug: 'token-extractor',
+      nextTitle: 'Token Extractor',
+    },
+    {
+      slug: 'token-extractor',
+      title: 'Token Extractor',
+      category: 'Builds',
+      tone: 'd',
       year: '2024',
-      role: 'WebGL & Frontend Developer',
-      stack: ['Astro', 'WebGL', 'Tailwind', 'Three.js'],
-      description: 'High-performance WebGL canvas animation & interactive physics engine.',
-      longDescription: 'Stelar Studio is an interactive WebGL canvas playground exploring fluid dynamics, particle simulations, and real-time GPU shaders for modern web applications.',
+      role: 'Design & Development',
+      stack: ['TypeScript', 'Browser Extension', 'Monorepo'],
+      description: 'A browser extension that pulls the real design tokens off any page.',
+      longDescription:
+        'Rebuilding someone else’s design language usually means eyedropping it one hex code at a time. This extension scans a page and extracts the actual design tokens — colours, shadows, text colours. It was my first proper build, and shipping it as multiple packages is how I learned to work with monorepos.',
       highlights: [
-        'Created custom GLSL fragment shaders for interactive noise and bloom.',
-        'Integrated spring physics for smooth cursor distortion effects.',
-        'Zero-dependency particle engine handling 50,000+ active particles.',
+        'Extracts colours, shadows and text styles directly from any live page.',
+        'First project I shipped, and where I learned monorepo tooling.',
       ],
-      image: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'firstbank-mobile',
-      nextTitle: 'FirstBank Mobile',
+      gallery: [],
+      link: '',
+      nextSlug: 'model-portfolio',
+      nextTitle: 'Model Portfolio',
     },
     {
-      slug: 'firstbank-mobile',
-      title: 'FirstBank Mobile',
-      category: 'Builds',
-      year: '2024',
-      role: 'Mobile Developer Intern',
-      stack: ['React Native', 'TypeScript', 'Design System'],
-      description: 'Fintech mobile banking application redesign & design system.',
-      longDescription: 'A comprehensive mobile banking experience refactor focused on biometric authentication security, instant fund transfers, and accessibility compliance for millions of active users.',
-      highlights: [
-        'Redesigned core account dashboard and transfer checkout flows.',
-        'Architected cross-platform React Native design system components.',
-        'Improved app cold start performance by 35%.',
-      ],
-      image: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'nova-design-system',
-      nextTitle: 'Nova Design System',
-    },
-    {
-      slug: 'nova-design-system',
-      title: 'Nova Design System',
+      slug: 'model-portfolio',
+      title: 'Model Portfolio',
       category: 'Designs',
+      tone: 'c',
       year: '2025',
-      role: 'Principal UI/UX Designer',
-      stack: ['Figma', 'Tokens', 'UI/UX', 'Astro'],
-      description: 'Editorial token design system with dark mode priority & motion guidelines.',
-      longDescription: 'Nova is a production-ready design token architecture built for high-contrast dark interfaces. It establishes mathematical corner radiuses, semantic color tokens, and motion timings.',
+      role: 'Design & Development',
+      stack: ['Astro', 'TypeScript', 'CSS'],
+      description: 'A site for a friend who models, built around her distinct style sets.',
+      longDescription:
+        'A model is judged on the same thing the portfolio is — how it looks. Template portfolio sites flatten everyone into one identical grid. This one is organised around her distinct style sets rather than a single uniform gallery, so the range itself becomes the point.',
       highlights: [
-        'Created 100+ accessible Figma component primitives.',
-        'Implemented token pipeline transforming JSON design tokens to CSS variables.',
-        'Built motion token scale for 60fps micro-interactions.',
+        'Organised around distinct style sets instead of one flat gallery.',
+        'Layout built so range and variety read immediately.',
       ],
-      image: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'pulse-analytics',
-      nextTitle: 'Pulse Analytics',
-    },
-    {
-      slug: 'pulse-analytics',
-      title: 'Pulse Analytics',
-      category: 'Designs',
-      year: '2024',
-      role: 'Product Designer',
-      stack: ['Product Design', 'Data Viz', 'Figma'],
-      description: 'Real-time telemetry dashboard for cloud infrastructure monitoring.',
-      longDescription: 'Pulse Analytics provides cloud operations teams with live infrastructure metrics, server latency graphs, and automated anomaly detection alerts.',
-      highlights: [
-        'Designed real-time canvas chart widgets for high-throughput metric streams.',
-        'Streamlined incident response user flows reducing mean-time-to-resolution.',
-      ],
-      image: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'shader-lab',
-      nextTitle: 'Shader Lab',
-    },
-    {
-      slug: 'shader-lab',
-      title: 'Shader Lab',
-      category: 'Playground',
-      year: '2025',
-      role: 'Creative Technologist',
-      stack: ['Three.js', 'GLSL', 'Shaders'],
-      description: 'Interactive GLSL raymarching fragments and post-processing filters.',
-      longDescription: 'An experimental shader laboratory featuring custom WebGL fragment shaders, raymarched signed distance functions (SDFs), and chromatic aberration post-processing filters.',
-      highlights: [
-        'Authored GLSL shaders for volumetric lighting and noise distortion.',
-        'Live code editor interface with instant hot-reloading GLSL canvas.',
-      ],
-      image: 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'kinetic-type',
-      nextTitle: 'Kinetic Type',
-    },
-    {
-      slug: 'kinetic-type',
-      title: 'Kinetic Type',
-      category: 'Playground',
-      year: '2024',
-      role: 'Design Engineer',
-      stack: ['Canvas API', 'Physics', 'TypeScript'],
-      description: 'Variable font spring physics engine driven by cursor velocity.',
-      longDescription: 'A kinetic typography experiment exploring real-time text distortion, spring physics simulation, and cursor proximity forces.',
-      highlights: [
-        'Simulated spring physics on glyph control points in HTML5 Canvas.',
-        'Cursor velocity vector calculations for dynamic text deformation.',
-      ],
-      image: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
-      gallery: [
-        'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1000&q=80',
-      ],
-      link: 'https://github.com',
-      nextSlug: 'cybertron-ai',
-      nextTitle: 'Cybertron AI',
+      gallery: [],
+      link: '',
+      nextSlug: 'forge',
+      nextTitle: 'Forge',
     },
   ];
 
@@ -194,7 +125,7 @@ const { project } = Astro.props;
 
         <!-- 1. Project Title & High-Level Summary -->
         <header class="t-stagger-line t-stagger-line--1 flex flex-col gap-3">
-          <h1 class="m-0 font-display text-3xl  font-bold leading-[1.15] tracking-normal text-[var(--text-primary)]">
+          <h1 class="m-0 font-sans text-[28px] font-medium leading-[1.2] tracking-[-0.035em] text-[var(--text-primary)]">
             {project.title}
           </h1>
 
@@ -250,34 +181,42 @@ const { project } = Astro.props;
             </div>
           </div>
 
-          <!-- Editorial Underlined CTA Link -->
-          <div class="pt-1">
-            <a
-              href={project.link}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="group inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] border-b border-[var(--text-primary)] pb-0.5 transition-colors duration-200 hover:border-[var(--text-muted)] hover:text-[var(--text-muted)] active:opacity-70"
-            >
-              <span>View Full Project</span>
-              <span class="inline-block transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:translate-x-1">→</span>
-            </a>
-          </div>
+          <!-- Editorial Underlined CTA Link — only when there is somewhere to go -->
+          {project.link && (
+            <div class="pt-1">
+              <a
+                href={project.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="group inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] border-b border-[var(--text-primary)] pb-0.5 transition-colors duration-200 hover:border-[var(--text-muted)] hover:text-[var(--text-muted)] active:opacity-70"
+              >
+                <span>View Full Project</span>
+                <span class="inline-block transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:translate-x-1">→</span>
+              </a>
+            </div>
+          )}
         </section>
 
         <!-- 3. Hero Framed Preview Banner -->
         <section class="t-stagger-line t-stagger-line--2 group relative overflow-hidden rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1.5 transition-[border-color] duration-300 ease-[var(--ease-smooth-out)]">
-          <div
-            class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[6px] bg-[var(--surface-interactive)] cursor-zoom-in"
-            data-spring-zoom-trigger
-            data-zoom-src={project.image}
-          >
-            <img
-              src={project.image}
-              alt={project.title}
-              class="h-full w-full object-cover object-center contrast-[1.02] opacity-95 transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.015]"
-              loading="eager"
-            />
-          </div>
+          {project.image ? (
+            <div
+              class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[6px] bg-[var(--surface-interactive)] cursor-zoom-in"
+              data-spring-zoom-trigger
+              data-zoom-src={project.image}
+            >
+              <img
+                src={project.image}
+                alt={project.title}
+                class="h-full w-full object-cover object-center contrast-[1.02] opacity-95 transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.015]"
+                loading="eager"
+              />
+            </div>
+          ) : (
+            <div class={`shot shot--${project.tone} relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[6px] flex items-center justify-center`}>
+              <span class="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--text-faint)]">screenshot</span>
+            </div>
+          )}
         </section>
 
         <!-- Hair-Line Separator -->

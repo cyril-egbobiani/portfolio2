@@ -1,0 +1,553 @@
+---
+// mock.astro — Standalone design exploration. Touches no existing components.
+// Concept: "marginalia" — cleanly set text + the author's own handwritten notes
+// and hand-drawn marks. Personality woven in, not sectioned off.
+// Product facts come from Cyril; stacks/statuses/screenshots are PLACEHOLDER.
+import Layout from '../components/Layout.astro';
+import profileImg from '../assets/images/profile-.png?url';
+
+const featured = [
+  {
+    name: 'Forge',
+    status: 'building',
+    what: 'A spiritual app for kids — games, teachings, devotions, and a prayer wall.',
+    problem:
+      'Most faith apps for kids are a wall of text and good intentions. And when your church asks you to pray for someone, you usually have no idea what you are actually praying about.',
+    decided:
+      'Teach through games and short devotions instead of reading. And let the prayer section show the real prayer chat from your own church — so when you pray for someone, you know what for.',
+    stack: ['React Native', 'Expo', 'TypeScript'],
+    tone: 'a',
+  },
+  {
+    name: '9to5er',
+    status: 'building',
+    what: 'Deep-dives on agencies, for people about to join one.',
+    problem:
+      'Joining a new agency you are mostly guessing — what they really do, how they work, how organised they actually are. You can ask a chatbot and get a confident summary of nothing.',
+    decided:
+      'Go narrow instead of general. Structured breakdowns of specific agencies — workflow, structure, how they actually operate. Being genuinely useful about a small thing beats being vague about everything.',
+    stack: ['Astro', 'TypeScript', 'Postgres'],
+    tone: 'b',
+  },
+];
+
+const smaller = [
+  {
+    name: 'Model portfolio',
+    status: 'live',
+    what: 'A site for a friend who models.',
+    line: 'Built around her distinct style sets rather than one flat grid — the range is the point.',
+    tone: 'c',
+  },
+  {
+    name: 'Token extractor',
+    status: 'shipped',
+    what: 'A browser extension.',
+    line: 'Scans any page and pulls the real design tokens — colours, shadows, type. My first proper build, and how I learned monorepos.',
+    tone: 'd',
+  },
+];
+---
+
+<Layout title="Mock — direction test">
+  <div class="mock-page">
+
+    <p class="mock-flag">
+      Design mock · voice + layout test · screenshots and stacks are placeholder
+    </p>
+
+    <!-- ───────────────────────── HERO ───────────────────────── -->
+    <section class="block">
+      <div class="hero-top">
+        <img class="avatar" src={profileImg} alt="Cyril Egbobiani" width="64" height="64" />
+        <span class="hero-hi">Hey, I'm Cyril.</span>
+      </div>
+
+      <h1 class="statement">
+        I design and build products — mostly web, some mobile.{' '}
+        <span class="marked">About three years in<svg class="mark-underline" viewBox="0 0 208 13" fill="none" aria-hidden="true"><path d="M3 8.6C32 3.1 61 11.6 92 6.2c31-5 60 3.7 113-1.4" stroke="currentColor" stroke-width="2" stroke-linecap="round" /></svg></span>{' '}
+        — long enough to have opinions, short enough to still be changing them.
+      </h1>
+
+      <p class="lede">
+        I came to software through drawing, and I think it shows — same instinct of
+        adjusting something until it stops feeling wrong. Most of what I build starts
+        with a problem someone I actually know has. Outside of that: too many plants,
+        and an indefensible amount of time spent sequencing playlists.
+      </p>
+
+      <p class="meta">Software engineer &amp; designer · Lagos, Nigeria</p>
+
+      <aside class="note note--hero">
+        <svg class="plant" viewBox="0 0 52 68" fill="none" aria-hidden="true">
+          <path d="M14 45l3 16c0 1.4.9 2 2 2h14c1.2 0 2-.7 2-2l3-16" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M11 44.5c10-2 20-2 30 0" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M26 45c-1-10 0-19 1.5-27" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+          <path d="M26 35c-8-2-14-8-14-15 8 0 14 6 14 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M27.5 28c7-2 13-8 13-15-8 0-13 6-13 14" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <span>the monstera has survived six months. personal record.</span>
+      </aside>
+    </section>
+
+    <!-- ──────────────────────── PRODUCTS ─────────────────────── -->
+    <section class="block">
+      <div class="lead-in">
+        <h2 class="lead-in__title">What I'm building.</h2>
+        <span class="lead-in__aside">some shipped, some still in progress — I'll say which</span>
+      </div>
+
+      {featured.map((p) => (
+        <article class="entry">
+          <div class={`shot shot--${p.tone}`}>
+            <span class="shot__pending">screenshot</span>
+          </div>
+
+          <div class="entry__head">
+            <h3 class="entry__name">{p.name}</h3>
+            <span class={`status status--${p.status}`}>
+              <span class="status__dot"></span>
+              {p.status === 'building' ? 'In progress' : 'Live'}
+            </span>
+          </div>
+
+          <p class="entry__what">{p.what}</p>
+
+          <div class="reasoning">
+            <div class="reasoning__row">
+              <span class="hand-label">the problem</span>
+              <p>{p.problem}</p>
+            </div>
+
+            <svg class="mark-arrow" viewBox="0 0 64 26" fill="none" aria-hidden="true">
+              <path d="M3 4c15-1.5 29 4 40 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+              <path d="M35 18.5l9.5 1-3-8.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+
+            <div class="reasoning__row">
+              <span class="hand-label">what I decided</span>
+              <p>{p.decided}</p>
+            </div>
+          </div>
+
+          <div class="stack">
+            {p.stack.map((s) => <span>{s}</span>)}
+          </div>
+        </article>
+      ))}
+
+      <!-- Smaller entries: same voice, less room -->
+      <div class="minor">
+        {smaller.map((p) => (
+          <article class="mini">
+            <div class={`mini__shot shot--${p.tone}`}></div>
+            <div class="mini__body">
+              <div class="entry__head entry__head--tight">
+                <h3 class="mini__name">{p.name}</h3>
+                <span class={`status status--${p.status}`}>
+                  <span class="status__dot"></span>
+                  {p.status === 'live' ? 'Live' : 'Shipped'}
+                </span>
+              </div>
+              <p class="mini__what">{p.what}</p>
+              <p class="mini__line">{p.line}</p>
+            </div>
+          </article>
+        ))}
+      </div>
+
+      <aside class="note note--product">
+        the extension came first. it is the reason I understand build tooling at all.
+      </aside>
+    </section>
+
+    <p class="mock-foot">End of mock — hero + products.</p>
+  </div>
+</Layout>
+
+<style>
+  /* Handwriting ink — warm, distinct from body text, set per theme below */
+  .mock-page {
+    --ink: #9a8365;
+    position: relative;
+    max-width: 660px;
+    margin: 0 auto;
+    padding: 72px 24px 140px;
+    color: var(--text-primary);
+    font-family: var(--font-sans);
+  }
+
+  :global([data-theme='dark']) .mock-page {
+    --ink: #b39b78;
+  }
+
+  .mock-flag,
+  .mock-foot {
+    margin: 0 0 56px;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .mock-foot {
+    margin: 96px 0 0;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 12px;
+  }
+
+  .block {
+    position: relative;
+    margin-bottom: 104px;
+  }
+
+  /* ── Hero ─────────────────────────────────────────────── */
+  .hero-top {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 26px;
+  }
+
+  .avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 9999px;
+    object-fit: cover;
+    border: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+
+  .hero-hi {
+    font-family: var(--font-display);
+    font-size: 27px;
+    line-height: 1;
+    color: var(--text-secondary);
+  }
+
+  .statement {
+    margin: 0 0 28px;
+    font-family: var(--font-sans);
+    font-size: 29px;
+    line-height: 1.34;
+    letter-spacing: -0.035em;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-wrap: balance;
+  }
+
+  .marked {
+    position: relative;
+    white-space: nowrap;
+  }
+
+  .mark-underline {
+    position: absolute;
+    left: -1%;
+    bottom: -0.3em;
+    width: 103%;
+    height: 0.34em;
+    overflow: visible;
+    color: var(--ink);
+    pointer-events: none;
+  }
+
+  .lede {
+    margin: 0 0 20px;
+    font-size: 16.5px;
+    line-height: 1.68;
+    color: var(--text-secondary);
+    max-width: 56ch;
+  }
+
+  .meta {
+    margin: 0;
+    font-size: 13.5px;
+    color: var(--text-muted);
+  }
+
+  /* ── Handwritten margin notes ─────────────────────────── */
+  .note {
+    font-family: var(--font-display);
+    font-size: 18px;
+    line-height: 1.32;
+    color: var(--ink);
+  }
+
+  .note--hero {
+    position: absolute;
+    top: 128px;
+    right: -212px;
+    width: 178px;
+    transform: rotate(-2.2deg);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .plant {
+    width: 40px;
+    height: 52px;
+    color: var(--ink);
+    opacity: 0.85;
+  }
+
+  .note--product {
+    position: absolute;
+    bottom: -18px;
+    left: -206px;
+    width: 176px;
+    text-align: right;
+    transform: rotate(1.6deg);
+  }
+
+  /* ── Section lead-in (replaces "WORK" label) ──────────── */
+  .lead-in {
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 30px;
+  }
+
+  .lead-in__title {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+  }
+
+  .lead-in__aside {
+    font-family: var(--font-display);
+    font-size: 18px;
+    color: var(--ink);
+  }
+
+  /* ── Product entry ────────────────────────────────────── */
+  .entry {
+    margin-bottom: 72px;
+  }
+
+  /* Screenshot placeholders — clearly placeholder, not stock imagery */
+  .shot {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .shot__pending {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-faint);
+  }
+
+  .shot--a { background: linear-gradient(148deg, #2b3350 0%, #1a1e30 62%, #141726 100%); }
+  .shot--b { background: linear-gradient(148deg, #2d3a34 0%, #1b2420 62%, #151b18 100%); }
+  .shot--c { background: linear-gradient(148deg, #3a2b33 0%, #241a20 62%, #1a1318 100%); }
+  .shot--d { background: linear-gradient(148deg, #33302a 0%, #211f1b 62%, #181713 100%); }
+
+  :global([data-theme='light']) .shot--a { background: linear-gradient(148deg, #dfe4f2 0%, #eef1f8 100%); }
+  :global([data-theme='light']) .shot--b { background: linear-gradient(148deg, #dfeae4 0%, #eff5f1 100%); }
+  :global([data-theme='light']) .shot--c { background: linear-gradient(148deg, #f0e2e8 0%, #f8eff3 100%); }
+  :global([data-theme='light']) .shot--d { background: linear-gradient(148deg, #efeae0 0%, #f7f4ee 100%); }
+
+  .entry__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .entry__head--tight {
+    margin-top: 0;
+  }
+
+  .entry__name {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    color: var(--text-primary);
+  }
+
+  /* Status — honest about what is shipped vs in progress */
+  .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .status__dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    flex-shrink: 0;
+  }
+
+  .status--building .status__dot { background: var(--ink); }
+  .status--live .status__dot,
+  .status--shipped .status__dot { background: var(--success); }
+
+  .entry__what {
+    margin: 8px 0 0;
+    font-size: 15.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+    max-width: 56ch;
+  }
+
+  /* ── The reasoning (product thinking made visible) ────── */
+  .reasoning {
+    margin-top: 22px;
+  }
+
+  .reasoning__row p {
+    margin: 5px 0 0;
+    font-size: 15px;
+    line-height: 1.66;
+    color: var(--text-secondary);
+    max-width: 58ch;
+  }
+
+  .hand-label {
+    font-family: var(--font-display);
+    font-size: 19px;
+    color: var(--ink);
+  }
+
+  .mark-arrow {
+    display: block;
+    width: 58px;
+    height: 24px;
+    margin: 14px 0 14px 22px;
+    color: var(--ink);
+    opacity: 0.8;
+  }
+
+  .stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 24px;
+  }
+
+  .stack span {
+    padding: 3px 9px;
+    border: 1px solid var(--border-subtle);
+    border-radius: 5px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+
+  /* ── Smaller entries ──────────────────────────────────── */
+  .minor {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border-subtle);
+    margin-top: 8px;
+  }
+
+  .mini {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding-top: 26px;
+  }
+
+  .mini__shot {
+    width: 132px;
+    aspect-ratio: 4 / 3;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    flex-shrink: 0;
+  }
+
+  .mini__body {
+    min-width: 0;
+  }
+
+  .mini__name {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 16.5px;
+    font-weight: 500;
+    letter-spacing: -0.025em;
+    color: var(--text-primary);
+  }
+
+  .mini__what {
+    margin: 6px 0 0;
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .mini__line {
+    margin: 8px 0 0;
+    font-size: 14.5px;
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  /* ── Narrow screens: margin notes fold inline ─────────── */
+  @media (max-width: 1120px) {
+    .note--hero,
+    .note--product {
+      position: static;
+      width: auto;
+      max-width: 34ch;
+      text-align: left;
+      transform: none;
+      margin-top: 26px;
+    }
+
+    .note--hero {
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .plant {
+      width: 30px;
+      height: 40px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .mock-page {
+      padding: 48px 20px 100px;
+    }
+
+    .statement {
+      font-size: 24px;
+    }
+
+    .lede {
+      font-size: 15.5px;
+    }
+
+    .mini {
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .mini__shot {
+      width: 100%;
+      aspect-ratio: 16 / 10;
+    }
+  }
+</style>

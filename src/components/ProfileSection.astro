@@ -1,5 +1,6 @@
 ---
-// ProfileSection.astro — Story & Personal Interests section
+// ProfileSection.astro — the human half.
+// Deliberately does NOT retell the origin story; the hero already covers that.
 import photographyImg from '../assets/images/Image (Photography).png?url';
 import footballImg from '../assets/images/image (Football).png?url';
 import cookingImg from '../assets/images/Image (Cooking).png?url';
@@ -7,93 +8,47 @@ import carsImg from '../assets/images/Image (Cars).png?url';
 import profile from '../assets/images/profile-1.png?url';
 
 const interests = [
-  {
-    title: 'Photography',
-    subtitle: 'Capturing the soul of my city',
-    image: photographyImg,
-  },
-  {
-    title: 'Football',
-    subtitle: '#Come on you Gunners!!!!',
-    image: footballImg,
-  },
-  {
-    title: 'Cooking',
-    subtitle: 'Mum really influenced me',
-    image: cookingImg,
-  },
-  {
-    title: 'Cars',
-    subtitle: 'Big fan of Automotive design',
-    image: carsImg,
-  },
+  { title: 'Photography', subtitle: 'mostly around Lagos', image: photographyImg },
+  { title: 'Football', subtitle: '#Come on you Gunners!!!!', image: footballImg },
+  { title: 'Cooking', subtitle: 'Mum really influenced me', image: cookingImg },
+  { title: 'Cars', subtitle: 'automotive design, mainly', image: carsImg },
 ];
 ---
 
-<section class="flex flex-col gap-9" id="about">
-  
-  <!-- Section Header -->
-  <div class="flex items-center justify-between">
-    <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">About</h2>
-  </div>
+<section class="relative flex flex-col gap-7" id="about">
 
-  <!-- Hero Framed Banner -->
-  <div class="group relative overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] transition-[border-color] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)]">
-    <img
-      src={profile}
-      alt="Cyril Egbobiani workspace"
-      class="h-[200px] sm:h-[280px] w-full object-cover object-center opacity-95 transition-[transform,opacity] duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02] group-hover:opacity-100"
-      loading="lazy"
-    />
-  </div>
-
-  <!-- Editorial Narrative Statement -->
-  <div class="flex flex-col gap-4">
-    <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.65] text-[var(--text-secondary)] font-normal">
-      I've always liked making things, pulling them apart, and understanding why they work. That started with sketching, physical objects, and small experiments. Software made that curiosity feel bigger because the idea, interaction, and final experience can all live in the same medium.
-    </p>
-  </div>
-
-  <!-- Hair-Line Separator with Faded Mask -->
-  <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
-
-  <!-- Beyond Code & Design (Personal Interests Grid) -->
-  <div class="flex flex-col gap-4">
-    <div class="flex items-center">
-      <h3 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">
-        Beyond code & design
-      </h3>
+  <div class="section-head">
+    <div class="section-head__text">
+      <h2 class="section-title">A bit more about me.</h2>
+      <span class="section-aside">the non-software half</span>
     </div>
+  </div>
 
-    <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+  <div class="portrait">
+    <img src={profile} alt="Cyril Egbobiani" loading="lazy" />
+  </div>
+
+  <p class="about-copy">
+    Most of what I know, I learned by building things badly the first time. I like
+    problems I can sit with for a while, and I care about the details at the end
+    that people feel but never point at. I also just like talking to people about
+    what they're making.
+  </p>
+
+  <div class="interests">
+    <span class="hand-label">when I'm not at a screen</span>
+
+    <div class="interest-grid">
       {interests.map((item) => (
-        <div class="interest-card group relative flex h-[100px] w-full overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-3.5 transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.98] select-none cursor-default">
-          
-          <!-- Left Details -->
-          <div class="z-10 flex flex-col justify-end pr-4 min-w-0">
-            <div class="flex flex-col">
-              <span class="font-sans text-[15px] font-medium tracking-[-0.02em] text-[var(--text-primary)] truncate">
-                {item.title}
-              </span>
-              <span class="text-xs text-[var(--text-muted)] font-sans truncate">
-                {item.subtitle}
-              </span>
-            </div>
+        <figure class="interest">
+          <div class="interest__frame">
+            <img src={item.image} alt={item.title} loading="lazy" />
           </div>
-
-          <!-- Right Thumbnail Image (Masked Split View) -->
-          <div class="absolute right-0 top-0 bottom-0 h-full w-[42%] overflow-hidden pointer-events-none">
-            <img
-              src={item.image}
-              alt={item.title}
-              class="h-full w-full object-cover object-center grayscale contrast-[1.05] opacity-60 transition-[filter,opacity,transform] duration-350 ease-[var(--ease-smooth-out)] group-hover:grayscale-0 group-hover:opacity-100 group-hover:scale-105"
-              loading="lazy"
-            />
-            <!-- Gradient Blend to Surface -->
-            <div class="absolute inset-0 bg-gradient-to-r from-[var(--surface-subtle)] via-transparent to-transparent transition-colors duration-200 group-hover:from-[var(--surface-interactive)]"></div>
-          </div>
-
-        </div>
+          <figcaption>
+            <span class="interest__title">{item.title}</span>
+            <span class="interest__sub">{item.subtitle}</span>
+          </figcaption>
+        </figure>
       ))}
     </div>
   </div>
@@ -101,13 +56,112 @@ const interests = [
 </section>
 
 <style>
-  @media (hover: hover) and (pointer: fine) {
-    .interest-card:hover {
-      transform: translateY(-2px);
+  .portrait {
+    overflow: hidden;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-subtle);
+  }
+
+  .portrait img {
+    display: block;
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+    object-position: center;
+  }
+
+  @media (min-width: 640px) {
+    .portrait img {
+      height: 300px;
     }
   }
 
-  .interest-card:active {
-    transform: scale(0.98);
+  .about-copy {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.7;
+    color: var(--text-secondary);
+    max-width: 58ch;
+  }
+
+  .interests {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 6px;
+  }
+
+  .interest-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  @media (min-width: 560px) {
+    .interest-grid {
+      grid-template-columns: repeat(4, 1fr);
+    }
+  }
+
+  .interest {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  /* The photograph is the point — shown in full colour, uncropped by overlays */
+  .interest__frame {
+    overflow: hidden;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-subtle);
+    aspect-ratio: 4 / 5;
+  }
+
+  .interest__frame img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    transition: transform var(--duration-very-slow) var(--ease-smooth-out);
+  }
+
+  .interest figcaption {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding-left: 1px;
+  }
+
+  .interest__title {
+    font-size: 13.5px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .interest__sub {
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-muted);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .interest:hover .interest__frame img {
+      transform: scale(1.04);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .interest__frame img {
+      transition: none;
+    }
+
+    .interest:hover .interest__frame img {
+      transform: none;
+    }
   }
 </style>

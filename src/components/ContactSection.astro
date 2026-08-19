@@ -2,18 +2,19 @@
 // ContactSection.astro — Interactive Contact Section
 ---
 
-<section class="flex flex-col gap-4" id="contact">
+<section class="relative flex flex-col gap-5" id="contact">
   <!-- Section Header -->
-  <div class="flex items-center justify-between">
-    <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">
-      Contact
-    </h2>
+  <div class="section-head">
+    <div class="section-head__text">
+      <h2 class="section-title">Let's talk.</h2>
+      <span class="section-aside">I reply to everything</span>
+    </div>
   </div>
 
   <!-- Contact Section Container -->
   <div class="contact-card flex flex-col gap-4 py-1">
     <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.65] text-[var(--text-secondary)] font-normal">
-      Whether you have a project idea, a design inquiry, or just want to connect — my inbox is always open.
+      A project idea, a design question, or just to say hello. My inbox is always open.
     </p>
 
     <!-- Email & Social Actions -->

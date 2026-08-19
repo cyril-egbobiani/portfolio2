@@ -59,9 +59,12 @@ const experience: ExperienceItem[] = [
 ];
 ---
 
-<section class="flex flex-col gap-5" id="experience">
-  <div class="flex items-center justify-between">
-    <h2 class="m-0 font-mono text-xs font-medium tracking-wider uppercase text-[var(--text-muted)]">Experience</h2>
+<section class="relative flex flex-col gap-6" id="experience">
+  <div class="section-head">
+    <div class="section-head__text">
+      <h2 class="section-title">Where I've been.</h2>
+      <span class="section-aside">the short version</span>
+    </div>
   </div>
 
   <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)] border-y border-dashed border-[var(--border-subtle)]" data-experience-list>
@@ -115,7 +118,10 @@ const experience: ExperienceItem[] = [
 
             <div class="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-[13.5px] text-[var(--text-muted)]">
               <span>{item.role}</span>
-              <span class="font-mono tabular-nums text-xs text-[var(--text-muted)]">{item.dates}</span>
+              <span class={`experience-dates font-mono tabular-nums text-xs ${item.dates.includes('Present') ? 'is-current' : 'text-[var(--text-muted)]'}`}>
+                {item.dates.includes('Present') && <span class="current-dot" aria-hidden="true"></span>}
+                {item.dates}
+              </span>
             </div>
           </div>
         </div>
@@ -134,7 +140,7 @@ const experience: ExperienceItem[] = [
 
               <!-- Highlights Bullet List -->
               <div class="flex flex-col gap-2 pt-1">
-                <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)]">Key Impact</span>
+                <span class="hand-label">what I actually did</span>
                 <ul class="m-0 flex list-none flex-col gap-2 p-0">
                   {item.highlights.map((h, i) => (
                     <li class="flex items-start gap-2.5 text-[13.5px] sm:text-[14px] text-[var(--text-secondary)]">
@@ -161,6 +167,25 @@ const experience: ExperienceItem[] = [
 
   .experience-card[data-expanded="true"] {
     background-color: var(--surface-interactive);
+  }
+
+  /* Current roles carry the same ink marker used for in-progress work */
+  .experience-dates {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .experience-dates.is-current {
+    color: var(--ink);
+  }
+
+  .current-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: var(--ink);
+    flex-shrink: 0;
   }
 
   /* Staggered scroll reveal */
