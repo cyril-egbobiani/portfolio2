@@ -60,7 +60,7 @@ const smaller = [
     <section class="block">
       <div class="hero-top">
         <img class="avatar" src={profileImg} alt="Cyril Egbobiani" width="64" height="64" />
-        <span class="hero-hi">Hey, I'm Cyril.</span>
+        <span class="hero-hi">Cyril Egbobiani</span>
       </div>
 
       <h1 class="statement">
@@ -166,9 +166,9 @@ const smaller = [
 </Layout>
 
 <style>
-  /* Handwriting ink — warm, distinct from body text, set per theme below */
+  /* Handwriting ink — neutral secondary tone */
   .mock-page {
-    --ink: #9a8365;
+    --ink: var(--text-secondary);
     position: relative;
     max-width: 660px;
     margin: 0 auto;
@@ -178,7 +178,7 @@ const smaller = [
   }
 
   :global([data-theme='dark']) .mock-page {
-    --ink: #b39b78;
+    --ink: var(--text-secondary);
   }
 
   .mock-flag,
@@ -220,8 +220,10 @@ const smaller = [
   }
 
   .hero-hi {
-    font-family: var(--font-display);
-    font-size: 27px;
+    font-family: var(--font-serif, "Instrument Serif", Georgia, serif);
+    font-style: italic;
+    font-size: 28px;
+    font-weight: 400;
     line-height: 1;
     color: var(--text-secondary);
   }

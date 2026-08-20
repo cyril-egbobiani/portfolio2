@@ -6,7 +6,6 @@ import '../../styles.css';
 
 export function getStaticPaths() {
   // NOTE: slugs must stay in sync with src/components/ProjectsSection.astro
-  // `role`, `year` and `stack` are placeholders pending confirmation.
   const projects = [
     {
       slug: 'forge',
@@ -14,20 +13,27 @@ export function getStaticPaths() {
       category: 'Builds',
       tone: 'a',
       year: '2026',
-      role: 'Design & Development',
-      stack: ['React Native', 'Expo', 'TypeScript'],
-      description: 'A spiritual app for kids — games, teachings, devotions and a church prayer wall.',
+      role: 'Product Design & Engineering',
+      stack: ['React Native', 'Expo', 'TypeScript', 'Tailwind', 'Supabase'],
+      description: 'A spiritual app for kids — games, teachings, devotions and a live church prayer wall.',
+      problem:
+        'Most faith apps for kids are a wall of text and good intentions. And when your church asks you to pray for someone, you usually have no idea what you are actually praying about.',
+      decided:
+        'Teach through games and short devotions instead of reading. And let the prayer section surface the real prayer chat from your own church — so when you pray for someone, you know what for.',
       longDescription:
         'Most faith apps for kids are a wall of text and good intentions. Forge teaches through games and short devotions instead of reading. It also carries a prayer section that surfaces the prayer chat from your own church — because when someone asks you to pray for a person, you usually have no idea what you are actually praying about.',
       highlights: [
         'Teaching delivered through games and short devotions rather than long reading.',
-        'Prayer wall shows your own church prayer chat, so prayer has real context.',
-        'Devotions and teachings structured for a young attention span.',
+        'Prayer wall surfaces the real prayer chat from your own church for authentic context.',
+        'Devotions and teachings structured specifically for young attention spans.',
       ],
       gallery: [],
       link: '',
+      prevSlug: 'model-portfolio',
+      prevTitle: 'Model Portfolio',
       nextSlug: '9to5er',
       nextTitle: '9to5er',
+      nextTone: 'b',
     },
     {
       slug: '9to5er',
@@ -35,20 +41,27 @@ export function getStaticPaths() {
       category: 'Builds',
       tone: 'b',
       year: '2026',
-      role: 'Design & Development',
-      stack: ['Astro', 'TypeScript', 'Postgres'],
+      role: 'Full Stack Engineering & Design',
+      stack: ['Astro', 'TypeScript', 'Postgres', 'TailwindCSS'],
       description: 'Deep-dives on agencies, for people about to join one.',
+      problem:
+        'Joining a new agency you are mostly guessing — what they really do, how they work, how organised they actually are. You can ask a general chatbot and get a confident summary of nothing.',
+      decided:
+        'Go narrow instead of general. Structured breakdowns of specific agencies — workflow, structure, how they actually operate. Being genuinely useful about a small thing beats being vague about everything.',
       longDescription:
         'Joining a new agency you are mostly guessing — what they really do, how they work, how organised they actually are. You can ask a general chatbot and get a confident summary of nothing. 9to5er goes narrow instead: structured breakdowns of specific agencies, their workflow and their structure. Being genuinely useful about a small thing beats being vague about everything.',
       highlights: [
-        'Structured agency breakdowns covering workflow, structure and how teams operate.',
-        'Deliberately narrow and accountable rather than a general answer engine.',
-        'Built for people entering the field or moving between agencies.',
+        'Structured agency breakdowns covering workflow, hierarchy, and operational health.',
+        'Deliberately narrow and accountable rather than a generic answer engine.',
+        'Built for designers and engineers entering the field or moving between agencies.',
       ],
       gallery: [],
       link: '',
+      prevSlug: 'forge',
+      prevTitle: 'Forge',
       nextSlug: 'token-extractor',
       nextTitle: 'Token Extractor',
+      nextTone: 'd',
     },
     {
       slug: 'token-extractor',
@@ -56,19 +69,27 @@ export function getStaticPaths() {
       category: 'Builds',
       tone: 'd',
       year: '2024',
-      role: 'Design & Development',
-      stack: ['TypeScript', 'Browser Extension', 'Monorepo'],
+      role: 'Browser Extension & Tooling',
+      stack: ['TypeScript', 'Browser Extension', 'Monorepo', 'CSS AST'],
       description: 'A browser extension that pulls the real design tokens off any page.',
+      problem:
+        'Rebuilding someone else’s design language usually means eyedropping it one hex code at a time and manually calculating font scales.',
+      decided:
+        'Automate token extraction directly from computed CSS styles. The extension parses a page in real time and extracts tokens — colours, shadows, typography, spacing — into clean JSON or CSS variables.',
       longDescription:
         'Rebuilding someone else’s design language usually means eyedropping it one hex code at a time. This extension scans a page and extracts the actual design tokens — colours, shadows, text colours. It was my first proper build, and shipping it as multiple packages is how I learned to work with monorepos.',
       highlights: [
-        'Extracts colours, shadows and text styles directly from any live page.',
-        'First project I shipped, and where I learned monorepo tooling.',
+        'Extracts colours, shadows, fonts, and layout tokens directly from any live page DOM.',
+        'First open-source build shipped, architected as a modular monorepo.',
+        'Instant copy-paste tokens in CSS variables and Tailwind token formats.',
       ],
       gallery: [],
       link: '',
+      prevSlug: '9to5er',
+      prevTitle: '9to5er',
       nextSlug: 'model-portfolio',
       nextTitle: 'Model Portfolio',
+      nextTone: 'c',
     },
     {
       slug: 'model-portfolio',
@@ -76,19 +97,27 @@ export function getStaticPaths() {
       category: 'Designs',
       tone: 'c',
       year: '2025',
-      role: 'Design & Development',
-      stack: ['Astro', 'TypeScript', 'CSS'],
+      role: 'Art Direction & Frontend',
+      stack: ['Astro', 'TypeScript', 'TailwindCSS', 'Motion'],
       description: 'A site for a friend who models, built around her distinct style sets.',
+      problem:
+        'A model is judged on the same thing the portfolio is — how it looks. Standard portfolio templates flatten everyone into one identical, sterile square grid.',
+      decided:
+        'Structure the entire showcase around her distinct style sets and editorial moods rather than a single flat gallery, so her aesthetic range becomes the focal point.',
       longDescription:
         'A model is judged on the same thing the portfolio is — how it looks. Template portfolio sites flatten everyone into one identical grid. This one is organised around her distinct style sets rather than a single uniform gallery, so the range itself becomes the point.',
       highlights: [
-        'Organised around distinct style sets instead of one flat gallery.',
-        'Layout built so range and variety read immediately.',
+        'Organised around distinct editorial style sets instead of one uniform gallery.',
+        'Dynamic layout built so range and versatility read immediately on first viewport.',
+        'Silky image transitions and spring-physics media viewing.',
       ],
       gallery: [],
       link: '',
+      prevSlug: 'token-extractor',
+      prevTitle: 'Token Extractor',
       nextSlug: 'forge',
       nextTitle: 'Forge',
+      nextTone: 'a',
     },
   ];
 
@@ -101,177 +130,156 @@ export function getStaticPaths() {
 const { project } = Astro.props;
 ---
 
-<Layout title={`${project.title} | Cyril Egbobiani`}>
+<Layout title={`${project.title} — Case Study | Cyril Egbobiani`} description={project.description}>
   <main class="min-h-screen bg-[var(--surface)] px-4 pt-8 sm:pt-12 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
     <div class="mx-auto flex w-full max-w-[660px] flex-col gap-10">
 
-      <!-- Top Row: Back Button (Left) & Theme Toggle (Right) -->
-      <nav class="flex w-full items-center justify-between" aria-label="Project navigation">
+      <!-- ── Top Nav: Breadcrumb (Left) + Theme Toggle (Right) ── -->
+      <nav class="project-nav flex w-full items-center justify-between" aria-label="Project navigation">
         <a
           href="/#projects"
-          class="group inline-flex size-9 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] no-underline transition-[transform,border-color,background-color,color] duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-[2px] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)] active:scale-[0.92]"
-          aria-label="Back to work section"
+          class="back-link group inline-flex items-center gap-2 text-[13px] font-medium text-[var(--text-muted)] no-underline transition-colors hover:text-[var(--text-primary)]"
+          aria-label="Back to all projects"
         >
-          <svg class="size-4 transition-transform duration-200 group-hover:-translate-x-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15.75 19.5L8.25 12l7.5-7.5" />
-          </svg>
+          <span class="inline-flex size-6 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface-subtle)] text-[var(--text-muted)] transition-[transform,border-color,color] duration-160 ease-[var(--ease-smooth-out)] group-hover:-translate-x-0.5 group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)]">
+            <svg class="size-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M15 18l-6-6 6-6" />
+            </svg>
+          </span>
+          <span class="tracking-tight">Work</span>
+          <span class="text-[var(--text-faint)]">/</span>
+          <span class="text-[var(--text-secondary)] font-normal truncate max-w-[160px] sm:max-w-none">{project.title}</span>
         </a>
 
-        <ThemeToggle />
+        <div class="flex items-center">
+          <ThemeToggle />
+        </div>
       </nav>
 
-      <!-- Main Project Description Content with Staggered Entrance -->
-      <article class="t-stagger flex flex-col gap-10">
+      <!-- ── Main Case Study Article with Staggered Entrance ── -->
+      <article class="t-stagger flex flex-col gap-12">
 
-        <!-- 1. Project Title & High-Level Summary -->
-        <header class="t-stagger-line t-stagger-line--1 flex flex-col gap-3">
-          <h1 class="m-0 font-sans text-[28px] font-medium leading-[1.2] tracking-[-0.035em] text-[var(--text-primary)]">
+        <!-- 1. Hero Title & Premise -->
+        <header class="t-stagger-line t-stagger-line--1 flex flex-col gap-4">
+         
+
+          <h1 class="project-headline m-0 text-[32px] sm:text-[38px] font-semibold leading-[1.18] tracking-[-0.04em] text-[var(--text-primary)] text-wrap">
             {project.title}
           </h1>
 
-          <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.68] text-[var(--text-secondary)] font-normal">
+          <p class="m-0 text-[16px] sm:text-[17px] leading-[1.65] text-[var(--text-secondary)] font-normal max-w-[56ch]">
             {project.description}
           </p>
         </header>
 
-        <!-- 2. Architectural Spec-Sheet Table & Editorial Link -->
-        <section class="t-stagger-line t-stagger-line--2 flex flex-col gap-5">
-          <!-- Spec Table -->
+        <!-- 2. Hero Visual Preview Frame -->
+        <section class="t-stagger-line t-stagger-line--2">
+          <div class="hero-frame group relative overflow-hidden rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1.5 transition-[border-color] duration-250 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)]">
+            <div
+              class={`shot shot--${project.tone} relative aspect-[16/10] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[7px] flex items-center justify-center cursor-zoom-in`}
+              data-spring-zoom-trigger
+              data-zoom-src={`#shot-${project.slug}`}
+            >
+              <div class="shot-inner-banner flex flex-col items-center gap-2 select-none">
+                <span class="shot-title font-mono text-[13px] font-medium tracking-wide uppercase text-[var(--text-secondary)] opacity-90">
+                  {project.title}
+                </span>
+                <span class="font-mono text-[10.5px] uppercase tracking-[0.16em] text-[var(--text-faint)]">
+                  preview · {project.role}
+                </span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 3. The Reasoning (Problem vs. Decision) -->
+        <section class="t-stagger-line t-stagger-line--3 reasoning-block flex flex-col gap-5 rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-5 sm:p-6">
+          
+          <div class="reasoning-row flex flex-col gap-1.5">
+            <span class="hand-label">the problem</span>
+            <p class="m-0 text-[15px] sm:text-[15.5px] leading-[1.68] text-[var(--text-secondary)]">
+              {project.problem}
+            </p>
+          </div>
+
+          <svg class="mark-arrow" viewBox="0 0 64 26" fill="none" aria-hidden="true">
+            <path d="M3 4c15-1.5 29 4 40 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+            <path d="M35 18.5l9.5 1-3-8.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+
+          <div class="reasoning-row flex flex-col gap-1.5">
+            <span class="hand-label">what I decided</span>
+            <p class="m-0 text-[15px] sm:text-[15.5px] leading-[1.68] text-[var(--text-secondary)]">
+              {project.decided}
+            </p>
+          </div>
+        </section>
+
+        <!-- 4. Specifications & Interactive Tech Stack -->
+        <section class="t-stagger-line t-stagger-line--3 flex flex-col gap-5">
           <div class="flex flex-col border-y border-[var(--border-subtle)] divide-y divide-[var(--border-subtle)]">
             <!-- Row: Role -->
-            <div class="flex items-center justify-between py-2.5 text-xs">
-              <span class="flex items-center gap-2 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
-                Role
-              </span>
-              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">
-                {project.role}
-              </span>
+            <div class="flex items-center justify-between py-3 text-xs">
+              <span class="font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">Role</span>
+              <span class="font-sans text-[13.5px] font-medium text-[var(--text-primary)]">{project.role}</span>
             </div>
 
             <!-- Row: Timeline -->
-            <div class="flex items-center justify-between py-2.5 text-xs">
-              <span class="flex items-center gap-2 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
-                Timeline
-              </span>
-              <span class="font-mono tabular-nums text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">
-                {project.year}
-              </span>
+            <div class="flex items-center justify-between py-3 text-xs">
+              <span class="font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">Timeline</span>
+              <span class="font-mono tabular-nums text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">{project.year}</span>
             </div>
 
-            <!-- Row: Tech Stack -->
-            {project.stack && project.stack.length > 0 && (
-              <div class="flex items-center justify-between py-2.5 text-xs gap-4">
-                <span class="flex items-center gap-2 shrink-0 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
-                  Tech Stack
-                </span>
-                <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)] text-right">
-                  {project.stack.join(', ')}
-                </span>
-              </div>
-            )}
-
             <!-- Row: Category -->
-            <div class="flex items-center justify-between py-2.5 text-xs">
-              <span class="flex items-center gap-2 font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">
-                Category
-              </span>
-              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">
-                {project.category}
-              </span>
+            <div class="flex items-center justify-between py-3 text-xs">
+              <span class="font-mono uppercase tracking-wider text-[var(--text-muted)] font-medium">Category</span>
+              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-primary)]">{project.category}</span>
             </div>
           </div>
 
-          <!-- Editorial Underlined CTA Link — only when there is somewhere to go -->
+          <!-- Stack Badges -->
+          <div class="flex flex-col gap-2.5 pt-1">
+            <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">
+              Technologies & Architecture
+            </span>
+            <div class="flex flex-wrap gap-2">
+              {project.stack.map((item) => (
+                <span class="stack-badge inline-flex items-center rounded-[5px] border border-[var(--border-subtle)] bg-[var(--surface-interactive)] px-2.5 py-1 text-[12px] font-mono text-[var(--text-secondary)] transition-colors hover:border-[var(--border-default)] hover:text-[var(--text-primary)]">
+                  {item}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <!-- External Live Link CTA if present -->
           {project.link && (
-            <div class="pt-1">
+            <div class="pt-2">
               <a
                 href={project.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                class="group inline-flex items-center gap-2 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] border-b border-[var(--text-primary)] pb-0.5 transition-colors duration-200 hover:border-[var(--text-muted)] hover:text-[var(--text-muted)] active:opacity-70"
+                class="cta-link inline-flex items-center gap-1.5 font-mono text-xs font-semibold uppercase tracking-wider text-[var(--text-primary)] border-b border-[var(--text-primary)] pb-0.5 transition-colors hover:border-[var(--text-muted)] hover:text-[var(--text-muted)] active:opacity-70"
               >
-                <span>View Full Project</span>
-                <span class="inline-block transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:translate-x-1">→</span>
+                <span>Visit Live Project</span>
+                <svg class="size-3 transition-transform duration-160 ease-[var(--ease-smooth-out)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M9 18l6-6-6-6" />
+                </svg>
               </a>
             </div>
           )}
         </section>
 
-        <!-- 3. Hero Framed Preview Banner -->
-        <section class="t-stagger-line t-stagger-line--2 group relative overflow-hidden rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1.5 transition-[border-color] duration-300 ease-[var(--ease-smooth-out)]">
-          {project.image ? (
-            <div
-              class="relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[6px] bg-[var(--surface-interactive)] cursor-zoom-in"
-              data-spring-zoom-trigger
-              data-zoom-src={project.image}
-            >
-              <img
-                src={project.image}
-                alt={project.title}
-                class="h-full w-full object-cover object-center contrast-[1.02] opacity-95 transition-transform duration-700 ease-[var(--ease-smooth-out)] group-hover:scale-[1.015]"
-                loading="eager"
-              />
-            </div>
-          ) : (
-            <div class={`shot shot--${project.tone} relative aspect-[16/9] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[6px] flex items-center justify-center`}>
-              <span class="font-mono text-[10.5px] uppercase tracking-[0.14em] text-[var(--text-faint)]">screenshot</span>
-            </div>
-          )}
-        </section>
-
-        <!-- Hair-Line Separator -->
-        <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
-
-        <!-- 4. Deep-Dive Case Study Narrative & Key Highlights -->
-        <section class="t-stagger-line t-stagger-line--3 flex flex-col gap-6">
-          <div class="flex flex-col gap-3">
+        <!-- 5. Key Highlights Grid -->
+        {project.highlights && project.highlights.length > 0 && (
+          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4">
             <h2 class="m-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
-              Overview & Architecture
+              Key Deliverables & Takeaways
             </h2>
-            <p class="m-0 font-sans text-[15.5px] sm:text-[16px] leading-[1.68] text-[var(--text-secondary)] font-normal">
-              {project.longDescription}
-            </p>
-          </div>
-
-          <!-- Key Deliverables & Technical Highlights -->
-          {project.highlights && project.highlights.length > 0 && (
-            <div class="flex flex-col gap-3 pt-2">
-              <h3 class="m-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
-                Key Highlights
-              </h3>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {project.highlights.map((item, idx) => (
-                  <div class="flex flex-col gap-2 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-3.5 transition-colors duration-200 hover:border-[var(--border-default)]">
-                    <span class="font-mono text-xs font-medium text-[var(--text-muted)]">0{idx + 1}</span>
-                    <span class="font-sans text-[13.5px] sm:text-[14px] leading-relaxed text-[var(--text-secondary)]">{item}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </section>
-
-        <!-- 5. Visual Gallery (Zoomable Framed Media Containers) -->
-        {project.gallery && project.gallery.length > 0 && (
-          <section class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-2">
-            <h2 class="m-0 font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">
-              Visual Gallery
-            </h2>
-            <div class="flex flex-col gap-6">
-              {project.gallery.map((imgUrl) => (
-                <div
-                  class="relative aspect-[16/9] w-full overflow-hidden rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-1.5 cursor-zoom-in group"
-                  data-spring-zoom-trigger
-                  data-zoom-src={imgUrl}
-                >
-                  <div class="relative h-full w-full overflow-hidden rounded-[6px]">
-                    <img
-                      src={imgUrl}
-                      alt={`${project.title} preview`}
-                      class="h-full w-full object-cover object-center opacity-95 transition-transform duration-500 ease-[var(--ease-smooth-out)] group-hover:scale-[1.02]"
-                      loading="lazy"
-                    />
-                  </div>
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              {project.highlights.map((item, idx) => (
+                <div class="highlight-card flex flex-col gap-2 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 transition-colors duration-200 hover:border-[var(--border-default)]">
+                  <span class="font-mono text-xs font-semibold text-[var(--text-muted)]">0{idx + 1}</span>
+                  <span class="font-sans text-[13.5px] leading-relaxed text-[var(--text-secondary)]">{item}</span>
                 </div>
               ))}
             </div>
@@ -281,30 +289,38 @@ const { project } = Astro.props;
         <!-- Hair-Line Separator -->
         <div class="w-full border-t border-dashed border-[var(--border-subtle)]" role="separator" aria-hidden="true"></div>
 
-        <!-- 6. Next Project Showcase Banner -->
+        <!-- 6. Next Case Study Showcase Card -->
         <footer class="t-stagger-line t-stagger-line--4 flex flex-col gap-4">
           <div class="flex items-center justify-between">
-            <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">UP NEXT</span>
-            <a href="/#projects" class="font-mono text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)]">
-              Back to all projects ↗
+            <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">Up Next</span>
+            <a href="/#projects" class="group inline-flex items-center gap-1.5 font-mono text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] no-underline">
+              <span>Back to all projects</span>
+              <svg class="size-3 transition-transform duration-160 ease-[var(--ease-smooth-out)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6" />
+              </svg>
             </a>
           </div>
 
           <a
             href={`/projects/${project.nextSlug}`}
-            class="group flex items-center justify-between gap-4 rounded-[8px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-[border-color,background-color,transform] duration-250 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.985]"
+            class="next-card group flex items-center justify-between gap-4 rounded-[10px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:-translate-y-0.5 active:scale-[0.985]"
           >
-            <div class="flex flex-col gap-1">
-              <span class="font-mono text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">NEXT CASE STUDY</span>
-              <span class="font-display text-lg sm:text-xl font-bold tracking-[-0.03em] text-[var(--text-primary)]">
-                {project.nextTitle}
-              </span>
+            <div class="flex items-center gap-4 min-w-0">
+              <div class={`mini-shot shot--${project.nextTone} size-12 shrink-0 rounded-[6px] border border-[var(--border-subtle)]`}></div>
+              <div class="flex flex-col gap-0.5 min-w-0">
+                <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">
+                  Next Case Study
+                </span>
+                <span class="font-sans text-[17px] sm:text-[18px] font-semibold tracking-tight text-[var(--text-primary)] truncate">
+                  {project.nextTitle}
+                </span>
+              </div>
             </div>
 
-            <!-- Tactile Circular Arrow Button -->
-            <div class="flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] transition-[border-color,color,transform] duration-200 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)] group-hover:translate-x-1">
-              <svg class="size-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+            <!-- Tactile Chevron Button -->
+            <div class="flex size-8 shrink-0 items-center justify-center rounded-full border border-[var(--border-subtle)] bg-[var(--surface)] text-[var(--text-muted)] transition-[border-color,color,transform] duration-160 ease-[var(--ease-smooth-out)] group-hover:border-[var(--border-default)] group-hover:text-[var(--text-primary)] group-hover:translate-x-0.5">
+              <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M9 18l6-6-6-6" />
               </svg>
             </div>
           </a>
@@ -318,26 +334,93 @@ const { project } = Astro.props;
   </main>
 </Layout>
 
-<!-- Fullscreen FLIP Spring Zoom Backdrop -->
+<!-- Fullscreen Spring Zoom Backdrop -->
 <div
   id="spring-zoom-backdrop"
-  class="spring-zoom-backdrop fixed inset-0 z-40 bg-[rgba(13,13,13,0.94)] backdrop-blur-md transition-opacity duration-300 opacity-0 pointer-events-none"
+  class="spring-zoom-backdrop fixed inset-0 z-40 bg-[rgba(13,13,13,0.92)] backdrop-blur-md transition-opacity duration-260 opacity-0 pointer-events-none"
   aria-hidden="true"
 ></div>
 
 <style>
-  .project-back-btn:active {
-    transform: scale(0.95);
+  /* ── Screenshots & Gradients ── */
+  .shot {
+    position: relative;
+    border-radius: 6px;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-subtle);
   }
 
+  .shot--a { background: linear-gradient(148deg, #2b3350 0%, #1a1e30 62%, #141726 100%); }
+  .shot--b { background: linear-gradient(148deg, #2d3a34 0%, #1b2420 62%, #151b18 100%); }
+  .shot--c { background: linear-gradient(148deg, #3a2b33 0%, #241a20 62%, #1a1318 100%); }
+  .shot--d { background: linear-gradient(148deg, #33302a 0%, #211f1b 62%, #181713 100%); }
+
+  :global([data-theme='light']) .shot--a { background: linear-gradient(148deg, #dfe4f2 0%, #eef1f8 100%); }
+  :global([data-theme='light']) .shot--b { background: linear-gradient(148deg, #dfeae4 0%, #eff5f1 100%); }
+  :global([data-theme='light']) .shot--c { background: linear-gradient(148deg, #f0e2e8 0%, #f8eff3 100%); }
+  :global([data-theme='light']) .shot--d { background: linear-gradient(148deg, #efeae0 0%, #f7f4ee 100%); }
+
+  /* ── Handwritten Reasoning Annotations ── */
+  .hand-label {
+    font-family: var(--font-display);
+    font-size: 20px;
+    color: var(--text-secondary);
+    line-height: 1.2;
+  }
+
+  .mark-arrow {
+    display: block;
+    width: 54px;
+    height: 22px;
+    margin: 4px 0 4px 12px;
+    color: var(--text-muted);
+    opacity: 0.8;
+  }
+
+  /* ── Staggered Entrance Animations (transitions-dev #18) ── */
+  .t-stagger-line {
+    opacity: 0;
+    transform: translateY(var(--stagger-distance, 12px));
+    filter: blur(var(--stagger-blur, 3px));
+    transition:
+      opacity var(--stagger-dur, 500ms) var(--stagger-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+      transform var(--stagger-dur, 500ms) var(--stagger-ease, cubic-bezier(0.16, 1, 0.3, 1)),
+      filter var(--stagger-dur, 500ms) var(--stagger-ease, cubic-bezier(0.16, 1, 0.3, 1));
+    will-change: transform, opacity, filter;
+  }
+
+  .t-stagger-line--1 { transition-delay: 0ms; }
+  .t-stagger-line--2 { transition-delay: 50ms; }
+  .t-stagger-line--3 { transition-delay: 100ms; }
+  .t-stagger-line--4 { transition-delay: 150ms; }
+
+  .t-stagger.is-shown .t-stagger-line {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  /* ── Zoom Backdrop ── */
   .spring-zoom-backdrop.is-active {
     opacity: 1;
     pointer-events: auto;
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .t-stagger-line {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+      transition: none !important;
+    }
+  }
 </style>
 
 <script>
-  // Stagger reveal animation matching Home intro
+  // Play staggered entrance animation immediately on render
   const block = document.querySelector<HTMLElement>('.t-stagger');
   if (block) {
     requestAnimationFrame(() => {
@@ -345,101 +428,20 @@ const { project } = Astro.props;
     });
   }
 
-  // FLIP Spring Shared-Element Zoom & Retraction Engine
-  const backdrop = document.getElementById('spring-zoom-backdrop');
-  const zoomCards = document.querySelectorAll<HTMLElement>('[data-spring-zoom-trigger]');
-  let activeClone: HTMLImageElement | null = null;
-  let activeSourceEl: HTMLElement | null = null;
-  let isZoomed = false;
-
-  const retractZoom = () => {
-    if (!activeClone || !activeSourceEl || !isZoomed) return;
-    isZoomed = false;
-
-    if (backdrop) backdrop.classList.remove('is-active');
-
-    // Smooth spring retraction back to exact origin
-    activeClone.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1)';
-    activeClone.style.transform = 'translate3d(0px, 0px, 0) scale(1)';
-
-    const handleEnd = () => {
-      if (activeSourceEl) activeSourceEl.style.opacity = '1';
-      requestAnimationFrame(() => {
-        if (activeClone && activeClone.parentNode) {
-          activeClone.parentNode.removeChild(activeClone);
-        }
-        activeClone = null;
-        activeSourceEl = null;
-        document.body.style.overflow = '';
-      });
-    };
-
-    activeClone.addEventListener('transitionend', handleEnd, { once: true });
-  };
-
-  zoomCards.forEach((card) => {
-    card.addEventListener('click', () => {
-      if (isZoomed) {
-        retractZoom();
-        return;
-      }
-
-      const imgEl = card.querySelector('img');
-      const src = card.dataset.zoomSrc;
-      if (!imgEl || !src) return;
-
-      isZoomed = true;
-      activeSourceEl = card;
-      const sourceRect = imgEl.getBoundingClientRect();
-
-      const clone = document.createElement('img');
-      clone.src = src;
-      clone.className = 'fixed z-50 shadow-2xl object-contain cursor-zoom-out select-none';
-      clone.style.left = `${sourceRect.left}px`;
-      clone.style.top = `${sourceRect.top}px`;
-      clone.style.width = `${sourceRect.width}px`;
-      clone.style.height = `${sourceRect.height}px`;
-      clone.style.transformOrigin = 'top left';
-      clone.style.willChange = 'transform';
-
-      document.body.appendChild(clone);
-      activeClone = clone;
-      card.style.opacity = '0';
-
-      if (backdrop) backdrop.classList.add('is-active');
-      document.body.style.overflow = 'hidden';
-
-      const maxW = Math.min(window.innerWidth * 0.9, 1200);
-      const maxH = Math.min(window.innerHeight * 0.85, 900);
-      
-      let targetW = maxW;
-      let targetH = maxW * (sourceRect.height / sourceRect.width);
-      if (targetH > maxH) {
-        targetH = maxH;
-        targetW = maxH * (sourceRect.width / sourceRect.height);
-      }
-
-      const targetLeft = (window.innerWidth - targetW) / 2;
-      const targetTop = (window.innerHeight - targetH) / 2;
-
-      const scale = targetW / sourceRect.width;
-      const translateX = targetLeft - sourceRect.left;
-      const translateY = targetTop - sourceRect.top;
-
-      void clone.offsetWidth;
-
-      clone.style.transition = 'transform 420ms cubic-bezier(0.23, 1, 0.32, 1)';
-      clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
-
-      clone.addEventListener('click', retractZoom);
-    });
-  });
-
-  if (backdrop) backdrop.addEventListener('click', retractZoom);
-
+  // Keyboard navigation between projects (Left = Back, Right = Next)
   window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isZoomed) {
-      retractZoom();
+    if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+    
+    if (e.key === 'ArrowRight') {
+      const nextCard = document.querySelector<HTMLAnchorElement>('.next-card');
+      if (nextCard && nextCard.href) {
+        window.location.href = nextCard.href;
+      }
+    } else if (e.key === 'ArrowLeft') {
+      const backLink = document.querySelector<HTMLAnchorElement>('.back-link');
+      if (backLink && backLink.href) {
+        window.location.href = backLink.href;
+      }
     }
   });
 </script>

@@ -57,6 +57,19 @@ const navLinks = [
     justify-content: flex-end;
     gap: 16px;
     pointer-events: auto;
+    animation: headerFadeIn 450ms var(--ease-smooth-out) 0ms both;
+    will-change: transform, opacity;
+  }
+
+  @keyframes headerFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   @media (min-width: 640px) {
@@ -164,6 +177,17 @@ const navLinks = [
     .site-header__link:nth-child(2),
     .site-header__link:nth-child(3) {
       display: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-header__bar,
+    .site-header__link,
+    .site-header__toggle :global(.theme-toggle) {
+      animation: none !important;
+      transition: none !important;
+      transform: none !important;
+      opacity: 1 !important;
     }
   }
 </style>

@@ -38,15 +38,16 @@ const socialLinks = [
       height="104"
       loading="eager"
     />
-    <span class="hero-hi font-bold">Hey, I'm Cyril.</span>
   </div>
 
-  <h1 class="statement">I design and build software, mostly the parts people actually touch.</h1>
+  <h1 class="statement">Cyril Egbobiani</h1>
 
   <p class="lede">
-    Three years in. Mostly web, some mobile, working out of Lagos.
-    I got here through drawing, the instinct carried over. You keep
-    adjusting until it stops feeling wrong.
+   Based in Lagos Nigeria, I'm a Designer and Builder of softwares, mostly the parts people actually touch. The passion for design and building softwares came from drawing, the instinct carried over.
+  </p>
+
+  <p class="lede">
+  I currently serve as a Frontend Engineer and a UI/UX designer at the International Energy Services Limited company, where I design and build software solutions.
   </p>
 
   <nav class="social-row" aria-label="Social links">
@@ -81,12 +82,14 @@ const socialLinks = [
     object-fit: cover;
     border: 1px solid var(--border-subtle);
     flex-shrink: 0;
+    animation: heroAvatarReveal 500ms var(--ease-smooth-out) 0ms both;
+    will-change: transform, opacity;
   }
 
   /* Greeting is warm but subordinate — it sets tone, it is not the headline */
   .hero-hi {
-    font-family: var(--font-display);
-    font-size: 20px;
+    font-size: 27px;
+    font-weight: 500;
     line-height: 1;
     color: var(--text-secondary);
   }
@@ -100,6 +103,8 @@ const socialLinks = [
     letter-spacing: -0.05em;
     font-weight: 600;
     color: var(--text-primary);
+    animation: heroTextReveal var(--stagger-dur, 500ms) var(--stagger-ease, cubic-bezier(0.16, 1, 0.3, 1)) 40ms both;
+    will-change: transform, opacity, filter;
   }
 
   .lede {
@@ -108,6 +113,16 @@ const socialLinks = [
     line-height: 1.7;
     color: var(--text-secondary);
     max-width: 54ch;
+    animation: heroTextReveal var(--stagger-dur, 500ms) var(--stagger-ease, cubic-bezier(0.16, 1, 0.3, 1)) both;
+    will-change: transform, opacity, filter;
+  }
+
+  .lede:nth-of-type(1) {
+    animation-delay: 90ms;
+  }
+
+  .lede:nth-of-type(2) {
+    animation-delay: 140ms;
   }
 
   /* Quiet text links rather than four bordered pills, which read as noise
@@ -116,6 +131,8 @@ const socialLinks = [
     display: flex;
     flex-wrap: wrap;
     gap: 18px;
+    animation: heroRowReveal 450ms var(--ease-smooth-out) 190ms both;
+    will-change: transform, opacity;
   }
 
   .social-link {
@@ -148,7 +165,40 @@ const socialLinks = [
     display: block;
   }
 
+  @keyframes heroAvatarReveal {
+    from {
+      opacity: 0;
+      transform: scale(0.94) translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0);
+    }
+  }
 
+  @keyframes heroTextReveal {
+    from {
+      opacity: 0;
+      transform: translateY(var(--stagger-distance, 12px));
+      filter: blur(var(--stagger-blur, 3px));
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @keyframes heroRowReveal {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
 
   @media (hover: hover) and (pointer: fine) {
     .social-link:hover {
@@ -158,8 +208,6 @@ const socialLinks = [
     .social-link:hover .social-link__icon {
       opacity: 1;
     }
-
-
   }
 
   .social-link:active {
@@ -181,13 +229,17 @@ const socialLinks = [
   }
 
   @media (prefers-reduced-motion: reduce) {
+    .hero-avatar,
+    .statement,
+    .lede,
+    .social-row,
     .social-link,
     .social-link__icon {
-      transition: none;
-    }
-
-    .social-link:active {
-      transform: none;
+      animation: none !important;
+      transition: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
     }
   }
 </style>

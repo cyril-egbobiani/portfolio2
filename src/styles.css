@@ -113,8 +113,8 @@
   --rose: #f43f5e;
   --rose-hover: #e11d48;
 
-  /* Handwriting ink — used only for handwritten annotations & in-progress markers */
-  --ink: #9a8365;
+  /* Handwriting ink & annotations — neutral secondary tone */
+  --ink: var(--text-secondary);
 
   /* Logo chip */
   --border-logo: rgba(0, 0, 0, 0.08);
@@ -132,6 +132,7 @@
   /* Typography */
   --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
   --font-display: "Caveat", cursive, sans-serif;
+  --font-serif: "Instrument Serif", "EB Garamond", Garamond, Georgia, serif;
   --font-mono: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
@@ -169,8 +170,8 @@
   --rose: #f43f5e;
   --rose-hover: #fda4af;
 
-  /* Handwriting ink — used only for handwritten annotations & in-progress markers */
-  --ink: #b39b78;
+  /* Handwriting ink — neutral secondary tone */
+  --ink: var(--text-secondary);
 
   /* Logo chip */
   --border-logo: rgba(255, 255, 255, 0.06);
@@ -578,6 +579,7 @@
   }
 
   @media (max-width: 1180px) {
+
     .note--right,
     .note--left {
       position: static;
@@ -606,21 +608,48 @@
     flex-shrink: 0;
   }
 
-  .status--building .status__dot { background: var(--ink); }
+  .status--building .status__dot {
+    background: var(--ink);
+  }
+
   .status--live .status__dot,
-  .status--shipped .status__dot { background: var(--success); }
+  .status--shipped .status__dot {
+    background: var(--success);
+  }
 
   /* Screenshot placeholder tints — shared by project cards and detail pages.
      Remove a tone once that project has a real screenshot. */
-  .shot--a { background: linear-gradient(148deg, #2b3350 0%, #1a1e30 62%, #141726 100%); }
-  .shot--b { background: linear-gradient(148deg, #2d3a34 0%, #1b2420 62%, #151b18 100%); }
-  .shot--c { background: linear-gradient(148deg, #3a2b33 0%, #241a20 62%, #1a1318 100%); }
-  .shot--d { background: linear-gradient(148deg, #33302a 0%, #211f1b 62%, #181713 100%); }
+  .shot--a {
+    background: linear-gradient(148deg, #2b3350 0%, #1a1e30 62%, #141726 100%);
+  }
 
-  :root:not([data-theme='dark']) .shot--a { background: linear-gradient(148deg, #dfe4f2 0%, #eef1f8 100%); }
-  :root:not([data-theme='dark']) .shot--b { background: linear-gradient(148deg, #dfeae4 0%, #eff5f1 100%); }
-  :root:not([data-theme='dark']) .shot--c { background: linear-gradient(148deg, #f0e2e8 0%, #f8eff3 100%); }
-  :root:not([data-theme='dark']) .shot--d { background: linear-gradient(148deg, #efeae0 0%, #f7f4ee 100%); }
+  .shot--b {
+    background: linear-gradient(148deg, #2d3a34 0%, #1b2420 62%, #151b18 100%);
+  }
+
+  .shot--c {
+    background: linear-gradient(148deg, #3a2b33 0%, #241a20 62%, #1a1318 100%);
+  }
+
+  .shot--d {
+    background: linear-gradient(148deg, #33302a 0%, #211f1b 62%, #181713 100%);
+  }
+
+  :root:not([data-theme='dark']) .shot--a {
+    background: linear-gradient(148deg, #dfe4f2 0%, #eef1f8 100%);
+  }
+
+  :root:not([data-theme='dark']) .shot--b {
+    background: linear-gradient(148deg, #dfeae4 0%, #eff5f1 100%);
+  }
+
+  :root:not([data-theme='dark']) .shot--c {
+    background: linear-gradient(148deg, #f0e2e8 0%, #f8eff3 100%);
+  }
+
+  :root:not([data-theme='dark']) .shot--d {
+    background: linear-gradient(148deg, #efeae0 0%, #f7f4ee 100%);
+  }
 
   /* Texts reveal — staggered blurred rise */
   .t-stagger {
