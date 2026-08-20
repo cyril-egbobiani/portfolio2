@@ -1,21 +1,14 @@
 ---
 // ProfileSection.astro — the human half.
-// Deliberately does NOT retell the origin story; the hero already covers that.
 import photographyImg from '../assets/images/Image (Photography).png?url';
 import footballImg from '../assets/images/image (Football).png?url';
 import cookingImg from '../assets/images/Image (Cooking).png?url';
 import carsImg from '../assets/images/Image (Cars).png?url';
-import profile from '../assets/images/profile-1.png?url';
-
-const interests = [
-  { title: 'Photography', subtitle: 'mostly around Lagos', image: photographyImg },
-  { title: 'Football', subtitle: '#Come on you Gunners!!!!', image: footballImg },
-  { title: 'Cooking', subtitle: 'Mum really influenced me', image: cookingImg },
-  { title: 'Cars', subtitle: 'automotive design, mainly', image: carsImg },
-];
+import profile1 from '../assets/images/profile-1.png?url';
+import profileAvatar from '../assets/images/profile-.png?url';
 ---
 
-<section class="relative flex flex-col gap-7" id="about">
+<section class="relative flex flex-col gap-8" id="about">
 
   <div class="section-head">
     <div class="section-head__text">
@@ -24,8 +17,129 @@ const interests = [
     </div>
   </div>
 
-  <div class="portrait">
-    <img src={profile} alt="Cyril Egbobiani" loading="lazy" />
+  <!-- ═══════════════════════════════════════════════════════════
+       CYRIL'S PERSONAL MOODBOARD & PHOTO COLLAGE (DRAGGABLE)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="moodboard-wrapper">
+    <div class="moodboard" data-moodboard>
+
+      <!-- Drag hint -->
+      <div class="moodboard-hint" aria-hidden="true">
+        <span>drag anything around</span>
+      </div>
+
+      <!-- 1. Main Portrait Polaroid: Cyril -->
+      <div
+        class="sticker-item polaroid-frame polaroid--main"
+        data-draggable
+        style="--x: 50%; --y: 45%; --r: -2deg; z-index: 12;"
+      >
+        <div class="tape tape--top"></div>
+        <div class="polaroid-photo">
+          <img src={profile1} alt="Cyril Egbobiani" draggable="false" />
+        </div>
+        <div class="polaroid-meta">
+          <span class="polaroid-title">Cyril Egbobiani</span>
+          <span class="polaroid-sub font-display">Lagos, NG</span>
+        </div>
+      </div>
+
+      <!-- 2. Photography Polaroid -->
+      <div
+        class="sticker-item polaroid-frame"
+        data-draggable
+        style="--x: 23%; --y: 36%; --r: -7deg; z-index: 8;"
+      >
+        <div class="tape tape--top-left"></div>
+        <div class="polaroid-photo">
+          <img src={photographyImg} alt="Street photography in Lagos" draggable="false" />
+        </div>
+        <div class="polaroid-meta">
+          <span class="polaroid-title">Photography</span>
+          <span class="polaroid-sub font-display">mostly around Lagos</span>
+        </div>
+      </div>
+
+      <!-- 3. Football Polaroid -->
+      <div
+        class="sticker-item polaroid-frame"
+        data-draggable
+        style="--x: 77%; --y: 35%; --r: 5deg; z-index: 9;"
+      >
+        <div class="tape tape--top-right"></div>
+        <div class="polaroid-photo">
+          <img src={footballImg} alt="Football" draggable="false" />
+        </div>
+        <div class="polaroid-meta">
+          <span class="polaroid-title">Football</span>
+          <span class="polaroid-sub font-display">#Come on you Gunners!!!!</span>
+        </div>
+      </div>
+
+      <!-- 4. Cooking Polaroid -->
+      <div
+        class="sticker-item polaroid-frame"
+        data-draggable
+        style="--x: 21%; --y: 78%; --r: 5deg; z-index: 10;"
+      >
+        <div class="polaroid-photo">
+          <img src={cookingImg} alt="Cooking" draggable="false" />
+        </div>
+        <div class="polaroid-meta">
+          <span class="polaroid-title">Cooking</span>
+          <span class="polaroid-sub font-display">Mum really influenced me</span>
+        </div>
+      </div>
+
+      <!-- 5. Cars Polaroid -->
+      <div
+        class="sticker-item polaroid-frame polaroid--wide"
+        data-draggable
+        style="--x: 78%; --y: 76%; --r: -5deg; z-index: 7;"
+      >
+        <div class="polaroid-photo">
+          <img src={carsImg} alt="Cars" draggable="false" />
+        </div>
+        <div class="polaroid-meta">
+          <span class="polaroid-title">Cars</span>
+          <span class="polaroid-sub font-display">automotive design, mainly</span>
+        </div>
+      </div>
+
+      <!-- 6. Small Avatar Cutout Stamp -->
+      <div
+        class="sticker-item avatar-stamp"
+        data-draggable
+        style="--x: 37%; --y: 19%; --r: -8deg; z-index: 14;"
+      >
+        <img src={profileAvatar} alt="Cyril avatar" draggable="false" />
+      </div>
+
+      <!-- 7. Handwritten Note Card -->
+      <div
+        class="sticker-item note-card"
+        data-draggable
+        style="--x: 48%; --y: 84%; --r: -3deg; z-index: 13;"
+      >
+        <span class="note-text font-display">sketching before coding</span>
+        <div class="note-sketch">
+          <svg width="36" height="10" viewBox="0 0 36 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
+            <path d="M2 7 C 8 1, 16 9, 24 3 C 28 1, 32 6, 34 4" />
+          </svg>
+        </div>
+      </div>
+
+      <!-- 8. Lagos Location Tag -->
+      <div
+        class="sticker-item pill-tag font-mono"
+        data-draggable
+        style="--x: 63%; --y: 16%; --r: 6deg; z-index: 11;"
+      >
+        <span class="pill-dot"></span>
+        <span>Lagos, Nigeria</span>
+      </div>
+
+    </div>
   </div>
 
   <p class="about-copy">
@@ -35,48 +149,266 @@ const interests = [
     what they're making.
   </p>
 
-  <div class="interests">
-    <span class="hand-label">when I'm not at a screen</span>
-
-    <div class="interest-grid">
-      {interests.map((item) => (
-        <figure class="interest">
-          <div class="interest__frame">
-            <img src={item.image} alt={item.title} loading="lazy" />
-          </div>
-          <figcaption>
-            <span class="interest__title">{item.title}</span>
-            <span class="interest__sub">{item.subtitle}</span>
-          </figcaption>
-        </figure>
-      ))}
-    </div>
-  </div>
-
 </section>
 
 <style>
-  .portrait {
+  /* ═══════════════════════════════════════════════════════════
+     MOODBOARD STAGE CONTAINER
+     ═══════════════════════════════════════════════════════════ */
+  .moodboard-wrapper {
+    position: relative;
+    width: 100%;
     overflow: hidden;
     border-radius: 12px;
     border: 1px solid var(--border-subtle);
     background: var(--surface-subtle);
+    background-image: radial-gradient(rgba(128, 128, 128, 0.12) 1px, transparent 1px);
+    background-size: 24px 24px;
+    padding: 12px;
   }
 
-  .portrait img {
-    display: block;
+  .moodboard {
+    position: relative;
     width: 100%;
-    height: 240px;
-    object-fit: cover;
-    object-position: center;
+    height: 480px;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: none;
   }
 
   @media (min-width: 640px) {
-    .portrait img {
-      height: 300px;
+    .moodboard {
+      height: 520px;
     }
   }
 
+  .moodboard-hint {
+    position: absolute;
+    bottom: 12px;
+    right: 16px;
+    font-family: var(--font-display, cursive);
+    font-size: 14px;
+    color: var(--ink, #9a8365);
+    opacity: 0.75;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ═══════════════════════════════════════════════════════════
+     DRAGGABLE STICKER BASE
+     ═══════════════════════════════════════════════════════════ */
+  .sticker-item {
+    position: absolute;
+    left: var(--x);
+    top: var(--y);
+    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) rotate(var(--r));
+    cursor: grab;
+    touch-action: none;
+    will-change: transform, box-shadow;
+    transition:
+      box-shadow 180ms var(--ease-smooth-out, cubic-bezier(0.16, 1, 0.3, 1)),
+      scale 180ms var(--ease-smooth-out, cubic-bezier(0.16, 1, 0.3, 1));
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .sticker-item:hover {
+      scale: 1.03;
+    }
+  }
+
+  .sticker-item[data-dragging="true"] {
+    cursor: grabbing !important;
+    scale: 1.07 !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28) !important;
+    transition: none !important;
+  }
+
+  /* ── Polaroid Frames ── */
+  .polaroid-frame {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 8px 8px 16px 8px;
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    width: 152px;
+  }
+
+  [data-theme="dark"] .polaroid-frame {
+    background: #18181b;
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+  }
+
+  .polaroid--main {
+    width: 165px;
+    padding-bottom: 18px;
+  }
+
+  .polaroid--main .polaroid-photo img {
+    height: 145px;
+  }
+
+  .polaroid--wide {
+    width: 175px;
+  }
+
+  .polaroid--wide .polaroid-photo img {
+    height: 105px;
+  }
+
+  .polaroid-photo {
+    width: 100%;
+    overflow: hidden;
+    background: var(--surface-subtle);
+  }
+
+  .polaroid-photo img {
+    width: 100%;
+    height: 125px;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  .polaroid-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    margin-top: 7px;
+    padding: 0 2px;
+  }
+
+  .polaroid-title {
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .polaroid-sub {
+    font-family: var(--font-display);
+    font-size: 14px;
+    line-height: 1.25;
+    color: var(--ink);
+  }
+
+  /* ── Tape Accents ── */
+  .tape {
+    position: absolute;
+    width: 34px;
+    height: 13px;
+    background: rgba(255, 255, 255, 0.65);
+    backdrop-filter: blur(3px);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+    border-radius: 1px;
+  }
+
+  [data-theme="dark"] .tape {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .tape--top {
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%) rotate(-1deg);
+  }
+
+  .tape--top-left {
+    top: -7px;
+    left: 10px;
+    transform: rotate(-14deg);
+  }
+
+  .tape--top-right {
+    top: -7px;
+    right: 12px;
+    transform: rotate(18deg);
+  }
+
+  /* ── Avatar Stamp ── */
+  .avatar-stamp {
+    width: 62px;
+    height: 62px;
+    border-radius: 9999px;
+    border: 3px solid #ffffff;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
+    background: #000000;
+  }
+
+  [data-theme="dark"] .avatar-stamp {
+    border-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .avatar-stamp img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+
+  /* ── Note Card ── */
+  .note-card {
+    background: var(--surface);
+    border: 1px dashed var(--border-strong);
+    border-radius: 6px;
+    padding: 8px 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    color: var(--ink);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+  }
+
+  .note-text {
+    font-size: 15px;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .note-sketch {
+    opacity: 0.6;
+  }
+
+  /* ── Pill Tags ── */
+  .pill-tag {
+    background: #18181b;
+    color: #e4e4e7;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    border-radius: 9999px;
+    padding: 5px 12px;
+    font-size: 11px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+    white-space: nowrap;
+  }
+
+  .pill-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: #22c55e;
+  }
+
+  /* ── Responsive adjustments ── */
+  @media (max-width: 640px) {
+    .polaroid-frame { width: 125px; }
+    .polaroid-photo img { height: 100px; }
+    .polaroid--main { width: 135px; }
+    .polaroid--wide { width: 145px; }
+    .avatar-stamp { width: 50px; height: 50px; }
+    .note-text { font-size: 13px; }
+  }
+
+  /* ── About copy ── */
   .about-copy {
     margin: 0;
     font-size: 15.5px;
@@ -84,84 +416,68 @@ const interests = [
     color: var(--text-secondary);
     max-width: 58ch;
   }
-
-  .interests {
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
-    margin-top: 6px;
-  }
-
-  .interest-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 14px;
-  }
-
-  @media (min-width: 560px) {
-    .interest-grid {
-      grid-template-columns: repeat(4, 1fr);
-    }
-  }
-
-  .interest {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 9px;
-  }
-
-  /* The photograph is the point — shown in full colour, uncropped by overlays */
-  .interest__frame {
-    overflow: hidden;
-    border-radius: 10px;
-    border: 1px solid var(--border-subtle);
-    background: var(--surface-subtle);
-    aspect-ratio: 4 / 5;
-  }
-
-  .interest__frame img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center;
-    transition: transform var(--duration-very-slow) var(--ease-smooth-out);
-  }
-
-  .interest figcaption {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    padding-left: 1px;
-  }
-
-  .interest__title {
-    font-size: 13.5px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
-
-  .interest__sub {
-    font-size: 12px;
-    line-height: 1.4;
-    color: var(--text-muted);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .interest:hover .interest__frame img {
-      transform: scale(1.04);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .interest__frame img {
-      transition: none;
-    }
-
-    .interest:hover .interest__frame img {
-      transform: none;
-    }
-  }
 </style>
+
+<script>
+  // Robust pointer-event drag engine
+  const board = document.querySelector<HTMLElement>('[data-moodboard]');
+
+  if (board) {
+    const items = Array.from(board.querySelectorAll<HTMLElement>('[data-draggable]'));
+    let highestZ = 20;
+
+    items.forEach((el) => {
+      let isDragging = false;
+      let startPointerX = 0;
+      let startPointerY = 0;
+      let startDx = 0;
+      let startDy = 0;
+
+      const onPointerDown = (e: PointerEvent) => {
+        if (e.button !== 0) return; // primary click only
+        
+        isDragging = true;
+        el.setPointerCapture(e.pointerId);
+
+        // Bring to front
+        highestZ += 1;
+        el.style.zIndex = String(highestZ);
+
+        startPointerX = e.clientX;
+        startPointerY = e.clientY;
+
+        // Parse existing CSS custom properties for offsets
+        startDx = parseFloat(el.style.getPropertyValue('--dx') || '0');
+        startDy = parseFloat(el.style.getPropertyValue('--dy') || '0');
+
+        el.setAttribute('data-dragging', 'true');
+
+        el.addEventListener('pointermove', onPointerMove);
+        el.addEventListener('pointerup', onPointerUp);
+        el.addEventListener('pointercancel', onPointerUp);
+      };
+
+      const onPointerMove = (e: PointerEvent) => {
+        if (!isDragging) return;
+        const currentDx = startDx + (e.clientX - startPointerX);
+        const currentDy = startDy + (e.clientY - startPointerY);
+
+        el.style.setProperty('--dx', `${currentDx}px`);
+        el.style.setProperty('--dy', `${currentDy}px`);
+      };
+
+      const onPointerUp = (e: PointerEvent) => {
+        if (!isDragging) return;
+        isDragging = false;
+        el.releasePointerCapture(e.pointerId);
+        el.setAttribute('data-dragging', 'false');
+
+        el.removeEventListener('pointermove', onPointerMove);
+        el.removeEventListener('pointerup', onPointerUp);
+        el.removeEventListener('pointercancel', onPointerUp);
+      };
+
+      el.addEventListener('pointerdown', onPointerDown);
+    });
+  }
+</script>

@@ -1,0 +1,169 @@
+---
+// Header.astro — Minimal top navigation aligned to the right of the screen
+// Uses multi-layered progressive Gaussian blur for smooth gradient fade.
+import ProgressiveBlur from './ProgressiveBlur.astro';
+import ThemeToggle from './ThemeToggle.astro';
+
+const navLinks = [
+  { label: 'Work', href: '#projects' },
+  { label: 'Services', href: '#services' },
+  { label: 'Experience', href: '#experience' },
+  { label: 'About', href: '#about' },
+  { label: 'Contact', href: '#contact' },
+];
+---
+
+<header class="site-header" id="top">
+  <!-- Multi-layered progressive Gaussian blur -->
+  <ProgressiveBlur direction="top" height="72px" />
+
+  <!-- Navigation items aligned to the right of the screen -->
+  <div class="site-header__bar">
+    <nav class="site-header__nav" aria-label="Main navigation">
+      {navLinks.map((link) => (
+        <a href={link.href} class="site-header__link">
+          {link.label}
+        </a>
+      ))}
+    </nav>
+
+    <div class="site-header__divider" aria-hidden="true"></div>
+
+    <div class="site-header__toggle">
+      <ThemeToggle />
+    </div>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: sticky;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .site-header__bar {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 16px;
+    pointer-events: auto;
+  }
+
+  @media (min-width: 640px) {
+    .site-header__bar {
+      padding: 18px 32px;
+      gap: 20px;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-header__bar {
+      padding: 20px 48px;
+    }
+  }
+
+  .site-header__nav {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
+
+  @media (min-width: 640px) {
+    .site-header__nav {
+      gap: 24px;
+    }
+  }
+
+  .site-header__link {
+    font-size: 14px;
+    color: var(--text-secondary);
+    text-decoration: none;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    transition:
+      color 160ms var(--ease-smooth-out),
+      transform 160ms var(--ease-smooth-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-header__link:hover {
+      color: var(--text-primary);
+    }
+  }
+
+  .site-header__link:active {
+    transform: scale(0.96);
+  }
+
+  .site-header__divider {
+    width: 1px;
+    height: 14px;
+    background: var(--border-subtle);
+    flex-shrink: 0;
+  }
+
+  .site-header__toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .site-header__toggle :global(.theme-toggle) {
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--border-subtle);
+    background: transparent;
+    border-radius: 9999px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      color 160ms var(--ease-smooth-out),
+      border-color 160ms var(--ease-smooth-out),
+      transform 160ms var(--ease-smooth-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-header__toggle :global(.theme-toggle:hover) {
+      color: var(--text-primary);
+      border-color: var(--border-default);
+    }
+  }
+
+  .site-header__toggle :global(.theme-toggle:active) {
+    transform: scale(0.92);
+  }
+
+  /* ── Mobile adjustments ── */
+  @media (max-width: 540px) {
+    .site-header__bar {
+      padding: 14px 16px;
+      gap: 12px;
+    }
+
+    .site-header__nav {
+      gap: 14px;
+    }
+
+    .site-header__link {
+      font-size: 13px;
+    }
+
+    .site-header__link:nth-child(2),
+    .site-header__link:nth-child(3) {
+      display: none;
+    }
+  }
+</style>
