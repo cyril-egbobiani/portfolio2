@@ -67,10 +67,10 @@ const experience: ExperienceItem[] = [
     </div>
   </div>
 
-  <div class="flex flex-col divide-y divide-dashed divide-[var(--border-subtle)] border-y border-dashed border-[var(--border-subtle)]" data-experience-list>
+  <div class="flex flex-col gap-2" data-experience-list>
     {experience.map((item, index) => (
       <div
-        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-2 sm:px-3 transition-[background-color,border-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] cursor-pointer select-none rounded-[6px] active:scale-[0.995]"
+        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-3 sm:px-4 transition-[background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-subtle)] cursor-pointer select-none rounded-[8px] active:scale-[0.995]"
         data-experience-item
         data-visible="false"
         data-expanded={index === 0 ? 'true' : 'false'}
@@ -80,8 +80,8 @@ const experience: ExperienceItem[] = [
       >
         <!-- Card Header Row -->
         <div class="flex items-start gap-3.5 sm:gap-4">
-          <!-- Logo Badge: Subtle hairline frame (48px x 48px, 12px radius) -->
-          <div class={`experience-badge flex size-[46px] sm:size-[50px] shrink-0 items-center justify-center rounded-[12px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
+          <!-- Logo Badge: Borderless surface badge -->
+          <div class={`experience-badge flex size-[46px] sm:size-[50px] shrink-0 items-center justify-center rounded-[12px] bg-[var(--surface-interactive)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
             {item.logo ? (
               typeof item.logo === 'string' ? (
                 <img
@@ -166,7 +166,7 @@ const experience: ExperienceItem[] = [
   }
 
   .experience-card[data-expanded="true"] {
-    background-color: var(--surface-interactive);
+    background-color: var(--surface-subtle);
   }
 
   /* Current roles carry the same ink marker used for in-progress work */
