@@ -3,43 +3,18 @@
 // Builds  → product cards. Anything listed here is shipped and reachable.
 // Designs → visual work. No cards, no detail pages: a masonry gallery that
 //           springs open to full view on tap.
-// NOTE: build slugs must stay in sync with getStaticPaths in src/pages/projects/[slug].astro
+import { projects } from '../data/projects';
+
 const tabs = ['Builds', 'Designs'];
 
-interface Build {
-  slug: string;
-  title: string;
-  blurb: string;
-  tone: 'a' | 'b' | 'c' | 'd';
-  image?: string;
-}
-
-const builds: Build[] = [
-  {
-    slug: 'forge',
-    title: 'Forge',
-    blurb: 'A spiritual app for kids, built around games, teachings, devotions and a church prayer wall.',
-    tone: 'a',
-  },
-  {
-    slug: '9to5er',
-    title: '9to5er',
-    blurb: 'Deep-dives on agencies, for people about to join one.',
-    tone: 'b',
-  },
-  {
-    slug: 'model-portfolio',
-    title: 'Model Portfolio',
-    blurb: 'A site for a friend who models, built around her distinct style sets.',
-    tone: 'c',
-  },
-  {
-    slug: 'token-extractor',
-    title: 'Token Extractor',
-    blurb: 'A browser extension that pulls the real design tokens off any page.',
-    tone: 'd',
-  },
-];
+const builds = projects.map((p) => ({
+  slug: p.slug,
+  title: p.title,
+  blurb: p.shortBlurb || p.description,
+  tone: p.tone,
+  image: p.thumbnailImage || (p.heroMedia && 'src' in p.heroMedia ? p.heroMedia.src : undefined),
+  deviceType: p.heroMedia && 'device' in p.heroMedia ? p.heroMedia.device : 'phone',
+}));
 
 // Placeholder network images with deliberately varied dimensions so the
 // masonry sizing is visible. Swap for real design work.
@@ -85,7 +60,13 @@ const designs = [
         <a href={`/projects/${project.slug}`} data-astro-prefetch class="project-card group">
           <div class={`shot shot--${project.tone}`}>
             {project.image ? (
-              <img src={project.image} alt={project.title} class="shot__img" loading="lazy" />
+              project.deviceType === 'phone' ? (
+                <div class="shot__phone-frame">
+                  <img src={project.image} alt={project.title} class="shot__phone-img" loading="lazy" />
+                </div>
+              ) : (
+                <img src={project.image} alt={project.title} class="shot__img" loading="lazy" />
+              )
             ) : (
               <span class="shot__pending">screenshot</span>
             )}
@@ -174,8 +155,37 @@ const designs = [
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 300ms var(--ease-smooth-out);
+    transition: transform 350ms var(--ease-smooth-out);
     will-change: transform;
+  }
+
+  .project-card:hover .shot__img {
+    transform: scale(1.04);
+  }
+
+  .shot__phone-frame {
+    position: relative;
+    height: 86%;
+    aspect-ratio: 9 / 19.5;
+    border-radius: 14px;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    overflow: hidden;
+    background: #0d0d0f;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(168, 85, 247, 0.22);
+    transition: transform 350ms var(--ease-smooth-out), box-shadow 350ms var(--ease-smooth-out);
+    will-change: transform;
+  }
+
+  .shot__phone-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .project-card:hover .shot__phone-frame {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 32px rgba(168, 85, 247, 0.35);
   }
 
   .shot__pending {
@@ -204,9 +214,13 @@ const designs = [
 
   .card-blurb {
     margin: 5px 0 0;
-    font-size: 14px;
-    line-height: 1.55;
+    font-size: 13.5px;
+    line-height: 1.5;
     color: var(--text-muted);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   @media (hover: hover) and (pointer: fine) {

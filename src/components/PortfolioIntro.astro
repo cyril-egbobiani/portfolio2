@@ -27,37 +27,44 @@ const socialLinks = [
 
 <!-- Reading order is deliberate and descending: greeting, then the one thing
      I do, then context, then details, then links. Nothing competes. -->
-<section class="hero pt-14 sm:pt-18">
+<section class="hero pt-6 sm:pt-10 flex flex-col gap-5 sm:gap-6">
 
-  <div class="hero-top">
+  <!-- Div 1: Rectangular Display Photo Card with 60% Progressive Blur -->
+  <div class="hero-photo-card group">
     <img
-      class="hero-avatar"
+      class="hero-photo-img"
       src={profileImg}
       alt="Cyril Egbobiani"
-      width="104"
-      height="104"
       loading="eager"
     />
+    <!-- Bottom 60% Progressive Blur Fade -->
+    <div class="hero-blur-tint" aria-hidden="true"></div>
+    <div class="hero-blur-filter" aria-hidden="true"></div>
   </div>
 
-  <h1 class="statement">Cyril Egbobiani</h1>
+  <!-- Div 2: Text Content Block (Positioned at a lower level below the image) -->
+  <div class="hero-text-block flex flex-col gap-4 w-full pt-1 sm:pt-2">
+    <h1 class="statement">
+      Cyril Egbobiani
+    </h1>
 
-  <p class="lede">
-   Based in Lagos Nigeria, I'm a Designer and Builder of softwares, mostly the parts people actually touch. The passion for design and building softwares came from drawing, the instinct carried over.
-  </p>
+    <p class="lede">
+      Based in Lagos Nigeria, I'm a Designer and Builder of softwares, mostly the parts people actually touch. The passion for design and building softwares came from drawing, the instinct carried over.
+    </p>
 
-  <p class="lede">
-  I currently serve as a Frontend Engineer and a UI/UX designer at the International Energy Services Limited company, where I design and build software solutions.
-  </p>
+    <p class="lede">
+      I currently serve as a Frontend Engineer and UI/UX designer at International Energy Services Limited, where I design and build software solutions.
+    </p>
 
-  <nav class="social-row" aria-label="Social links">
-    {socialLinks.map((link) => (
-      <a class="social-link" href={link.href} aria-label={link.label}>
-        <span class="social-link__icon" set:html={link.icon} />
-        <span>{link.label}</span>
-      </a>
-    ))}
-  </nav>
+    <nav class="social-row pt-1" aria-label="Social links">
+      {socialLinks.map((link) => (
+        <a class="social-link" href={link.href} aria-label={link.label}>
+          <span class="social-link__icon" set:html={link.icon} />
+          <span>{link.label}</span>
+        </a>
+      ))}
+    </nav>
+  </div>
 
 </section>
 
@@ -68,22 +75,66 @@ const socialLinks = [
     align-items: flex-start;
   }
 
-  .hero-top {
-    display: flex;
-    align-items: center;
-    gap: 13px;
-    margin-bottom: 24px;
+  .hero-photo-card {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    border: none;
+    overflow: hidden;
+    background: transparent;
+    box-shadow: none;
   }
 
-  .hero-avatar {
-    width: 52px;
-    height: 52px;
-    border-radius: 9999px;
+  @media (min-width: 640px) {
+    .hero-photo-card {
+      aspect-ratio: 2.1 / 1;
+      border-radius: 20px;
+    }
+  }
+
+  .hero-photo-img {
+    width: 100%;
+    height: 100%;
     object-fit: cover;
-    background: var(--surface-subtle);
-    flex-shrink: 0;
-    animation: heroAvatarReveal 500ms var(--ease-smooth-out) 0ms both;
-    will-change: transform, opacity;
+    object-position: center 15%;
+    display: block;
+    transform: scale(1.02);
+    transition: transform 700ms var(--ease-smooth-out);
+  }
+
+  .hero-photo-card:hover .hero-photo-img {
+    transform: scale(1.035);
+  }
+
+  .hero-blur-tint {
+    position: absolute;
+    inset: 0;
+    top: auto;
+    height: 60%;
+    background: linear-gradient(
+      to top,
+      var(--surface) 0%,
+      color-mix(in srgb, var(--surface) 92%, transparent) 35%,
+      color-mix(in srgb, var(--surface) 40%, transparent) 70%,
+      transparent 100%
+    );
+    pointer-events: none;
+    z-index: 1;
+    transition: background-color 200ms var(--ease-smooth-out);
+  }
+
+  .hero-blur-filter {
+    position: absolute;
+    inset: 0;
+    top: auto;
+    height: 60%;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 50%, rgba(0, 0, 0, 0) 100%);
+    pointer-events: none;
+    z-index: 2;
   }
 
   /* Greeting is warm but subordinate — it sets tone, it is not the headline */
@@ -112,7 +163,7 @@ const socialLinks = [
     font-size: 16px;
     line-height: 1.7;
     color: var(--text-secondary);
-    max-width: 54ch;
+    width: 100%;
     animation: heroTextReveal var(--stagger-dur, 500ms) var(--stagger-ease, cubic-bezier(0.16, 1, 0.3, 1)) both;
     will-change: transform, opacity, filter;
   }
