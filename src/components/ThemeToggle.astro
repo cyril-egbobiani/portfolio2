@@ -1,17 +1,17 @@
 ---
-// Theme toggle using Hero Icons (sun + moon) with a minimal, no-background button.
+// ThemeToggle.astro — Filled MingCute sun & moon icons
 ---
 
-<button class="theme-toggle" type="button" aria-label="Switch to light theme" data-theme-toggle>
+<button class="theme-toggle" type="button" aria-label="Toggle theme" title="Toggle theme" data-theme-toggle>
   <span class="theme-toggle__stage" aria-hidden="true">
-    <!-- Clean Solid Sun icon (Filled center + rays) -->
+    <!-- MingCute Sun Solid Fill icon -->
     <svg class="theme-toggle__icon theme-toggle__icon--sun" viewBox="0 0 24 24" fill="currentColor">
       <circle cx="12" cy="12" r="4.5" />
-      <path stroke="currentColor" stroke-width="1.8" stroke-linecap="round" d="M12 2.5v2M12 19.5v2M4.75 4.75l1.42 1.42m11.66 11.66l1.42 1.42M2.5 12h2m15 0h2M4.75 19.25l1.42-1.42m11.66-11.66l1.42-1.42" />
+      <path stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M12 2.5v2M12 19.5v2M4.75 4.75l1.42 1.42m11.66 11.66l1.42 1.42M2.5 12h2m15 0h2M4.75 19.25l1.42-1.42m11.66-11.66l1.42-1.42" />
     </svg>
-    <!-- Modern Solid Crescent Moon icon (Heroicons Solid) -->
+    <!-- MingCute Moon Solid Fill icon -->
     <svg class="theme-toggle__icon theme-toggle__icon--moon" viewBox="0 0 24 24" fill="currentColor">
-      <path fill-rule="evenodd" clip-rule="evenodd" d="M9.528 1.718a.75.75 0 0 1 .162.819A8.97 8.97 0 0 0 9 6a9 9 0 0 0 9 9 8.97 8.97 0 0 0 3.463-.69.75.75 0 0 1 .981.98 10.503 10.503 0 0 1-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 0 1 .818.162Z" />
+      <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
     </svg>
   </span>
 </button>
@@ -21,7 +21,6 @@
   const toggle = document.querySelector<HTMLButtonElement>('[data-theme-toggle]');
 
   const applyTheme = (theme: 'light' | 'dark') => {
-    // Disable all color transitions temporarily for an INSTANT theme swap
     document.documentElement.classList.add('theme-switching');
     document.documentElement.dataset.theme = theme;
     toggle?.setAttribute('aria-label', `Switch to ${theme === 'dark' ? 'light' : 'dark'} theme`);
@@ -36,7 +35,6 @@
   if (savedTheme === 'light' || savedTheme === 'dark') {
     applyTheme(savedTheme);
   } else {
-    // Respect OS preference when no saved preference exists
     const prefersLight = window.matchMedia?.('(prefers-color-scheme: light)').matches;
     applyTheme(prefersLight ? 'light' : 'dark');
   }

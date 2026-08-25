@@ -129,11 +129,10 @@
   --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
   --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.06);
 
-  /* Typography */
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Caveat", cursive, sans-serif;
-  --font-serif: "Instrument Serif", "EB Garamond", Garamond, Georgia, serif;
-  --font-mono: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Typography — Option 1: Cabinet Grotesk + Geist Sans + Geist Mono */
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Cabinet Grotesk", "Geist", -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -187,9 +186,9 @@
   --shadow-card-hover: none;
 
   /* Typography */
-  --font-sans: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-display: "Caveat", cursive, sans-serif;
-  --font-mono: "Geist", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: "Cabinet Grotesk", "Geist", -apple-system, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
 /* ---------------------------------------------------------------------------
@@ -292,12 +291,15 @@
     font-family: var(--font-display);
   }
 
-  .font-sans,
-  .font-mono {
+  .font-sans {
     font-family: var(--font-sans);
   }
 
-  /* Display typography: Cabinet Grotesk weight 800 (extra bold), tight tracking */
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  /* Display typography: Cabinet Grotesk weight 700, tight tracking */
   h1,
   h2,
   h3,
@@ -305,7 +307,8 @@
   h5,
   h6 {
     font-family: var(--font-display);
-    font-weight: 800;
+    font-weight: 700;
+    letter-spacing: -0.03em;
   }
 
   .lead {
@@ -370,33 +373,36 @@
     color: var(--text-secondary);
   }
 
-  /* Theme toggle button — inline within the nav bar */
+  .section-title {
+    font-family: var(--font-sans);
+    font-size: 16px;
+    font-weight: 600;
+    font-style: normal;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  /* Theme toggle button — inline within container */
   .theme-toggle {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 100%;
+    height: 100%;
     padding: 0;
     border: none;
-    border-radius: 9999px;
-    background: var(--surface-subtle);
+    border-radius: inherit;
+    background: transparent;
     color: var(--text-primary);
     cursor: pointer;
-    transition: background-color var(--duration-fast) var(--ease-smooth-out), color var(--duration-fast) var(--ease-smooth-out), transform 160ms var(--ease-smooth-out);
+    transition: color var(--duration-fast) var(--ease-smooth-out);
   }
 
-  .theme-toggle:hover {
-    color: var(--text-primary);
-    background: var(--surface-interactive);
-    transform: none;
-  }
-
-  /* Smaller icons inside the toggle */
   .theme-toggle .theme-toggle__icon {
-    width: 15px;
-    height: 15px;
+    width: 18px;
+    height: 18px;
   }
 
   /* Quick links — styled by the scoped <style> in QuickLinks.astro */

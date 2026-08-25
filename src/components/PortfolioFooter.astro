@@ -1,56 +1,35 @@
 ---
-// Portfolio Footer — Clean footer anchor with back-to-top micro-interaction.
+// PortfolioFooter.astro — Minimalist footer with MingCute back-to-top icon button
 ---
 
-<footer class=" flex flex-col gap-8 " id="footer">
+<footer class="flex flex-col gap-8 pt-4 pb-12" id="footer">
   <!-- Hair-line separator with faded gradient mask -->
   <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
 
-  <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-6">
-    
-    <!-- Left Column: Brand Stamp + Copyright Metadata -->
-    <div class="flex flex-col items-start gap-4">
-      <!-- Theme-adaptive Custom CY Brand Logo Mark (3-path updated SVG) -->
-      <svg
-        class="h-9 sm:h-11 w-auto text-[var(--text-primary)] opacity-20 transition-opacity duration-300 hover:opacity-40"
-        viewBox="0 0 174 90"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-label="Cyril Egbobiani Logo"
-      >
-        <path d="M88.0254 5.08594C88.0254 2.32451 90.264 0.0859375 93.0254 0.0859375H123.025C125.787 0.0859375 128.025 2.32451 128.025 5.08594V37.0859C128.025 38.7428 126.682 40.0859 125.025 40.0859H93.0254C90.264 40.0859 88.0254 37.8474 88.0254 35.0859V5.08594Z" fill="currentColor"/>
-        <path d="M173.025 45.1738C173.025 47.9353 170.787 50.1738 168.025 50.1738H155.025C152.264 50.1738 150.025 52.4124 150.025 55.1738V84.1172C150.025 86.8786 147.787 89.1172 145.025 89.1172H115.025C112.264 89.1172 110.025 86.8786 110.025 84.1172V49.1172C110.025 46.3558 112.264 44.1172 115.025 44.1172H127.025C129.787 44.1172 132.025 41.8786 132.025 39.1172V5.08594C132.025 2.32451 134.264 0.0859375 137.025 0.0859375H168.025C170.787 0.0859375 173.025 2.32451 173.025 5.08594V45.1738Z" fill="currentColor"/>
-        <path d="M34.3187 40.0443C33.2104 40.0423 32.3102 40.9392 32.3082 42.0475C32.3062 43.1559 33.203 44.056 34.3114 44.058L74.5271 44.1314C77.2885 44.1365 79.523 46.3791 79.518 49.1405L79.4542 84.0721C79.4492 86.8335 77.2065 89.068 74.4451 89.063L14.4452 88.9535C11.6838 88.9484 9.4493 86.7058 9.45434 83.9443L9.46268 79.3799C9.46744 76.7717 7.35689 74.6534 4.74865 74.6486C2.1404 74.6439 0.0298592 72.5256 0.0346203 69.9174L0.125739 20.0004C0.130501 17.3917 2.2492 15.2807 4.85799 15.2854C7.46677 15.2902 9.58547 13.1792 9.59023 10.5704L9.60036 5.02065C9.60541 2.25923 11.8481 0.0247453 14.6095 0.029786L74.6094 0.13931C77.3708 0.144351 79.6053 2.8167 79.6002 5.14843L79.5455 35.1269C79.5405 37.8883 77.2978 40.1228 74.5364 40.1178L34.3187 40.0443Z" fill="currentColor"/>
-      </svg>
-      
-      <p class="m-0 font-mono text-xs text-[var(--text-muted)] tracking-tight">
-        © 2026 CYRIL EGBOBIANI &nbsp;·&nbsp; LAGOS, NG 
+  <div class="flex items-center justify-between gap-6">
+    <!-- Brand Stamp & Copyright -->
+    <div class="flex flex-col items-start gap-2">
+      <p class="m-0 font-sans text-xs text-[var(--text-muted)] tracking-tight">
+        © 2026 CYRIL EGBOBIANI &nbsp;·&nbsp; LAGOS, NG
       </p>
     </div>
 
-    <!-- Right Column: Back to Top Button -->
+    <!-- Right: MingCute Circular Back-to-Top Icon Button -->
     <div class="flex items-center">
       <button
         type="button"
-        class="back-top-btn group inline-flex items-center gap-1.5 rounded-[6px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] px-3 py-1.5 font-mono text-xs text-[var(--text-muted)] transition-[border-color,background-color,color] duration-200 ease-[var(--ease-smooth-out)] hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)] active:scale-[0.96]"
+        class="back-top-btn group inline-flex items-center justify-center w-8 h-8 rounded-full bg-black/5 dark:bg-white/10 hover:bg-black/10 dark:hover:bg-white/15 text-[var(--text-primary)] transition-all duration-200 active:scale-[0.94] border-none cursor-pointer"
         data-back-top
         aria-label="Scroll back to top"
+        title="Back to top"
       >
-        <span>Back to top</span>
-        <svg class="size-3.5 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
+        <svg class="size-4 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 19V5M5 12l7-7 7 7" />
         </svg>
       </button>
     </div>
-
   </div>
 </footer>
-
-<style>
-  .back-top-btn:active {
-    transform: scale(0.96);
-  }
-</style>
 
 <script>
   const backTopBtn = document.querySelector<HTMLButtonElement>('[data-back-top]');

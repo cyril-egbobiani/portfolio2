@@ -1,152 +1,18 @@
 ---
-// Header.astro — Top navigation matching Figma layout
-// Left: Work | Right: About + Divider + ThemeToggle
-import ProgressiveBlur from './ProgressiveBlur.astro';
-import ThemeToggle from './ThemeToggle.astro';
+// Header.astro — Minimal in-flow top bar with brand & live status
 ---
 
-<header class="site-header" id="top">
-  <!-- Subtle progressive blur -->
-  <ProgressiveBlur direction="top" height="72px" />
+<header class="w-full flex items-center justify-between pt-5 sm:pt-7 pb-1" id="top">
+  <!-- Brand Name -->
+  <a href="#top" class="group flex items-center gap-2 text-inherit no-underline" aria-label="Cyril Egbobiani - Home">
+    <span class="font-sans font-semibold text-[15px] sm:text-[16px] tracking-tight text-[var(--text-primary)] transition-opacity duration-160 group-hover:opacity-75">
+      Cyril Egbobiani
+    </span>
+  </a>
 
-  <!-- Navigation items -->
-  <div class="site-header__bar">
-    <!-- Top-Left Action: Work -->
-    <a href="#projects" class="site-header__link" aria-label="Go to Work section">
-      Work
-    </a>
-
-    <!-- Top-Right Controls: About | ThemeToggle -->
-    <div class="site-header__right">
-      <a href="#about" class="site-header__link" aria-label="Go to About section">
-        About
-      </a>
-
-      <span class="site-header__divider" aria-hidden="true">|</span>
-
-      <div class="site-header__toggle">
-        <ThemeToggle />
-      </div>
-    </div>
+  <!-- Minimal status / location stamp -->
+  <div class="flex items-center gap-2 text-xs font-mono text-[var(--text-muted)] tracking-tight">
+    <span class="inline-block size-1.5 rounded-full bg-emerald-500 animate-pulse" aria-hidden="true"></span>
+    <span>Lagos, NG</span>
   </div>
 </header>
-
-<style>
-  .site-header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 100;
-    width: 100%;
-    pointer-events: none;
-  }
-
-  .site-header__bar {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    pointer-events: auto;
-  }
-
-  @media (min-width: 640px) {
-    .site-header__bar {
-      padding: 16px 32px;
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .site-header__bar {
-      padding: 18px 44px;
-    }
-  }
-
-  .site-header__right {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    height: 30px;
-  }
-
-  .site-header__link {
-    font-family: var(--font-sans);
-    font-size: 14px;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    padding: 0;
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-    transition:
-      opacity 160ms var(--ease-smooth-out),
-      transform 160ms var(--ease-smooth-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .site-header__link:hover {
-      opacity: 0.65;
-    }
-  }
-
-  .site-header__link:active {
-    transform: scale(0.96);
-  }
-
-  .site-header__divider {
-    color: var(--text-muted);
-    font-size: 12px;
-    opacity: 0.35;
-    user-select: none;
-    display: inline-flex;
-    align-items: center;
-    line-height: 1;
-  }
-
-  .site-header__toggle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .site-header__toggle :global(.theme-toggle) {
-    width: 30px;
-    height: 30px;
-    border: none;
-    background: var(--surface-subtle);
-    border-radius: 9999px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-primary);
-    cursor: pointer;
-    transition:
-      background-color 160ms var(--ease-smooth-out),
-      transform 160ms var(--ease-smooth-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .site-header__toggle :global(.theme-toggle:hover) {
-      background: var(--surface-interactive);
-      transform: none;
-    }
-  }
-
-  .site-header__toggle :global(.theme-toggle:active) {
-    transform: scale(0.92);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .site-header__link,
-    .site-header__toggle :global(.theme-toggle) {
-      transition: none !important;
-      transform: none !important;
-    }
-  }
-</style>

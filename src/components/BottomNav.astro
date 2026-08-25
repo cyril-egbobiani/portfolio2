@@ -1,95 +1,332 @@
 ---
-// BottomNav.astro — Bottom navigation matching Figma layout
-// Left: Services | Right: Contact
-import ProgressiveBlur from './ProgressiveBlur.astro';
+// BottomNav.astro — 4-Segment Floating Dock Navigation
+// Matches screenshot: Outer capsule + 4 distinct segmented tiles.
+// Tile 1: Left rounded full (20px), Right rounded matching middle tiles (10px).
+// Tile 2 & 3: All 4 corners rounded (10px).
+// Tile 4: Left rounded matching middle tiles (10px), Right rounded full (20px).
 ---
 
-<nav class="site-bottom-nav" aria-label="Secondary navigation">
-  <!-- Subtle progressive blur -->
-  <ProgressiveBlur direction="bottom" height="72px" />
+<nav class="floating-dock-anchor" aria-label="Floating dock navigation">
+  <div class="floating-dock">
+    
+    <!-- 1. Work (Tile 1: Left Full 20px, Right 10px) -->
+    <div class="dock-item">
+      <a
+        href="#projects"
+        class="dock-tile dock-tile--first"
+        aria-label="Work"
+      >
+        <svg class="dock-icon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M9 3a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v2h20V8a2 2 0 0 0-2-2h-3V5a2 2 0 0 0-2-2H9zm2 2h2v1h-2V5zM2 11h20v2H2v-2zm0 4h20v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4z"/>
+        </svg>
+      </a>
+      <span class="dock-tooltip" aria-hidden="true">Work</span>
+    </div>
 
-  <!-- Navigation items -->
-  <div class="site-bottom-nav__bar">
-    <!-- Bottom-Left Action: Services -->
-    <a href="#services" class="site-bottom-nav__link" aria-label="Go to Services section">
-      Services
-    </a>
+    <!-- 2. Services / Skills (Tile 2: All Corners 10px) -->
+    <div class="dock-item">
+      <a
+        href="#services"
+        class="dock-tile dock-tile--mid"
+        aria-label="Services"
+      >
+        <svg class="dock-icon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+          <rect x="2" y="8" width="3" height="8" rx="1.5" />
+          <rect x="6" y="5.5" width="3" height="13" rx="1.5" />
+          <rect x="9" y="10.5" width="6" height="3" rx="1" />
+          <rect x="15" y="5.5" width="3" height="13" rx="1.5" />
+          <rect x="19" y="8" width="3" height="8" rx="1.5" />
+        </svg>
+      </a>
+      <span class="dock-tooltip" aria-hidden="true">Services</span>
+    </div>
 
-    <!-- Bottom-Right Action: Contact -->
-    <a href="#contact" class="site-bottom-nav__link" aria-label="Go to Contact section">
-      Contact
-    </a>
+    <!-- 3. About (Tile 3: All Corners 10px) -->
+    <div class="dock-item">
+      <a
+        href="#about"
+        class="dock-tile dock-tile--mid"
+        aria-label="About"
+      >
+        <svg class="dock-icon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="4" r="2.5" />
+          <path d="M6 10c0-.6.4-1 1-1h10c.6 0 1 .4 1 1 0 .6-.4 1-1 1h-2v3.5l2.2 5.5c.2.6-.1 1.2-.7 1.4-.6.2-1.2-.1-1.4-.7L13 15.5h-2l-2.1 5.2c-.2.6-.8.9-1.4.7-.6-.2-.9-.8-.7-1.4L9 14.5V11H7c-.6 0-1-.4-1-1z"/>
+        </svg>
+      </a>
+      <span class="dock-tooltip" aria-hidden="true">About</span>
+    </div>
+
+    <!-- 4. Theme Switcher (Tile 4: Left 10px, Right Full 20px) -->
+    <div class="dock-item">
+      <button
+        type="button"
+        class="dock-tile dock-tile--last"
+        aria-label="Toggle theme"
+        title="Toggle theme"
+        data-dock-theme-toggle
+      >
+        <!-- Sun icon (shown in dark mode) -->
+        <svg class="dock-icon theme-icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="currentColor">
+          <circle cx="12" cy="12" r="4.5" />
+          <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
+        </svg>
+        <!-- Moon icon (shown in light mode) -->
+        <svg class="dock-icon theme-icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
+        </svg>
+      </button>
+      <span class="dock-tooltip" aria-hidden="true">Theme</span>
+    </div>
+
   </div>
 </nav>
 
 <style>
-  .site-bottom-nav {
+  /* ── Dock Position ── */
+  .floating-dock-anchor {
     position: fixed;
-    bottom: 0;
+    bottom: max(18px, calc(18px + env(safe-area-inset-bottom, 0px)));
     left: 0;
     right: 0;
-    z-index: 100;
-    width: 100%;
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
     pointer-events: none;
   }
 
-  .site-bottom-nav__bar {
-    position: relative;
-    z-index: 10;
-    width: 100%;
-    box-sizing: border-box;
-    padding: 14px 20px;
-    padding-bottom: max(14px, env(safe-area-inset-bottom));
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+  /* ── Outer Pill Capsule ── */
+  .floating-dock {
     pointer-events: auto;
-  }
-
-  @media (min-width: 640px) {
-    .site-bottom-nav__bar {
-      padding: 16px 32px;
-      padding-bottom: max(16px, env(safe-area-inset-bottom));
-    }
-  }
-
-  @media (min-width: 1024px) {
-    .site-bottom-nav__bar {
-      padding: 18px 44px;
-      padding-bottom: max(18px, env(safe-area-inset-bottom));
-    }
-  }
-
-  .site-bottom-nav__link {
-    font-family: var(--font-sans);
-    font-size: 14px;
-    color: var(--text-primary);
-    text-decoration: none;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    padding: 0;
     display: inline-flex;
     align-items: center;
-    line-height: 1;
+    gap: 4px;
+    padding: 4px;
+    border-radius: 9999px;
+    background: #170d06;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.4),
+      0 2px 5px rgba(0, 0, 0, 0.2);
     transition:
-      opacity 160ms var(--ease-smooth-out),
-      transform 160ms var(--ease-smooth-out);
+      background-color 200ms ease,
+      border-color 200ms ease,
+      box-shadow 200ms ease;
+  }
+
+  :global([data-theme="light"]) .floating-dock {
+    background: #3b1909;
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      0 8px 24px rgba(0, 0, 0, 0.18),
+      0 2px 5px rgba(0, 0, 0, 0.08);
+  }
+
+  .dock-item {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* ── Individual Nav Tiles ── */
+  .dock-tile {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 35px;
+    background: #2a150a;
+    color: #fdf8f3;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    box-sizing: border-box;
+    overflow: hidden;
+    transition:
+      background-color 160ms var(--ease-smooth-out),
+      transform 160ms var(--ease-smooth-out),
+      color 160ms var(--ease-smooth-out);
+  }
+
+  :global([data-theme="light"]) .dock-tile {
+    background: #50210b;
+    color: #fdf8f3;
+  }
+
+  /* ── Exact Corner Radii — Proportional without CSS clipping crush ── */
+  /* Tile 1: Left rounded full (20px), Right rounded 10px (matching middle tiles) */
+  .dock-tile--first {
+    border-top-left-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border-top-right-radius: 10px;
+    border-bottom-right-radius: 10px;
+    padding-left: 8px;
+    padding-right: 4px;
+  }
+
+  /* Tile 2 & 3: All 4 corners rounded 10px */
+  .dock-tile--mid {
+    border-radius: 10px;
+    padding: 6px 8px;
+  }
+
+  /* Tile 4: Left rounded 10px (matching middle tiles), Right rounded full (20px) */
+  .dock-tile--last {
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+    padding-left: 4px;
+    padding-right: 8px;
+  }
+
+  /* ── Hover & Active Feedback ── */
+  @media (hover: hover) and (pointer: fine) {
+    .dock-tile:hover {
+      background: #3e1f0e;
+      color: #ffffff;
+    }
+    :global([data-theme="light"]) .dock-tile:hover {
+      background: #692c10;
+      color: #ffffff;
+    }
+  }
+
+  .dock-tile:active {
+    transform: scale(0.92);
+  }
+
+  .dock-icon {
+    display: block;
+    flex-shrink: 0;
+  }
+
+  /* ── Single Icon Visibility ── */
+  .theme-icon-sun {
+    display: block;
+  }
+  .theme-icon-moon {
+    display: none;
+  }
+
+  :global([data-theme="light"]) .theme-icon-sun {
+    display: none !important;
+  }
+  :global([data-theme="light"]) .theme-icon-moon {
+    display: block !important;
+  }
+
+  /* ── Tooltips ── */
+  .dock-tooltip {
+    position: absolute;
+    bottom: calc(100% + 8px);
+    left: 50%;
+    transform: translate(-50%) scale(0.92);
+    transform-origin: bottom center;
+    background: #170d06;
+    color: #fdf8f3;
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    font-family: var(--font-sans);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    padding: 2px 7px;
+    border-radius: 5px;
+    white-space: nowrap;
+    pointer-events: none;
+    opacity: 0;
+    transition:
+      opacity 140ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
+      transform 140ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+  }
+
+  :global([data-theme="light"]) .dock-tooltip {
+    background: #3b1909;
+    color: #fdf8f3;
+    border-color: rgba(255, 255, 255, 0.15);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .site-bottom-nav__link:hover {
-      opacity: 0.65;
+    .dock-item:hover .dock-tooltip {
+      opacity: 1;
+      transform: translate(-50%) scale(1);
     }
   }
 
-  .site-bottom-nav__link:active {
-    transform: scale(0.96);
+  @media (max-width: 480px) {
+    .floating-dock {
+      gap: 3px;
+      padding: 3px;
+    }
+    .dock-tile {
+      width: 40px;
+      height: 33px;
+    }
+    .dock-tile--first {
+      border-top-left-radius: 18px;
+      border-bottom-left-radius: 18px;
+      border-top-right-radius: 8px;
+      border-bottom-right-radius: 8px;
+      padding-left: 7px;
+      padding-right: 3px;
+    }
+    .dock-tile--mid {
+      border-radius: 8px;
+    }
+    .dock-tile--last {
+      border-top-left-radius: 8px;
+      border-bottom-left-radius: 8px;
+      border-top-right-radius: 18px;
+      border-bottom-right-radius: 18px;
+      padding-left: 3px;
+      padding-right: 7px;
+    }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .site-bottom-nav__link {
+    .dock-tile,
+    .dock-tooltip {
       transition: none !important;
       transform: none !important;
     }
   }
 </style>
+
+<script>
+  function initThemeToggle() {
+    const toggleBtn = document.querySelector('[data-dock-theme-toggle]');
+    if (!toggleBtn) return;
+
+    const newBtn = toggleBtn.cloneNode(true);
+    toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
+
+    newBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const currentTheme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+      document.documentElement.classList.add('theme-switching');
+      document.documentElement.dataset.theme = nextTheme;
+
+      try {
+        localStorage.setItem('portfolio-theme', nextTheme);
+      } catch (err) {
+        console.warn('LocalStorage error:', err);
+      }
+
+      setTimeout(() => {
+        document.documentElement.classList.remove('theme-switching');
+      }, 120);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
+  document.addEventListener('astro:page-load', initThemeToggle);
+</script>

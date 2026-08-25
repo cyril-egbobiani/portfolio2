@@ -1,7 +1,6 @@
 ---
 import Layout from '../components/Layout.astro';
 import Header from '../components/Header.astro';
-import BottomNav from '../components/BottomNav.astro';
 import PortfolioIntro from '../components/PortfolioIntro.astro';
 import ProjectsSection from '../components/ProjectsSection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
@@ -9,12 +8,13 @@ import ProfileSection from '../components/ProfileSection.astro';
 import ExperienceSection from '../components/ExperienceSection.astro';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
+import BottomNav from '../components/BottomNav.astro';
 ---
 
-<Layout title="Cyril Egbobiani | Software Engineer & Designer">
-  <Header />
-  <main class="bg-[var(--surface)] px-4 pt-0 pb-28 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
-    <div class="mx-auto flex w-full max-w-[660px] flex-col gap-24">
+<Layout title="Cyril Egbobiani — Frontend Engineer & Designer">
+  <main class="min-h-screen bg-[var(--surface)] px-6 sm:px-8 font-[var(--font-sans)] text-[var(--text-primary)] antialiased transition-colors duration-200">
+    <div class="mx-auto flex w-full max-w-[660px] flex-col gap-14 sm:gap-16 pb-24 sm:pb-28">
+      <Header />
       <PortfolioIntro />
       <ProjectsSection />
       <ServicesSection />
@@ -24,6 +24,6 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
       <PortfolioFooter />
     </div>
   </main>
+  <!-- Centered Floating Dock Navigation inspired by shedsgns.me -->
   <BottomNav />
 </Layout>
-
