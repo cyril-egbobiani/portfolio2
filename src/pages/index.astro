@@ -1,6 +1,7 @@
 ---
 import Layout from '../components/Layout.astro';
 import Header from '../components/Header.astro';
+import BottomNav from '../components/BottomNav.astro';
 import PortfolioIntro from '../components/PortfolioIntro.astro';
 import ProjectsSection from '../components/ProjectsSection.astro';
 import ServicesSection from '../components/ServicesSection.astro';
@@ -12,7 +13,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
 
 <Layout title="Cyril Egbobiani | Software Engineer & Designer">
   <Header />
-  <main class="bg-[var(--surface)] px-4 pt-0 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
+  <main class="bg-[var(--surface)] px-4 pt-0 pb-28 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-6">
     <div class="mx-auto flex w-full max-w-[660px] flex-col gap-24">
       <PortfolioIntro />
       <ProjectsSection />
@@ -23,4 +24,6 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
       <PortfolioFooter />
     </div>
   </main>
+  <BottomNav />
 </Layout>
+

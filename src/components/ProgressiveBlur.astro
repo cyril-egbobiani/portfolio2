@@ -1,6 +1,6 @@
 ---
-// ProgressiveBlur.astro — Skiper UI #41 Progressive Blur Component
-// Pure CSS, hardware-accelerated, theme-sensitive with var(--surface).
+// ProgressiveBlur.astro — Subtle, lightweight progressive blur
+// Hardware-accelerated, theme-sensitive with var(--surface).
 
 interface Props {
   direction?: 'top' | 'bottom';
@@ -10,7 +10,7 @@ interface Props {
 
 const {
   direction = 'top',
-  height = '88px',
+  height = '72px',
   className = '',
 } = Astro.props;
 
@@ -23,10 +23,10 @@ const maskDir = direction === 'top' ? 'to bottom' : 'to top';
   style={`height: ${height};`}
   aria-hidden="true"
 >
-  <!-- Background gradient tint matching theme surface -->
+  <!-- Subtle surface background tint -->
   <div
     class="skiper-blur-tint absolute inset-0"
-    style={`background: linear-gradient(${gradientDir}, var(--surface) 20%, color-mix(in srgb, var(--surface) 60%, transparent) 60%, transparent 100%);`}
+    style={`background: linear-gradient(${gradientDir}, var(--surface) 0%, color-mix(in srgb, var(--surface) 60%, transparent) 50%, transparent 100%);`}
   ></div>
 
   <!-- Hardware-accelerated backdrop blur with smooth gradient mask -->
@@ -35,15 +35,15 @@ const maskDir = direction === 'top' ? 'to bottom' : 'to top';
     style={`
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      mask-image: linear-gradient(${maskDir}, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0) 100%);
-      -webkit-mask-image: linear-gradient(${maskDir}, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 45%, rgba(0, 0, 0, 0) 100%);
+      mask-image: linear-gradient(${maskDir}, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0) 100%);
+      -webkit-mask-image: linear-gradient(${maskDir}, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.6) 45%, rgba(0, 0, 0, 0) 100%);
     `}
   ></div>
 </div>
 
 <style>
   .skiper-progressive-blur {
-    z-index: 0;
+    z-index: 1;
     user-select: none;
     -webkit-user-select: none;
   }

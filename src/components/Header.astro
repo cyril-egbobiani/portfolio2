@@ -1,51 +1,28 @@
 ---
-// Header.astro — Minimal top navigation aligned to the right of the screen
-// Uses multi-layered progressive Gaussian blur for smooth gradient fade.
+// Header.astro — Top navigation matching Figma layout
+// Left: Work | Right: About + Divider + ThemeToggle
 import ProgressiveBlur from './ProgressiveBlur.astro';
 import ThemeToggle from './ThemeToggle.astro';
-import profileAvatar from '../assets/images/profile-.png?url';
-
-const navLinks = [
-  { label: 'Work', href: '#projects' },
-  { label: 'Services', href: '#services' },
-  { label: 'Experience', href: '#experience' },
-  { label: 'About', href: '#about' },
-  { label: 'Contact', href: '#contact' },
-];
 ---
 
 <header class="site-header" id="top">
-  <!-- Multi-layered progressive Gaussian blur -->
-  <ProgressiveBlur direction="top" height="128px" />
+  <!-- Subtle progressive blur -->
+  <ProgressiveBlur direction="top" height="72px" />
 
   <!-- Navigation items -->
   <div class="site-header__bar">
-    <!-- Brand Logo SVG Mark (Left) -->
-    <a href="#top" class="site-header__logo group flex items-center gap-2.5 text-[var(--text-primary)] no-underline" aria-label="Cyril Egbobiani home">
-      <svg
-        class="h-5 sm:h-6 w-auto text-[var(--text-primary)] opacity-85 transition-opacity duration-200 group-hover:opacity-100"
-        viewBox="0 0 174 90"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        aria-hidden="true"
-      >
-        <path d="M88.0254 5.08594C88.0254 2.32451 90.264 0.0859375 93.0254 0.0859375H123.025C125.787 0.0859375 128.025 2.32451 128.025 5.08594V37.0859C128.025 38.7428 126.682 40.0859 125.025 40.0859H93.0254C90.264 40.0859 88.0254 37.8474 88.0254 35.0859V5.08594Z" fill="currentColor"/>
-        <path d="M173.025 45.1738C173.025 47.9353 170.787 50.1738 168.025 50.1738H155.025C152.264 50.1738 150.025 52.4124 150.025 55.1738V84.1172C150.025 86.8786 147.787 89.1172 145.025 89.1172H115.025C112.264 89.1172 110.025 86.8786 110.025 84.1172V49.1172C110.025 46.3558 112.264 44.1172 115.025 44.1172H127.025C129.787 44.1172 132.025 41.8786 132.025 39.1172V5.08594C132.025 2.32451 134.264 0.0859375 137.025 0.0859375H168.025C170.787 0.0859375 173.025 2.32451 173.025 5.08594V45.1738Z" fill="currentColor"/>
-        <path d="M34.3187 40.0443C33.2104 40.0423 32.3102 40.9392 32.3082 42.0475C32.3062 43.1559 33.203 44.056 34.3114 44.058L74.5271 44.1314C77.2885 44.1365 79.523 46.3791 79.518 49.1405L79.4542 84.0721C79.4492 86.8335 77.2065 89.068 74.4451 89.063L14.4452 88.9535C11.6838 88.9484 9.4493 86.7058 9.45434 83.9443L9.46268 79.3799C9.46744 76.7717 7.35689 74.6534 4.74865 74.6486C2.1404 74.6439 0.0298592 72.5256 0.0346203 69.9174L0.125739 20.0004C0.130501 17.3917 2.2492 15.2807 4.85799 15.2854C7.46677 15.2902 9.58547 13.1792 9.59023 10.5704L9.60036 5.02065C9.60541 2.25923 11.8481 0.0247453 14.6095 0.029786L74.6094 0.13931C77.3708 0.144351 79.6053 2.8167 79.6002 5.14843L79.5455 35.1269C79.5405 37.8883 77.2978 40.1228 74.5364 40.1178L34.3187 40.0443Z" fill="currentColor"/>
-      </svg>
+    <!-- Top-Left Action: Work -->
+    <a href="#projects" class="site-header__link" aria-label="Go to Work section">
+      Work
     </a>
 
-    <!-- Right Controls -->
-    <div class="flex items-center gap-4 sm:gap-5">
-      <nav class="site-header__nav" aria-label="Main navigation">
-        {navLinks.map((link) => (
-          <a href={link.href} class="site-header__link">
-            {link.label}
-          </a>
-        ))}
-      </nav>
+    <!-- Top-Right Controls: About | ThemeToggle -->
+    <div class="site-header__right">
+      <a href="#about" class="site-header__link" aria-label="Go to About section">
+        About
+      </a>
 
-      <div class="site-header__divider" aria-hidden="true"></div>
+      <span class="site-header__divider" aria-hidden="true">|</span>
 
       <div class="site-header__toggle">
         <ThemeToggle />
@@ -56,11 +33,11 @@ const navLinks = [
 
 <style>
   .site-header {
-    position: sticky;
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
-    z-index: 50;
+    z-index: 100;
     width: 100%;
     pointer-events: none;
   }
@@ -70,93 +47,51 @@ const navLinks = [
     z-index: 10;
     width: 100%;
     box-sizing: border-box;
-    padding: 16px 20px;
+    padding: 14px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 16px;
     pointer-events: auto;
-    animation: headerFadeIn 450ms var(--ease-smooth-out) 0ms both;
-    will-change: transform, opacity;
-  }
-
-  .site-header__logo {
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    text-decoration: none;
-    transition: transform 160ms var(--ease-smooth-out);
-  }
-
-  .site-header__logo-img {
-    width: 32px;
-    height: 32px;
-    border-radius: 9999px;
-    object-fit: cover;
-    background: var(--surface-subtle);
-    transition: transform 160ms var(--ease-smooth-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .site-header__logo:hover .site-header__logo-img {
-      transform: scale(1.06);
-    }
-  }
-
-  .site-header__logo:active {
-    transform: scale(0.96);
-  }
-
-  @keyframes headerFadeIn {
-    from {
-      opacity: 0;
-      transform: translateY(-8px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
   }
 
   @media (min-width: 640px) {
     .site-header__bar {
-      padding: 18px 32px;
-      gap: 20px;
+      padding: 16px 32px;
     }
   }
 
   @media (min-width: 1024px) {
     .site-header__bar {
-      padding: 20px 48px;
+      padding: 18px 44px;
     }
   }
 
-  .site-header__nav {
-    display: flex;
+  .site-header__right {
+    display: inline-flex;
     align-items: center;
-    gap: 20px;
-  }
-
-  @media (min-width: 640px) {
-    .site-header__nav {
-      gap: 24px;
-    }
+    gap: 12px;
+    height: 30px;
   }
 
   .site-header__link {
+    font-family: var(--font-sans);
     font-size: 14px;
-    color: var(--text-secondary);
+    color: var(--text-primary);
     text-decoration: none;
-    font-weight: 500;
+    font-weight: 600;
     letter-spacing: -0.01em;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
     transition:
-      color 160ms var(--ease-smooth-out),
+      opacity 160ms var(--ease-smooth-out),
       transform 160ms var(--ease-smooth-out);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .site-header__link:hover {
-      color: var(--text-primary);
+      opacity: 0.65;
     }
   }
 
@@ -165,10 +100,13 @@ const navLinks = [
   }
 
   .site-header__divider {
-    width: 1px;
-    height: 14px;
-    background: var(--border-subtle);
-    flex-shrink: 0;
+    color: var(--text-muted);
+    font-size: 12px;
+    opacity: 0.35;
+    user-select: none;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
   }
 
   .site-header__toggle {
@@ -178,26 +116,25 @@ const navLinks = [
   }
 
   .site-header__toggle :global(.theme-toggle) {
-    width: 32px;
-    height: 32px;
-    border: 1px solid var(--border-subtle);
-    background: transparent;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background: var(--surface-subtle);
     border-radius: 9999px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    color: var(--text-muted);
+    color: var(--text-primary);
     cursor: pointer;
     transition:
-      color 160ms var(--ease-smooth-out),
-      border-color 160ms var(--ease-smooth-out),
+      background-color 160ms var(--ease-smooth-out),
       transform 160ms var(--ease-smooth-out);
   }
 
   @media (hover: hover) and (pointer: fine) {
     .site-header__toggle :global(.theme-toggle:hover) {
-      color: var(--text-primary);
-      border-color: var(--border-default);
+      background: var(--surface-interactive);
+      transform: none;
     }
   }
 
@@ -205,35 +142,11 @@ const navLinks = [
     transform: scale(0.92);
   }
 
-  /* ── Mobile adjustments ── */
-  @media (max-width: 540px) {
-    .site-header__bar {
-      padding: 14px 16px;
-      gap: 12px;
-    }
-
-    .site-header__nav {
-      gap: 14px;
-    }
-
-    .site-header__link {
-      font-size: 13px;
-    }
-
-    .site-header__link:nth-child(2),
-    .site-header__link:nth-child(3) {
-      display: none;
-    }
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .site-header__bar,
     .site-header__link,
     .site-header__toggle :global(.theme-toggle) {
-      animation: none !important;
       transition: none !important;
       transform: none !important;
-      opacity: 1 !important;
     }
   }
 </style>

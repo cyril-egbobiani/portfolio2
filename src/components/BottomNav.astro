@@ -1,0 +1,95 @@
+---
+// BottomNav.astro — Bottom navigation matching Figma layout
+// Left: Services | Right: Contact
+import ProgressiveBlur from './ProgressiveBlur.astro';
+---
+
+<nav class="site-bottom-nav" aria-label="Secondary navigation">
+  <!-- Subtle progressive blur -->
+  <ProgressiveBlur direction="bottom" height="72px" />
+
+  <!-- Navigation items -->
+  <div class="site-bottom-nav__bar">
+    <!-- Bottom-Left Action: Services -->
+    <a href="#services" class="site-bottom-nav__link" aria-label="Go to Services section">
+      Services
+    </a>
+
+    <!-- Bottom-Right Action: Contact -->
+    <a href="#contact" class="site-bottom-nav__link" aria-label="Go to Contact section">
+      Contact
+    </a>
+  </div>
+</nav>
+
+<style>
+  .site-bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 100;
+    width: 100%;
+    pointer-events: none;
+  }
+
+  .site-bottom-nav__bar {
+    position: relative;
+    z-index: 10;
+    width: 100%;
+    box-sizing: border-box;
+    padding: 14px 20px;
+    padding-bottom: max(14px, env(safe-area-inset-bottom));
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    pointer-events: auto;
+  }
+
+  @media (min-width: 640px) {
+    .site-bottom-nav__bar {
+      padding: 16px 32px;
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .site-bottom-nav__bar {
+      padding: 18px 44px;
+      padding-bottom: max(18px, env(safe-area-inset-bottom));
+    }
+  }
+
+  .site-bottom-nav__link {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    color: var(--text-primary);
+    text-decoration: none;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+    transition:
+      opacity 160ms var(--ease-smooth-out),
+      transform 160ms var(--ease-smooth-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .site-bottom-nav__link:hover {
+      opacity: 0.65;
+    }
+  }
+
+  .site-bottom-nav__link:active {
+    transform: scale(0.96);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .site-bottom-nav__link {
+      transition: none !important;
+      transform: none !important;
+    }
+  }
+</style>
