@@ -1,7 +1,7 @@
 ---
 // PortfolioIntro.astro — Uncluttered Intro with Clean MingCute Social Links
 // Wide landscape photo banner + calm, unclustered copy + lightweight social links (no heavy pills).
-import profileImg from '../assets/images/profile-.png?url';
+import profileImg from '../assets/images/profile.jpg?url';
 
 const socials = [
   {
@@ -99,7 +99,8 @@ const socials = [
 
   @media (min-width: 640px) {
     .hero-photo-card {
-      aspect-ratio: 3.2 / 2;
+      aspect-ratio: 3.2 / 2.2
+      ;
     }
   }
 
@@ -107,7 +108,7 @@ const socials = [
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 20%;
+    object-position: 55% 55%;
     display: block;
   }
 
@@ -116,7 +117,7 @@ const socials = [
     position: absolute;
     inset: 0;
     top: auto;
-    height: 55%;
+    height: 38%;
     background: linear-gradient(
       to top,
       var(--surface) 0%,
@@ -134,7 +135,7 @@ const socials = [
     position: absolute;
     inset: 0;
     top: auto;
-    height: 75%;
+    height: 45%;
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
     mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
