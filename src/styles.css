@@ -86,38 +86,38 @@
   --leading-body: 1.6;
   --leading-heading: 1.25;
 
-  /* Surfaces – light */
-  --surface: #ffffff;
-  --surface-subtle: #f6f6fa;
-  --surface-interactive: #ebebef;
+  /* Surfaces – light (warm creamy sand & roasted mocha) */
+  --surface: #fbf7f2;
+  --surface-subtle: #f2e8dc;
+  --surface-interactive: #e6d6c4;
   --surface-raised: #ffffff;
-  --surface-inverse: #0d0d0d;
+  --surface-inverse: #170d06;
 
-  /* Text hierarchy – light (high contrast & crisp legibility) */
-  --text-primary: #111111;
-  --text-secondary: #4a4a4a;
-  --text-muted: #737373;
-  --text-faint: #9e9e9e;
+  /* Text hierarchy – light (deep espresso headings & warm mocha body) */
+  --text-primary: #24140b;
+  --text-secondary: #5c4333;
+  --text-muted: #8a6d59;
+  --text-faint: #b39a87;
   --text-on-accent: #ffffff;
-  --text-on-inverse: #f5f5f5;
+  --text-on-inverse: #fbf7f2;
 
-  /* Borders */
-  --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-default: rgba(0, 0, 0, 0.12);
-  --border-strong: rgba(0, 0, 0, 0.22);
+  /* Borders – light (warm subtle earth borders) */
+  --border-subtle: rgba(60, 35, 15, 0.08);
+  --border-default: rgba(60, 35, 15, 0.15);
+  --border-strong: rgba(60, 35, 15, 0.26);
 
-  /* Accents — neutral white for dark, subtle for light */
-  --accent: #111111;
-  --accent-hover: #333333;
-  --accent-soft: rgba(0, 0, 0, 0.04);
+  /* Accents — rich terracotta brown */
+  --accent: #9c5221;
+  --accent-hover: #b56228;
+  --accent-soft: rgba(156, 82, 33, 0.09);
   --rose: #f43f5e;
   --rose-hover: #e11d48;
 
-  /* Handwriting ink & annotations — neutral secondary tone */
+  /* Handwriting ink & annotations — warm secondary tone */
   --ink: var(--text-secondary);
 
   /* Logo chip */
-  --border-logo: rgba(0, 0, 0, 0.08);
+  --border-logo: rgba(60, 35, 15, 0.08);
   --shadow-logo: none;
 
   /* Feedback */
@@ -125,9 +125,9 @@
   --warning: #d97706;
   --danger: #dc2626;
 
-  /* Shadows — minimal, no heavy drop shadows */
-  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 2px 6px rgba(0, 0, 0, 0.06);
+  /* Shadows — minimal warm shadows */
+  --shadow-card: 0 1px 3px rgba(36, 20, 11, 0.04);
+  --shadow-card-hover: 0 3px 8px rgba(36, 20, 11, 0.07);
 
   /* Typography — Option 1: Cabinet Grotesk + Geist Sans + Geist Mono */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -136,36 +136,36 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DARK THEME — #0D0D0D Pure Neutral Canvas
-   Elevated text luminance for effortless readability without eye strain.
+   DARK THEME — #0E0703 Deep Dark Espresso Canvas
+   Warm roasted cocoa surfaces, crisp warm-cream text & amber-gold accents.
    ═══════════════════════════════════════════════════════════════ */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Canvas: #0D0D0D — pure matte black */
-  --surface: #0d0d0d;
-  --surface-subtle: #202022;
-  --surface-interactive: #2a2a2e;
-  --surface-raised: #202022;
-  --surface-inverse: #f5f5f5;
+  /* Canvas: #0E0703 — ultra-deep dark espresso matte black */
+  --surface: #0e0703;
+  --surface-subtle: #190e06;
+  --surface-interactive: #26160b;
+  --surface-raised: #190e06;
+  --surface-inverse: #fbf6f0;
 
-  /* Text: Pure white headings (#FFFFFF), elevated silver body (#C4C4C4) */
-  --text-primary: #ffffff;
-  --text-secondary: #c4c4c4;
-  --text-muted: #8e8e8e;
-  --text-faint: #5e5e5e;
-  --text-on-accent: #ffffff;
-  --text-on-inverse: #0d0d0d;
+  /* Text: Warm cream white headings (#FBF6F0), elevated warm silver body (#C8B7AA) */
+  --text-primary: #fbf6f0;
+  --text-secondary: #c8b7aa;
+  --text-muted: #8e7a6d;
+  --text-faint: #5a4b41;
+  --text-on-accent: #0e0703;
+  --text-on-inverse: #0e0703;
 
-  /* Borders: Hair-line rgba white, nearly invisible */
-  --border-subtle: rgba(255, 255, 255, 0.06);
-  --border-default: rgba(255, 255, 255, 0.14);
-  --border-strong: rgba(255, 255, 255, 0.24);
+  /* Borders: Hair-line warm amber-cream rgba */
+  --border-subtle: rgba(251, 246, 240, 0.06);
+  --border-default: rgba(251, 246, 240, 0.13);
+  --border-strong: rgba(251, 246, 240, 0.22);
 
-  /* Accents — pure white in dark mode */
-  --accent: #ffffff;
-  --accent-hover: #cccccc;
-  --accent-soft: rgba(255, 255, 255, 0.06);
+  /* Accents — luminous warm amber gold */
+  --accent: #e69550;
+  --accent-hover: #f0a868;
+  --accent-soft: rgba(230, 149, 80, 0.12);
   --rose: #f43f5e;
   --rose-hover: #fda4af;
 

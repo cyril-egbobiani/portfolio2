@@ -46,18 +46,22 @@ const socials = [
     <div class="hero-blur-filter" aria-hidden="true"></div>
   </div>
 
-  <!-- 2. Text Content Block — Clean & Relaxed -->
-  <div class="hero-text-block flex flex-col gap-3.5 w-full">
+  <!-- 2. Text Content Block — Broken into Light, Airy Editorial Sections -->
+  <div class="hero-text-block flex flex-col gap-4 sm:gap-5 w-full">
+    <h1 class="statement font-display text-[26px] sm:text-[32px] font-semibold leading-[1.22] tracking-[-0.03em] text-[var(--text-primary)]">
+      Hi, I'm Cyril. I design and build software people actually touch.
+    </h1>
+
     <p class="lede">
-      Hi, I'm Cyril—a Designer and Builder of software, mostly the parts people actually touch. The passion started from drawing, then I eventually found code and realized this was the missing piece I needed. Since then, I've been designing and building systems for web and mobile.
+      Based in Lagos, Nigeria. The passion started from drawing, which eventually led me to code—the missing piece I needed to build full systems for web and mobile.
     </p>
 
     <p class="lede">
-      I currently serve as a Frontend Engineer and UI/UX designer at <a href="https://iesl.ng" target="_blank" rel="noopener noreferrer" class="story-link">International Energy Services Limited</a>, where I design and build software solutions.
+      Currently serving as a Frontend Engineer & UI/UX Designer at <a href="https://iesl.ng" target="_blank" rel="noopener noreferrer" class="story-link">International Energy Services Limited</a>, where I craft digital software solutions.
     </p>
 
-    <!-- 3. Minimalist MingCute Social Links (Clean, unclustered, no heavy pills) -->
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-1">
+    <!-- 3. Minimalist Social Links -->
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-1 sm:pt-2">
       {socials.map((social) => (
         <a
           href={social.href}

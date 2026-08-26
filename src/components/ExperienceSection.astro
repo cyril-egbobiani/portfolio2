@@ -133,23 +133,10 @@ const experience: ExperienceItem[] = [
           data-experience-content
         >
           <div class="overflow-hidden">
-            <div class="flex flex-col gap-3 pt-3 pb-1 pl-[58px] sm:pl-[64px]">
+            <div class="pt-2.5 pb-1 pl-[58px] sm:pl-[64px]">
               <p class="m-0 font-sans text-[14px] sm:text-[14.5px] leading-[1.65] text-[var(--text-secondary)] font-normal">
                 {item.description}
               </p>
-
-              <!-- Highlights Bullet List -->
-              <div class="flex flex-col gap-2 pt-1">
-                <span class="hand-label">what I actually did</span>
-                <ul class="m-0 flex list-none flex-col gap-2 p-0">
-                  {item.highlights.map((h, i) => (
-                    <li class="flex items-start gap-2.5 text-[13.5px] sm:text-[14px] text-[var(--text-secondary)]">
-                      <span class="font-mono tabular-nums text-xs text-[var(--text-muted)] pt-0.5">0{i + 1}</span>
-                      <span class="leading-relaxed">{h}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </div>
           </div>
         </div>
