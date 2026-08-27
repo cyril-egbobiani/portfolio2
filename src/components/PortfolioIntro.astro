@@ -46,22 +46,22 @@ const socials = [
     <div class="hero-blur-filter" aria-hidden="true"></div>
   </div>
 
-  <!-- 2. Text Content Block — Broken into Light, Airy Editorial Sections -->
-  <div class="hero-text-block flex flex-col gap-4 sm:gap-5 w-full">
-    <h1 class="statement font-display text-[24px] sm:text-[30px] font-semibold leading-[1.22] tracking-[-0.03em] text-[var(--text-primary)]">
+  <!-- 2. Text Content Block — Staggered Editorial Reveal -->
+  <div class="hero-text-block t-stagger is-shown flex flex-col gap-4 sm:gap-5 w-full">
+    <h1 class="statement t-stagger-line t-stagger-line--1 font-display text-[24px] sm:text-[30px] font-semibold leading-[1.22] tracking-[-0.03em] text-[var(--text-primary)]">
       Hi, I'm Cyril. I design and build software people actually touch.
     </h1>
 
-    <p class="lede">
+    <p class="lede t-stagger-line t-stagger-line--2">
       Based in Lagos, Nigeria. I developed a passion for art, which eventually led me to code; a missing piece I needed to build in the software world.
     </p>
 
-    <p class="lede">
+    <p class="lede t-stagger-line t-stagger-line--3">
       Currently, I'm serving as a Frontend Engineer & UI/UX Designer at <a href="https://ieslglobal.com/" target="_blank" rel="noopener noreferrer" class="story-link">International Energy Services Limited</a>, where I craft digital software solutions.
     </p>
 
     <!-- 3. Minimalist Social Links -->
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-1 sm:pt-2">
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-1 sm:pt-2 t-stagger-line t-stagger-line--4">
       {socials.map((social) => (
         <a
           href={social.href}
@@ -99,8 +99,7 @@ const socials = [
 
   @media (min-width: 640px) {
     .hero-photo-card {
-      aspect-ratio: 3.2 / 2.2
-      ;
+      aspect-ratio: 3.2 / 2.2;
     }
   }
 
@@ -110,6 +109,15 @@ const socials = [
     object-fit: cover;
     object-position: 55% 55%;
     display: block;
+    transform: scale(1.01);
+    transition: transform 600ms var(--ease-smooth-out);
+    will-change: transform;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .hero-photo-card:hover .hero-photo-img {
+      transform: scale(1.03);
+    }
   }
 
   /* Progressive downward fade matching canvas */

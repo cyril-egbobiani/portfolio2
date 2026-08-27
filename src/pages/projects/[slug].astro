@@ -24,7 +24,7 @@ const { project } = Astro.props as { project: ProjectData };
         <!-- Back to Home Button (No border, subtle background, MingCute left arrow + house fill) -->
         <a
           href="/"
-          class="back-btn group inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-black/5 dark:bg-white/10 text-[var(--text-secondary)] no-underline transition-[background-color,color,transform] duration-160 hover:bg-black/10 dark:hover:bg-white/15 hover:text-[var(--text-primary)] active:scale-95 border-0"
+          class="back-btn group inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-[var(--bg-surface-subtle)] hover:bg-[var(--bg-surface)] text-[var(--text-secondary)] no-underline transition-[background-color,color,transform] duration-160  hover:text-[var(--text-primary)] active:scale-95 border-0"
           aria-label="Back to home"
           title="Back to home"
         >
@@ -41,7 +41,7 @@ const { project } = Astro.props as { project: ProjectData };
         <!-- Theme Toggle Button (No border, matching background, sun/moon) -->
         <button
           type="button"
-          class="size-9 rounded-full bg-black/5 dark:bg-white/10 text-[var(--text-secondary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160 hover:bg-black/10 dark:hover:bg-white/15 hover:text-[var(--text-primary)] active:scale-95 cursor-pointer border-0"
+          class="size-9 rounded-full  text-[var(--text-secondary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160  hover:text-[var(--text-primary)] active:scale-95 cursor-pointer border-0"
           aria-label="Toggle theme"
           title="Toggle theme"
           data-page-theme-toggle
@@ -163,7 +163,7 @@ const { project } = Astro.props as { project: ProjectData };
         <!-- 3. Open Editorial Reasoning Narrative -->
         <section class="t-stagger-line t-stagger-line--3 reasoning-block flex flex-col gap-8 py-4 sm:py-6">
           <div class="reasoning-row flex flex-col gap-3">
-            <span class="hand-label">the problem</span>
+            <span class="hand-label">The problem</span>
             <p class="m-0 text-[15.5px] sm:text-[16.5px] leading-[1.7] text-[var(--text-secondary)]">
               {project.problem}
             </p>
@@ -175,7 +175,7 @@ const { project } = Astro.props as { project: ProjectData };
           </svg>
 
           <div class="reasoning-row flex flex-col gap-3">
-            <span class="hand-label">what I decided</span>
+            <span class="hand-label">What I decided</span>
             <p class="m-0 text-[15.5px] sm:text-[16.5px] leading-[1.7] text-[var(--text-secondary)]">
               {project.decided}
             </p>
