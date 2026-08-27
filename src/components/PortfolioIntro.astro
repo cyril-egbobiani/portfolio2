@@ -1,6 +1,5 @@
 ---
-// PortfolioIntro.astro — Uncluttered Intro with Clean MingCute Social Links
-// Wide landscape photo banner + calm, unclustered copy + lightweight social links (no heavy pills).
+// PortfolioIntro.astro — Initial Layout Structure
 import profileImg from '../assets/images/profile.jpg?url';
 
 const socials = [
@@ -49,15 +48,15 @@ const socials = [
   <!-- 2. Text Content Block — Staggered Editorial Reveal -->
   <div class="hero-text-block t-stagger is-shown flex flex-col gap-4 sm:gap-5 w-full">
     <h1 class="statement t-stagger-line t-stagger-line--1 font-display text-[24px] sm:text-[30px] font-semibold leading-[1.22] tracking-[-0.03em] text-[var(--text-primary)]">
-      Hi, I'm Cyril. I design and build software people actually touch.
+      Hi, I'm Cyril. I help thoughtful founders and product teams bring complex ideas to life through refined UI design and motion engineering.
     </h1>
 
     <p class="lede t-stagger-line t-stagger-line--2">
-      Based in Lagos, Nigeria. I developed a passion for art, which eventually led me to code; a missing piece I needed to build in the software world.
+      Based in Lagos, Nigeria. Specializing in tactile consumer app interfaces and high-performance creative tools that feel natural, fluid, and memorable to use.
     </p>
 
     <p class="lede t-stagger-line t-stagger-line--3">
-      Currently, I'm serving as a Frontend Engineer & UI/UX Designer at <a href="https://ieslglobal.com/" target="_blank" rel="noopener noreferrer" class="story-link">International Energy Services Limited</a>, where I craft digital software solutions.
+      Currently serving as Frontend Engineer & UI/UX Designer at <a href="https://ieslglobal.com/" target="_blank" rel="noopener noreferrer" class="story-link font-medium">International Energy Services Limited</a> while taking on select design engineering contracts.
     </p>
 
     <!-- 3. Minimalist Social Links -->
@@ -90,137 +89,97 @@ const socials = [
   .hero-photo-card {
     position: relative;
     width: 100%;
-    aspect-ratio: 2.7 / 1.7;
-    border: none;
+    border-radius: 0;
     overflow: hidden;
-    background: transparent;
-    box-shadow: none;
-  }
-
-  @media (min-width: 640px) {
-    .hero-photo-card {
-      aspect-ratio: 3.2 / 2.2;
-    }
+    background: var(--surface-subtle);
   }
 
   .hero-photo-img {
     width: 100%;
-    height: 100%;
+    height: 280px;
     object-fit: cover;
-    object-position: 55% 55%;
+    object-position: center 65%;
     display: block;
-    transform: scale(1.01);
-    transition: transform 600ms var(--ease-smooth-out);
-    will-change: transform;
+    transition: transform 500ms var(--ease-smooth-out);
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .hero-photo-card:hover .hero-photo-img {
-      transform: scale(1.03);
+  @media (min-width: 640px) {
+    .hero-photo-img {
+      height: 340px;
+      object-position: center 65%;
     }
   }
 
-  /* Progressive downward fade matching canvas */
+  .hero-photo-card:hover .hero-photo-img {
+    transform: scale(1.02);
+  }
+
   .hero-blur-tint {
     position: absolute;
     inset: 0;
-    top: auto;
-    height: 38%;
     background: linear-gradient(
-      to top,
-      var(--surface) 0%,
-      color-mix(in srgb, var(--surface) 100%, transparent) 30%,
-      color-mix(in srgb, var(--surface) 30%, transparent) 55%,
-      color-mix(in srgb, var(--surface) 20%, transparent) 80%,
-      transparent 100%
+      to bottom,
+      rgba(0, 0, 0, 0) 0%,
+      rgba(0, 0, 0, 0) 35%,
+      var(--surface) 100%
     );
     pointer-events: none;
-    z-index: 1;
-    transition: background-color 150ms var(--ease-smooth-out);
   }
 
-  .hero-blur-filter {
-    position: absolute;
-    inset: 0;
-    top: auto;
-    height: 45%;
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
-    -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 0.7) 50%, rgba(0, 0, 0, 0) 100%);
-    pointer-events: none;
-    z-index: 2;
+  /* ── Editorial Typography ── */
+  .statement {
+    margin: 0;
   }
 
-  /* ── Introduction Typography ── */
   .lede {
     margin: 0;
-    font-family: var(--font-sans);
-    font-size: 15px;
-    line-height: 1.75;
+    font-size: 15.5px;
+    line-height: 1.65;
     color: var(--text-secondary);
-    width: 100%;
-    letter-spacing: -0.01em;
+  }
+
+  @media (min-width: 640px) {
+    .lede {
+      font-size: 16.5px;
+    }
   }
 
   .story-link {
     color: var(--text-primary);
-    font-weight: 500;
     text-decoration: none;
-    transition: color 160ms var(--ease-smooth-out), opacity 160ms var(--ease-smooth-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .story-link:hover {
-      opacity: 0.75;
-    }
-  }
-
-  /* ── Clean MingCute Social Links ── */
-  .social-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    color: var(--text-secondary);
-    font-family: var(--font-sans);
-    font-size: 13.5px;
     font-weight: 500;
-    letter-spacing: -0.01em;
-    text-decoration: none;
-    transition:
-      color 160ms var(--ease-smooth-out),
-      transform 160ms var(--ease-smooth-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .social-link:hover {
-      color: var(--text-primary);
-    }
-  }
-
-  .social-link:active {
-    transform: scale(0.96);
-  }
-
-  .social-link__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--text-muted);
     transition: color 160ms var(--ease-smooth-out);
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .social-link:hover .social-link__icon {
-      color: var(--text-primary);
-    }
+  .story-link:hover {
+    color: var(--text-muted);
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .hero-photo-img,
-    .social-link {
-      transition: none !important;
-      transform: none !important;
-    }
+  /* ── Minimalist Social Links ── */
+  .social-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 160ms var(--ease-smooth-out);
+  }
+
+  .social-link:hover {
+    color: var(--text-primary);
+  }
+
+  .social-link__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0.7;
+    transition: opacity 160ms var(--ease-smooth-out);
+  }
+
+  .social-link:hover .social-link__icon {
+    opacity: 1;
   }
 </style>

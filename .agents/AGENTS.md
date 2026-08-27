@@ -32,12 +32,8 @@ When the user asks to "polish" or "improve" a component holistically:
 3. Never use `transitions-dev` if the component already has animations — use `transitions-polish` instead
 
 ## Design Identity
-This portfolio uses the **benji.org + ana.sh editorial hybrid skin**:
-- Canvas: `#0D0D0D` (pure neutral matte black)
-- Headings: `#FFFFFF`, `letter-spacing: -0.05em`, `font-weight: 600`
-- Body: `#999999` (neutral silver)
-- Borders: `rgba(255, 255, 255, 0.06)` hair-line
-- Max border-radius: `6px` (4px for inner elements)
-- Easing: `cubic-bezier(0.23, 1, 0.32, 1)` (Emil's strong ease-out)
-- No drop shadows, no gradients, no blurs on surfaces
-- No `transition: all` — always specify exact properties
+This portfolio uses **Cyril's Custom Creative Signature**:
+- Uniquely crafted, lightweight, and expressive layout architecture tailored specifically to Cyril's dual advantage as a Software Engineer who designs.
+- High visual impact without text bloat or heavy repetition.
+- Easing: `cubic-bezier(0.23, 1, 0.32, 1)` (Emil's strong ease-out).
+- No `transition: all` — always specify exact properties.
