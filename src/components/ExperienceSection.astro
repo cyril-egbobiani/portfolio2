@@ -1,0 +1,217 @@
+---
+import { Image } from 'astro:assets';
+import ieslLogo from '../assets/images/iesl-logo.png';
+import firstBankLogo from '../assets/images/first-bank-logo.png';
+import globeSvg from '../assets/images/globe.svg';
+
+interface ExperienceItem {
+  company: string;
+  role: string;
+  dates: string;
+  location?: string;
+  logo?: ImageMetadata | string;
+  themeAdaptive?: boolean;
+  description: string;
+}
+
+const experience: ExperienceItem[] = [
+  {
+    company: 'International Energy Services Limited',
+    role: 'Frontend Developer & Product Designer',
+    dates: '2026 – Present',
+    location: 'Lagos, Nigeria',
+    logo: ieslLogo,
+    themeAdaptive: false,
+    description: 'Leading digital product design and frontend architecture for enterprise energy management systems.',
+  },
+  {
+    company: 'Freelance',
+    role: 'Software Developer & Designer',
+    dates: '2025 – Present',
+    location: 'Remote',
+    logo: globeSvg,
+    themeAdaptive: true,
+    description: 'Designing and engineering bespoke digital experiences, brand identities, and WebGL canvases for global clients.',
+  },
+  {
+    company: 'First Bank Digital Innovation Lab',
+    role: 'Mobile Developer Intern',
+    dates: '2024 – 2024',
+    location: 'Lagos, Nigeria',
+    logo: firstBankLogo,
+    themeAdaptive: false,
+    description: 'Contributed to the core mobile banking application refactor and cross-platform design system components.',
+  },
+];
+---
+
+<section class="relative flex flex-col gap-6" id="experience">
+  <div class="section-head">
+    <div class="section-head__text flex items-baseline justify-between w-full">
+      <h2 class="section-title">Where I've been</h2>
+    </div>
+  </div>
+
+  <div class="flex flex-col gap-2" data-experience-list>
+    {experience.map((item, index) => (
+      <div
+        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-3 sm:px-4 transition-[background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-subtle)] cursor-pointer select-none rounded-[10px] active:scale-[0.995]"
+        data-experience-item
+        data-visible="true"
+        data-expanded={index === 0 ? 'true' : 'false'}
+        role="button"
+        tabindex="0"
+        aria-expanded={index === 0 ? 'true' : 'false'}
+      >
+        <!-- Card Header Row -->
+        <div class="flex items-start gap-3.5 sm:gap-4">
+          <!-- Logo Badge -->
+          <div class={`experience-badge flex size-[44px] sm:size-[48px] shrink-0 items-center justify-center rounded-[10px] bg-[var(--surface-interactive)] border border-[var(--border-subtle)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
+            {item.logo ? (
+              typeof item.logo === 'string' ? (
+                <img
+                  src={item.logo}
+                  alt={item.company}
+                  class={`max-h-full max-w-full h-auto w-auto object-contain shrink-0 ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
+                />
+              ) : (
+                <Image
+                  class={`max-h-full max-w-full h-auto w-auto object-contain shrink-0 ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
+                  src={item.logo}
+                  alt={item.company}
+                />
+              )
+            ) : (
+              <span class="font-mono text-sm font-semibold text-[var(--text-secondary)]">CY</span>
+            )}
+          </div>
+
+          <!-- Role Summary Header -->
+          <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
+            <div class="flex items-center justify-between gap-2">
+              <h3 class="m-0 font-sans text-[15px] sm:text-[16px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                {item.company}
+              </h3>
+              
+              <!-- Rotating Chevron Indicator (MingCute) -->
+              <div class="experience-chevron-box flex size-6 items-center justify-center rounded-full text-[var(--text-muted)] transition-[color,transform] duration-200 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)]">
+                <svg class="experience-chevron size-4 transition-transform duration-250 ease-[var(--ease-smooth-out)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6 9l6 6 6-6" />
+                </svg>
+              </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-between gap-2 text-[13px] text-[var(--text-muted)]">
+              <span class="font-sans">{item.role}</span>
+              <span class={`experience-dates font-mono tabular-nums text-xs ${item.dates.includes('Present') ? 'is-current text-[var(--text-primary)] font-medium' : 'text-[var(--text-muted)]'}`}>
+                {item.dates.includes('Present') && <span class="current-dot inline-block size-1.5 rounded-full bg-current opacity-70 mr-1.5" aria-hidden="true"></span>}
+                {item.dates}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Expandable Role Drawer (0fr -> 1fr CSS Grid Animation) -->
+        <div
+          class="experience-drawer grid transition-[grid-template-rows,opacity] duration-250 ease-[var(--ease-smooth-out)]"
+          style={index === 0 ? 'grid-template-rows: 1fr; opacity: 1;' : 'grid-template-rows: 0fr; opacity: 0;'}
+          data-experience-content
+        >
+          <div class="overflow-hidden">
+            <div class="pt-2.5 pb-1 pl-[56px] sm:pl-[62px]">
+              <p class="m-0 font-sans text-[14px] sm:text-[14.5px] leading-[1.65] text-[var(--text-secondary)] font-normal">
+                {item.description}
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    ))}
+  </div>
+</section>
+
+<style>
+  /* Chevron rotation state when expanded */
+  .experience-card[data-expanded="true"] .experience-chevron {
+    transform: rotate(180deg);
+  }
+
+  .experience-card[data-expanded="true"] {
+    background-color: var(--surface-subtle);
+  }
+
+  /* Current roles indicator */
+  .experience-dates {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .experience-card {
+    transition:
+      background-color 200ms ease,
+      transform 200ms var(--ease-smooth-out);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .experience-chevron,
+    .experience-drawer {
+      transition: none !important;
+    }
+  }
+</style>
+
+<script>
+  function initExperienceAccordion() {
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>('[data-experience-item]')
+    );
+
+    cards.forEach((card) => {
+      const toggle = (expand: boolean) => {
+        card.setAttribute('data-expanded', String(expand));
+        card.setAttribute('aria-expanded', String(expand));
+        const drawer = card.querySelector<HTMLElement>('[data-experience-content]');
+        if (drawer) {
+          drawer.style.gridTemplateRows = expand ? '1fr' : '0fr';
+          drawer.style.opacity = expand ? '1' : '0';
+        }
+      };
+
+      // Click handler
+      card.onclick = () => {
+        const isExpanded = card.getAttribute('data-expanded') === 'true';
+
+        // Collapse others (accordion behavior)
+        cards.forEach((other) => {
+          if (other !== card) {
+            other.setAttribute('data-expanded', 'false');
+            other.setAttribute('aria-expanded', 'false');
+            const otherDrawer = other.querySelector<HTMLElement>('[data-experience-content]');
+            if (otherDrawer) {
+              otherDrawer.style.gridTemplateRows = '0fr';
+              otherDrawer.style.opacity = '0';
+            }
+          }
+        });
+
+        toggle(!isExpanded);
+      };
+
+      // Keyboard accessibility
+      card.onkeydown = (e: KeyboardEvent) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          card.click();
+        }
+      };
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initExperienceAccordion);
+  } else {
+    initExperienceAccordion();
+  }
+  document.addEventListener('astro:page-load', initExperienceAccordion);
+</script>

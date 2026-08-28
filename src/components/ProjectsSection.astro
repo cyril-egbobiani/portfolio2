@@ -30,8 +30,8 @@ const designs = [
 
 <section class="flex flex-col gap-6" id="projects">
 
-  <div class="section-head">
-    <div class="section-head__text">
+  <div class="section-head flex items-center justify-between w-full">
+    <div class="section-head__text flex items-center">
       <h2 class="section-title">Work</h2>
     </div>
 
@@ -114,6 +114,13 @@ const designs = [
 </button>
 
 <style>
+  .section-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+
   /* ── Segmented Sliding Pill Tab Bar ── */
   .tabs-bar {
     position: relative;
@@ -171,7 +178,7 @@ const designs = [
   .builds-grid {
     display: grid;
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 40px;
     align-items: start;
   }
 
@@ -257,16 +264,16 @@ const designs = [
   .card-title {
     margin: 0;
     font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 500;
-    letter-spacing: -0.025em;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
     color: var(--text-primary);
     min-width: 0;
   }
 
   .card-blurb {
-    margin: 5px 0 0;
-    font-size: 13.5px;
+    margin: 4px 0 0;
+    font-size: 13px;
     line-height: 1.5;
     color: var(--text-muted);
     display: -webkit-box;

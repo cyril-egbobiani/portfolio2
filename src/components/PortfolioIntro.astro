@@ -47,20 +47,24 @@ const socials = [
 
   <!-- 2. Text Content Block — Staggered Editorial Reveal -->
   <div class="hero-text-block t-stagger is-shown flex flex-col gap-4 sm:gap-5 w-full">
-    <h1 class="statement t-stagger-line t-stagger-line--1 font-display text-[24px] sm:text-[30px] font-semibold leading-[1.22] tracking-[-0.03em] text-[var(--text-primary)]">
+    <h1 class="statement t-stagger-line t-stagger-line--1 font-display text-[22px] sm:text-[26px] font-semibold leading-[1.25] tracking-[-0.03em] text-[var(--text-primary)]">
       Hi, I'm Cyril. I help thoughtful founders and product teams bring complex ideas to life through refined UI design and motion engineering.
     </h1>
 
     <p class="lede t-stagger-line t-stagger-line--2">
-      Based in Lagos, Nigeria. Specializing in tactile consumer app interfaces and high-performance creative tools that feel natural, fluid, and memorable to use.
+      Based in Lagos, Nigeria.  I specialize in tactile consumer app interfaces and high-performance creative tools that feel natural, fluid, and memorable to use.
     </p>
 
     <p class="lede t-stagger-line t-stagger-line--3">
-      Currently serving as Frontend Engineer & UI/UX Designer at <a href="https://ieslglobal.com/" target="_blank" rel="noopener noreferrer" class="story-link font-medium">International Energy Services Limited</a> while taking on select design engineering contracts.
+      Currently, I'm a Frontend Engineer & UI/UX Designer at <a href="https://ieslglobal.com/" target="_blank" rel="noopener noreferrer" class="story-link font-medium">International Energy Services Limited</a>.
+    </p>
+
+    <p class="lede t-stagger-line t-stagger-line--4">
+      I'm also open for select design engineering contracts, product advisory, and creative collaborations.
     </p>
 
     <!-- 3. Minimalist Social Links -->
-    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-1 sm:pt-2 t-stagger-line t-stagger-line--4">
+    <div class="flex flex-wrap items-center gap-x-5 gap-y-2.5 pt-1 sm:pt-2 t-stagger-line t-stagger-line--5">
       {socials.map((social) => (
         <a
           href={social.href}
@@ -85,39 +89,74 @@ const socials = [
     align-items: flex-start;
   }
 
-  /* ── Photo Banner Card (Clean Rectangular Aspect Ratio) ── */
+  /* ── Variant B: Studio Portrait Vignette (No box, seamless 360° feathered dissolve) ── */
   .hero-photo-card {
     position: relative;
     width: 100%;
-    aspect-ratio: 16 / 9;
-    border-radius: 0;
+    aspect-ratio: 16 / 11;
+    border: none;
     overflow: hidden;
-    background: var(--surface-subtle);
+    background: transparent;
+    box-shadow: none;
+  }
+
+  @media (min-width: 640px) {
+    .hero-photo-card {
+      aspect-ratio: 16 / 9.5;
+    }
   }
 
   .hero-photo-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 65%;
+    object-position: 55% 55%;
     display: block;
-    transition: transform 500ms var(--ease-smooth-out);
+    transform: scale(1.01);
+    transition: transform 600ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
+    /* 360° Organic Radial Feather Mask */
+    mask-image:
+      radial-gradient(ellipse 72% 62% at 55% 52%, #000000 32%, rgba(0, 0, 0, 0.75) 60%, rgba(0, 0, 0, 0.2) 82%, transparent 98%),
+      linear-gradient(to bottom, #000000 45%, rgba(0, 0, 0, 0.6) 75%, transparent 98%);
+    -webkit-mask-image:
+      radial-gradient(ellipse 72% 62% at 55% 52%, #000000 32%, rgba(0, 0, 0, 0.75) 60%, rgba(0, 0, 0, 0.2) 82%, transparent 98%),
+      linear-gradient(to bottom, #000000 45%, rgba(0, 0, 0, 0.6) 75%, transparent 98%);
   }
 
-  .hero-photo-card:hover .hero-photo-img {
-    transform: scale(1.02);
+  @media (hover: hover) and (pointer: fine) {
+    .hero-photo-card:hover .hero-photo-img {
+      transform: scale(1.03);
+    }
   }
 
+  /* Multi-stop progressive gradient mist dissolving the bottom table into --surface */
   .hero-blur-tint {
     position: absolute;
     inset: 0;
     background: linear-gradient(
       to bottom,
-      rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) 35%,
+      transparent 0%,
+      transparent 45%,
+      color-mix(in srgb, var(--surface) 20%, transparent) 65%,
+      color-mix(in srgb, var(--surface) 65%, transparent) 82%,
       var(--surface) 100%
     );
     pointer-events: none;
+    z-index: 1;
+    transition: background-color 200ms ease;
+  }
+
+  .hero-blur-filter {
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 35%;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 45%, rgba(0, 0, 0, 1) 100%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 45%, rgba(0, 0, 0, 1) 100%);
+    pointer-events: none;
+    z-index: 2;
   }
 
   /* ── Editorial Typography ── */
@@ -127,15 +166,10 @@ const socials = [
 
   .lede {
     margin: 0;
-    font-size: 15.5px;
-    line-height: 1.65;
+    font-size: 15px;
+    line-height: 1.7;
     color: var(--text-secondary);
-  }
-
-  @media (min-width: 640px) {
-    .lede {
-      font-size: 16.5px;
-    }
+    letter-spacing: -0.01em;
   }
 
   .story-link {
