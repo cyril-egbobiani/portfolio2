@@ -143,29 +143,17 @@ const services = [
   .service-list {
     display: flex;
     flex-direction: column;
-    gap: 8px;
+  }
+
+  .service-item + .service-item {
+    border-top: 1px solid var(--border-subtle);
   }
 
   .service-item {
     cursor: pointer;
     user-select: none;
-    border-radius: 10px;
-    padding: 0 12px;
-    transition: background-color 200ms ease, transform 200ms var(--ease-smooth-out);
-  }
-
-  @media (min-width: 640px) {
-    .service-item {
-      padding: 0 16px;
-    }
-  }
-
-  .service-item:hover {
-    background-color: var(--surface-subtle);
-  }
-
-  .service-item[data-expanded="true"] {
-    background-color: var(--surface-subtle);
+    padding: 0;
+    transition: opacity 200ms ease;
   }
 
   .service-trigger {

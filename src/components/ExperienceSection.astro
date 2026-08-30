@@ -52,10 +52,10 @@ const experience: ExperienceItem[] = [
     </div>
   </div>
 
-  <div class="flex flex-col gap-2" data-experience-list>
+  <div class="flex flex-col" data-experience-list>
     {experience.map((item, index) => (
       <div
-        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-3 sm:px-4 transition-[background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-subtle)] cursor-pointer select-none rounded-[10px] active:scale-[0.995]"
+        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-0 border-b border-[var(--border-subtle)] last:border-b-0 cursor-pointer select-none"
         data-experience-item
         data-visible="true"
         data-expanded={index === 0 ? 'true' : 'false'}
@@ -137,20 +137,10 @@ const experience: ExperienceItem[] = [
     transform: rotate(180deg);
   }
 
-  .experience-card[data-expanded="true"] {
-    background-color: var(--surface-subtle);
-  }
-
   /* Current roles indicator */
   .experience-dates {
     display: inline-flex;
     align-items: center;
-  }
-
-  .experience-card {
-    transition:
-      background-color 200ms ease,
-      transform 200ms var(--ease-smooth-out);
   }
 
   @media (prefers-reduced-motion: reduce) {
