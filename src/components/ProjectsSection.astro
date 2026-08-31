@@ -30,7 +30,7 @@ const designs = [
 
 <section class="flex flex-col gap-6" id="projects">
 
-  <div class="section-head flex items-center justify-between w-full">
+  <div class="section-head reveal-item flex items-center justify-between w-full">
     <div class="section-head__text flex items-center">
       <h2 class="section-title">Work</h2>
     </div>
@@ -56,8 +56,8 @@ const designs = [
 
     <!-- ── BUILDS: product cards ───────────────────────────── -->
     <div class="tab-panel builds-grid" data-tab-panel data-tab-id="Builds">
-      {builds.map((project) => (
-        <a href={`/projects/${project.slug}`} data-astro-prefetch class="project-card group">
+      {builds.map((project, index) => (
+        <a href={`/projects/${project.slug}`} data-astro-prefetch class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}>
           <div class={`shot shot--${project.tone}`}>
             {project.image ? (
               project.deviceType === 'phone' ? (
@@ -129,7 +129,7 @@ const designs = [
     background: var(--surface-subtle);
     padding: 3px;
     border-radius: 9999px;
-    border: 1px solid var(--border-subtle);
+    border: none;
     box-sizing: border-box;
   }
 
@@ -140,7 +140,7 @@ const designs = [
     height: calc(100% - 6px);
     background: var(--surface);
     border-radius: 9999px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 0 1px rgba(255, 255, 255, 0.08);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 1px rgba(255, 255, 255, 0.05);
     will-change: transform, width;
     pointer-events: none;
     box-sizing: border-box;
@@ -152,15 +152,16 @@ const designs = [
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    padding: 6px 16px;
+    padding: 6px 18px;
     font-family: var(--font-sans);
     font-size: 13px;
     font-weight: 500;
-    line-height: 1;
+    line-height: 1.2;
     color: var(--text-muted);
     background: none;
     border: none;
     cursor: pointer;
+    border-radius: 9999px;
     transition: color 160ms var(--ease-smooth-out);
     user-select: none;
   }

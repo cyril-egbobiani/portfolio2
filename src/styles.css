@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Tiro+Tamil:ital@0;1&display=swap');
 @config "../tailwind.config.js";
 
 /* ---------------------------------------------------------------------------
@@ -129,9 +130,9 @@
   --shadow-card: 0 1px 3px rgba(30, 15, 7, 0.03);
   --shadow-card-hover: 0 3px 8px rgba(30, 15, 7, 0.06);
 
-  /* Typography — Option 1: Cabinet Grotesk + Geist Sans + Geist Mono */
+  /* Typography — Display: Tiro Tamil + Body: Geist Sans */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Cabinet Grotesk", "Geist", -apple-system, sans-serif;
+  --font-display: "Tiro Tamil", Georgia, "Times New Roman", serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -187,7 +188,7 @@
 
   /* Typography */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Cabinet Grotesk", "Geist", -apple-system, sans-serif;
+  --font-display: "Tiro Tamil", Georgia, "Times New Roman", serif;
   --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 }
 
@@ -459,57 +460,6 @@
     opacity: 1;
   }
 
-  /* Tab bar — sliding pill (R_outer 8px - padding 2px = R_inner 6px) */
-  .tabs-bar {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    height: 33px;
-    gap: 2px;
-    padding: 2px;
-    border-radius: 8px;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .tab {
-    position: relative;
-    height: 100%;
-    padding: 0 0.75rem;
-    font-size: 0.875rem;
-    color: var(--text-muted);
-    background: transparent;
-    border: none;
-    cursor: pointer;
-    border-radius: 6px;
-    z-index: 1;
-    transition: color var(--duration-fast) var(--ease-smooth-out);
-  }
-
-  .tab:hover,
-  .tab-active {
-    color: var(--text-primary);
-  }
-
-  /* Sliding pill — R_inner 6px = R_outer 8px - padding 2px */
-  .tabs-pill {
-    position: absolute;
-    top: 2px;
-    left: 0;
-    height: calc(100% - 4px);
-    width: 0;
-    background: var(--surface-interactive);
-    border: 1px solid var(--border-subtle);
-    border-radius: 6px;
-    transform: translateX(0);
-    transition:
-      transform var(--duration-fast) var(--ease-smooth-out),
-      width var(--duration-fast) var(--ease-smooth-out);
-    will-change: transform, width;
-    z-index: 0;
-    pointer-events: none;
-  }
-
   /* ═══════════════════════════════════════════════════════════
      MARGINALIA SYSTEM
      Printed (sans) = the site speaking. Handwritten (display face,
@@ -737,20 +687,48 @@
 
 
 
-  @media (prefers-reduced-motion: reduce) {
+  /* ─────────────────────────────────────────────────────────
+     COORDINATED FULL-PAGE ENTRANCE & SCROLL REVEAL TOKENS
+     ───────────────────────────────────────────────────────── */
+  .reveal-item {
+    opacity: 0;
+    transform: translateY(18px);
+    filter: blur(4px);
+    transition: opacity 550ms cubic-bezier(0.23, 1, 0.32, 1),
+                transform 550ms cubic-bezier(0.23, 1, 0.32, 1),
+                filter 550ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: opacity, transform, filter;
+  }
 
+  .reveal-item.is-revealed {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+  }
+
+  /* Sequenced stagger delays */
+  .reveal-delay-1 { transition-delay: 60ms; }
+  .reveal-delay-2 { transition-delay: 120ms; }
+  .reveal-delay-3 { transition-delay: 180ms; }
+  .reveal-delay-4 { transition-delay: 240ms; }
+  .reveal-delay-5 { transition-delay: 300ms; }
+  .reveal-delay-6 { transition-delay: 360ms; }
+
+  @media (prefers-reduced-motion: reduce) {
     .tabs-pill,
     .tab,
     [data-tab-panel],
-    .t-stagger-line {
+    .t-stagger-line,
+    .reveal-item {
       transition: none !important;
       animation: none !important;
     }
 
-    .t-stagger-line {
-      opacity: 1;
-      transform: none;
-      filter: none;
+    .t-stagger-line,
+    .reveal-item {
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
     }
   }
 
@@ -768,4 +746,4 @@
   .pressable:active {
     transform: scale(0.975);
   }
-}
+}

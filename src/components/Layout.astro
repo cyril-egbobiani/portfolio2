@@ -58,6 +58,10 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 
     <!-- Preconnect Domains for Instant Asset Delivery -->
     <link rel="dns-prefetch" href="https://images.unsplash.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Tiro+Tamil:ital@0;1&display=swap" rel="stylesheet" />
+
     <link rel="preconnect" href="https://images.unsplash.com" crossorigin="anonymous" />
     <link rel="preconnect" href="https://api.fontshare.com" crossorigin="anonymous" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -86,5 +90,41 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     </script>
     <slot />
     <Lenis />
+
+    <script>
+      function initScrollReveals() {
+        const revealItems = document.querySelectorAll('.reveal-item');
+        if (!revealItems.length) return;
+
+        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+          revealItems.forEach((el) => el.classList.add('is-revealed'));
+          return;
+        }
+
+        const observer = new IntersectionObserver(
+          (entries, obs) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add('is-revealed');
+                obs.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            rootMargin: '0px 0px -30px 0px',
+            threshold: 0.05,
+          }
+        );
+
+        revealItems.forEach((el) => observer.observe(el));
+      }
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initScrollReveals);
+      } else {
+        initScrollReveals();
+      }
+      document.addEventListener('astro:page-load', initScrollReveals);
+    </script>
   </body>
 </html>

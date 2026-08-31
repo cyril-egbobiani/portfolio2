@@ -46,7 +46,7 @@ const experience: ExperienceItem[] = [
 ---
 
 <section class="relative flex flex-col gap-6" id="experience">
-  <div class="section-head">
+  <div class="section-head reveal-item">
     <div class="section-head__text flex items-baseline justify-between w-full">
       <h2 class="section-title">Where I've been</h2>
     </div>
@@ -55,7 +55,7 @@ const experience: ExperienceItem[] = [
   <div class="flex flex-col" data-experience-list>
     {experience.map((item, index) => (
       <div
-        class="experience-card group relative flex flex-col overflow-hidden py-3.5 px-0 border-b border-[var(--border-subtle)] last:border-b-0 cursor-pointer select-none"
+        class={`experience-card group relative flex flex-col overflow-hidden py-3.5 px-0 border-b border-[var(--border-subtle)] last:border-b-0 cursor-pointer select-none reveal-item reveal-delay-${index + 1}`}
         data-experience-item
         data-visible="true"
         data-expanded={index === 0 ? 'true' : 'false'}
