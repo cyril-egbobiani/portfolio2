@@ -32,8 +32,8 @@ const socials = [
 ---
 
 <section class="hero flex flex-col gap-6">
-  <!-- 1. Refined Physical Ticket Pass (Authentic Cardstock Texture, Flat 3D Motion) -->
-  <div class="tkt-wrapper w-full max-w-[240px] mb-2 select-none" role="img" aria-label="Cyril Egbobiani — CE Archive verified pass" id="tktWrapper">
+  <!-- 1. Refined Physical Ticket Pass (Compact Size, Authentic Cardstock, Flat 3D Motion) -->
+  <div class="tkt-wrapper w-full max-w-[175px] mb-2 select-none" role="img" aria-label="Cyril Egbobiani — CE Archive verified pass" id="tktWrapper">
     <div class="tkt-card relative w-full bg-[#eee7dc] rounded-[4px] overflow-visible border border-[rgba(60,45,30,0.08)]" id="tktCard">
 
       <!-- Tactile Cardstock Grain Overlay -->
@@ -43,13 +43,13 @@ const socials = [
       <div class="tkt-glare" id="tktGlare" aria-hidden="true"></div>
 
       <!-- 4 Corner Concave Notches -->
-      <div class="absolute -top-3 -left-3 size-6 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-      <div class="absolute -top-3 -right-3 size-6 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-      <div class="absolute -bottom-3 -left-3 size-6 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-      <div class="absolute -bottom-3 -right-3 size-6 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
+      <div class="absolute -top-2.5 -left-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
+      <div class="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
+      <div class="absolute -bottom-2.5 -left-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
+      <div class="absolute -bottom-2.5 -right-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
 
       <!-- Column Layout Inside Card -->
-      <div class="tkt-inner-content flex flex-col p-3.5 gap-2.5">
+      <div class="tkt-inner-content flex flex-col p-2.5 gap-2">
 
         <!-- 1. Top Framed B&W Photo -->
         <div class="tkt-photo-layer w-full aspect-[4/3.6] rounded-[2px] overflow-hidden bg-[#d6cdc1] border border-[rgba(60,45,30,0.06)]">
@@ -62,21 +62,21 @@ const socials = [
         </div>
 
         <!-- 3. Horizontal Perforation Line with Anchored Side Notches -->
-        <div class="relative w-full my-1 flex items-center" aria-hidden="true">
+        <div class="relative w-full my-0.5 flex items-center" aria-hidden="true">
           <!-- Left tear notch -->
-          <div class="absolute -left-[26px] size-6 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
+          <div class="absolute -left-[20px] size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
           <!-- Dashed perforation line -->
           <div class="w-full border-t border-dashed border-[#cfc5b8]"></div>
           <!-- Right tear notch -->
-          <div class="absolute -right-[26px] size-6 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
+          <div class="absolute -right-[20px] size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
         </div>
 
         <!-- 4. Bottom Stub: Verified Pass + Barcode -->
-        <div class="tkt-stub-layer flex items-center justify-between gap-2 px-0.5">
-          <span class="font-mono text-[10.5px] font-bold uppercase tracking-[0.14em] text-[#1a1918]">
+        <div class="tkt-stub-layer flex items-center justify-between gap-1.5 px-0.5">
+          <span class="font-mono text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#1a1918]">
             LIVING
           </span>
-          <div class="w-14 h-4 text-[#2b2622] opacity-85 shrink-0" aria-label="ticket barcode">
+          <div class="w-11 h-3.5 text-[#2b2622] opacity-85 shrink-0" aria-label="ticket barcode">
             <svg viewBox="0 0 56 18" fill="currentColor" class="w-full h-full" preserveAspectRatio="none">
               <rect x="0" y="0" width="2" height="18" />
               <rect x="4" y="0" width="3" height="18" />
@@ -251,7 +251,7 @@ const socials = [
   .tkt-wrapper {
     position: relative;
     width: 100%;
-    max-width: 240px;
+    max-width: 175px;
     margin-bottom: 0.75rem;
     perspective: 900px;
     cursor: pointer;

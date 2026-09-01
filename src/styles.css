@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Tiro+Tamil:ital@0;1&display=swap');
 @config "../tailwind.config.js";
 
 /* ---------------------------------------------------------------------------
@@ -746,4 +745,4 @@
   .pressable:active {
     transform: scale(0.975);
   }
-}
+}
