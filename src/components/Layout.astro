@@ -92,6 +92,8 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <Lenis />
 
     <script>
+      import { initLisse } from '../utils/lisse';
+
       function initScrollReveals() {
         const revealItems = document.querySelectorAll('.reveal-item');
         if (!revealItems.length) return;
@@ -119,12 +121,17 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
         revealItems.forEach((el) => observer.observe(el));
       }
 
-      if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initScrollReveals);
-      } else {
+      function initApp() {
         initScrollReveals();
+        initLisse();
       }
-      document.addEventListener('astro:page-load', initScrollReveals);
+
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initApp);
+      } else {
+        initApp();
+      }
+      document.addEventListener('astro:page-load', initApp);
     </script>
   </body>
 </html>

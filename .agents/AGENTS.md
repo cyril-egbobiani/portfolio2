@@ -20,6 +20,12 @@ Use when **refining existing motion** that already works but feels off.
 - Invoke for: "polish the timing", "the animation feels janky", "tune the easing", "tighten the stagger", "align to motion tokens"
 - This is the *tuning* skill — use it to adjust what already animates
 
+### `lisse-smooth-corners` (@lisse/core, @lisse/react)
+Use when **implementing or tuning squircle / smooth corner geometry** across cards, mockups, image frames, and containers.
+- Invoke for: "squircle", "smooth corners", "lisse", "corner smoothing", "figma radius", "apply smooth corners"
+- Rule: Apply to all rounded borders that are not fully rounded capsules (skip `rounded-full` / `9999px` pills)
+- Standard: `smoothing: 0.65` (Apple standard) / `0.60` (Figma), `curve: 'squircle'`
+
 ### `grill-me` (Matt Pocock)
 This skill is **slash-command only** (`disable-model-invocation: true`).
 - The user must type `/grill-me` in chat to activate it
@@ -28,12 +34,13 @@ This skill is **slash-command only** (`disable-model-invocation: true`).
 ## Skill Composition
 When the user asks to "polish" or "improve" a component holistically:
 1. **First** run `emil-design-eng` to produce a Before/After/Why critique table
-2. **Then** apply fixes using `transitions-polish` for motion and direct CSS edits for visual identity
+2. **Then** apply fixes using `transitions-polish` for motion, `lisse-smooth-corners` for organic corner geometry, and direct CSS edits for visual identity
 3. Never use `transitions-dev` if the component already has animations — use `transitions-polish` instead
 
 ## Design Identity
 This portfolio uses **Cyril's Custom Creative Signature**:
 - Uniquely crafted, lightweight, and expressive layout architecture tailored specifically to Cyril's dual advantage as a Software Engineer who designs.
 - High visual impact without text bloat or heavy repetition.
+- Squircles: Figma-grade continuous curvature on all cards & frames via `@lisse/core`.
 - Easing: `cubic-bezier(0.23, 1, 0.32, 1)` (Emil's strong ease-out).
 - No `transition: all` — always specify exact properties.

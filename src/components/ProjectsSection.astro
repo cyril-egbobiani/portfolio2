@@ -58,11 +58,13 @@ const designs = [
     <div class="tab-panel builds-grid" data-tab-panel data-tab-id="Builds">
       {builds.map((project, index) => (
         <a href={`/projects/${project.slug}`} data-astro-prefetch class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}>
-          <div class={`shot shot--${project.tone}`}>
+          <div class={`shot shot--${project.tone}`} data-lisse="22">
             {project.image ? (
               project.deviceType === 'phone' ? (
                 <div class="shot__phone-frame">
-                  <img src={project.image} alt={project.title} class="shot__phone-img" loading="lazy" />
+                  <div class="shot__phone-screen" data-lisse='{"radius": 17, "smoothing": 0.65}'>
+                    <img src={project.image} alt={project.title} class="shot__phone-img" loading="lazy" />
+                  </div>
                 </div>
               ) : (
                 <img src={project.image} alt={project.title} class="shot__img" loading="lazy" />
@@ -85,7 +87,7 @@ const designs = [
     <!-- ── DESIGNS: masonry gallery, springs open on tap ───── -->
     <div class="tab-panel design-grid" data-tab-panel data-tab-id="Designs" hidden>
       {designs.map((item) => (
-        <button type="button" class="design-tile" data-zoom-tile aria-label={`Expand: ${item.alt}`}>
+        <button type="button" class="design-tile" data-zoom-tile data-lisse="18" aria-label={`Expand: ${item.alt}`}>
           <img
             src={item.src}
             alt={item.alt}
@@ -175,6 +177,71 @@ const designs = [
     color: var(--text-primary);
   }
 
+  /* ── Tab Panels Switching Animation ── */
+  .tab-panel {
+    animation: tabFadeIn 320ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+
+  .tab-panel[hidden] {
+    display: none !important;
+  }
+
+  @keyframes tabFadeIn {
+    0% {
+      opacity: 0;
+      transform: translateY(12px) scale(0.988);
+      filter: blur(4px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      filter: blur(0);
+    }
+  }
+
+  /* Stagger child cards/tiles as the active panel slides into view */
+  .tab-panel.is-entering .project-card,
+  .tab-panel.is-entering .design-tile {
+    animation: tabItemCascade 340ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  }
+
+  .tab-panel.is-entering .project-card:nth-child(1),
+  .tab-panel.is-entering .design-tile:nth-child(1) { animation-delay: 0ms; }
+
+  .tab-panel.is-entering .project-card:nth-child(2),
+  .tab-panel.is-entering .design-tile:nth-child(2) { animation-delay: 45ms; }
+
+  .tab-panel.is-entering .project-card:nth-child(3),
+  .tab-panel.is-entering .design-tile:nth-child(3) { animation-delay: 90ms; }
+
+  .tab-panel.is-entering .project-card:nth-child(4),
+  .tab-panel.is-entering .design-tile:nth-child(4) { animation-delay: 135ms; }
+
+  .tab-panel.is-entering .design-tile:nth-child(5) { animation-delay: 180ms; }
+  .tab-panel.is-entering .design-tile:nth-child(6) { animation-delay: 225ms; }
+
+  @keyframes tabItemCascade {
+    0% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tab-panel,
+    .tab-panel.is-entering .project-card,
+    .tab-panel.is-entering .design-tile {
+      animation: none !important;
+      opacity: 1 !important;
+      transform: none !important;
+      filter: none !important;
+    }
+  }
+
   /* ── Builds ───────────────────────────────────────────── */
   .builds-grid {
     display: grid;
@@ -200,14 +267,14 @@ const designs = [
   .shot {
     position: relative;
     aspect-ratio: 1 / 1;
-    border-radius: 12px;
+    border-radius: 22px;
+    border: none;
+    outline: none;
     overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition:
-      border-color 200ms var(--ease-smooth-out),
-      box-shadow 200ms var(--ease-smooth-out);
+    transition: box-shadow 200ms var(--ease-smooth-out);
   }
 
   .shot__img {
@@ -215,6 +282,8 @@ const designs = [
     height: 100%;
     object-fit: cover;
     display: block;
+    border: none;
+    outline: none;
     transition: transform 350ms var(--ease-smooth-out);
     will-change: transform;
   }
@@ -227,13 +296,22 @@ const designs = [
     position: relative;
     height: 86%;
     aspect-ratio: 9 / 19.5;
-    border-radius: 14px;
-    border: 1px solid rgba(255, 255, 255, 0.14);
+    border: none;
+    outline: none;
+    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.28)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
+    transition: transform 350ms var(--ease-smooth-out), filter 350ms var(--ease-smooth-out);
+    will-change: transform, filter;
+  }
+
+  .shot__phone-screen {
+    position: relative;
+    width: 100%;
+    height: 100%;
     overflow: hidden;
     background: #0d0d0f;
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45), 0 0 24px rgba(168, 85, 247, 0.22);
-    transition: transform 350ms var(--ease-smooth-out), box-shadow 350ms var(--ease-smooth-out);
-    will-change: transform;
+    border-radius: 17px;
+    border: none;
+    outline: none;
   }
 
   .shot__phone-img {
@@ -241,11 +319,13 @@ const designs = [
     height: 100%;
     object-fit: cover;
     display: block;
+    border: none;
+    outline: none;
   }
 
   .project-card:hover .shot__phone-frame {
     transform: translateY(-4px) scale(1.03);
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.55), 0 0 32px rgba(168, 85, 247, 0.35);
+    filter: drop-shadow(0 20px 38px rgba(0, 0, 0, 0.38)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.16));
   }
 
   .shot__pending {
@@ -288,7 +368,6 @@ const designs = [
       transform: translateY(-3px);
     }
     .project-card:hover .shot {
-      border-color: var(--border-default);
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
     }
     .project-card:hover .shot__img {
@@ -311,17 +390,16 @@ const designs = [
     width: 100%;
     margin: 0 0 14px;
     padding: 0;
-    border: 1px solid var(--border-subtle);
-    border-radius: 10px;
+    border: none;
+    outline: none;
+    border-radius: 18px;
     overflow: hidden;
-    background: var(--surface-subtle);
+    background: transparent;
     cursor: zoom-in;
     position: relative;
     break-inside: avoid;
     -webkit-column-break-inside: avoid;
-    transition:
-      border-color var(--duration-fast) var(--ease-smooth-out),
-      transform var(--duration-fast) var(--ease-smooth-out);
+    transition: transform var(--duration-fast) var(--ease-smooth-out);
   }
 
   /* Height follows the image's own dimensions — this is what makes the grid dynamic */
@@ -329,6 +407,8 @@ const designs = [
     display: block;
     width: 100%;
     height: auto;
+    border: none;
+    outline: none;
   }
 
   .design-tile__hint {
@@ -355,7 +435,6 @@ const designs = [
 
   @media (hover: hover) and (pointer: fine) {
     .design-tile:hover {
-      border-color: var(--border-default);
       transform: translateY(-2px);
     }
 
@@ -479,11 +558,17 @@ const designs = [
 </style>
 
 <script>
+  import { initLisse } from '../utils/lisse';
+
   // ── Tab bar ─────────────────────────────────────────────
   const bar = document.querySelector<HTMLElement>('.tabs-bar');
   const pill = bar?.querySelector<HTMLElement>('.tabs-pill');
   const triggers = document.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
   const panels = document.querySelectorAll<HTMLElement>('[data-tab-panel]');
+
+  // Initialize Lisse smooth corners
+  initLisse();
+  document.addEventListener('astro:page-load', initLisse);
 
   const movePill = (tab: HTMLButtonElement, animate: boolean) => {
     if (!pill || !bar) return;
@@ -520,10 +605,17 @@ const designs = [
       const isTarget = panel.dataset.tabId === id;
       if (isTarget) {
         panel.hidden = false;
+        panel.classList.remove('is-entering');
+        void panel.offsetWidth;
         panel.classList.add('is-entering');
-        setTimeout(() => panel.classList.remove('is-entering'), 350);
+        initLisse();
+        setTimeout(() => {
+          panel.classList.remove('is-entering');
+          initLisse();
+        }, 380);
       } else {
         panel.hidden = true;
+        panel.classList.remove('is-entering');
       }
     });
   };

@@ -66,7 +66,7 @@ const experience: ExperienceItem[] = [
         <!-- Card Header Row -->
         <div class="flex items-start gap-3.5 sm:gap-4">
           <!-- Logo Badge -->
-          <div class={`experience-badge flex size-[44px] sm:size-[48px] shrink-0 items-center justify-center rounded-[10px] bg-[var(--surface-interactive)] border border-[var(--border-subtle)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
+          <div data-lisse="10" class={`experience-badge flex size-[44px] sm:size-[48px] shrink-0 items-center justify-center rounded-[10px] bg-[var(--surface-interactive)] border border-[var(--border-subtle)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
             {item.logo ? (
               typeof item.logo === 'string' ? (
                 <img

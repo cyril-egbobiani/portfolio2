@@ -93,8 +93,8 @@ const { project } = Astro.props as { project: ProjectData };
         <!-- 2. Responsive Hero Media Showcase (Clean Minimal Device Frame) -->
         <section class="t-stagger-line t-stagger-line--2">
           {project.heroMedia && project.heroMedia.device === 'phone' && (
-            <div class="phone-frame group relative mx-auto max-w-[280px] sm:max-w-[320px] overflow-hidden rounded-[16px] border border-[var(--border-subtle)] transition-transform duration-250 ease-[var(--ease-smooth-out)] hover:-translate-y-1">
-              <div class="relative w-full overflow-hidden flex items-center justify-center">
+            <div class="phone-frame group relative mx-auto max-w-[210px] sm:max-w-[230px] transition-transform duration-250 ease-[var(--ease-smooth-out)] hover:-translate-y-1">
+              <div class="phone-screen relative w-full overflow-hidden flex items-center justify-center" data-lisse='{"radius": 28, "smoothing": 0.65}'>
                 {project.heroMedia.type === 'video' ? (
                   <video
                     src={project.heroMedia.src}
@@ -117,7 +117,7 @@ const { project } = Astro.props as { project: ProjectData };
           )}
 
           {project.heroMedia && project.heroMedia.device === 'desktop' && (
-            <div class="desktop-frame group relative overflow-hidden rounded-[12px] border border-[var(--border-subtle)] transition-transform duration-250 ease-[var(--ease-smooth-out)] hover:-translate-y-1">
+            <div class="desktop-frame group relative mx-auto max-w-[520px] overflow-hidden transition-transform duration-250 ease-[var(--ease-smooth-out)] hover:-translate-y-1" data-lisse="18">
               <div class="relative aspect-[16/10] w-full overflow-hidden flex items-center justify-center">
                 {project.heroMedia.type === 'video' ? (
                   <video
@@ -141,9 +141,9 @@ const { project } = Astro.props as { project: ProjectData };
           )}
 
           {!project.heroMedia && (
-            <div class="hero-frame group relative overflow-hidden rounded-[12px] border border-[var(--border-subtle)]">
+            <div class="hero-frame group relative mx-auto max-w-[520px] overflow-hidden" data-lisse="18">
               <div
-                class={`shot shot--${project.tone} relative aspect-[16/10] sm:aspect-[2.1/1] w-full overflow-hidden rounded-[8px] flex items-center justify-center cursor-zoom-in`}
+                class={`shot shot--${project.tone} relative aspect-[16/10] sm:aspect-[2.1/1] w-full overflow-hidden flex items-center justify-center cursor-zoom-in`}
                 data-spring-zoom-trigger
                 data-zoom-src={`#shot-${project.slug}`}
               >
@@ -189,12 +189,13 @@ const { project } = Astro.props as { project: ProjectData };
               Interface & Motion Showcase
             </h2>
 
-            <div class="grid grid-cols-2 gap-6 sm:gap-10 items-start">
+            <div class="grid grid-cols-2 gap-x-10 sm:gap-x-16 gap-y-8 items-start w-full max-w-[600px] mx-auto">
               {project.mediaGallery.map((item) => (
                 <div class="showcase-card group flex flex-col gap-3">
                   <div
-                    class="relative w-full cursor-zoom-in overflow-hidden rounded-[14px] sm:rounded-[18px] border border-[var(--border-subtle)] bg-[var(--surface-subtle)] transition-[transform,border-color,background-color] duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-1 hover:border-[var(--border-default)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
+                    class="relative w-full cursor-zoom-in overflow-hidden transition-[transform,background-color] duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-1 active:scale-[0.97]"
                     data-spring-zoom-trigger
+                    data-lisse='{"radius": 28, "smoothing": 0.65}'
                   >
                     {item.type === 'video' ? (
                       <video
@@ -252,7 +253,7 @@ const { project } = Astro.props as { project: ProjectData };
           </span>
           <div class="flex flex-wrap gap-2">
             {project.stack.map((item) => (
-              <span class="stack-badge inline-flex items-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-1.5 text-[12.5px] font-mono text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)]">
+              <span data-lisse="6" class="stack-badge inline-flex items-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-1.5 text-[12.5px] font-mono text-[var(--text-secondary)] transition-colors hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)]">
                 {item}
               </span>
             ))}
@@ -307,10 +308,11 @@ const { project } = Astro.props as { project: ProjectData };
 
           <a
             href={`/projects/${project.nextSlug}`}
+            data-lisse="16"
             class="next-card group flex items-center justify-between gap-4 rounded-[12px] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-[background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] hover:-translate-y-0.5 active:scale-[0.985]"
           >
             <div class="flex items-center gap-4 min-w-0">
-              <div class={`mini-shot shot--${project.nextTone} size-12 shrink-0 rounded-[6px]`}></div>
+              <div data-lisse="8" class={`mini-shot shot--${project.nextTone} size-12 shrink-0 rounded-[6px]`}></div>
               <div class="flex flex-col gap-0.5 min-w-0">
                 <span class="font-mono text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">
                   Next Case Study
@@ -360,9 +362,40 @@ const { project } = Astro.props as { project: ProjectData };
     display: block !important;
   }
 
+  .phone-frame {
+    filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.22)) drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08));
+    border: none;
+    outline: none;
+  }
+
+  .phone-screen {
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+
+  .phone-screen img,
+  .phone-screen video {
+    display: block;
+    width: 100%;
+    height: auto;
+    border: none;
+    outline: none;
+  }
+
+  .desktop-frame,
+  .hero-frame {
+    filter: drop-shadow(0 14px 32px rgba(0, 0, 0, 0.16));
+    border: none;
+    outline: none;
+    background: transparent;
+  }
+
   .shot {
     position: relative;
-    border-radius: 8px;
+    border-radius: 22px;
+    border: none;
+    outline: none;
     overflow: hidden;
     display: flex;
     align-items: center;
