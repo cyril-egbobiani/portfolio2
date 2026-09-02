@@ -2,6 +2,7 @@ import { generateClipPath, FIGMA_SMOOTHING, APPLE_SMOOTHING } from '@lisse/core'
 
 export interface LisseOptions {
   radius: number;
+  radiusMobile?: number;
   smoothing?: number;
   curve?: 'squircle' | 'superellipse' | 'clothoid' | 'arc';
   preserveSmoothing?: boolean;
@@ -19,10 +20,21 @@ function updateElementClipPath(el: HTMLElement) {
   const height = el.offsetHeight;
   if (width <= 0 || height <= 0) return;
 
+  // Responsive mobile radius handling
+  let targetRadius = options.radius;
+  const isMobile = typeof window !== 'undefined' && (window.innerWidth < 640 || width < 180);
+
+  if (isMobile && options.radiusMobile) {
+    targetRadius = options.radiusMobile;
+  } else if (targetRadius > 12 && width < 260) {
+    // Dynamically scale down large radii on narrow mobile containers (~10.5% of width)
+    targetRadius = Math.min(targetRadius, Math.max(8, Math.round(width * 0.105)));
+  }
+
   try {
     const clipPath = generateClipPath(width, height, {
-      radius: options.radius,
-      smoothing: options.smoothing ?? 0.8,
+      radius: targetRadius,
+      smoothing: options.smoothing ?? 0.65,
       curve: options.curve ?? 'squircle',
       preserveSmoothing: options.preserveSmoothing ?? true,
     });

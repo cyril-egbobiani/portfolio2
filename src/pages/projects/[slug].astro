@@ -94,7 +94,7 @@ const { project } = Astro.props as { project: ProjectData };
         <section class="t-stagger-line t-stagger-line--2">
           {project.heroMedia && project.heroMedia.device === 'phone' && (
             <div class="phone-frame group relative mx-auto max-w-[210px] sm:max-w-[230px] transition-transform duration-250 ease-[var(--ease-smooth-out)] hover:-translate-y-1">
-              <div class="phone-screen relative w-full overflow-hidden flex items-center justify-center" data-lisse='{"radius": 28, "smoothing": 0.65}'>
+              <div class="phone-screen relative w-full overflow-hidden flex items-center justify-center" data-lisse='{"radius": 24, "radiusMobile": 18, "smoothing": 0.65}'>
                 {project.heroMedia.type === 'video' ? (
                   <video
                     src={project.heroMedia.src}
@@ -195,7 +195,7 @@ const { project } = Astro.props as { project: ProjectData };
                   <div
                     class="relative w-full cursor-zoom-in overflow-hidden transition-[transform,background-color] duration-200 ease-[var(--ease-smooth-out)] hover:-translate-y-1 active:scale-[0.97]"
                     data-spring-zoom-trigger
-                    data-lisse='{"radius": 28, "smoothing": 0.65}'
+                    data-lisse='{"radius": 24, "radiusMobile": 14, "smoothing": 0.65}'
                   >
                     {item.type === 'video' ? (
                       <video
