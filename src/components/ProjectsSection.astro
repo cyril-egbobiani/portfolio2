@@ -3,6 +3,7 @@
 // Builds  → product cards. Anything listed here is shipped and reachable.
 // Designs → visual work. No cards, no detail pages: a masonry gallery that
 //           springs open to full view on tap.
+import { Image } from 'astro:assets';
 import { projects } from '../data/projects';
 
 const tabs = ['Builds', 'Designs'];
@@ -39,7 +40,7 @@ const designs = [
       <span class="tabs-pill" aria-hidden="true"></span>
       {tabs.map((tab, index) => (
         <button
-          class={`tab font-mono text-xs font-medium ${index === 0 ? 'tab-active' : ''}`}
+          class={`tab font-sans text-xs font-medium ${index === 0 ? 'tab-active' : ''}`}
           type="button"
           role="tab"
           aria-selected={index === 0}
@@ -63,11 +64,27 @@ const designs = [
               project.deviceType === 'phone' ? (
                 <div class="shot__phone-frame">
                   <div class="shot__phone-screen" data-lisse='{"radius": 17, "smoothing": 0.65}'>
-                    <img src={project.image} alt={project.title} class="shot__phone-img" loading="lazy" />
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      width={375}
+                      height={812}
+                      class="shot__phone-img"
+                      loading="lazy"
+                      decoding="async"
+                    />
                   </div>
                 </div>
               ) : (
-                <img src={project.image} alt={project.title} class="shot__img" loading="lazy" />
+                <Image
+                  src={project.image}
+                  alt={project.title}
+                  width={600}
+                  height={375}
+                  class="shot__img"
+                  loading="lazy"
+                  decoding="async"
+                />
               )
             ) : (
               <span class="shot__pending">screenshot</span>
@@ -88,12 +105,13 @@ const designs = [
     <div class="tab-panel design-grid" data-tab-panel data-tab-id="Designs" hidden>
       {designs.map((item) => (
         <button type="button" class="design-tile" data-zoom-tile data-lisse="18" aria-label={`Expand: ${item.alt}`}>
-          <img
+          <Image
             src={item.src}
             alt={item.alt}
             width={item.w}
             height={item.h}
             loading="lazy"
+            decoding="async"
           />
           <span class="design-tile__hint" aria-hidden="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">

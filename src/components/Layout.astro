@@ -56,17 +56,23 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
       ]
     })} />
 
-    <!-- Preconnect Domains for Instant Asset Delivery -->
-    <link rel="dns-prefetch" href="https://images.unsplash.com" />
+    <!-- Preconnect Domains for Fast Font & Asset Delivery -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Tiro+Tamil:ital@0;1&display=swap" rel="stylesheet" />
+    <link rel="preconnect" href="https://api.fontshare.com" crossorigin />
 
-    <link rel="preconnect" href="https://images.unsplash.com" crossorigin="anonymous" />
-    <link rel="preconnect" href="https://api.fontshare.com" crossorigin="anonymous" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&display=swap" rel="stylesheet" />
-    <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <!-- Non-render-blocking font stylesheets -->
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Tiro+Tamil:ital@0;1&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Tiro+Tamil:ital@0;1&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Tiro+Tamil:ital@0;1&display=swap" />
+    </noscript>
+
+    <link rel="preload" as="style" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&display=swap" />
+    <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=cabinet-grotesk@500,700,800&display=swap" />
+    </noscript>
   </head>
 
 <body>
@@ -74,6 +80,13 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
       // Prevent flash of wrong theme by applying the saved preference before paint.
       (function () {
         try {
+          var params = new URLSearchParams(window.location.search);
+          var queryTheme = params.get('theme');
+          if (queryTheme === 'light' || queryTheme === 'dark') {
+            localStorage.setItem('portfolio-theme', queryTheme);
+            document.documentElement.dataset.theme = queryTheme;
+            return;
+          }
           var saved = localStorage.getItem('portfolio-theme');
           if (saved === 'light' || saved === 'dark') {
             document.documentElement.dataset.theme = saved;

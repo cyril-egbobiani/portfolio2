@@ -86,38 +86,38 @@
   --leading-body: 1.6;
   --leading-heading: 1.25;
 
-  /* Surfaces – light (fresh oat-milk ivory & soft latte foam) */
-  --surface: #fcfaf7;
-  --surface-subtle: #f4ece2;
-  --surface-interactive: #ebdccf;
+  /* Surfaces – light (clean gallery paper & architectural mist) */
+  --surface: #fafafb;
+  --surface-subtle: #f1f1f4;
+  --surface-interactive: #e5e5e9;
   --surface-raised: #ffffff;
-  --surface-inverse: #120904;
+  --surface-inverse: #09090b;
 
-  /* Text hierarchy – light (deep dark roast espresso ink & warm mocha body) */
-  --text-primary: #1e0f07;
-  --text-secondary: #4a3528;
-  --text-muted: #7d6656;
-  --text-faint: #ab9788;
+  /* Text hierarchy – light (deep carbon obsidian ink & neutral slate) */
+  --text-primary: #09090b;
+  --text-secondary: #3f3f46;
+  --text-muted: #71717a;
+  --text-faint: #a1a1aa;
   --text-on-accent: #ffffff;
-  --text-on-inverse: #fcfaf7;
+  --text-on-inverse: #fafafb;
 
-  /* Borders – light (delicate warm espresso hairlines) */
-  --border-subtle: rgba(45, 22, 10, 0.06);
-  --border-default: rgba(45, 22, 10, 0.12);
-  --border-strong: rgba(45, 22, 10, 0.22);
+  /* Borders – light (delicate neutral hairlines) */
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-default: rgba(0, 0, 0, 0.11);
+  --border-strong: rgba(0, 0, 0, 0.20);
 
-  /* Accents — rich caramel terracotta */
-  --accent: #944c1e;
-  --accent-hover: #ab5824;
-  --accent-soft: rgba(148, 76, 30, 0.08);
+  /* Accents — pure carbon obsidian */
+  --accent: #18181b;
+  --accent-hover: #27272a;
+  --accent-soft: rgba(0, 0, 0, 0.05);
   --rose: #f43f5e;
   --rose-hover: #e11d48;
 
-  /* Handwriting ink & annotations — warm secondary tone */
+  /* Handwriting ink & annotations */
   --ink: var(--text-secondary);
 
   /* Logo chip */
-  --border-logo: rgba(45, 22, 10, 0.06);
+  --border-logo: rgba(0, 0, 0, 0.06);
   --shadow-logo: none;
 
   /* Feedback */
@@ -125,55 +125,55 @@
   --warning: #d97706;
   --danger: #dc2626;
 
-  /* Shadows — minimal warm shadows */
-  --shadow-card: 0 1px 3px rgba(30, 15, 7, 0.03);
-  --shadow-card-hover: 0 3px 8px rgba(30, 15, 7, 0.06);
+  /* Shadows — minimal neutral shadows */
+  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
+  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  /* Typography — Display: Tiro Tamil + Body: Geist Sans */
+  /* Typography — Display: Tiro Tamil + Body: Geist */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: "Tiro Tamil", Georgia, "Times New Roman", serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono: var(--font-sans);
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DARK THEME — #080402 Obsidian Espresso Noir Canvas
-   Ultra-deep roasted espresso noir, radiant ivory text & amber-gold accents.
+   DARK THEME — #09090B Obsidian Monochrome Noir Canvas
+   Pure carbon black noir, radiant titanium ivory text & neutral accents.
    ═══════════════════════════════════════════════════════════════ */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Canvas: #080402 — ultra-deep dark obsidian espresso noir */
-  --surface: #080402;
-  --surface-subtle: #120804;
-  --surface-interactive: #1c0d07;
-  --surface-raised: #120804;
-  --surface-inverse: #fcfaf7;
+  /* Canvas: #09090b — sleek obsidian carbon noir */
+  --surface: #09090b;
+  --surface-subtle: #141417;
+  --surface-interactive: #1f1f24;
+  --surface-raised: #141417;
+  --surface-inverse: #fafafb;
 
-  /* Text: Crisp ivory porcelain headings (#FCF9F5), warm silver-mocha body (#C2B3A6) */
-  --text-primary: #fcf9f5;
-  --text-secondary: #c2b3a6;
-  --text-muted: #847366;
-  --text-faint: #4a3c33;
-  --text-on-accent: #080402;
-  --text-on-inverse: #080402;
+  /* Text: Pure radiant titanium white headings (#f4f4f6), neutral silver graphite body (#a1a1aa) */
+  --text-primary: #f4f4f6;
+  --text-secondary: #a1a1aa;
+  --text-muted: #71717a;
+  --text-faint: #3f3f46;
+  --text-on-accent: #09090b;
+  --text-on-inverse: #09090b;
 
-  /* Borders: Hair-line crisp ivory rgba */
-  --border-subtle: rgba(252, 249, 245, 0.05);
-  --border-default: rgba(252, 249, 245, 0.10);
-  --border-strong: rgba(252, 249, 245, 0.18);
+  /* Borders: Crisp ivory-white hairlines */
+  --border-subtle: rgba(255, 255, 255, 0.07);
+  --border-default: rgba(255, 255, 255, 0.12);
+  --border-strong: rgba(255, 255, 255, 0.22);
 
-  /* Accents — luminous warm amber gold */
-  --accent: #e59247;
-  --accent-hover: #f0a158;
-  --accent-soft: rgba(229, 146, 71, 0.12);
+  /* Accents — radiant pure titanium white */
+  --accent: #f4f4f6;
+  --accent-hover: #e4e4e7;
+  --accent-soft: rgba(255, 255, 255, 0.08);
   --rose: #f43f5e;
   --rose-hover: #fda4af;
 
-  /* Handwriting ink — neutral secondary tone */
+  /* Handwriting ink */
   --ink: var(--text-secondary);
 
   /* Logo chip */
-  --border-logo: rgba(255, 255, 255, 0.05);
+  --border-logo: rgba(255, 255, 255, 0.06);
   --shadow-logo: none;
 
   /* Feedback */
@@ -188,7 +188,7 @@
   /* Typography */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: "Tiro Tamil", Georgia, "Times New Roman", serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  --font-mono: var(--font-sans);
 }
 
 /* ---------------------------------------------------------------------------
@@ -573,38 +573,37 @@
     background: var(--success);
   }
 
-  /* Screenshot placeholder tints — shared by project cards and detail pages.
-     Remove a tone once that project has a real screenshot. */
+  /* Screenshot placeholder tints — sleek monochrome cards */
   .shot--a {
-    background: radial-gradient(120% 120% at 50% 25%, rgba(168, 85, 247, 0.28) 0%, rgba(126, 34, 206, 0.16) 50%, rgba(13, 13, 15, 0.98) 100%), #0d0d0f;
+    background: radial-gradient(120% 120% at 50% 25%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 50%, #0d0d0f 100%), #0d0d0f;
   }
 
   .shot--b {
-    background: linear-gradient(148deg, #2d3a34 0%, #1b2420 62%, #151b18 100%);
+    background: linear-gradient(148deg, #222227 0%, #151518 62%, #0e0e11 100%);
   }
 
   .shot--c {
-    background: linear-gradient(148deg, #3a2b33 0%, #241a20 62%, #1a1318 100%);
+    background: linear-gradient(148deg, #1f1f23 0%, #131316 62%, #0d0d0f 100%);
   }
 
   .shot--d {
-    background: linear-gradient(148deg, #33302a 0%, #211f1b 62%, #181713 100%);
+    background: linear-gradient(148deg, #26262c 0%, #161619 62%, #101012 100%);
   }
 
   :root:not([data-theme='dark']) .shot--a {
-    background: radial-gradient(120% 120% at 50% 25%, rgba(192, 132, 252, 0.32) 0%, rgba(243, 232, 255, 0.6) 60%, #fcf8ff 100%);
+    background: radial-gradient(120% 120% at 50% 25%, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 60%, #f4f4f7 100%);
   }
 
   :root:not([data-theme='dark']) .shot--b {
-    background: linear-gradient(148deg, #dfeae4 0%, #eff5f1 100%);
+    background: linear-gradient(148deg, #e7e7eb 0%, #f2f2f5 100%);
   }
 
   :root:not([data-theme='dark']) .shot--c {
-    background: linear-gradient(148deg, #f0e2e8 0%, #f8eff3 100%);
+    background: linear-gradient(148deg, #eaeaf0 0%, #f6f6f9 100%);
   }
 
   :root:not([data-theme='dark']) .shot--d {
-    background: linear-gradient(148deg, #efeae0 0%, #f7f4ee 100%);
+    background: linear-gradient(148deg, #ececf0 0%, #f5f5f8 100%);
   }
 
   /* Texts reveal — staggered blurred rise */

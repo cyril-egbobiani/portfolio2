@@ -10,6 +10,9 @@ export default defineConfig({
   markdown: {
     syntaxHighlight: 'shiki',
   },
+  image: {
+    domains: ['images.unsplash.com'],
+  },
   vite: {
     plugins: [tailwindcss()],
   },

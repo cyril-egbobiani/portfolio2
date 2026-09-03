@@ -1,11 +1,11 @@
 ---
 // ProfileSection.astro — the human half.
-import photographyImg from '../assets/images/Image (Photography).png?url';
-import footballImg from '../assets/images/image (Football).png?url';
-import cookingImg from '../assets/images/Image (Cooking).png?url';
-import carsImg from '../assets/images/Image (Cars).png?url';
-import profile1 from '../assets/images/profile-1.png?url';
-import profileAvatar from '../assets/images/profile-.png?url';
+import photographyImg from '../assets/images/optimized/photography.webp?url';
+import footballImg from '../assets/images/optimized/football.webp?url';
+import cookingImg from '../assets/images/optimized/cooking.webp?url';
+import carsImg from '../assets/images/optimized/cars.webp?url';
+import profile1 from '../assets/images/optimized/profile-polaroid.webp?url';
+import profileAvatar from '../assets/images/optimized/profile-avatar.webp?url';
 ---
 
 <section class="relative flex flex-col gap-8" id="about">
@@ -36,11 +36,11 @@ import profileAvatar from '../assets/images/profile-.png?url';
       >
         <div class="tape tape--top"></div>
         <div class="polaroid-photo">
-          <img src={profile1} alt="Cyril Egbobiani" draggable="false" />
+          <img src={profile1} alt="Cyril Egbobiani" draggable="false" loading="lazy" decoding="async" width="220" height="293" />
         </div>
         <div class="polaroid-meta">
           <span class="polaroid-title">Cyril Egbobiani</span>
-          <span class="polaroid-sub font-display">That's me</span>
+          <span class="polaroid-sub">That's me</span>
         </div>
       </div>
 
@@ -52,11 +52,11 @@ import profileAvatar from '../assets/images/profile-.png?url';
       >
         <div class="tape tape--top-left"></div>
         <div class="polaroid-photo">
-          <img src={photographyImg} alt="Street photography in Lagos" draggable="false" />
+          <img src={photographyImg} alt="Street photography in Lagos" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
         </div>
         <div class="polaroid-meta">
           <span class="polaroid-title">Photography</span>
-          <span class="polaroid-sub font-display">Mostly around Lagos</span>
+          <span class="polaroid-sub">Mostly around Lagos</span>
         </div>
       </div>
 
@@ -68,11 +68,11 @@ import profileAvatar from '../assets/images/profile-.png?url';
       >
         <div class="tape tape--top-right"></div>
         <div class="polaroid-photo">
-          <img src={footballImg} alt="Football" draggable="false" />
+          <img src={footballImg} alt="Football" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
         </div>
         <div class="polaroid-meta">
           <span class="polaroid-title">Football</span>
-          <span class="polaroid-sub font-display">#Come on you Gunners!!!!</span>
+          <span class="polaroid-sub">#Come on you Gunners!!!!</span>
         </div>
       </div>
 
@@ -83,11 +83,11 @@ import profileAvatar from '../assets/images/profile-.png?url';
         style="--x: 21%; --y: 78%; --r: 5deg; z-index: 10;"
       >
         <div class="polaroid-photo">
-          <img src={cookingImg} alt="Cooking" draggable="false" />
+          <img src={cookingImg} alt="Cooking" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
         </div>
         <div class="polaroid-meta">
           <span class="polaroid-title">Cooking</span>
-          <span class="polaroid-sub font-display">Mum really influenced me</span>
+          <span class="polaroid-sub">Mum really influenced me</span>
         </div>
       </div>
 
@@ -98,11 +98,11 @@ import profileAvatar from '../assets/images/profile-.png?url';
         style="--x: 78%; --y: 76%; --r: -5deg; z-index: 7;"
       >
         <div class="polaroid-photo">
-          <img src={carsImg} alt="Cars" draggable="false" />
+          <img src={carsImg} alt="Cars" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
         </div>
         <div class="polaroid-meta">
           <span class="polaroid-title">Cars</span>
-          <span class="polaroid-sub font-display">Automotive design, mainly</span>
+          <span class="polaroid-sub">Automotive design, mainly</span>
         </div>
       </div>
 
@@ -112,7 +112,7 @@ import profileAvatar from '../assets/images/profile-.png?url';
         data-draggable
         style="--x: 37%; --y: 19%; --r: -8deg; z-index: 14;"
       >
-        <img src={profileAvatar} alt="Cyril avatar" draggable="false" />
+        <img src={profileAvatar} alt="Cyril avatar" draggable="false" loading="lazy" decoding="async" width="80" height="80" />
       </div>
 
       <!-- 7. Handwritten Note Card -->
@@ -132,7 +132,7 @@ import profileAvatar from '../assets/images/profile-.png?url';
 
       <!-- 8. Lagos Location Tag -->
       <div
-        class="sticker-item pill-tag font-mono"
+        class="sticker-item pill-tag font-sans"
         data-draggable
         style="--x: 63%; --y: 16%; --r: 6deg; z-index: 11;"
       >
@@ -267,6 +267,13 @@ import profileAvatar from '../assets/images/profile-.png?url';
     pointer-events: none;
   }
 
+  .section-title {
+    font-family: var(--font-display);
+    font-size: 19px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+
   .polaroid-meta {
     display: flex;
     flex-direction: column;
@@ -276,17 +283,19 @@ import profileAvatar from '../assets/images/profile-.png?url';
   }
 
   .polaroid-title {
-    font-family: var(--font-sans);
-    font-size: 13px;
+    font-family: var(--font-display);
+    font-size: 14.5px;
     font-weight: 600;
-    letter-spacing: -0.02em;
+    letter-spacing: -0.01em;
     color: #111111;
   }
 
   .polaroid-sub {
-    font-family: var(--font-display);
-    font-size: 14px;
-    line-height: 1.25;
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    font-weight: 450;
+    line-height: 1.35;
+    letter-spacing: -0.01em;
     color: #52525b;
   }
 

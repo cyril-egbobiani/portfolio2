@@ -5,7 +5,7 @@
 // Every section with an id is represented here, so the scroll-spy never
 // reports a section the dock cannot show.
 import ThemeToggle from './ThemeToggle.astro';
-import profileImg from '../assets/images/profile-.png?url';
+import profileImg from '../assets/images/optimized/profile-avatar.webp?url';
 
 const links = [
   { label: 'Work', href: '#projects', external: false, icon: 'work' },
@@ -102,6 +102,7 @@ const links = [
     padding: 4px 5px;
     border-radius: 9999px;
     background: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.14);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
