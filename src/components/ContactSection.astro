@@ -29,29 +29,33 @@
         tabindex="0"
         aria-label="Copy email address"
       >
-        <div class="flex items-center gap-2 min-w-0">
+        <div class="flex items-center gap-2 min-w-0 flex-1">
           <svg class="size-4 shrink-0 opacity-70 text-[var(--text-primary)] transition-opacity group-hover:opacity-100" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect width="18" height="14" x="3" y="5" rx="2.5" />
             <path d="m3 7 9 6 9-6" />
           </svg>
-          <span class="truncate font-sans text-[13.5px] sm:text-sm text-[var(--text-primary)]">
+          <span class="truncate font-sans text-[13px] sm:text-sm text-[var(--text-primary)]">
             egbobianicyril@gmail.com
           </span>
         </div>
 
-        <div class="copy-btn flex items-center gap-1 rounded-[4px] bg-[var(--surface)] px-2 py-1 text-xs text-[var(--text-muted)] transition-[color] duration-160 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)]">
-          <span class="copy-btn__stage relative flex size-3.5 items-center justify-center" aria-hidden="true">
+        <div class="copy-btn shrink-0 relative flex items-center gap-1.5 rounded-[5px] border border-[var(--border-subtle)] bg-[var(--surface)] px-2.5 py-1 text-xs text-[var(--text-muted)] transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)] group-hover:border-[var(--border-default)]">
+          <span class="copy-btn__stage relative flex size-3.5 items-center justify-center shrink-0" aria-hidden="true">
             <!-- Copy icon -->
             <svg class="copy-btn__icon copy-btn__icon--copy size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
               <rect width="13" height="13" x="8" y="8" rx="2" />
               <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
             </svg>
-            <!-- Check icon -->
-            <svg class="copy-btn__icon copy-btn__icon--check size-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Check icon (draws on success) -->
+            <svg class="copy-btn__icon copy-btn__icon--check size-3.5 text-emerald-700 dark:text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
               <polyline points="20 6 9 17 4 12" />
             </svg>
           </span>
-          <span class="copy-btn__label font-sans text-xs font-medium">Copy</span>
+          <!-- Morphing Text Slot -->
+          <span class="copy-btn__text-slot relative inline-grid overflow-hidden">
+            <span class="copy-btn__text copy-btn__text--default font-sans text-xs font-medium">Copy</span>
+            <span class="copy-btn__text copy-btn__text--copied font-sans text-xs font-semibold text-emerald-700 dark:text-emerald-400">Copied!</span>
+          </span>
         </div>
       </div>
 
@@ -96,31 +100,132 @@
     transform: scale(0.98);
   }
 
+  /* ── Morph & Elastic Stretch Badge ── */
+  .copy-btn {
+    will-change: transform, border-color, background-color;
+  }
+
+  .email-box.is-copied .copy-btn {
+    animation: copyBadgeMorph 460ms cubic-bezier(0.23, 1, 0.32, 1) both;
+    background-color: #ffffff;
+    border-color: rgba(5, 150, 105, 0.35);
+    box-shadow: 0 1px 4px rgba(5, 150, 105, 0.12), 0 1px 2px rgba(0, 0, 0, 0.04);
+  }
+
+  :global([data-theme="dark"]) .email-box.is-copied .copy-btn {
+    background-color: rgba(16, 185, 129, 0.14);
+    border-color: rgba(52, 211, 153, 0.38);
+    box-shadow: 0 1px 6px rgba(16, 185, 129, 0.20);
+  }
+
+  @keyframes copyBadgeMorph {
+    0% {
+      transform: scale(0.92, 0.92);
+    }
+    35% {
+      transform: scale(1.10, 0.92); /* Horizontal stretch & squash */
+    }
+    68% {
+      transform: scale(0.97, 1.03); /* Elastic rebound */
+    }
+    100% {
+      transform: scale(1, 1);
+    }
+  }
+
+  /* ── Icon Cross-Swap + Path Stroke Draw ── */
+  .copy-btn__stage {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
   .copy-btn__icon {
     position: absolute;
     transition:
-      transform 200ms cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity;
+      transform 260ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      filter 240ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, filter;
   }
 
   .copy-btn__icon--copy {
     transform: rotate(0deg) scale(1);
     opacity: 1;
+    filter: blur(0);
   }
 
   .copy-btn__icon--check {
-    transform: rotate(90deg) scale(0.4);
+    transform: rotate(-35deg) scale(0.35);
     opacity: 0;
+    filter: blur(2px);
+  }
+
+  /* SVG stroke draw for checkmark */
+  .copy-btn__icon--check polyline {
+    stroke-dasharray: 24;
+    stroke-dashoffset: 24;
+    transition: stroke-dashoffset 280ms cubic-bezier(0.23, 1, 0.32, 1) 50ms;
   }
 
   .email-box.is-copied .copy-btn__icon--copy {
-    transform: rotate(-90deg) scale(0.4);
+    transform: rotate(45deg) scale(0.35);
     opacity: 0;
+    filter: blur(2px);
   }
 
-  .email-box.is-copied .copy-btn__label {
-    color: var(--text-primary);
+  .email-box.is-copied .copy-btn__icon--check {
+    transform: rotate(0deg) scale(1);
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  .email-box.is-copied .copy-btn__icon--check polyline {
+    stroke-dashoffset: 0;
+  }
+
+  /* ── Text Swap Slot ── */
+  .copy-btn__text-slot {
+    display: inline-grid;
+    grid-template-areas: "label";
+    align-items: center;
+    line-height: 1.2;
+  }
+
+  .copy-btn__text {
+    grid-area: label;
+    white-space: nowrap;
+    transition:
+      transform 240ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      filter 240ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform, opacity, filter;
+  }
+
+  .copy-btn__text--default {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
+  }
+
+  .copy-btn__text--copied {
+    transform: translateY(8px);
+    opacity: 0;
+    filter: blur(2px);
+    pointer-events: none;
+  }
+
+  .email-box.is-copied .copy-btn__text--default {
+    transform: translateY(-8px);
+    opacity: 0;
+    filter: blur(2px);
+  }
+
+  .email-box.is-copied .copy-btn__text--copied {
+    transform: translateY(0);
+    opacity: 1;
+    filter: blur(0);
   }
 
   @media (hover: hover) and (pointer: fine) {
@@ -129,16 +234,30 @@
       transform: translateY(-1px);
     }
   }
+
+  @media (prefers-reduced-motion: reduce) {
+    .copy-btn,
+    .copy-btn__icon,
+    .copy-btn__icon--check polyline,
+    .copy-btn__text {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
 </style>
 
 <script>
-  const box = document.querySelector<HTMLElement>('[data-copy-box]');
-  const label = box?.querySelector<HTMLElement>('.copy-btn__label');
-  const email = 'egbobianicyril@gmail.com';
+  function initEmailCopy() {
+    const box = document.querySelector<HTMLElement>('[data-copy-box]');
+    const email = 'egbobianicyril@gmail.com';
 
-  if (box && label) {
+    if (!box) return;
+
+    let copyTimer: number | undefined;
+
     const handleCopy = async () => {
       if (box.classList.contains('is-copied')) return;
+
       try {
         await navigator.clipboard.writeText(email);
       } catch {
@@ -149,13 +268,13 @@
         document.execCommand('copy');
         document.body.removeChild(ta);
       }
-      box.classList.add('is-copied');
-      label.textContent = 'Copied!';
 
-      setTimeout(() => {
+      box.classList.add('is-copied');
+
+      window.clearTimeout(copyTimer);
+      copyTimer = window.setTimeout(() => {
         box.classList.remove('is-copied');
-        label.textContent = 'Copy';
-      }, 1800);
+      }, 1900);
     };
 
     box.addEventListener('click', handleCopy);
@@ -166,4 +285,11 @@
       }
     });
   }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initEmailCopy);
+  } else {
+    initEmailCopy();
+  }
+  document.addEventListener('astro:page-load', initEmailCopy);
 </script>

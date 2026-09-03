@@ -55,6 +55,7 @@ export interface ProjectData {
   link?: string;
   prevSlug: string;
   prevTitle: string;
+  prevTone: 'a' | 'b' | 'c' | 'd';
   nextSlug: string;
   nextTitle: string;
   nextTone: 'a' | 'b' | 'c' | 'd';
@@ -149,6 +150,7 @@ export const projects: ProjectData[] = [
     link: '',
     prevSlug: 'model-portfolio',
     prevTitle: 'Dubem',
+    prevTone: 'c',
     nextSlug: '9to5er',
     nextTitle: '9to5er',
     nextTone: 'b',
@@ -174,6 +176,7 @@ export const projects: ProjectData[] = [
     link: '',
     prevSlug: 'forge',
     prevTitle: 'Forge',
+    prevTone: 'a',
     nextSlug: 'token-extractor',
     nextTitle: 'Token Extractor',
     nextTone: 'd',
@@ -199,6 +202,7 @@ export const projects: ProjectData[] = [
     link: '',
     prevSlug: '9to5er',
     prevTitle: '9to5er',
+    prevTone: 'b',
     nextSlug: 'model-portfolio',
     nextTitle: 'Dubem',
     nextTone: 'c',
@@ -224,6 +228,7 @@ export const projects: ProjectData[] = [
     link: '',
     prevSlug: 'token-extractor',
     prevTitle: 'Token Extractor',
+    prevTone: 'd',
     nextSlug: 'forge',
     nextTitle: 'Forge',
     nextTone: 'a',

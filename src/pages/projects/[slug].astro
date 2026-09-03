@@ -1,7 +1,6 @@
 ---
 import Layout from '../../components/Layout.astro';
 import ThemeToggle from '../../components/ThemeToggle.astro';
-import PortfolioFooter from '../../components/PortfolioFooter.astro';
 import { projects, type ProjectData } from '../../data/projects';
 import '../../styles.css';
 
@@ -19,29 +18,25 @@ const { project } = Astro.props as { project: ProjectData };
   <main class="min-h-screen bg-[var(--surface)] px-6 pt-8 sm:pt-12 pb-24 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-8">
     <div class="mx-auto flex w-full max-w-[660px] flex-col gap-12">
 
-      <!-- ── Top Nav: Back to Home (Left) + Theme Toggle (Right) ── -->
+      <!-- ── Top Nav: Home (Left) + Theme Toggle (Right) ── -->
       <nav class="project-nav flex w-full items-center justify-between" aria-label="Project navigation">
-        <!-- Back to Home Button (No border, subtle background, MingCute left arrow + house fill) -->
+        <!-- Home Button: takes user to home page -->
         <a
           href="/"
-          class="back-btn group inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-[var(--bg-surface-subtle)] hover:bg-[var(--bg-surface)] text-[var(--text-secondary)] no-underline transition-[background-color,color,transform] duration-160  hover:text-[var(--text-primary)] active:scale-95 border-0"
+          class="nav-icon-btn size-9 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-interactive)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160 ease-[var(--ease-smooth-out)] active:scale-95 border border-[var(--border-subtle)] no-underline"
           aria-label="Back to home"
           title="Back to home"
         >
-          <!-- MingCute Left Arrow -->
-          <svg class="size-3.5 transition-transform duration-160 group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-            <path d="M15 19l-7-7 7-7" />
-          </svg>
-          <!-- MingCute House Fill -->
-          <svg class="size-4 text-inherit" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M12 2.1a1.5 1.5 0 0 0-1.02.41l-7.5 7A1.5 1.5 0 0 0 3 10.6v9.4a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9.4a1.5 1.5 0 0 0-.48-1.09l-7.5-7A1.5 1.5 0 0 0 12 2.1zm-2 17.9v-5h4v5h-4z"/>
+          <svg class="size-4 text-inherit" viewBox="0 0 24 24">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" fill-rule="evenodd" d="M10.772 2.688a2 2 0 0 1 2.456 0l8.384 6.521c.753.586.337 1.791-.615 1.791H20v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8h-.997c-.953 0-1.367-1.206-.615-1.79z" clip-rule="evenodd" />
           </svg>
         </a>
 
         <!-- Theme Toggle Button (No border, matching background, sun/moon) -->
         <button
           type="button"
-          class="size-9 rounded-full  text-[var(--text-secondary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160  hover:text-[var(--text-primary)] active:scale-95 cursor-pointer border-0"
+          class="nav-icon-btn size-9 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-interactive)] text-[var(--text-secondary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] active:scale-95 cursor-pointer border border-[var(--border-subtle)]"
           aria-label="Toggle theme"
           title="Toggle theme"
           data-page-theme-toggle
@@ -294,50 +289,56 @@ const { project } = Astro.props as { project: ProjectData };
           </section>
         )}
 
-        <!-- 8. Next Case Study Showcase Card (Interactive Footer CTA) -->
-        <footer class="t-stagger-line t-stagger-line--4 flex flex-col gap-4 pt-6">
-          <div class="flex items-center justify-between">
-            <span class="font-sans text-xs font-medium uppercase tracking-wider text-[var(--text-muted)]">Up Next</span>
-            <a href="/#projects" class="group inline-flex items-center gap-1.5 font-sans text-xs text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] no-underline">
-              <span>Back to all projects</span>
-              <svg class="size-3 transition-transform duration-160 ease-[var(--ease-smooth-out)] group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
+        <!-- 8. Project Navigation: Minimal Editorial Previous & Next Links -->
+        <footer class="t-stagger-line t-stagger-line--4 border-t border-[var(--border-subtle)] pt-8">
+          <nav class="flex items-center justify-between gap-6" aria-label="Project pagination">
+            <!-- Previous Project -->
+            <a
+              href={`/projects/${project.prevSlug}`}
+              class="prev-card group flex flex-col gap-1 text-left no-underline transition-[transform] duration-160 ease-[var(--ease-smooth-out)] hover:-translate-x-0.5 active:scale-[0.98]"
+              aria-label={`Previous project: ${project.prevTitle}`}
+            >
+              <span class="font-sans text-xs text-[var(--text-muted)] transition-colors group-hover:text-[var(--text-secondary)]">
+                Previous
+              </span>
+              <span class="font-sans text-[15px] sm:text-[16px] font-medium text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                {project.prevTitle}
+              </span>
             </a>
-          </div>
 
-          <a
-            href={`/projects/${project.nextSlug}`}
-            data-lisse="16"
-            class="next-card group flex items-center justify-between gap-4 rounded-[12px] bg-[var(--surface-subtle)] p-4 sm:p-5 no-underline transition-[background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] hover:-translate-y-0.5 active:scale-[0.985]"
-          >
-            <div class="flex items-center gap-4 min-w-0">
-              <div data-lisse="8" class={`mini-shot shot--${project.nextTone} size-12 shrink-0 rounded-[6px]`}></div>
-              <div class="flex flex-col gap-0.5 min-w-0">
-                <span class="font-sans text-[11px] uppercase tracking-wider text-[var(--text-muted)] font-medium">
-                  Next Case Study
-                </span>
-                <span class="font-sans text-[17px] sm:text-[18px] font-semibold tracking-tight text-[var(--text-primary)] truncate">
-                  {project.nextTitle}
-                </span>
-              </div>
-            </div>
-
-            <!-- Tactile Chevron Button -->
-            <div class="flex size-8 shrink-0 items-center justify-center rounded-full bg-[var(--surface)] text-[var(--text-muted)] transition-[color,transform] duration-160 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)] group-hover:translate-x-0.5">
-              <svg class="size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                <path d="M9 18l6-6-6-6" />
-              </svg>
-            </div>
-          </a>
+            <!-- Next Project -->
+            <a
+              href={`/projects/${project.nextSlug}`}
+              class="next-card group flex flex-col gap-1 text-right no-underline transition-[transform] duration-160 ease-[var(--ease-smooth-out)] hover:translate-x-0.5 active:scale-[0.98]"
+              aria-label={`Next project: ${project.nextTitle}`}
+            >
+              <span class="font-sans text-xs text-[var(--text-muted)] transition-colors group-hover:text-[var(--text-secondary)]">
+                Next
+              </span>
+              <span class="font-sans text-[15px] sm:text-[16px] font-medium text-[var(--text-primary)] transition-colors group-hover:text-[var(--accent)]">
+                {project.nextTitle}
+              </span>
+            </a>
+          </nav>
         </footer>
 
       </article>
 
-      <PortfolioFooter />
-
     </div>
   </main>
+
+  <!-- Fixed Back-to-Top Floating Button (Fades in when scrolling down) -->
+  <button
+    type="button"
+    id="fixed-back-top"
+    class="fixed-back-top group fixed bottom-6 right-6 sm:bottom-8 sm:right-8 z-30 size-9 rounded-full bg-[var(--surface)]/90 backdrop-blur-md text-[var(--text-secondary)] hover:text-[var(--text-primary)] inline-flex items-center justify-center border border-[var(--border-subtle)] shadow-sm hover:shadow-md transition-[opacity,transform,background-color,border-color,color] duration-200 ease-[var(--ease-smooth-out)] opacity-0 translate-y-2 pointer-events-none active:scale-95 cursor-pointer"
+    aria-label="Scroll back to top"
+    title="Back to top"
+  >
+    <svg class="size-4 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </button>
 </Layout>
 
 <!-- Fullscreen Spring Zoom Backdrop -->
@@ -348,6 +349,13 @@ const { project } = Astro.props as { project: ProjectData };
 ></div>
 
 <style>
+  /* ── Fixed Back-to-Top Floating Button ── */
+  .fixed-back-top.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
   /* ── Screenshots & Gradients ── */
   .theme-icon-sun {
     display: block;
@@ -576,9 +584,9 @@ const { project } = Astro.props as { project: ProjectData };
         window.location.href = nextCard.href;
       }
     } else if (e.key === 'ArrowLeft') {
-      const backLink = document.querySelector<HTMLAnchorElement>('.back-btn');
-      if (backLink && backLink.href) {
-        window.location.href = backLink.href;
+      const prevCard = document.querySelector<HTMLAnchorElement>('.prev-card');
+      if (prevCard && prevCard.href) {
+        window.location.href = prevCard.href;
       }
     }
   });
@@ -606,10 +614,49 @@ const { project } = Astro.props as { project: ProjectData };
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initCaseStudyTheme);
-  } else {
-    initCaseStudyTheme();
+  // Floating Back to Top Button
+  function initFixedBackTop() {
+    const btn = document.getElementById('fixed-back-top');
+    if (!btn) return;
+
+    let ticking = false;
+
+    const checkScroll = () => {
+      if (window.scrollY > 300) {
+        btn.classList.add('is-visible');
+      } else {
+        btn.classList.remove('is-visible');
+      }
+      ticking = false;
+    };
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(checkScroll);
+        ticking = true;
+      }
+    }, { passive: true });
+
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+    });
+
+    checkScroll();
   }
-  document.addEventListener('astro:page-load', initCaseStudyTheme);
+
+  function setupPage() {
+    initCaseStudyTheme();
+    initFixedBackTop();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupPage);
+  } else {
+    setupPage();
+  }
+  document.addEventListener('astro:page-load', setupPage);
 </script>
