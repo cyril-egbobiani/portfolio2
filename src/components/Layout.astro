@@ -1,6 +1,5 @@
 ---
 import '../styles.css';
-import Lenis from './Lenis.astro';
 
 const {
   title = 'Cyril Egbobiani | Software Engineer & Designer',
@@ -102,7 +101,6 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
       })();
     </script>
     <slot />
-    <Lenis />
 
     <script>
       import { initLisse } from '../utils/lisse';

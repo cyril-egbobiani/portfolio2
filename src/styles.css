@@ -206,22 +206,17 @@
   }
 
   html {
-    /* Lenis handles smooth scrolling; disable native CSS smooth scroll to avoid conflict */
-    scroll-behavior: auto;
+    scroll-behavior: smooth;
   }
 
-  /* Lenis recommended base styles */
-  html.lenis,
-  html.lenis body {
-    height: auto;
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
   }
 
-  .lenis.lenis-smooth {
-    scroll-behavior: auto !important;
-  }
-
-  .lenis.lenis-stopped {
-    overflow: hidden;
+  section[id] {
+    scroll-margin-top: 2rem;
   }
 
   body {
