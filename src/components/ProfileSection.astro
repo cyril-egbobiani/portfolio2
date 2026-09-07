@@ -1,485 +1,65 @@
 ---
-// ProfileSection.astro — the human half.
-import photographyImg from '../assets/images/optimized/photography.webp?url';
-import footballImg from '../assets/images/optimized/football.webp?url';
-import cookingImg from '../assets/images/optimized/cooking.webp?url';
-import carsImg from '../assets/images/optimized/cars.webp?url';
-import profile1 from '../assets/images/optimized/profile-polaroid.webp?url';
-import profileAvatar from '../assets/images/optimized/profile-avatar.webp?url';
+// ProfileSection.astro — Editorial Profile Teaser on index.astro linking to /about
+import profilePolaroid from '../assets/images/optimized/profile-polaroid.webp?url';
 ---
 
-<section class="relative flex flex-col gap-8" id="about">
-
+<section class="relative flex flex-col gap-6" id="about">
   <div class="section-head reveal-item">
     <div class="section-head__text">
-      <h2 class="section-title leading-[1.4] tracking-normal font-bold">A bit more about me</h2>
-      <span class="section-aside">the non-software half</span>
+      <h2 class="section-title font-display leading-[1.4] tracking-normal font-bold">A bit more about me</h2>
     </div>
   </div>
 
-  <!-- ═══════════════════════════════════════════════════════════
-       CYRIL'S PERSONAL MOODBOARD & PHOTO COLLAGE (DRAGGABLE)
-       ═══════════════════════════════════════════════════════════ -->
-  <div class="moodboard-wrapper reveal-item reveal-delay-1" data-lisse="18">
-    <div class="moodboard" data-moodboard>
-
-      <!-- Drag hint -->
-      <div class="moodboard-hint" aria-hidden="true">
-        <span>drag anything around</span>
-      </div>
-
-      <!-- 1. Main Portrait Polaroid: Cyril -->
-      <div
-        class="sticker-item polaroid-frame polaroid--main"
-        data-draggable
-        style="--x: 50%; --y: 45%; --r: -2deg; z-index: 12;"
-      >
-        <div class="tape tape--top"></div>
-        <div class="polaroid-photo">
-          <img src={profile1} alt="Cyril Egbobiani" draggable="false" loading="lazy" decoding="async" width="220" height="293" />
+  <!-- Profile Teaser Card -->
+  <a
+    href="/about"
+    class="profile-teaser-card group relative flex flex-col sm:flex-row items-center gap-6 p-6 sm:p-7 rounded-[14px] bg-[var(--surface-subtle)] border border-[var(--border-subtle)] hover:border-[var(--border-interactive)] transition-[border-color,background-color,transform] duration-200 ease-[var(--ease-smooth-out)] no-underline text-inherit cursor-pointer active:scale-[0.99] reveal-item reveal-delay-1"
+    aria-label="Visit Cyril's dedicated profile page"
+  >
+    <!-- Left: Polaroid Preview with subtle tilt -->
+    <div class="polaroid-mini-wrapper shrink-0">
+      <div class="polaroid-mini bg-white p-2 pb-4 shadow-md rounded-[2px] border border-black/5 transform -rotate-3 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:rotate-0 group-hover:scale-105">
+        <div class="w-24 h-28 overflow-hidden bg-zinc-100">
+          <img src={profilePolaroid} alt="Cyril Egbobiani" class="w-full h-full object-cover grayscale contrast-105" loading="lazy" decoding="async" width="96" height="112" />
         </div>
-        <div class="polaroid-meta">
-          <span class="polaroid-title">Cyril Egbobiani</span>
-          <span class="polaroid-sub">That's me</span>
+        <div class="mt-2 text-center">
+          <span class="font-display text-[12px] font-semibold text-zinc-900 leading-none">Cyril</span>
         </div>
       </div>
-
-      <!-- 2. Photography Polaroid -->
-      <div
-        class="sticker-item polaroid-frame"
-        data-draggable
-        style="--x: 23%; --y: 36%; --r: -7deg; z-index: 8;"
-      >
-        <div class="tape tape--top-left"></div>
-        <div class="polaroid-photo">
-          <img src={photographyImg} alt="Street photography in Lagos" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
-        </div>
-        <div class="polaroid-meta">
-          <span class="polaroid-title">Photography</span>
-          <span class="polaroid-sub">Mostly around Lagos</span>
-        </div>
-      </div>
-
-      <!-- 3. Football Polaroid -->
-      <div
-        class="sticker-item polaroid-frame"
-        data-draggable
-        style="--x: 77%; --y: 35%; --r: 5deg; z-index: 9;"
-      >
-        <div class="tape tape--top-right"></div>
-        <div class="polaroid-photo">
-          <img src={footballImg} alt="Football" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
-        </div>
-        <div class="polaroid-meta">
-          <span class="polaroid-title">Football</span>
-          <span class="polaroid-sub">#Come on you Gunners!!!!</span>
-        </div>
-      </div>
-
-      <!-- 4. Cooking Polaroid -->
-      <div
-        class="sticker-item polaroid-frame"
-        data-draggable
-        style="--x: 21%; --y: 78%; --r: 5deg; z-index: 10;"
-      >
-        <div class="polaroid-photo">
-          <img src={cookingImg} alt="Cooking" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
-        </div>
-        <div class="polaroid-meta">
-          <span class="polaroid-title">Cooking</span>
-          <span class="polaroid-sub">Mum really influenced me</span>
-        </div>
-      </div>
-
-      <!-- 5. Cars Polaroid -->
-      <div
-        class="sticker-item polaroid-frame polaroid--wide"
-        data-draggable
-        style="--x: 78%; --y: 76%; --r: -5deg; z-index: 7;"
-      >
-        <div class="polaroid-photo">
-          <img src={carsImg} alt="Cars" draggable="false" loading="lazy" decoding="async" width="200" height="200" />
-        </div>
-        <div class="polaroid-meta">
-          <span class="polaroid-title">Cars</span>
-          <span class="polaroid-sub">Automotive design, mainly</span>
-        </div>
-      </div>
-
-      <!-- 6. Small Avatar Cutout Stamp -->
-      <div
-        class="sticker-item avatar-stamp"
-        data-draggable
-        style="--x: 37%; --y: 19%; --r: -8deg; z-index: 14;"
-      >
-        <img src={profileAvatar} alt="Cyril avatar" draggable="false" loading="lazy" decoding="async" width="80" height="80" />
-      </div>
-
-      <!-- 7. Handwritten Note Card -->
-      <div
-        class="sticker-item note-card"
-        data-draggable
-        data-lisse="8"
-        style="--x: 48%; --y: 84%; --r: -3deg; z-index: 13;"
-      >
-        <span class="note-text font-display">Time and Chance</span>
-        <div class="note-sketch">
-          <svg width="36" height="10" viewBox="0 0 36 10" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round">
-            <path d="M2 7 C 8 1, 16 9, 24 3 C 28 1, 32 6, 34 4" />
-          </svg>
-        </div>
-      </div>
-
-      <!-- 8. Lagos Location Tag -->
-      <div
-        class="sticker-item pill-tag font-sans"
-        data-draggable
-        style="--x: 63%; --y: 16%; --r: 6deg; z-index: 11;"
-      >
-        <span class="pill-dot"></span>
-        <span>Lagos, Nigeria</span>
-      </div>
-
     </div>
-  </div>
 
-  <p class="about-copy">
-    Most of what I know, I learned by building things badly the first time. I like
-    problems I can sit with for a while, and I care about the details at the end
-    that people feel but never point at. I also just like talking to people about
-    what they're making.
-  </p>
+    <!-- Right: Editorial copy + Arrow -->
+    <div class="flex flex-col gap-2.5 flex-1 text-left">
+      <p class="m-0 text-[14.5px] sm:text-[15.5px] leading-[1.65] text-[var(--text-secondary)]">
+        Most of what I know, I learned by building things badly the first time. Explore my verified pass, personal moodboard, photography around Lagos, and creative background.
+      </p>
 
+      <div class="inline-flex items-center gap-1.5 text-[13.5px] font-medium text-[var(--text-primary)] group-hover:text-[var(--text-muted)] transition-colors pt-1">
+        <span>Open profile &amp; explore moodboard</span>
+        <svg class="size-4 transition-transform duration-160 ease-[var(--ease-smooth-out)] group-hover:translate-x-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M5 12h14M12 5l7 7-7 7" />
+        </svg>
+      </div>
+    </div>
+  </a>
 </section>
 
 <style>
-  /* ═══════════════════════════════════════════════════════════
-     MOODBOARD STAGE CONTAINER
-     ═══════════════════════════════════════════════════════════ */
-  .moodboard-wrapper {
-    position: relative;
-    width: 100%;
-    overflow: hidden;
-    border-radius: 12px;
-    background: var(--surface-subtle);
-    background-image: radial-gradient(rgba(128, 128, 128, 0.12) 1px, transparent 1px);
-    background-size: 24px 24px;
-    padding: 12px;
-  }
-
-  .moodboard {
-    position: relative;
-    width: 100%;
-    height: 480px;
-    user-select: none;
-    -webkit-user-select: none;
-    touch-action: none;
-  }
-
-  @media (min-width: 640px) {
-    .moodboard {
-      height: 520px;
-    }
-  }
-
-  .moodboard-hint {
-    position: absolute;
-    bottom: 12px;
-    right: 16px;
-    font-family: var(--font-sans);
-    font-size: 13px;
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    color: var(--ink, var(--text-secondary));
-    opacity: 0.75;
-    pointer-events: none;
-    z-index: 1;
-  }
-
-  /* ═══════════════════════════════════════════════════════════
-     DRAGGABLE STICKER BASE
-     ═══════════════════════════════════════════════════════════ */
-  .sticker-item {
-    position: absolute;
-    left: var(--x);
-    top: var(--y);
-    transform: translate(calc(-50% + var(--dx, 0px)), calc(-50% + var(--dy, 0px))) rotate(var(--r));
-    cursor: grab;
-    touch-action: none;
-    will-change: transform, box-shadow;
-    transition:
-      box-shadow 180ms var(--ease-smooth-out, cubic-bezier(0.16, 1, 0.3, 1)),
-      scale 180ms var(--ease-smooth-out, cubic-bezier(0.16, 1, 0.3, 1));
+  .profile-teaser-card {
+    will-change: transform, border-color;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .sticker-item:hover {
-      scale: 1.03;
+    .profile-teaser-card:hover {
+      background-color: var(--surface-interactive);
     }
   }
 
-  .sticker-item[data-dragging="true"] {
-    cursor: grabbing !important;
-    scale: 1.07 !important;
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.28) !important;
-    transition: none !important;
-  }
-
-  /* ── Polaroid Frames (Physical white paper prints with constant ink) ── */
-  .polaroid-frame {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    padding: 8px 8px 16px 8px;
-    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.16);
-    display: flex;
-    flex-direction: column;
-    width: 152px;
-  }
-
-  .polaroid--main {
-    width: 165px;
-    padding-bottom: 18px;
-  }
-
-  .polaroid--main .polaroid-photo img {
-    height: 145px;
-  }
-
-  .polaroid--wide {
-    width: 175px;
-  }
-
-  .polaroid--wide .polaroid-photo img {
-    height: 105px;
-  }
-
-  .polaroid-photo {
-    width: 100%;
-    overflow: hidden;
-    background: #f4f4f5;
-  }
-
-  .polaroid-photo img {
-    width: 100%;
-    height: 125px;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-  }
-
-  .section-title {
-    font-family: var(--font-display);
-  }
-
-  .polaroid-meta {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-    margin-top: 7px;
-    padding: 0 2px;
-  }
-
-  .polaroid-title {
-    font-family: var(--font-display);
-    font-size: 14.5px;
-    font-weight: 600;
-    letter-spacing: -0.01em;
-    color: #111111;
-  }
-
-  .polaroid-sub {
-    font-family: var(--font-sans);
-    font-size: 11.5px;
-    font-weight: 450;
-    line-height: 1.35;
-    letter-spacing: -0.01em;
-    color: #52525b;
-  }
-
-  /* ── Tape Accents ── */
-  .tape {
-    position: absolute;
-    width: 34px;
-    height: 13px;
-    background: rgba(255, 255, 255, 0.65);
-    backdrop-filter: blur(3px);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
-    border-radius: 1px;
-  }
-
-  [data-theme="dark"] .tape {
-    background: rgba(255, 255, 255, 0.15);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
-  .tape--top {
-    top: -7px;
-    left: 50%;
-    transform: translateX(-50%) rotate(-1deg);
-  }
-
-  .tape--top-left {
-    top: -7px;
-    left: 10px;
-    transform: rotate(-14deg);
-  }
-
-  .tape--top-right {
-    top: -7px;
-    right: 12px;
-    transform: rotate(18deg);
-  }
-
-  /* ── Avatar Stamp ── */
-  .avatar-stamp {
-    width: 62px;
-    height: 62px;
-    border-radius: 9999px;
-    border: 3px solid #ffffff;
-    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.16);
-    overflow: hidden;
-    background: #000000;
-  }
-
-  [data-theme="dark"] .avatar-stamp {
-    border-color: rgba(255, 255, 255, 0.2);
-  }
-
-  .avatar-stamp img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-  }
-
-  /* ── Note Card ── */
-  .note-card {
-    background: var(--surface);
-    border: 1px dashed var(--border-strong);
-    border-radius: 6px;
-    padding: 8px 12px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2px;
-    color: var(--ink);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
-  }
-
-  .note-text {
-    font-size: 15px;
-    line-height: 1.2;
-    white-space: nowrap;
-  }
-
-  .note-sketch {
-    opacity: 0.6;
-  }
-
-  /* ── Pill Tags ── */
-  .pill-tag {
-    background: #18181b;
-    color: #e4e4e7;
-    border: 1px solid rgba(255, 255, 255, 0.12);
-    border-radius: 9999px;
-    padding: 5px 12px;
-    font-size: 11px;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-    white-space: nowrap;
-  }
-
-  .pill-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 9999px;
-    background: #22c55e;
-  }
-
-  /* ── Responsive adjustments ── */
-  @media (max-width: 640px) {
-    .polaroid-frame { width: 125px; }
-    .polaroid-photo img { height: 100px; }
-    .polaroid--main { width: 135px; }
-    .polaroid--wide { width: 145px; }
-    .avatar-stamp { width: 50px; height: 50px; }
-    .note-text { font-size: 13px; }
-  }
-
-  /* ── About copy ── */
-  .about-copy {
-    margin: 0;
-    font-size: 15.5px;
-    line-height: 1.7;
-    color: var(--text-secondary);
-    max-width: 58ch;
+  @media (prefers-reduced-motion: reduce) {
+    .polaroid-mini,
+    .profile-teaser-card {
+      transform: none !important;
+      transition: none !important;
+    }
   }
 </style>
-
-<script>
-  // Robust pointer-event drag engine
-  const board = document.querySelector<HTMLElement>('[data-moodboard]');
-
-  if (board) {
-    const items = Array.from(board.querySelectorAll<HTMLElement>('[data-draggable]'));
-    let highestZ = 20;
-
-    items.forEach((el) => {
-      let isDragging = false;
-      let startPointerX = 0;
-      let startPointerY = 0;
-      let startDx = 0;
-      let startDy = 0;
-
-      const onPointerDown = (e: PointerEvent) => {
-        if (e.button !== 0) return; // primary click only
-        
-        isDragging = true;
-        el.setPointerCapture(e.pointerId);
-
-        // Bring to front
-        highestZ += 1;
-        el.style.zIndex = String(highestZ);
-
-        startPointerX = e.clientX;
-        startPointerY = e.clientY;
-
-        // Parse existing CSS custom properties for offsets
-        startDx = parseFloat(el.style.getPropertyValue('--dx') || '0');
-        startDy = parseFloat(el.style.getPropertyValue('--dy') || '0');
-
-        el.setAttribute('data-dragging', 'true');
-
-        el.addEventListener('pointermove', onPointerMove);
-        el.addEventListener('pointerup', onPointerUp);
-        el.addEventListener('pointercancel', onPointerUp);
-      };
-
-      const onPointerMove = (e: PointerEvent) => {
-        if (!isDragging) return;
-        const currentDx = startDx + (e.clientX - startPointerX);
-        const currentDy = startDy + (e.clientY - startPointerY);
-
-        el.style.setProperty('--dx', `${currentDx}px`);
-        el.style.setProperty('--dy', `${currentDy}px`);
-      };
-
-      const onPointerUp = (e: PointerEvent) => {
-        if (!isDragging) return;
-        isDragging = false;
-        el.releasePointerCapture(e.pointerId);
-        el.setAttribute('data-dragging', 'false');
-
-        el.removeEventListener('pointermove', onPointerMove);
-        el.removeEventListener('pointerup', onPointerUp);
-        el.removeEventListener('pointercancel', onPointerUp);
-      };
-
-      el.addEventListener('pointerdown', onPointerDown);
-    });
-  }
-</script>

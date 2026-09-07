@@ -39,6 +39,11 @@
 :root {
   color-scheme: light;
 
+  /* Typography Font Families */
+  --font-display: "Tiro Tamil", Georgia, serif;
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-script: "Caveat", cursive;
+
   /* ── Motion tokens ───────────────────────────────────────────
      Premium easing: cubic-bezier(0.16, 1, 0.3, 1) — the benji.org
      kinetic signature. Fast attack, slow settle. */
