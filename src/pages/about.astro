@@ -1,14 +1,12 @@
 ---
 // src/pages/about.astro — Dedicated Profile & Human Half Page
 import Layout from '../components/Layout.astro';
-import BottomNav from '../components/BottomNav.astro';
 import profileIntroImg from '../assets/images/optimized/profile-intro.webp?url';
 import photographyImg from '../assets/images/optimized/photography.webp?url';
 import footballImg from '../assets/images/optimized/football.webp?url';
 import cookingImg from '../assets/images/optimized/cooking.webp?url';
 import carsImg from '../assets/images/optimized/cars.webp?url';
-import profilePolaroid from '../assets/images/optimized/profile-polaroid.webp?url';
-import profileAvatar from '../assets/images/optimized/profile-avatar.webp?url';
+import soundscapesImg from '../assets/images/optimized/soundscapes.webp?url';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
 ---
@@ -17,11 +15,11 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
   title="About Cyril Egbobiani — Software Engineer & Designer"
   description="The human half of Cyril Egbobiani. Background, philosophy, personal interests, photography, and creative explorations."
 >
-  <main class="min-h-screen bg-[var(--surface)] px-6 pt-8 sm:pt-12 pb-28 sm:pb-36 font-[var(--font-sans)] text-[var(--text-primary)] sm:px-8">
-    <div class="mx-auto flex w-full max-w-[680px] flex-col gap-12 sm:gap-16">
+  <main class="min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-8 sm:pt-12 pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
+    <div class="mx-auto flex w-full max-w-[680px] flex-col">
 
       <!-- ── 1. Top Navigation Bar: Home (Left) + Theme Toggle (Right) ── -->
-      <nav class="flex w-full items-center justify-between" aria-label="Page navigation">
+      <nav class="flex w-full items-center justify-between mb-14 sm:mb-18" aria-label="Page navigation">
         <a
           href="/"
           class="nav-icon-btn size-9 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-interactive)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160 ease-[var(--ease-smooth-out)] active:scale-95 border border-[var(--border-subtle)] no-underline"
@@ -54,8 +52,11 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
         </button>
       </nav>
 
-      <!-- ── 2. Hero Identity Showcase: Profile Card (Own Row) + Introduction ── -->
-      <section class="t-stagger is-shown flex flex-col gap-6 pt-2">
+      <!-- ── Main Sections (Matching Homepage gap-24 sm:gap-28 rhythm) ── -->
+      <div class="flex flex-col gap-24 sm:gap-28">
+
+        <!-- ── 2. Hero Identity Showcase: Profile Card (Own Row) + Introduction ── -->
+        <section class="t-stagger is-shown flex flex-col gap-6">
         <!-- Row 1: Tactile Physical Ticket Pass Profile Card -->
         <div class="tkt-wrapper w-full max-w-[185px] sm:max-w-[195px] select-none" aria-label="Cyril Egbobiani — CE Archive verified pass" id="tktWrapper" data-tilt-card>
           <div class="tkt-card relative w-full bg-[#ececed] rounded-[4px] overflow-visible border border-[rgba(60,45,30,0.08)]" id="tktCard" data-tilt-target>
@@ -139,123 +140,201 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
         </div>
       </section>
 
-      <!-- ── 3. Dynamic Visual Moodboard ── -->
-      <section class="flex flex-col gap-8 pt-2">
-        <div class="section-head reveal-item">
-          <div class="section-head__text">
-            <h2 class="section-title font-display leading-[1.4] tracking-normal font-bold text-[20px]">My other domains</h2>
-          </div>
+      <!-- ── 3. Dynamic Visual Moodboard / Hobbies Section ── -->
+      <section class="flex flex-col gap-6 pt-2" aria-labelledby="hobbiesHeading">
+        <div class="flex items-center justify-between">
+          <h2 id="hobbiesHeading" class="section-title font-display leading-[1.4] tracking-normal font-bold text-[20px]">
+            My other domains
+          </h2>
         </div>
 
-        <!-- Dynamic Graphic Layout (Natural page surface, no enclosing poster box) -->
-        <div class="relative w-full flex flex-col gap-8 sm:gap-11">
+        <!-- Dynamic Handcrafted Collage Grid (Compact & Borderless) -->
+        <div class="dynamic-polaroid-grid grid grid-cols-1 sm:grid-cols-12 gap-3.5 sm:gap-4 w-full select-none" id="polaroidGallery">
+          
+          <!-- Card 1: Cars (Col 1-6) -->
+          <div class="sm:col-span-6">
+            <button
+              type="button"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
+              data-lisse="14"
+              data-polaroid-card
+              aria-label="Cars (tap to reveal thoughts)"
+            >
+              <div class="polaroid-frame relative w-full aspect-[16/10] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
+                <div class="polaroid-glare" aria-hidden="true"></div>
+                
+                <!-- Main Image (Blurs out on tap) -->
+                <img
+                  src={carsImg}
+                  alt="Automotive design & classic silhouettes"
+                  class="polaroid-img w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
 
-          <!-- Unit 1: Top Wide Landscape Frame (Cars) + Explanation -->
-          <div class="flex flex-col sm:flex-row items-start justify-between gap-5 sm:gap-8 w-full">
-            <!-- Frame 1: Cars -->
-            <div class="dynamic-frame-wrapper w-full sm:w-[62%] aspect-[16/10.5]" data-tilt-card>
-              <div class="dynamic-frame w-full h-full shadow-xs" data-tilt-target>
-                <div class="dynamic-frame-glare" aria-hidden="true"></div>
-                <div class="dynamic-frame-inner">
-                  <img src={carsImg} alt="Automotive design & classic silhouettes" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
+                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
+                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
+                    Obsessed with classic wedge silhouettes, pop-up headlights, manual gearboxes, and the pure tactile feedback of 80s aerodynamics.
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <!-- Text 1: Cars Explanation -->
-            <div class="flex flex-col gap-1.5 sm:w-[35%] sm:pt-2">
-              <h3 class="font-display text-[18px] sm:text-[19px] font-semibold text-[var(--text-primary)] m-0 leading-tight">Cars</h3>
-              <p class="text-[14px] leading-[1.65] text-[var(--text-secondary)] m-0">
-                Automotive design, classic silhouettes, and an obsession with 80s turbo aerodynamics.
-              </p>
-            </div>
+              <!-- Bottom Bar: Clean Title Only -->
+              <div class="mt-1.5 px-0.5">
+                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Cars</span>
+              </div>
+            </button>
           </div>
 
-          <!-- Unit 2: Photography Frame (Left) + Centerpiece Hero Portrait (Right) with Overlap -->
-          <div class="relative flex flex-col sm:flex-row items-start justify-between gap-6 sm:gap-7 w-full my-1">
-            
-            <!-- Left: Photography Frame + Text -->
-            <div class="flex flex-col gap-3 w-full sm:w-[40%]">
-              <div class="dynamic-frame-wrapper w-full aspect-[4/4.6]" data-tilt-card>
-                <div class="dynamic-frame w-full h-full shadow-xs" data-tilt-target>
-                  <div class="dynamic-frame-glare" aria-hidden="true"></div>
-                  <div class="dynamic-frame-inner">
-                    <img src={photographyImg} alt="Street & portraiture photography around Lagos" class="w-full h-full object-cover" loading="lazy" decoding="async" />
-                  </div>
+          <!-- Card 2: Photography (Col 7-12) -->
+          <div class="sm:col-span-6">
+            <button
+              type="button"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
+              data-lisse="14"
+              data-polaroid-card
+              aria-label="Photography (tap to reveal thoughts)"
+            >
+              <div class="polaroid-frame relative w-full aspect-[16/10] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
+                <div class="polaroid-glare" aria-hidden="true"></div>
+                
+                <!-- Main Image (Blurs out on tap) -->
+                <img
+                  src={photographyImg}
+                  alt="Street photography around Lagos"
+                  class="polaroid-img w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
+                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
+                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
+                    Walking through Lagos with a 35mm prime lens, searching for honest light and unscripted rhythm in everyday chaos.
+                  </p>
                 </div>
               </div>
-              <div class="flex flex-col gap-1">
-                <h3 class="font-display text-[17px] sm:text-[18px] font-semibold text-[var(--text-primary)] m-0 leading-tight">Photography</h3>
-                <p class="text-[13.5px] leading-[1.6] text-[var(--text-secondary)] m-0">
-                  Street &amp; portraiture around Lagos with a prime lens, always looking for honest light.
-                </p>
-              </div>
-            </div>
 
-            <!-- Right: Centerpiece Hero Frame (Cyril Portrait) + Text -->
-            <div class="flex flex-col gap-3 w-full sm:w-[56%] sm:-ml-2 sm:mt-2 z-10">
-              <div class="dynamic-frame-wrapper w-full aspect-[4/3.8]" data-tilt-card>
-                <div class="dynamic-frame dynamic-frame--hero w-full h-full shadow-md" data-tilt-target>
-                  <div class="dynamic-frame-glare" aria-hidden="true"></div>
-                  <div class="dynamic-frame-inner">
-                    <img src={profilePolaroid} alt="Cyril Egbobiani" class="w-full h-full object-cover" loading="lazy" decoding="async" />
-                  </div>
-                </div>
+              <!-- Bottom Bar: Clean Title Only -->
+              <div class="mt-1.5 px-0.5">
+                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Photography</span>
               </div>
-              <div class="flex flex-col gap-1">
-                <h3 class="font-display text-[18px] sm:text-[20px] font-semibold text-[var(--text-primary)] m-0 leading-tight">Cyril Egbobiani</h3>
-                <p class="text-[14px] leading-[1.65] text-[var(--text-secondary)] m-0">
-                  Software engineer &amp; UI/UX designer building at the intersection of systematic code and tactile craft.
-                </p>
-              </div>
-            </div>
-
+            </button>
           </div>
 
-          <!-- Unit 3: Football Frame + Explanation -->
-          <div class="flex flex-col sm:flex-row items-start justify-between gap-5 sm:gap-8 w-full">
-            <!-- Frame 3: Football -->
-            <div class="dynamic-frame-wrapper w-full sm:w-[54%] aspect-[4/3.3] sm:ml-4" data-tilt-card>
-              <div class="dynamic-frame w-full h-full shadow-xs" data-tilt-target>
-                <div class="dynamic-frame-glare" aria-hidden="true"></div>
-                <div class="dynamic-frame-inner">
-                  <img src={footballImg} alt="Football tactics and Arsenal matchdays" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+          <!-- Card 3: Football (Col 1-4) -->
+          <div class="sm:col-span-4">
+            <button
+              type="button"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
+              data-lisse="14"
+              data-polaroid-card
+              aria-label="Football & Tactics (tap to reveal thoughts)"
+            >
+              <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
+                <div class="polaroid-glare" aria-hidden="true"></div>
+                
+                <!-- Main Image (Blurs out on tap) -->
+                <img
+                  src={footballImg}
+                  alt="Football tactics and Arsenal matchdays"
+                  class="polaroid-img w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
+                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
+                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
+                    Systems architecture on grass. Studying positional play and pressing triggers under maximum pressure.
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <!-- Text 3: Football Explanation -->
-            <div class="flex flex-col gap-1.5 sm:w-[40%] sm:pt-2">
-              <h3 class="font-display text-[18px] sm:text-[19px] font-semibold text-[var(--text-primary)] m-0 leading-tight">Football</h3>
-              <p class="text-[14px] leading-[1.65] text-[var(--text-secondary)] m-0">
-                Tactics &amp; matchdays. Watching Arsenal through the banter and the beauty.
-              </p>
-            </div>
+              <!-- Bottom Bar: Clean Title Only -->
+              <div class="mt-1.5 px-0.5">
+                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Football & Tactics</span>
+              </div>
+            </button>
           </div>
 
-          <!-- Unit 4: Bottom Alcove Frame (Cooking) + Explanation -->
-          <div class="flex flex-col sm:flex-row items-center justify-center gap-6 sm:gap-8 w-full pt-2">
-            <div class="dynamic-frame-wrapper w-[175px] sm:w-[195px] aspect-[4/4.2] shrink-0" data-tilt-card>
-              <div class="dynamic-frame w-full h-full shadow-xs" data-tilt-target>
-                <div class="dynamic-frame-glare" aria-hidden="true"></div>
-                <div class="dynamic-frame-inner">
-                  <img src={cookingImg} alt="Cooking culinary experiments" class="w-full h-full object-cover" loading="lazy" decoding="async" />
+          <!-- Card 4: Cooking (Col 5-8) -->
+          <div class="sm:col-span-4">
+            <button
+              type="button"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
+              data-lisse="14"
+              data-polaroid-card
+              aria-label="Cooking (tap to reveal thoughts)"
+            >
+              <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
+                <div class="polaroid-glare" aria-hidden="true"></div>
+                
+                <!-- Main Image (Blurs out on tap) -->
+                <img
+                  src={cookingImg}
+                  alt="Culinary cooking experiments and family recipes"
+                  class="polaroid-img w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
+                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
+                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
+                    Pure flow state away from screens. Recreating family recipes and balancing complex spices by instinct.
+                  </p>
                 </div>
               </div>
-            </div>
 
-            <div class="flex flex-col gap-1.5 text-center sm:text-left max-w-[280px]">
-              <h3 class="font-display text-[17px] sm:text-[18px] font-semibold text-[var(--text-primary)] m-0 leading-tight">Cooking</h3>
-              <p class="text-[13.5px] leading-[1.6] text-[var(--text-secondary)] m-0">
-                Culinary experiments, family recipes, and finding flow away from computer monitors.
-              </p>
-            </div>
+              <!-- Bottom Bar: Clean Title Only -->
+              <div class="mt-1.5 px-0.5">
+                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Cooking</span>
+              </div>
+            </button>
+          </div>
+
+          <!-- Card 5: Soundscapes (Col 9-12) -->
+          <div class="sm:col-span-4">
+            <button
+              type="button"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
+              data-lisse="14"
+              data-polaroid-card
+              aria-label="Soundscapes (tap to reveal thoughts)"
+            >
+              <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
+                <div class="polaroid-glare" aria-hidden="true"></div>
+                
+                <!-- Main Image (Blurs out on tap) -->
+                <img
+                  src={soundscapesImg}
+                  alt="Minimalist vinyl turntable and studio headphones workspace"
+                  class="polaroid-img w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+
+                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
+                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
+                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
+                    Invisible architecture of mood. Analog vinyl warmth and high-tempo rhythms setting the tempo for code.
+                  </p>
+                </div>
+              </div>
+
+              <!-- Bottom Bar: Clean Title Only -->
+              <div class="mt-1.5 px-0.5">
+                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Soundscapes</span>
+              </div>
+            </button>
           </div>
 
         </div>
 
-        <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)] mt-2">
-          Outside of designing tools and writing code, you will usually find me watching Arsenal match replays, experimenting in the kitchen with family recipes, or walking around Lagos with a prime lens looking for honest light.
+        <p class="text-[14.5px] sm:text-[15px] leading-[1.65] text-[var(--text-secondary)] mt-2">
+          Outside of designing tools and writing code, you will usually find me watching Arsenal match replays, experimenting in the kitchen with family recipes, walking around Lagos with a prime lens looking for honest light, or listening to analog vinyl & Afrobeats.
         </p>
       </section>
 
@@ -263,11 +342,9 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       <ContactSection />
       <PortfolioFooter />
 
+      </div>
     </div>
   </main>
-
-  <!-- Bottom Floating Dock Navigation -->
-  <BottomNav />
 </Layout>
 
 <style>
@@ -376,98 +453,107 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
   }
 
   /* ─────────────────────────────────────────────────────────
-     DYNAMIC 3D TILT FRAMES
+     DYNAMIC POLAROID CARDS (BORDERLESS, COMPACT & BLUR SWAP)
      ───────────────────────────────────────────────────────── */
-  .dynamic-frame-wrapper {
-    position: relative;
-    perspective: 900px;
-    transform-style: preserve-3d;
-  }
-
-  .dynamic-frame {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    cursor: pointer;
-    background-color: var(--surface-subtle);
-    border: 1px solid var(--border-subtle);
-    border-radius: 8px;
-    padding: 6px;
-    transform-style: preserve-3d;
+  .polaroid-card {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
     will-change: transform, box-shadow;
-    transform: perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    transform-origin: center center;
   }
 
-  .dynamic-frame.is-interacting {
-    box-shadow: 0 16px 36px rgba(0, 0, 0, 0.12), 0 2px 6px rgba(0, 0, 0, 0.04);
-    border-color: var(--border-default);
+  .polaroid-card:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03);
   }
 
-  :global([data-theme="dark"]) .dynamic-frame.is-interacting {
-    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.42), 0 2px 8px rgba(0, 0, 0, 0.2);
-    border-color: rgba(255, 255, 255, 0.18);
+  :global([data-theme="dark"]) .polaroid-card {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
   }
 
-  .dynamic-frame-glare {
+  :global([data-theme="dark"]) .polaroid-card:hover {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Active In-Place Flipped Focus State */
+  .polaroid-card.is-flipped {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.03);
+  }
+
+  :global([data-theme="dark"]) .polaroid-card.is-flipped {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
+  }
+
+  .polaroid-frame {
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Image Transition: Crystal Sharp -> Atmospheric Ambient Glow */
+  .polaroid-img {
+    transition: filter 340ms cubic-bezier(0.23, 1, 0.32, 1),
+                opacity 340ms cubic-bezier(0.23, 1, 0.32, 1),
+                transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: center center;
+    will-change: filter, opacity, transform;
+  }
+
+  .polaroid-card.is-flipped .polaroid-img {
+    filter: blur(18px) brightness(0.65) saturate(1.2);
+    opacity: 0.2;
+    transform: scale(1.1);
+  }
+
+  /* Text Narrative Overlay: Hidden blur-away -> Crisp reveal */
+  .polaroid-text-overlay {
+    opacity: 0;
+    filter: blur(6px);
+    transform: translateY(4px) scale(0.98);
+    pointer-events: none;
+    transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1),
+                filter 300ms cubic-bezier(0.23, 1, 0.32, 1),
+                transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: opacity, filter, transform;
+  }
+
+  .polaroid-card.is-flipped .polaroid-text-overlay {
+    opacity: 1;
+    filter: blur(0px);
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+
+  .polaroid-glare {
     position: absolute;
     inset: 0;
-    border-radius: 8px;
     pointer-events: none;
-    z-index: 10;
+    z-index: 5;
     opacity: 0;
     background: radial-gradient(
-      circle 200px at var(--glare-x, 50%) var(--glare-y, 50%),
-      rgba(255, 255, 255, 0.45) 0%,
-      rgba(255, 255, 255, 0.12) 40%,
+      circle 180px at var(--glare-x, 50%) var(--glare-y, 50%),
+      rgba(255, 255, 255, 0.32) 0%,
+      rgba(255, 255, 255, 0.06) 45%,
       transparent 75%
     );
     mix-blend-mode: overlay;
-    transition: opacity 260ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  :global([data-theme="dark"]) .dynamic-frame-glare {
+  :global([data-theme="dark"]) .polaroid-glare {
     background: radial-gradient(
-      circle 200px at var(--glare-x, 50%) var(--glare-y, 50%),
-      rgba(255, 255, 255, 0.22) 0%,
-      rgba(255, 255, 255, 0.06) 45%,
+      circle 180px at var(--glare-x, 50%) var(--glare-y, 50%),
+      rgba(255, 255, 255, 0.16) 0%,
+      rgba(255, 255, 255, 0.03) 45%,
       transparent 75%
     );
     mix-blend-mode: screen;
   }
 
-  .dynamic-frame-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    border-radius: 4px;
-    background-color: var(--surface-subtle);
-    transform-style: preserve-3d;
-    transform: translateZ(6px);
-  }
-
-  .dynamic-frame-inner img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    pointer-events: none;
-    user-select: none;
-  }
-
-  .dynamic-frame--hero {
-    border-color: var(--border-default);
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.08);
-  }
-
-  :global([data-theme="dark"]) .dynamic-frame--hero {
-    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.35);
-  }
-
   @media (prefers-reduced-motion: reduce) {
-    .dynamic-frame {
+    .polaroid-card {
       transform: none !important;
+      transition: none !important;
+    }
+    .polaroid-img,
+    .polaroid-text-overlay {
       transition: none !important;
     }
   }
@@ -480,16 +566,18 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
 </style>
 
 <script>
-  // ── Unified Physics-based 3D Card Tilt Controller (Profile Card & Moodboard Cards) ──
+  import { initLisse } from '../utils/lisse';
+
+  // ── Unified Physics-based 3D Card Tilt Controller (Profile Card & Polaroids) ──
   function setup3DCardTilt() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    const cards = document.querySelectorAll<HTMLElement>('[data-tilt-card]');
+    const cards = document.querySelectorAll<HTMLElement>('[data-tilt-card], .polaroid-card');
 
     cards.forEach((wrapper) => {
       const target = wrapper.querySelector<HTMLElement>('[data-tilt-target]') || wrapper;
-      const glare = wrapper.querySelector<HTMLElement>('.tkt-glare, .dynamic-frame-glare');
+      const glare = wrapper.querySelector<HTMLElement>('.tkt-glare, .polaroid-glare');
 
       let isHovering = false;
       let isPressed = false;
@@ -500,20 +588,19 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       let currentRotateY = 0;
       let currentTranslateZ = 0;
       let targetTranslateZ = 0;
-      let currentScale = 1;
-      let targetScale = 1;
 
       const isTicket = wrapper.classList.contains('tkt-wrapper');
-      const maxTilt = isTicket ? 9 : 7.5;
+      const maxTilt = isTicket ? 9 : 4.5;
 
       const updateSpring = () => {
-        if (isHovering) {
-          currentRotateX += (targetRotateX - currentRotateX) * 0.13;
-          currentRotateY += (targetRotateY - currentRotateY) * 0.13;
-          currentTranslateZ += (targetTranslateZ - currentTranslateZ) * 0.13;
-          currentScale += (targetScale - currentScale) * 0.13;
+        if (isHovering && !wrapper.classList.contains('is-flipped')) {
+          currentRotateX += (targetRotateX - currentRotateX) * 0.14;
+          currentRotateY += (targetRotateY - currentRotateY) * 0.14;
+          currentTranslateZ += (targetTranslateZ - currentTranslateZ) * 0.14;
 
-          target.style.transform = `perspective(900px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px) scale(${currentScale.toFixed(3)})`;
+          if (isTicket) {
+            target.style.transform = `perspective(900px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
+          }
 
           rafId = requestAnimationFrame(updateSpring);
         }
@@ -534,24 +621,21 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
 
         targetRotateY = normX * maxTilt;
         targetRotateX = -normY * maxTilt;
-        targetTranslateZ = isPressed ? -3 : 6;
-        targetScale = isPressed ? 0.985 : 1.018;
+        targetTranslateZ = isPressed ? -2 : 4;
 
         if (glare) {
           const glareX = (x / rect.width) * 100;
           const glareY = (y / rect.height) * 100;
           glare.style.setProperty('--glare-x', `${glareX.toFixed(1)}%`);
           glare.style.setProperty('--glare-y', `${glareY.toFixed(1)}%`);
-          glare.style.opacity = isTicket ? '0.35' : '0.28';
+          glare.style.opacity = isTicket ? '0.35' : '0.24';
         }
       };
 
       wrapper.addEventListener('pointerenter', () => {
         isHovering = true;
         isPressed = false;
-        target.classList.add('is-interacting');
-        target.style.transition = '';
-        cancelAnimationFrame(rafId ?? 0);
+        if (rafId) cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(updateSpring);
       });
 
@@ -560,16 +644,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       wrapper.addEventListener('pointerdown', (e: PointerEvent) => {
         if (e.button !== 0) return;
         isPressed = true;
-        targetTranslateZ = -4;
-        targetScale = 0.985;
       });
 
       wrapper.addEventListener('pointerup', () => {
         isPressed = false;
-        if (isHovering) {
-          targetTranslateZ = 6;
-          targetScale = 1.018;
-        }
       });
 
       wrapper.addEventListener('pointerleave', () => {
@@ -578,22 +656,37 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
         targetRotateX = 0;
         targetRotateY = 0;
         targetTranslateZ = 0;
-        targetScale = 1;
 
         if (glare) {
           glare.style.opacity = '0';
         }
 
-        target.style.transition = 'transform 420ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 420ms cubic-bezier(0.23, 1, 0.32, 1)';
-        target.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px) scale(1)';
+        if (isTicket) {
+          target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1)';
+          target.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        }
+      });
+    });
+  }
 
-        setTimeout(() => {
-          if (!isHovering) {
-            target.classList.remove('is-interacting');
-            target.style.transition = '';
-            target.style.transform = '';
-          }
-        }, 420);
+  // ── In-Place Polaroid Image Blur & Narrative Text Swap Controller ──
+  function setupPolaroidInteractivity() {
+    const cards = document.querySelectorAll<HTMLButtonElement>('[data-polaroid-card]');
+
+    cards.forEach((card) => {
+      card.addEventListener('click', () => {
+        const isFlipped = card.classList.contains('is-flipped');
+        
+        if (isFlipped) {
+          card.classList.remove('is-flipped');
+          card.setAttribute('aria-expanded', 'false');
+        } else {
+          card.classList.add('is-flipped');
+          card.setAttribute('aria-expanded', 'true');
+        }
+
+        // Recompute continuous squircle clip paths with Lisse
+        initLisse();
       });
     });
   }
@@ -618,12 +711,15 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
 
       setTimeout(() => {
         document.documentElement.classList.remove('theme-switching');
+        initLisse();
       }, 120);
     });
   }
 
   function initAboutPage() {
+    initLisse();
     setup3DCardTilt();
+    setupPolaroidInteractivity();
     setupAboutThemeToggle();
   }
 
