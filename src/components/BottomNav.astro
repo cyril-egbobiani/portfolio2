@@ -1,91 +1,106 @@
 ---
-// BottomNav.astro — 4-Segment Floating Dock Navigation
-// Matches screenshot: Outer capsule + 4 distinct segmented tiles.
-// Tile 1: Left rounded full (20px), Right rounded matching middle tiles (10px).
-// Tile 2 & 3: All 4 corners rounded (10px).
-// Tile 4: Left rounded matching middle tiles (10px), Right rounded full (20px).
+// BottomNav.astro — Concept 1: Fluid Sliding Indicator (Dynamic Magnetic Pill)
+// A continuous glassmorphism capsule with a liquid highlight pill that glides smoothly
+// between items with Emil Kowalski's signature spring curve cubic-bezier(0.23, 1, 0.32, 1).
 ---
 
 <nav class="floating-dock-anchor" aria-label="Floating dock navigation">
-  <div class="floating-dock">
+  <div class="floating-dock" data-floating-dock>
     
-    <!-- 1. Work (Tile 1: Left Full 20px, Right 10px) -->
-    <div class="dock-item">
+    <!-- Navigation Items Group with Fluid Sliding Pill -->
+    <div class="dock-nav-group" role="tablist" data-dock-nav-group>
+      <!-- Fluid Sliding Highlight Pill -->
+      <div class="dock-sliding-pill" data-dock-sliding-pill aria-hidden="true"></div>
+
+      <!-- 1. Work -->
       <a
         href="/#projects"
-        class="dock-tile dock-tile--first"
+        class="dock-item is-active"
+        data-dock-item="projects"
+        role="tab"
         aria-label="Work"
       >
-        <svg class="dock-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M9 3a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v2h20V8a2 2 0 0 0-2-2h-3V5a2 2 0 0 0-2-2H9zm2 2h2v1h-2V5zM2 11h20v2H2v-2zm0 4h20v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4z"/>
-        </svg>
+        <span class="dock-icon-wrap">
+          <svg class="dock-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 3a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v2h20V8a2 2 0 0 0-2-2h-3V5a2 2 0 0 0-2-2H9zm2 2h2v1h-2V5zM2 11h20v2H2v-2zm0 4h20v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4z"/>
+          </svg>
+        </span>
+        <span class="dock-tooltip" aria-hidden="true">Work</span>
       </a>
-      <span class="dock-tooltip" aria-hidden="true">Work</span>
-    </div>
 
-    <!-- 2. Services / Skills (Tile 2: All Corners 10px) -->
-    <div class="dock-item">
+      <!-- 2. Services -->
       <a
         href="/#services"
-        class="dock-tile dock-tile--mid"
+        class="dock-item"
+        data-dock-item="services"
+        role="tab"
         aria-label="Services"
       >
-        <svg class="dock-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <rect x="2" y="8" width="3" height="8" rx="1.5" />
-          <rect x="6" y="5.5" width="3" height="13" rx="1.5" />
-          <rect x="9" y="10.5" width="6" height="3" rx="1" />
-          <rect x="15" y="5.5" width="3" height="13" rx="1.5" />
-          <rect x="19" y="8" width="3" height="8" rx="1.5" />
-        </svg>
+        <span class="dock-icon-wrap">
+          <svg class="dock-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <rect x="2" y="8" width="3" height="8" rx="1.5" />
+            <rect x="6" y="5.5" width="3" height="13" rx="1.5" />
+            <rect x="9" y="10.5" width="6" height="3" rx="1" />
+            <rect x="15" y="5.5" width="3" height="13" rx="1.5" />
+            <rect x="19" y="8" width="3" height="8" rx="1.5" />
+          </svg>
+        </span>
+        <span class="dock-tooltip" aria-hidden="true">Services</span>
       </a>
-      <span class="dock-tooltip" aria-hidden="true">Services</span>
-    </div>
 
-    <!-- 3. About (Tile 3: All Corners 10px) -->
-    <div class="dock-item">
+      <!-- 3. About -->
       <a
         href="/about"
-        class="dock-tile dock-tile--mid"
+        class="dock-item"
+        data-dock-item="about"
+        role="tab"
         aria-label="About"
       >
-        <svg class="dock-icon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="12" cy="4" r="2.5" />
-          <path d="M6 10c0-.6.4-1 1-1h10c.6 0 1 .4 1 1 0 .6-.4 1-1 1h-2v3.5l2.2 5.5c.2.6-.1 1.2-.7 1.4-.6.2-1.2-.1-1.4-.7L13 15.5h-2l-2.1 5.2c-.2.6-.8.9-1.4.7-.6-.2-.9-.8-.7-1.4L9 14.5V11H7c-.6 0-1-.4-1-1z"/>
-        </svg>
+        <span class="dock-icon-wrap">
+          <svg class="dock-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="4" r="2.5" />
+            <path d="M6 10c0-.6.4-1 1-1h10c.6 0 1 .4 1 1 0 .6-.4 1-1 1h-2v3.5l2.2 5.5c.2.6-.1 1.2-.7 1.4-.6.2-1.2-.1-1.4-.7L13 15.5h-2l-2.1 5.2c-.2.6-.8.9-1.4.7-.6-.2-.9-.8-.7-1.4L9 14.5V11H7c-.6 0-1-.4-1-1z"/>
+          </svg>
+        </span>
+        <span class="dock-tooltip" aria-hidden="true">About</span>
       </a>
-      <span class="dock-tooltip" aria-hidden="true">About</span>
     </div>
 
-    <!-- 4. Theme Switcher (Tile 4: Left 10px, Right Full 20px) -->
-    <div class="dock-item">
+    <!-- Vertical Hairline Divider -->
+    <div class="dock-divider" aria-hidden="true"></div>
+
+    <!-- Theme Switcher Utility Button -->
+    <div class="dock-utility-wrap">
       <button
         type="button"
-        class="dock-tile dock-tile--last"
+        class="dock-theme-btn"
         aria-label="Toggle theme"
         title="Toggle theme"
         data-dock-theme-toggle
       >
-        <!-- Sun icon (shown in dark mode) -->
-        <svg class="dock-icon theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-          <circle cx="12" cy="12" r="4.5" />
-          <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
-        </svg>
-        <!-- Moon icon (shown in light mode) -->
-        <svg class="dock-icon theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
-        </svg>
+        <span class="dock-icon-wrap theme-icon-wrap">
+          <!-- Sun icon (shown in dark mode) -->
+          <svg class="dock-icon theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="4.5" />
+            <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
+          </svg>
+          <!-- Moon icon (shown in light mode) -->
+          <svg class="dock-icon theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
+          </svg>
+        </span>
+        <span class="dock-tooltip" aria-hidden="true">Theme</span>
       </button>
-      <span class="dock-tooltip" aria-hidden="true">Theme</span>
     </div>
 
   </div>
 </nav>
 
 <style>
-  /* ── Dock Position ── */
+  /* ── Dock Fixed Anchor ── */
   .floating-dock-anchor {
     position: fixed;
-    bottom: max(18px, calc(18px + env(safe-area-inset-bottom, 0px)));
+    bottom: max(20px, calc(20px + env(safe-area-inset-bottom, 0px)));
     left: 0;
     right: 0;
     z-index: 9999;
@@ -94,29 +109,33 @@
     pointer-events: none;
   }
 
-  /* ── Outer Pill Capsule ── */
+  /* ── Outer Continuous Glassmorphic Capsule ── */
   .floating-dock {
     pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    gap: 3px;
-    padding: 3px;
+    padding: 3.5px;
     border-radius: 9999px;
-    background: #121215;
+    background: rgba(18, 18, 22, 0.76);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.5),
-      0 2px 6px rgba(0, 0, 0, 0.3);
-    animation: dockEntrance 600ms cubic-bezier(0.23, 1, 0.32, 1) 240ms both;
+      0 12px 32px -4px rgba(0, 0, 0, 0.5),
+      0 4px 12px rgba(0, 0, 0, 0.3),
+      inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    animation: dockEntrance 500ms cubic-bezier(0.23, 1, 0.32, 1) 200ms both;
     transition:
       background-color 200ms ease,
       border-color 200ms ease,
       box-shadow 200ms ease;
+    user-select: none;
   }
 
   @keyframes dockEntrance {
     0% {
       opacity: 0;
-      transform: translateY(20px) scale(0.93);
+      transform: translateY(18px) scale(0.94);
       filter: blur(4px);
     }
     100% {
@@ -127,94 +146,165 @@
   }
 
   :global([data-theme="light"]) .floating-dock {
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.05);
+    background: rgba(255, 255, 255, 0.82);
+    border: 1px solid rgba(0, 0, 0, 0.07);
     box-shadow:
-      0 8px 24px rgba(0, 0, 0, 0.06),
-      0 2px 6px rgba(0, 0, 0, 0.03);
+      0 12px 32px -4px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.04),
+      inset 0 1px 0 rgba(255, 255, 255, 0.9);
   }
 
-  .dock-item {
+  /* ── Navigation Group (Container for sliding pill + items) ── */
+  .dock-nav-group {
     position: relative;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 2px;
   }
 
-  /* ── Individual Nav Tiles ── */
-  .dock-tile {
+  /* ── Fluid Sliding Highlight Pill ── */
+  .dock-sliding-pill {
+    position: absolute;
+    top: 2px;
+    bottom: 2px;
+    left: 0;
+    width: 36px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
+      0 2px 8px rgba(0, 0, 0, 0.25);
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0;
+    will-change: transform, width, opacity;
+    transition:
+      transform 320ms cubic-bezier(0.23, 1, 0.32, 1),
+      width 280ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 180ms ease;
+  }
+
+  :global([data-theme="light"]) .dock-sliding-pill {
+    background: #ffffff;
+    box-shadow:
+      inset 0 0 0 1px rgba(0, 0, 0, 0.06),
+      0 2px 8px rgba(0, 0, 0, 0.07);
+  }
+
+  /* ── Individual Nav Item ── */
+  .dock-item {
+    position: relative;
+    z-index: 2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 29px;
-    background: #1c1c21;
-    color: #f4f4f6;
+    width: 38px;
+    height: 32px;
+    border-radius: 9999px;
+    color: var(--text-secondary);
+    opacity: 0.72;
     text-decoration: none;
-    border: none;
     cursor: pointer;
     box-sizing: border-box;
-    overflow: hidden;
     transition:
-      background-color 160ms var(--ease-smooth-out),
-      transform 160ms var(--ease-smooth-out),
-      color 160ms var(--ease-smooth-out);
+      color 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+    -webkit-tap-highlight-color: transparent;
   }
 
-  :global([data-theme="light"]) .dock-tile {
-    background: #f1f1f4;
-    color: #18181b;
+  .dock-item.is-active {
+    color: var(--text-primary);
+    opacity: 1;
   }
 
-  /* ── Exact Corner Radii — Proportional without CSS clipping crush ── */
-  /* Tile 1: Left rounded full (16px), Right rounded 7px (matching middle tiles) */
-  .dock-tile--first {
-    border-top-left-radius: 16px;
-    border-bottom-left-radius: 16px;
-    border-top-right-radius: 7px;
-    border-bottom-right-radius: 7px;
-    padding-left: 6px;
-    padding-right: 3px;
-  }
-
-  /* Tile 2 & 3: All 4 corners rounded 7px */
-  .dock-tile--mid {
-    border-radius: 7px;
-    padding: 4px 6px;
-  }
-
-  /* Tile 4: Left rounded 7px (matching middle tiles), Right rounded full (16px) */
-  .dock-tile--last {
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px;
-    border-top-right-radius: 16px;
-    border-bottom-right-radius: 16px;
-    padding-left: 3px;
-    padding-right: 6px;
-  }
-
-  /* ── Hover & Active Feedback ── */
   @media (hover: hover) and (pointer: fine) {
-    .dock-tile:hover {
-      background: #27272e;
-      color: #ffffff;
-    }
-    :global([data-theme="light"]) .dock-tile:hover {
-      background: #e4e4e7;
-      color: #000000;
+    .dock-item:hover {
+      color: var(--text-primary);
+      opacity: 1;
     }
   }
 
-  .dock-tile:active {
+  .dock-item:active {
     transform: scale(0.92);
+  }
+
+  .dock-icon-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
   }
 
   .dock-icon {
     display: block;
     flex-shrink: 0;
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* ── Single Icon Visibility ── */
+  @media (hover: hover) and (pointer: fine) {
+    .dock-item:hover .dock-icon {
+      transform: scale(1.08);
+    }
+  }
+
+  /* ── Vertical Micro Hairline Divider ── */
+  .dock-divider {
+    width: 1px;
+    height: 16px;
+    margin: 0 4px;
+    background: rgba(255, 255, 255, 0.1);
+    flex-shrink: 0;
+  }
+
+  :global([data-theme="light"]) .dock-divider {
+    background: rgba(0, 0, 0, 0.08);
+  }
+
+  /* ── Theme Switcher Utility Button ── */
+  .dock-utility-wrap {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .dock-theme-btn {
+    position: relative;
+    z-index: 2;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 32px;
+    border-radius: 9999px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    opacity: 0.78;
+    cursor: pointer;
+    box-sizing: border-box;
+    transition:
+      color 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .dock-theme-btn:hover {
+      color: var(--text-primary);
+      opacity: 1;
+    }
+  }
+
+  .dock-theme-btn:active {
+    transform: scale(0.92);
+  }
+
+  .theme-icon-wrap {
+    transition: transform 350ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
   .theme-icon-sun {
     display: block;
   }
@@ -229,95 +319,218 @@
     display: block !important;
   }
 
-  /* ── Tooltips ── */
+  /* ── Precision Micro-Tooltips ── */
   .dock-tooltip {
     position: absolute;
-    bottom: calc(100% + 8px);
+    bottom: calc(100% + 9px);
     left: 50%;
     transform: translate(-50%) scale(0.92);
     transform-origin: bottom center;
-    background: var(--surface);
-    color: var(--text);
+    background: var(--surface-raised, #18181b);
+    color: var(--text-primary);
     border: 1px solid rgba(255, 255, 255, 0.12);
     font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 500;
     letter-spacing: -0.01em;
-    padding: 2px 7px;
-    border-radius: 5px;
+    padding: 3px 8px;
+    border-radius: 6px;
     white-space: nowrap;
     pointer-events: none;
     opacity: 0;
     transition:
-      opacity 140ms cubic-bezier(0.25, 0.46, 0.45, 0.94),
-      transform 140ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    z-index: 10;
+      opacity 140ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+    z-index: 100;
   }
 
   :global([data-theme="light"]) .dock-tooltip {
-    background: var(--surface);
-    color: var(--text);
-    border-color: rgba(0, 0, 0, 0.15);
+    background: #ffffff;
+    color: #18181b;
+    border-color: rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .dock-item:hover .dock-tooltip {
+    .dock-item:hover .dock-tooltip,
+    .dock-theme-btn:hover .dock-tooltip {
       opacity: 1;
       transform: translate(-50%) scale(1);
     }
   }
 
+  /* ── Mobile Responsive Refinement ── */
   @media (max-width: 480px) {
     .floating-dock {
-      gap: 3px;
       padding: 3px;
     }
-    .dock-tile {
+    .dock-item {
+      width: 42px;
+      height: 34px;
+    }
+    .dock-theme-btn {
       width: 40px;
-      height: 33px;
-    }
-    .dock-tile--first {
-      border-top-left-radius: 18px;
-      border-bottom-left-radius: 18px;
-      border-top-right-radius: 8px;
-      border-bottom-right-radius: 8px;
-      padding-left: 7px;
-      padding-right: 3px;
-    }
-    .dock-tile--mid {
-      border-radius: 8px;
-    }
-    .dock-tile--last {
-      border-top-left-radius: 8px;
-      border-bottom-left-radius: 8px;
-      border-top-right-radius: 18px;
-      border-bottom-right-radius: 18px;
-      padding-left: 3px;
-      padding-right: 7px;
+      height: 34px;
     }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .dock-tile,
+    .floating-dock,
+    .dock-sliding-pill,
+    .dock-item,
+    .dock-theme-btn,
     .dock-tooltip {
       transition: none !important;
-      transform: none !important;
+      animation: none !important;
     }
   }
 </style>
 
 <script>
+  function initFloatingDock() {
+    const dock = document.querySelector<HTMLElement>('[data-floating-dock]');
+    const navGroup = document.querySelector<HTMLElement>('[data-dock-nav-group]');
+    const pill = document.querySelector<HTMLElement>('[data-dock-sliding-pill]');
+    const items = document.querySelectorAll<HTMLElement>('[data-dock-item]');
+    if (!dock || !navGroup || !pill || items.length === 0) return;
+
+    let activeItem: HTMLElement | null = null;
+    const isAboutPage = window.location.pathname.startsWith('/about');
+
+    // 1. Determine Initial Active Item
+    if (isAboutPage) {
+      activeItem = document.querySelector<HTMLElement>('[data-dock-item="about"]');
+    } else {
+      const hash = window.location.hash.replace('#', '');
+      if (hash) {
+        activeItem = document.querySelector<HTMLElement>(`[data-dock-item="${hash}"]`);
+      }
+      if (!activeItem) {
+        activeItem = document.querySelector<HTMLElement>('[data-dock-item="projects"]');
+      }
+    }
+
+    function movePillTo(targetEl: HTMLElement, immediate = false) {
+      if (!pill || !navGroup || !targetEl) return;
+      const groupRect = navGroup.getBoundingClientRect();
+      const targetRect = targetEl.getBoundingClientRect();
+      const left = targetRect.left - groupRect.left;
+      const width = targetRect.width;
+
+      if (immediate) {
+        pill.style.transition = 'none';
+      } else {
+        pill.style.transition = 'transform 320ms cubic-bezier(0.23, 1, 0.32, 1), width 280ms cubic-bezier(0.23, 1, 0.32, 1), opacity 180ms ease';
+      }
+
+      pill.style.transform = `translateX(${left}px)`;
+      pill.style.width = `${width}px`;
+      pill.style.opacity = '1';
+    }
+
+    function setActive(newActiveEl: HTMLElement | null) {
+      if (!newActiveEl) return;
+      activeItem = newActiveEl;
+      items.forEach((item) => item.classList.remove('is-active'));
+      activeItem.classList.add('is-active');
+      movePillTo(activeItem);
+    }
+
+    // Initialize pill position
+    if (activeItem) {
+      setActive(activeItem);
+      // Ensure correct dimensions after initial layout render
+      requestAnimationFrame(() => {
+        if (activeItem) movePillTo(activeItem, true);
+      });
+    }
+
+    // 2. Magnetic Cursor Tracking on Desktop
+    items.forEach((item) => {
+      item.addEventListener('mouseenter', () => {
+        movePillTo(item);
+      });
+
+      item.addEventListener('click', (e) => {
+        const href = item.getAttribute('href');
+        if (href && href.startsWith('/#')) {
+          const sectionId = href.replace('/#', '');
+          const targetSection = document.getElementById(sectionId);
+          if (targetSection && !isAboutPage) {
+            e.preventDefault();
+            setActive(item);
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            history.pushState(null, '', `#${sectionId}`);
+          }
+        }
+      });
+    });
+
+    // When mouse leaves the dock, slide back to currently active item
+    navGroup.addEventListener('mouseleave', () => {
+      if (activeItem) {
+        movePillTo(activeItem);
+      }
+    });
+
+    // 3. Scroll Spy for Home Page Sections
+    if (!isAboutPage) {
+      const sectionIds = ['projects', 'services'];
+      const observedSections = sectionIds
+        .map((id) => document.getElementById(id))
+        .filter(Boolean) as HTMLElement[];
+
+      if (observedSections.length > 0 && typeof IntersectionObserver !== 'undefined') {
+        const observer = new IntersectionObserver(
+          (entries) => {
+            // Find most visible section
+            const visible = entries.filter((e) => e.isIntersecting);
+            if (visible.length > 0) {
+              const topSection = visible.sort(
+                (a, b) => b.intersectionRatio - a.intersectionRatio
+              )[0];
+              const matchedItem = document.querySelector<HTMLElement>(
+                `[data-dock-item="${topSection.target.id}"]`
+              );
+              if (matchedItem && matchedItem !== activeItem) {
+                setActive(matchedItem);
+              }
+            }
+          },
+          {
+            rootMargin: '-20% 0px -40% 0px',
+            threshold: [0.1, 0.3, 0.6],
+          }
+        );
+
+        observedSections.forEach((sec) => observer.observe(sec));
+      }
+    }
+
+    // 4. Window resize handler to keep pill perfectly positioned
+    window.addEventListener('resize', () => {
+      if (activeItem) movePillTo(activeItem, true);
+    });
+  }
+
+  // ── Theme Toggle Handler with Micro-Rotation ──
   function initThemeToggle() {
-    const toggleBtn = document.querySelector('[data-dock-theme-toggle]');
+    const toggleBtn = document.querySelector<HTMLButtonElement>('[data-dock-theme-toggle]');
     if (!toggleBtn) return;
 
-    const newBtn = toggleBtn.cloneNode(true);
+    const newBtn = toggleBtn.cloneNode(true) as HTMLButtonElement;
     toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
 
     newBtn.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
+
+      const iconWrap = newBtn.querySelector<HTMLElement>('.theme-icon-wrap');
+      if (iconWrap) {
+        iconWrap.style.transform = 'rotate(180deg) scale(0.85)';
+      }
+
       const currentTheme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
       const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
 
@@ -332,14 +545,22 @@
 
       setTimeout(() => {
         document.documentElement.classList.remove('theme-switching');
-      }, 120);
+        if (iconWrap) {
+          iconWrap.style.transform = 'rotate(0deg) scale(1)';
+        }
+      }, 250);
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initThemeToggle);
-  } else {
+  function setupDock() {
+    initFloatingDock();
     initThemeToggle();
   }
-  document.addEventListener('astro:page-load', initThemeToggle);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupDock);
+  } else {
+    setupDock();
+  }
+  document.addEventListener('astro:page-load', setupDock);
 </script>

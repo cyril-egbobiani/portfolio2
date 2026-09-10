@@ -39,9 +39,10 @@
 :root {
   color-scheme: light;
 
-  /* Typography Font Families */
-  --font-display: "Tiro Tamil", Georgia, serif;
-  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+  /* Typography Font Families — Unified Geist Architecture */
+  --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: var(--font-sans);
   --font-script: "Caveat", cursive;
 
   /* ── Motion tokens ───────────────────────────────────────────
@@ -134,9 +135,9 @@
   --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
   --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-  /* Typography — Display: Tiro Tamil + Body: Geist */
+  /* Typography — Unified Geist System */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Tiro Tamil", Georgia, "Times New Roman", serif;
+  --font-display: var(--font-sans);
   --font-mono: var(--font-sans);
 }
 
@@ -192,7 +193,7 @@
 
   /* Typography */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  --font-display: "Tiro Tamil", Georgia, "Times New Roman", serif;
+  --font-display: var(--font-sans);
   --font-mono: var(--font-sans);
 }
 
@@ -299,7 +300,7 @@
     font-family: var(--font-mono);
   }
 
-  /* Display typography: Cabinet Grotesk weight 700, tight tracking */
+  /* Display typography: Geist weight 600, refined optical tracking */
   h1,
   h2,
   h3,
@@ -307,8 +308,8 @@
   h5,
   h6 {
     font-family: var(--font-display);
-    font-weight: 700;
-    letter-spacing: -0.03em;
+    font-weight: 600;
+    letter-spacing: -0.02em;
   }
 
   .lead {
@@ -375,12 +376,12 @@
 
   .section-title {
     font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 600;
+    font-size: 15.5px;
+    font-weight: 500;
     font-style: normal;
     color: var(--text-primary);
-    letter-spacing: -0.02em;
-    line-height: 1.3;
+    letter-spacing: -0.015em;
+    line-height: 1.35;
     margin: 0;
   }
 
@@ -487,11 +488,11 @@
   .section-title {
     margin: 0;
     font-family: var(--font-sans);
-    font-size: 16px;
-    font-weight: 600;
-    letter-spacing: -0.025em;
+    font-size: 15.5px;
+    font-weight: 500;
+    letter-spacing: -0.015em;
     color: var(--text-primary);
-    line-height: 1.3;
+    line-height: 1.35;
   }
 
   .section-aside {
@@ -641,10 +642,13 @@
       transform: translateY(14px);
       clip-path: inset(0 0 100% 0);
     }
+    99.9% {
+      clip-path: inset(0 0 0% 0);
+    }
     100% {
       opacity: 1;
       transform: translateY(0);
-      clip-path: inset(0 0 0% 0);
+      clip-path: none;
     }
   }
 

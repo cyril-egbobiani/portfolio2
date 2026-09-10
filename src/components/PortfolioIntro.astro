@@ -1,10 +1,13 @@
 ---
 // PortfolioIntro.astro — Hero introduction on index.astro
+import ieslLogo from '../assets/images/iesl-logo.png';
+import profileIntroImg from '../assets/images/optimized/profile-intro.webp?url';
+
 const socials = [
   {
     name: 'X (Twitter)',
     href: 'https://x.com',
-    icon: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4l11.733 16h4.267l-11.733 -16z"/><path d="M4 20l6.768 -6.768m2.46 -2.46l6.772 -6.772"/></svg>`,
+    icon: `<svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
   },
   {
     name: 'GitHub',
@@ -32,25 +35,64 @@ const socials = [
 <section class="hero flex flex-col gap-6 pt-30">
   <!-- Text Content Block — Staggered Editorial Reveal -->
   <div class="hero-text-block t-stagger is-shown flex flex-col gap-4 sm:gap-5 w-full">
-    <h1 class="statement t-stagger-line t-stagger-line--1 font-display text-4xl  tracking-tight text-[var(--text-primary)] font-bold">
-      Cyril Egbobiani.
-    </h1>
+    <!-- 1. Dual-Craft Identity Header Lockup -->
+    <div class="t-stagger-line t-stagger-line--1 flex items-center gap-3.5 sm:gap-4 mb-1">
+      <!-- Lisse Squircle Avatar Frame -->
+      <a
+        href="/about"
+        class="avatar-squircle-wrap relative size-[52px] sm:size-[56px] rounded-[14px] shrink-0 overflow-hidden bg-[var(--surface-subtle)] select-none block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+        data-lisse='{"radius": 14, "smoothing": 0.65}'
+        aria-label="About Cyril Egbobiani"
+        title="About Cyril"
+      >
+        <img
+          src={profileIntroImg}
+          alt="Cyril Egbobiani"
+          class="avatar-photo w-full h-full object-cover object-[50%_25%] filter grayscale contrast-[1.06]"
+          loading="eager"
+          decoding="async"
+        />
+      </a>
+
+      <!-- Identity Text Stack -->
+      <div class="flex flex-col min-w-0 justify-center">
+        <h1 class="font-display text-[18.5px] sm:text-[19.5px] font-semibold tracking-[-0.02em] text-[var(--text-primary)] leading-tight m-0">
+          Cyril Egbobiani
+        </h1>
+        <div class="text-[13.5px] sm:text-[14px] text-[var(--text-secondary)] font-normal leading-normal mt-0.5">
+          Software Engineer &amp; UI/UX Designer
+        </div>
+      </div>
+    </div>
 
     <p class="lede t-stagger-line t-stagger-line--2">
       Based in Lagos, Nigeria. I specialize in tactile consumer app interfaces and high-performance creative tools that feel natural, fluid, and memorable to use.
     </p>
 
     <p class="lede t-stagger-line t-stagger-line--3">
-      Currently, I'm a Frontend Engineer &amp; UI/UX Designer at <a href="https://ieslglobal.com/" target="_blank" rel="noopener noreferrer" class="story-link font-medium">International Energy Services Limited</a>.
+      Currently, I'm a Frontend Engineer &amp; UI/UX Designer at <a
+        href="https://ieslglobal.com/"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="inline-company-link"
+      ><img
+        src={ieslLogo.src}
+        alt=""
+        class="inline-company-icon"
+        style="display: inline-block !important; height: 14px !important; width: auto !important; vertical-align: -2px !important; margin-right: 5px !important; border-radius: 2px !important;"
+      />International Energy Services Limited</a>.
     </p>
 
     <p class="lede t-stagger-line t-stagger-line--4">
-      I'm also open for select design engineering contracts, product advisory, and creative collaborations.
+      I'm also open for select design engineering contracts, product advisory, and <a
+        href="#contact"
+        class="inline-company-link"
+      ><span class="inline-globe-wrap" title="Open for creative collaborations"><canvas class="mini-3d-globe" width="32" height="32" aria-label="Rotating 3D globe"></canvas></span>creative collaborations</a>.
     </p>
 
     <!-- Minimalist Social Links + Profile Page Link -->
     <div class="flex flex-wrap items-center justify-between gap-y-3 pt-2 sm:pt-3 t-stagger-line t-stagger-line--5 border-t border-[var(--border-subtle)]">
-      <div class="flex flex-wrap items-center gap-x-5 gap-y-2">
+      <div class="flex flex-wrap items-center gap-1 sm:gap-1.5">
         {socials.map((social) => (
           <a
             href={social.href}
@@ -64,8 +106,6 @@ const socials = [
           </a>
         ))}
       </div>
-
-    
     </div>
   </div>
 </section>
@@ -89,41 +129,242 @@ const socials = [
     letter-spacing: -0.01em;
   }
 
-  .story-link {
+  /* Seamless Inline Company Link & Micro-Icon */
+  .inline-company-link {
+    display: inline;
     color: var(--text-primary);
-    text-decoration: none;
+    text-decoration: underline;
+    text-decoration-color: var(--border-subtle);
+    text-underline-offset: 3px;
     font-weight: 500;
-    transition: color 160ms var(--ease-smooth-out);
+    transition: color 160ms var(--ease-smooth-out),
+                text-decoration-color 160ms var(--ease-smooth-out);
   }
 
-  .story-link:hover {
+  .inline-company-link:hover {
     color: var(--text-muted);
+    text-decoration-color: var(--text-muted);
   }
 
+  .inline-company-icon {
+    display: inline-block;
+    height: 14px;
+    width: auto;
+    vertical-align: -1.5px;
+    margin-right: 5px;
+    border-radius: 2px;
+    object-fit: contain;
+  }
+
+  /* Inline Rotating 3D Dotted Globe */
+  .inline-globe-wrap {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: -2px;
+    margin: 0 4px 0 2px;
+    user-select: none;
+  }
+
+  .mini-3d-globe {
+    display: inline-block !important;
+    width: 15px !important;
+    height: 15px !important;
+    cursor: pointer;
+    transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .mini-3d-globe:hover {
+      transform: scale(1.18);
+    }
+  }
+
+  .mini-3d-globe:active {
+    transform: scale(0.94);
+  }
+
+  /* Lisse Squircle Avatar */
+  .avatar-squircle-wrap {
+    transform-origin: center center;
+    box-shadow: inset 0 0 0 1px var(--border-subtle);
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .avatar-squircle-wrap:hover {
+      transform: scale(1.03);
+    }
+  }
+
+  .avatar-squircle-wrap:active {
+    transform: scale(0.97);
+  }
+
+  /* Tactile Social Pills */
   .social-link {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     gap: 6px;
+    padding: 5px 8px;
+    border-radius: 7px;
     font-size: 13px;
     font-weight: 500;
     color: var(--text-secondary);
     text-decoration: none;
-    transition: color 160ms var(--ease-smooth-out);
+    transition: background-color 160ms var(--ease-smooth-out),
+                color 160ms var(--ease-smooth-out),
+                transform 140ms var(--ease-smooth-out);
+    user-select: none;
   }
 
-  .social-link:hover {
-    color: var(--text-primary);
+  @media (hover: hover) and (pointer: fine) {
+    .social-link:hover {
+      background: var(--surface-subtle);
+      color: var(--text-primary);
+    }
+    .social-link:hover .social-link__icon {
+      opacity: 1;
+      color: var(--text-primary);
+    }
+  }
+
+  .social-link:active {
+    transform: scale(0.96);
   }
 
   .social-link__icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.7;
-    transition: opacity 160ms var(--ease-smooth-out);
-  }
-
-  .social-link:hover .social-link__icon {
-    opacity: 1;
+    opacity: 0.75;
+    transition: opacity 160ms var(--ease-smooth-out), color 160ms var(--ease-smooth-out);
   }
 </style>
+
+<script>
+  import { initLisse } from '../utils/lisse';
+
+  function initMini3DGlobe() {
+    const canvas = document.querySelector<HTMLCanvasElement>('.mini-3d-globe');
+    if (!canvas) return;
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Generate 54 uniform points on a 3D sphere using Fibonacci lattice
+    const count = 54;
+    const phi = Math.PI * (3 - Math.sqrt(5)); // golden ratio angle
+    const r = 11.5; // radius within 32x32 canvas buffer
+    const points: Array<{ x: number; y: number; z: number }> = [];
+
+    for (let i = 0; i < count; i++) {
+      const y = 1 - (i / (count - 1)) * 2; // -1 to 1
+      const radiusAtY = Math.sqrt(Math.max(0, 1 - y * y));
+      const theta = phi * i;
+
+      points.push({
+        x: Math.cos(theta) * radiusAtY * r,
+        y: y * r,
+        z: Math.sin(theta) * radiusAtY * r,
+      });
+    }
+
+    let angle = 0;
+    let speed = 0.007; // Relaxed, hypnotic rotation speed
+    let rafId: number | null = null;
+
+    const interactiveTarget = canvas.closest('a') || canvas;
+
+    interactiveTarget.addEventListener('pointerenter', () => {
+      speed = 0.018; // Gentle acceleration on hover
+    });
+
+    interactiveTarget.addEventListener('pointerleave', () => {
+      speed = 0.007;
+    });
+
+    // 18 degree axial tilt
+    const tilt = 0.31;
+    const cosTilt = Math.cos(tilt);
+    const sinTilt = Math.sin(tilt);
+
+    function render() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, 32, 32);
+
+      const isDark = document.documentElement.dataset.theme !== 'light';
+      const baseR = isDark ? 255 : 24;
+      const baseG = isDark ? 255 : 24;
+      const baseB = isDark ? 255 : 27;
+
+      // Subtle outer equator circle
+      ctx.beginPath();
+      ctx.arc(16, 16, r + 0.5, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${isDark ? '0.14' : '0.12'})`;
+      ctx.lineWidth = 0.85;
+      ctx.stroke();
+
+      const cosY = Math.cos(angle);
+      const sinY = Math.sin(angle);
+
+      // Rotate and project points
+      const transformed = points.map((p) => {
+        // Y-axis rotation
+        const x1 = p.x * cosY - p.z * sinY;
+        const z1 = p.x * sinY + p.z * cosY;
+
+        // Axial tilt
+        const y2 = p.y * cosTilt - z1 * sinTilt;
+        const z2 = p.y * sinTilt + z1 * cosTilt;
+
+        return { x: x1, y: y2, z: z2 };
+      }).sort((a, b) => a.z - b.z);
+
+      const fov = 38;
+
+      for (const p of transformed) {
+        const scale = fov / (fov + p.z);
+        const screenX = 16 + p.x * scale;
+        const screenY = 16 + p.y * scale;
+
+        // Depth z: -r (back) to +r (front)
+        const normZ = Math.max(0, Math.min(1, (p.z + r) / (2 * r)));
+        const alpha = 0.16 + normZ * 0.84;
+        const dotRadius = 0.65 + normZ * 0.65;
+
+        ctx.beginPath();
+        ctx.arc(screenX, screenY, dotRadius, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(${baseR}, ${baseG}, ${baseB}, ${alpha.toFixed(2)})`;
+        ctx.fill();
+      }
+
+      if (!prefersReducedMotion) {
+        angle += speed;
+        rafId = requestAnimationFrame(render);
+      }
+    }
+
+    render();
+
+    // Re-render when theme toggles
+    const observer = new MutationObserver(() => {
+      render();
+    });
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  }
+
+  function initIntro() {
+    initLisse();
+    initMini3DGlobe();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initIntro);
+  } else {
+    initIntro();
+  }
+  document.addEventListener('astro:page-load', initIntro);
+</script>

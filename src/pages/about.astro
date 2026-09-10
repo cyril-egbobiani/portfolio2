@@ -143,7 +143,7 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       <!-- ── 3. Dynamic Visual Moodboard / Hobbies Section ── -->
       <section class="flex flex-col gap-6 pt-2" aria-labelledby="hobbiesHeading">
         <div class="flex items-center justify-between">
-          <h2 id="hobbiesHeading" class="section-title font-display leading-[1.4] tracking-normal font-bold text-[20px]">
+          <h2 id="hobbiesHeading" class="section-title">
             My other domains
           </h2>
         </div>
@@ -155,9 +155,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           <div class="sm:col-span-6">
             <button
               type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
               data-lisse="14"
               data-polaroid-card
+              data-base-rotate="-1"
               aria-label="Cars (tap to reveal thoughts)"
             >
               <div class="polaroid-frame relative w-full aspect-[16/10] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
@@ -180,9 +181,16 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
                 </div>
               </div>
 
-              <!-- Bottom Bar: Clean Title Only -->
-              <div class="mt-1.5 px-0.5">
+              <!-- Bottom Bar: Title + Subtle Flip Hint -->
+              <div class="mt-1.5 px-0.5 flex items-center justify-between">
                 <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Cars</span>
+                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
+                  <span class="indicator-read">Thoughts</span>
+                  <span class="indicator-close hidden">Close</span>
+                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
+                  </svg>
+                </span>
               </div>
             </button>
           </div>
@@ -191,9 +199,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           <div class="sm:col-span-6">
             <button
               type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
               data-lisse="14"
               data-polaroid-card
+              data-base-rotate="1"
               aria-label="Photography (tap to reveal thoughts)"
             >
               <div class="polaroid-frame relative w-full aspect-[16/10] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
@@ -216,9 +225,16 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
                 </div>
               </div>
 
-              <!-- Bottom Bar: Clean Title Only -->
-              <div class="mt-1.5 px-0.5">
+              <!-- Bottom Bar: Title + Subtle Flip Hint -->
+              <div class="mt-1.5 px-0.5 flex items-center justify-between">
                 <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Photography</span>
+                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
+                  <span class="indicator-read">Thoughts</span>
+                  <span class="indicator-close hidden">Close</span>
+                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
+                  </svg>
+                </span>
               </div>
             </button>
           </div>
@@ -227,9 +243,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           <div class="sm:col-span-4">
             <button
               type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
               data-lisse="14"
               data-polaroid-card
+              data-base-rotate="-1"
               aria-label="Football & Tactics (tap to reveal thoughts)"
             >
               <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
@@ -252,9 +269,16 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
                 </div>
               </div>
 
-              <!-- Bottom Bar: Clean Title Only -->
-              <div class="mt-1.5 px-0.5">
+              <!-- Bottom Bar: Title + Subtle Flip Hint -->
+              <div class="mt-1.5 px-0.5 flex items-center justify-between">
                 <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Football & Tactics</span>
+                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
+                  <span class="indicator-read">Thoughts</span>
+                  <span class="indicator-close hidden">Close</span>
+                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
+                  </svg>
+                </span>
               </div>
             </button>
           </div>
@@ -263,9 +287,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           <div class="sm:col-span-4">
             <button
               type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
               data-lisse="14"
               data-polaroid-card
+              data-base-rotate="1"
               aria-label="Cooking (tap to reveal thoughts)"
             >
               <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
@@ -288,9 +313,16 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
                 </div>
               </div>
 
-              <!-- Bottom Bar: Clean Title Only -->
-              <div class="mt-1.5 px-0.5">
+              <!-- Bottom Bar: Title + Subtle Flip Hint -->
+              <div class="mt-1.5 px-0.5 flex items-center justify-between">
                 <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Cooking</span>
+                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
+                  <span class="indicator-read">Thoughts</span>
+                  <span class="indicator-close hidden">Close</span>
+                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
+                  </svg>
+                </span>
               </div>
             </button>
           </div>
@@ -299,9 +331,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           <div class="sm:col-span-4">
             <button
               type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left transition-[transform,box-shadow] duration-250 ease-[var(--ease-smooth-out)] active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
+              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
               data-lisse="14"
               data-polaroid-card
+              data-base-rotate="-1"
               aria-label="Soundscapes (tap to reveal thoughts)"
             >
               <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
@@ -324,9 +357,16 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
                 </div>
               </div>
 
-              <!-- Bottom Bar: Clean Title Only -->
-              <div class="mt-1.5 px-0.5">
+              <!-- Bottom Bar: Title + Subtle Flip Hint -->
+              <div class="mt-1.5 px-0.5 flex items-center justify-between">
                 <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Soundscapes</span>
+                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
+                  <span class="indicator-read">Thoughts</span>
+                  <span class="indicator-close hidden">Close</span>
+                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
+                  </svg>
+                </span>
               </div>
             </button>
           </div>
@@ -547,6 +587,20 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
     mix-blend-mode: screen;
   }
 
+  /* Subtle Indicator for Polaroid Behind-the-Scenes Thoughts */
+  .polaroid-flip-indicator .indicator-read { display: inline; }
+  .polaroid-flip-indicator .indicator-close { display: none; }
+  
+  .polaroid-card.is-flipped .polaroid-flip-indicator .indicator-read { display: none; }
+  .polaroid-card.is-flipped .polaroid-flip-indicator .indicator-close { display: inline; }
+  .polaroid-card.is-flipped .polaroid-flip-indicator .indicator-icon {
+    transform: rotate(45deg);
+  }
+  .polaroid-card.is-flipped .polaroid-flip-indicator {
+    color: var(--text-primary);
+    opacity: 1;
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .polaroid-card {
       transform: none !important;
@@ -590,7 +644,7 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       let targetTranslateZ = 0;
 
       const isTicket = wrapper.classList.contains('tkt-wrapper');
-      const maxTilt = isTicket ? 9 : 4.5;
+      const maxTilt = isTicket ? 9 : 3.8;
 
       const updateSpring = () => {
         if (isHovering && !wrapper.classList.contains('is-flipped')) {
@@ -600,6 +654,9 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
 
           if (isTicket) {
             target.style.transform = `perspective(900px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
+          } else {
+            const baseRot = parseFloat(wrapper.dataset.baseRotate || '0');
+            target.style.transform = `perspective(800px) rotate(${baseRot}deg) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
           }
 
           rafId = requestAnimationFrame(updateSpring);
@@ -635,6 +692,7 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       wrapper.addEventListener('pointerenter', () => {
         isHovering = true;
         isPressed = false;
+        target.style.transition = 'none';
         if (rafId) cancelAnimationFrame(rafId);
         rafId = requestAnimationFrame(updateSpring);
       });
@@ -664,6 +722,10 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
         if (isTicket) {
           target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1)';
           target.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
+        } else {
+          const baseRot = parseFloat(wrapper.dataset.baseRotate || '0');
+          target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 250ms cubic-bezier(0.23, 1, 0.32, 1)';
+          target.style.transform = `perspective(800px) rotate(${baseRot}deg) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
         }
       });
     });
