@@ -2,7 +2,6 @@
 // ProjectsSection.astro
 // Builds  → product cards. Anything listed here is shipped and reachable.
 // Designs → visual work. No cards, no detail pages: a masonry gallery that
-//           springs open to full view on tap.
 import { Image } from 'astro:assets';
 import { projects } from '../data/projects';
 
@@ -29,7 +28,7 @@ const designs = [
 ];
 ---
 
-<section class="flex flex-col gap-6" id="projects">
+<section class="flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="projects">
 
   <div class="section-head reveal-item flex items-center justify-between w-full">
     <div class="section-head__text flex items-center">
@@ -43,7 +42,7 @@ const designs = [
           class={`tab font-sans text-xs font-medium ${index === 0 ? 'tab-active' : ''}`}
           type="button"
           role="tab"
-          aria-selected={index === 0}
+          aria-selected={index === 0 ? 'true' : 'false'}
           data-tab-trigger
           data-tab-id={tab}
         >
@@ -56,7 +55,7 @@ const designs = [
   <div class="relative">
 
     <!-- ── BUILDS: product cards ───────────────────────────── -->
-    <div class="tab-panel builds-grid" data-tab-panel data-tab-id="Builds">
+    <div class="tab-panel builds-grid is-active" data-tab-panel data-tab-id="Builds">
       {builds.map((project, index) => (
         <a href={`/projects/${project.slug}`} data-astro-prefetch class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}>
           <div class={`shot shot--${project.tone}`} data-lisse="22">
@@ -182,8 +181,12 @@ const designs = [
     border: none;
     cursor: pointer;
     border-radius: 9999px;
-    transition: color 160ms var(--ease-smooth-out);
+    transition: color 160ms var(--ease-smooth-out), transform 120ms var(--ease-smooth-out);
     user-select: none;
+  }
+
+  .tab:active {
+    transform: scale(0.96);
   }
 
   .tab.tab-active,
@@ -196,12 +199,24 @@ const designs = [
   }
 
   /* ── Tab Panels Switching Animation ── */
-  .tab-panel {
+  .tab-panel[hidden] {
+    display: none !important;
+  }
+
+  .tab-panel:not([hidden]),
+  .tab-panel.is-active {
+    display: block !important;
     animation: tabFadeIn 320ms cubic-bezier(0.23, 1, 0.32, 1) both;
   }
 
-  .tab-panel[hidden] {
-    display: none !important;
+  .builds-grid:not([hidden]),
+  .builds-grid.is-active {
+    display: grid !important;
+  }
+
+  .design-grid:not([hidden]),
+  .design-grid.is-active {
+    display: block !important;
   }
 
   @keyframes tabFadeIn {
@@ -578,179 +593,225 @@ const designs = [
 <script>
   import { initLisse } from '../utils/lisse';
 
-  // ── Tab bar ─────────────────────────────────────────────
-  const bar = document.querySelector<HTMLElement>('.tabs-bar');
-  const pill = bar?.querySelector<HTMLElement>('.tabs-pill');
-  const triggers = document.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
-  const panels = document.querySelectorAll<HTMLElement>('[data-tab-panel]');
+  function initProjectTabs() {
+    const bar = document.querySelector<HTMLElement>('.tabs-bar');
+    if (!bar) return;
 
-  // Initialize Lisse smooth corners
-  initLisse();
-  document.addEventListener('astro:page-load', initLisse);
+    const pill = bar.querySelector<HTMLElement>('.tabs-pill');
+    const triggers = bar.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
+    const panels = document.querySelectorAll<HTMLElement>('[data-tab-panel]');
 
-  const movePill = (tab: HTMLButtonElement, animate: boolean) => {
-    if (!pill || !bar) return;
-    if (!animate) {
-      const prev = pill.style.transition;
-      pill.style.transition = 'none';
-      pill.style.transform = `translateX(${tab.offsetLeft}px)`;
-      pill.style.width = `${tab.offsetWidth}px`;
-      void pill.offsetWidth;
-      pill.style.transition = prev;
-    } else {
-      pill.style.transition =
-        'transform 220ms cubic-bezier(0.16, 1, 0.3, 1), width 220ms cubic-bezier(0.16, 1, 0.3, 1)';
-      pill.style.transform = `translateX(${tab.offsetLeft}px)`;
-      pill.style.width = `${tab.offsetWidth}px`;
-    }
-  };
+    const movePill = (tab: HTMLElement, animate: boolean) => {
+      if (!pill || !bar) return;
+      const left = tab.offsetLeft;
+      const width = tab.offsetWidth;
+      if (width <= 0) return;
 
-  const activeTrigger = () =>
-    [...triggers].find((t) => t.getAttribute('aria-selected') === 'true') || triggers[0];
-
-  const activateTab = (id: string) => {
-    const nextTrigger = [...triggers].find((t) => t.dataset.tabId === id);
-
-    triggers.forEach((trigger) => {
-      const isActive = trigger.dataset.tabId === id;
-      trigger.classList.toggle('tab-active', isActive);
-      trigger.setAttribute('aria-selected', String(isActive));
-    });
-
-    if (nextTrigger) movePill(nextTrigger, true);
-
-    panels.forEach((panel) => {
-      const isTarget = panel.dataset.tabId === id;
-      if (isTarget) {
-        panel.hidden = false;
-        panel.classList.remove('is-entering');
-        void panel.offsetWidth;
-        panel.classList.add('is-entering');
-        initLisse();
-        setTimeout(() => {
-          panel.classList.remove('is-entering');
-          initLisse();
-        }, 380);
+      if (!animate) {
+        const prev = pill.style.transition;
+        pill.style.transition = 'none';
+        pill.style.transform = `translateX(${left}px)`;
+        pill.style.width = `${width}px`;
+        void pill.offsetWidth;
+        pill.style.transition = prev;
       } else {
-        panel.hidden = true;
-        panel.classList.remove('is-entering');
+        pill.style.transition =
+          'transform 220ms cubic-bezier(0.16, 1, 0.3, 1), width 220ms cubic-bezier(0.16, 1, 0.3, 1)';
+        pill.style.transform = `translateX(${left}px)`;
+        pill.style.width = `${width}px`;
       }
-    });
-  };
-
-  triggers.forEach((trigger) => {
-    trigger.addEventListener('click', () => {
-      const id = trigger.dataset.tabId;
-      if (id) activateTab(id);
-    });
-  });
-
-  requestAnimationFrame(() => {
-    const active = activeTrigger();
-    if (active) movePill(active, false);
-  });
-  window.addEventListener('resize', () => {
-    const active = activeTrigger();
-    if (active) movePill(active, false);
-  });
-
-  // ── FLIP spring zoom for design tiles ───────────────────
-  const backdrop = document.getElementById('design-zoom-backdrop');
-  const closeBtn = document.getElementById('design-zoom-close');
-  const tiles = document.querySelectorAll<HTMLButtonElement>('[data-zoom-tile]');
-
-  const SPRING = 'cubic-bezier(0.23, 1, 0.32, 1)';
-  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  let clone: HTMLImageElement | null = null;
-  let sourceTile: HTMLElement | null = null;
-  let isZoomed = false;
-  let isAnimating = false;
-
-  const retract = () => {
-    if (!clone || !sourceTile || !isZoomed || isAnimating) return;
-    isZoomed = false;
-    isAnimating = true;
-
-    backdrop?.classList.remove('is-active');
-    closeBtn?.classList.remove('is-active');
-
-    const finish = () => {
-      if (sourceTile) sourceTile.style.opacity = '1';
-      clone?.remove();
-      clone = null;
-      sourceTile = null;
-      isAnimating = false;
-      document.body.style.overflow = '';
     };
 
-    if (reduceMotion) {
-      finish();
-      return;
+    const activateTab = (id: string) => {
+      const nextTrigger = bar.querySelector<HTMLButtonElement>(`[data-tab-trigger][data-tab-id="${id}"]`);
+
+      triggers.forEach((trigger) => {
+        const isActive = trigger.dataset.tabId === id;
+        trigger.classList.toggle('tab-active', isActive);
+        trigger.setAttribute('aria-selected', String(isActive));
+      });
+
+      if (nextTrigger) {
+        movePill(nextTrigger, true);
+      }
+
+      panels.forEach((panel) => {
+        const isTarget = panel.dataset.tabId === id;
+        if (isTarget) {
+          panel.removeAttribute('hidden');
+          panel.hidden = false;
+          panel.classList.add('is-active');
+          panel.classList.remove('is-entering');
+          void panel.offsetWidth;
+          panel.classList.add('is-entering');
+          initLisse();
+          setTimeout(() => {
+            panel.classList.remove('is-entering');
+            initLisse();
+          }, 380);
+        } else {
+          panel.setAttribute('hidden', '');
+          panel.hidden = true;
+          panel.classList.remove('is-active');
+          panel.classList.remove('is-entering');
+        }
+      });
+    };
+
+    // Wire delegated click handler on bar (ensures clicks never miss)
+    if (!bar.hasAttribute('data-tabs-bound')) {
+      bar.setAttribute('data-tabs-bound', 'true');
+      bar.addEventListener('click', (e) => {
+        const targetBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tab-trigger]');
+        if (!targetBtn) return;
+        e.preventDefault();
+        const id = targetBtn.dataset.tabId;
+        if (id) activateTab(id);
+      });
     }
 
-    // Exit is quicker than entry — the system responding, not the user deciding
-    clone.style.transition = `transform 340ms ${SPRING}`;
-    clone.style.transform = 'translate3d(0px, 0px, 0) scale(1)';
-    clone.addEventListener('transitionend', finish, { once: true });
-  };
+    // Initial pill placement
+    const active = bar.querySelector<HTMLButtonElement>('.tab.tab-active') || triggers[0];
+    if (active) {
+      requestAnimationFrame(() => movePill(active, false));
+      setTimeout(() => movePill(active, false), 80);
+    }
+  }
 
-  tiles.forEach((tile) => {
-    tile.addEventListener('click', () => {
-      if (isZoomed || isAnimating) return;
+  // ── FLIP spring zoom for design tiles ───────────────────
+  function initDesignZoom() {
+    const backdrop = document.getElementById('design-zoom-backdrop');
+    const closeBtn = document.getElementById('design-zoom-close');
+    const tiles = document.querySelectorAll<HTMLButtonElement>('[data-zoom-tile]');
+    if (!tiles.length) return;
 
-      const img = tile.querySelector('img');
-      if (!img) return;
+    const SPRING = 'cubic-bezier(0.23, 1, 0.32, 1)';
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-      const rect = img.getBoundingClientRect();
+    let clone: HTMLImageElement | null = null;
+    let sourceTile: HTMLElement | null = null;
+    let isZoomed = false;
+    let isAnimating = false;
 
-      clone = img.cloneNode(true) as HTMLImageElement;
-      clone.className = 'design-zoom-clone';
-      clone.style.left = `${rect.left}px`;
-      clone.style.top = `${rect.top}px`;
-      clone.style.width = `${rect.width}px`;
-      clone.style.height = `${rect.height}px`;
-      document.body.appendChild(clone);
+    const retract = () => {
+      if (!clone || !sourceTile || !isZoomed || isAnimating) return;
+      isZoomed = false;
+      isAnimating = true;
 
-      sourceTile = tile;
-      tile.style.opacity = '0';
-      isZoomed = true;
+      backdrop?.classList.remove('is-active');
+      closeBtn?.classList.remove('is-active');
 
-      backdrop?.classList.add('is-active');
-      closeBtn?.classList.add('is-active');
-      document.body.style.overflow = 'hidden';
-
-      // Fit the image inside the viewport, preserving its aspect ratio
-      const maxW = Math.min(window.innerWidth * 0.9, 1100);
-      const maxH = Math.min(window.innerHeight * 0.86, 940);
-      let targetW = maxW;
-      let targetH = maxW * (rect.height / rect.width);
-      if (targetH > maxH) {
-        targetH = maxH;
-        targetW = maxH * (rect.width / rect.height);
-      }
-
-      const scale = targetW / rect.width;
-      const translateX = (window.innerWidth - targetW) / 2 - rect.left;
-      const translateY = (window.innerHeight - targetH) / 2 - rect.top;
+      const finish = () => {
+        if (sourceTile) sourceTile.style.opacity = '1';
+        clone?.remove();
+        clone = null;
+        sourceTile = null;
+        isAnimating = false;
+        document.body.style.overflow = '';
+      };
 
       if (reduceMotion) {
-        clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
-      } else {
-        void clone.offsetWidth; // force reflow so the transition runs
-        clone.style.transition = `transform 420ms ${SPRING}`;
-        clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
+        finish();
+        return;
       }
 
-      clone.addEventListener('click', retract);
-      closeBtn?.focus();
+      clone.style.transition = `transform 340ms ${SPRING}`;
+      clone.style.transform = 'translate3d(0px, 0px, 0) scale(1)';
+      clone.addEventListener('transitionend', finish, { once: true });
+    };
+
+    tiles.forEach((tile) => {
+      if (tile.hasAttribute('data-zoom-bound')) return;
+      tile.setAttribute('data-zoom-bound', 'true');
+
+      tile.addEventListener('click', () => {
+        if (isZoomed || isAnimating) return;
+
+        const img = tile.querySelector('img');
+        if (!img) return;
+
+        const rect = img.getBoundingClientRect();
+
+        clone = img.cloneNode(true) as HTMLImageElement;
+        clone.className = 'design-zoom-clone';
+        clone.style.left = `${rect.left}px`;
+        clone.style.top = `${rect.top}px`;
+        clone.style.width = `${rect.width}px`;
+        clone.style.height = `${rect.height}px`;
+        document.body.appendChild(clone);
+
+        sourceTile = tile;
+        tile.style.opacity = '0';
+        isZoomed = true;
+
+        backdrop?.classList.add('is-active');
+        closeBtn?.classList.add('is-active');
+        document.body.style.overflow = 'hidden';
+
+        const maxW = Math.min(window.innerWidth * 0.9, 1100);
+        const maxH = Math.min(window.innerHeight * 0.86, 940);
+        let targetW = maxW;
+        let targetH = maxW * (rect.height / rect.width);
+        if (targetH > maxH) {
+          targetH = maxH;
+          targetW = maxH * (rect.width / rect.height);
+        }
+
+        const scale = targetW / rect.width;
+        const translateX = (window.innerWidth - targetW) / 2 - rect.left;
+        const translateY = (window.innerHeight - targetH) / 2 - rect.top;
+
+        if (reduceMotion) {
+          clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
+        } else {
+          void clone.offsetWidth;
+          clone.style.transition = `transform 420ms ${SPRING}`;
+          clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
+        }
+
+        clone.addEventListener('click', retract);
+        closeBtn?.focus();
+      });
     });
-  });
 
-  backdrop?.addEventListener('click', retract);
-  closeBtn?.addEventListener('click', retract);
+    if (backdrop && !backdrop.hasAttribute('data-zoom-bound')) {
+      backdrop.setAttribute('data-zoom-bound', 'true');
+      backdrop.addEventListener('click', retract);
+    }
+    if (closeBtn && !closeBtn.hasAttribute('data-zoom-bound')) {
+      closeBtn.setAttribute('data-zoom-bound', 'true');
+      closeBtn.addEventListener('click', retract);
+    }
 
-  window.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && isZoomed) retract();
+    if (!(window as any).__designZoomKeyBound) {
+      (window as any).__designZoomKeyBound = true;
+      window.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') retract();
+      });
+    }
+  }
+
+  function initProjects() {
+    initLisse();
+    initProjectTabs();
+    initDesignZoom();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initProjects);
+  } else {
+    initProjects();
+  }
+  document.addEventListener('astro:page-load', initProjects);
+
+  window.addEventListener('resize', () => {
+    const bar = document.querySelector<HTMLElement>('.tabs-bar');
+    const active = bar?.querySelector<HTMLButtonElement>('.tab.tab-active, [aria-selected="true"]');
+    const pill = bar?.querySelector<HTMLElement>('.tabs-pill');
+    if (bar && active && pill) {
+      pill.style.transition = 'none';
+      pill.style.transform = `translateX(${active.offsetLeft}px)`;
+      pill.style.width = `${active.offsetWidth}px`;
+    }
   });
 </script>

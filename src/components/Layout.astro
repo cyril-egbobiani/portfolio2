@@ -1,5 +1,6 @@
 ---
 import '../styles.css';
+import { ClientRouter } from 'astro:transitions';
 
 const {
   title = 'Cyril Egbobiani | Software Engineer & Designer',
@@ -11,10 +12,12 @@ const siteUrl = 'https://portfolio-screeching.brimble.app';
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 ---
 
-<html lang="en">
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <ClientRouter />
     
     <!-- Primary SEO Title & Meta Description -->
     <title>{title}</title>
@@ -105,51 +108,51 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <script>
       import { initLisse } from '../utils/lisse';
 
-      function initScrollReveals() {
-        const revealItems = document.querySelectorAll('.reveal-item, .reveal-line-draw');
-        if (!revealItems.length) return;
-
-        if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-          revealItems.forEach((el) => el.classList.add('is-revealed'));
-          return;
-        }
-
-        const observer = new IntersectionObserver(
-          (entries, obs) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add('is-revealed');
-                obs.unobserve(entry.target);
-              }
-            });
-          },
-          {
-            rootMargin: '40px 0px -20px 0px',
-            threshold: 0,
-          }
-        );
-
-        revealItems.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          if (rect.top < window.innerHeight && rect.bottom > 0) {
-            el.classList.add('is-revealed');
-          } else {
-            observer.observe(el);
-          }
-        });
-      }
-
       function initApp() {
-        initScrollReveals();
         initLisse();
       }
 
+      // Ensure theme is preserved during client-side navigation in Astro ClientRouter
+      function syncTheme() {
+        try {
+          const saved = localStorage.getItem('portfolio-theme');
+          const theme = (saved === 'light' || saved === 'dark')
+            ? saved
+            : (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          document.documentElement.dataset.theme = 'light';
+        }
+      }
+
+      // On client-side navigation, preserve theme and remove page-blur-entry on incoming document
+      document.addEventListener('astro:before-swap', (e: any) => {
+        const currentTheme = document.documentElement.dataset.theme || localStorage.getItem('portfolio-theme') || 'light';
+        if (e.newDocument) {
+          e.newDocument.documentElement.dataset.theme = currentTheme;
+          e.newDocument.querySelectorAll('.page-blur-entry').forEach((el: Element) => {
+            el.classList.remove('page-blur-entry');
+          });
+        }
+      });
+
+      document.addEventListener('astro:after-swap', () => {
+        syncTheme();
+      });
+
       if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initApp);
+        document.addEventListener('DOMContentLoaded', () => {
+          syncTheme();
+          initApp();
+        });
       } else {
+        syncTheme();
         initApp();
       }
-      document.addEventListener('astro:page-load', initApp);
+      document.addEventListener('astro:page-load', () => {
+        syncTheme();
+        initApp();
+      });
     </script>
   </body>
 </html>

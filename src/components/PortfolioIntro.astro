@@ -33,22 +33,21 @@ const socials = [
 ---
 
 <section class="hero flex flex-col gap-6 pt-30">
-  <!-- Text Content Block — Staggered Editorial Reveal -->
-  <div class="hero-text-block t-stagger is-shown flex flex-col gap-4 sm:gap-5 w-full">
+  <!-- Text Content Block -->
+  <div class="hero-text-block flex flex-col gap-4 sm:gap-5 w-full">
     <!-- 1. Dual-Craft Identity Header Lockup -->
-    <div class="t-stagger-line t-stagger-line--1 flex items-center gap-3.5 sm:gap-4 mb-1">
+    <div class="flex items-center gap-3.5 sm:gap-4 mb-1">
       <!-- Lisse Squircle Avatar Frame -->
       <a
         href="/about"
-        class="avatar-squircle-wrap relative size-[52px] sm:size-[56px] rounded-[14px] shrink-0 overflow-hidden bg-[var(--surface-subtle)] select-none block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
-        data-lisse='{"radius": 14, "smoothing": 0.65}'
+        class="avatar-squircle-wrap relative size-[52px] sm:size-[56px] rounded-4xl shrink-0 overflow-hidden bg-[var(--surface-subtle)] select-none block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
         aria-label="About Cyril Egbobiani"
         title="About Cyril"
       >
         <img
           src={profileIntroImg}
           alt="Cyril Egbobiani"
-          class="avatar-photo w-full h-full object-cover object-[50%_25%] filter grayscale contrast-[1.06]"
+          class="avatar-photo w-full h-full object-cover object-[50%_25%] filter  contrast-[1.06]"
           loading="eager"
           decoding="async"
         />
@@ -65,11 +64,11 @@ const socials = [
       </div>
     </div>
 
-    <p class="lede t-stagger-line t-stagger-line--2">
+    <p class="lede">
       Based in Lagos, Nigeria. I specialize in tactile consumer app interfaces and high-performance creative tools that feel natural, fluid, and memorable to use.
     </p>
 
-    <p class="lede t-stagger-line t-stagger-line--3">
+    <p class="lede">
       Currently, I'm a Frontend Engineer &amp; UI/UX Designer at <a
         href="https://ieslglobal.com/"
         target="_blank"
@@ -83,7 +82,7 @@ const socials = [
       />International Energy Services Limited</a>.
     </p>
 
-    <p class="lede t-stagger-line t-stagger-line--4">
+    <p class="lede">
       I'm also open for select design engineering contracts, product advisory, and <a
         href="#contact"
         class="inline-company-link"
@@ -91,7 +90,7 @@ const socials = [
     </p>
 
     <!-- Minimalist Social Links + Profile Page Link -->
-    <div class="flex flex-wrap items-center justify-between gap-y-3 pt-2 sm:pt-3 t-stagger-line t-stagger-line--5 border-t border-[var(--border-subtle)]">
+    <div class="flex flex-wrap items-center justify-between gap-y-3 pt-2 sm:pt-3 border-t border-[var(--border-subtle)]">
       <div class="flex flex-wrap items-center gap-1 sm:gap-1.5">
         {socials.map((social) => (
           <a

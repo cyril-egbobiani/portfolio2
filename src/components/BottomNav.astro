@@ -1,325 +1,624 @@
 ---
-// BottomNav.astro — Concept 1: Fluid Sliding Indicator (Dynamic Magnetic Pill)
-// A continuous glassmorphism capsule with a liquid highlight pill that glides smoothly
-// between items with Emil Kowalski's signature spring curve cubic-bezier(0.23, 1, 0.32, 1).
+// BottomNav.astro — Refined Dual-Island Floating Navigation (Direction 2: Harmonized)
+// Retains the detached dual-island architecture (Island A: Nav, Island B: Action Satellite)
+// while completely reskinning the materiality to speak the site's true design language:
+// • Frosted architectural glassmorphism with delicate hairlines (var(--border-subtle))
+// • Ergonomic 44px height matching the portfolio's restrained modular scale
+// • Fluid sliding indicator pill matching the "Builds / Designs" segmented control
+// • Restored custom vector icons (Briefcase, Equalizer Sliders, Profile Silhouette)
+// • Quick Connect popover with live availability, 1-tap email copy, theme toggle & links
+// • Emil Kowalski motion tokens: cubic-bezier(0.23, 1, 0.32, 1), :active press feedback
 ---
 
-<nav class="floating-dock-anchor" aria-label="Floating dock navigation">
-  <div class="floating-dock" data-floating-dock>
-    
-    <!-- Navigation Items Group with Fluid Sliding Pill -->
-    <div class="dock-nav-group" role="tablist" data-dock-nav-group>
-      <!-- Fluid Sliding Highlight Pill -->
+<nav class="dock-cluster-anchor" aria-label="Floating navigation dock">
+
+  <!-- ── Floating Quick Connect & Controls Popover Card (Flow 3 + Flow 2) ── -->
+  <div
+    class="dock-popover-card"
+    id="dockPopover"
+    role="dialog"
+    aria-modal="true"
+    aria-label="Quick Connect and Actions"
+    aria-hidden="true"
+  >
+
+    <!-- 1-Tap Copy Email Action (borderless, icon-driven feedback) -->
+    <div
+      class="popover-email-box"
+      role="button"
+      tabindex="0"
+      aria-label="Copy Cyril's email address"
+      data-popover-copy-email
+    >
+      <div class="popover-email-left">
+        <svg class="popover-glyph" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <rect width="18" height="14" x="3" y="5" rx="2.5" />
+          <path d="m3 7 9 6 9-6" />
+        </svg>
+        <span class="email-val">egbobianicyril@gmail.com</span>
+      </div>
+
+      <div class="popover-copy-action" aria-hidden="true">
+        <svg class="copy-glyph copy-glyph--idle" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="9" y="9" width="13" height="13" rx="2"/>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+        </svg>
+        <svg class="copy-glyph copy-glyph--copied" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+    </div>
+
+    <!-- Quick Utilities Row: Pure borderless icon tiles (no text clutter) -->
+    <div class="popover-tools-row">
+      <!-- Theme Switcher -->
+      <button
+        type="button"
+        class="popover-tool-btn"
+        data-popover-theme-toggle
+        aria-label="Switch theme"
+        title="Switch theme"
+      >
+        <span class="tool-icon-slot">
+          <!-- Sun icon (shown in dark mode) -->
+          <svg class="popover-glyph theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <circle cx="12" cy="12" r="4.5" />
+            <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
+          </svg>
+          <!-- Moon icon (shown in light mode) -->
+          <svg class="popover-glyph theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
+          </svg>
+        </span>
+      </button>
+
+      <!-- Resume PDF -->
+      <a
+        href="https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="popover-tool-btn"
+        aria-label="Resume PDF"
+        title="Resume PDF"
+      >
+        <svg class="popover-glyph" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path fill="currentColor" d="M4 4a2 2 0 0 1 2-2h8.586a2 2 0 0 1 1.414.586l3.414 3.414A2 2 0 0 1 20 7.414V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm10 0v3a1 1 0 0 0 1 1h3zM8 12a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2z"/>
+        </svg>
+      </a>
+
+      <!-- LinkedIn -->
+      <a
+        href="https://www.linkedin.com"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="popover-tool-btn"
+        aria-label="LinkedIn Profile"
+        title="LinkedIn Profile"
+      >
+        <svg class="popover-glyph" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M0 0h24v24H0z" fill="none"/>
+          <path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z"/>
+        </svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Dual-Island Floating Dock Cluster ── -->
+  <div class="dock-cluster" data-dock-cluster>
+
+    <!-- ── Invisible balancing spacer (ensures Island A is dead-center on screen) ── -->
+    <div class="dock-spacer" aria-hidden="true"></div>
+
+    <!-- ── Island A: Main Navigation Capsule (3 Destinations) ── -->
+    <div class="dock-main-capsule" role="tablist" data-dock-main-capsule>
+      <!-- Fluid Refined Sliding Highlight Pill -->
       <div class="dock-sliding-pill" data-dock-sliding-pill aria-hidden="true"></div>
 
-      <!-- 1. Work -->
+      <!-- Item 1: Work (MingCute Folder) -->
       <a
         href="/#projects"
-        class="dock-item is-active"
-        data-dock-item="projects"
+        class="dock-tab is-active"
+        data-dock-tab="projects"
         role="tab"
         aria-label="Work"
       >
-        <span class="dock-icon-wrap">
-          <svg class="dock-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M9 3a2 2 0 0 0-2 2v1H4a2 2 0 0 0-2 2v2h20V8a2 2 0 0 0-2-2h-3V5a2 2 0 0 0-2-2H9zm2 2h2v1h-2V5zM2 11h20v2H2v-2zm0 4h20v4a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2v-4z"/>
+        <span class="dock-tab-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" d="M2 5a2 2 0 0 1 2-2h5.52a2 2 0 0 1 1.561.75l1.4 1.75H20a2 2 0 0 1 2 2V19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2z" />
           </svg>
         </span>
         <span class="dock-tooltip" aria-hidden="true">Work</span>
       </a>
 
-      <!-- 2. Services -->
+      <!-- Item 2: Services (MingCute Scalloped Badge) -->
       <a
         href="/#services"
-        class="dock-item"
-        data-dock-item="services"
+        class="dock-tab"
+        data-dock-tab="services"
         role="tab"
         aria-label="Services"
       >
-        <span class="dock-icon-wrap">
-          <svg class="dock-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <rect x="2" y="8" width="3" height="8" rx="1.5" />
-            <rect x="6" y="5.5" width="3" height="13" rx="1.5" />
-            <rect x="9" y="10.5" width="6" height="3" rx="1" />
-            <rect x="15" y="5.5" width="3" height="13" rx="1.5" />
-            <rect x="19" y="8" width="3" height="8" rx="1.5" />
+        <span class="dock-tab-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" d="M7 3.34c1.026-.592 2.209-.55 3.24-.13a5.35 5.35 0 0 1 1.82 1.254a5.9 5.9 0 0 1 1.804-1.21c.997-.413 2.142-.488 3.136.086s1.502 1.602 1.644 2.672a5.9 5.9 0 0 1-.147 2.169c.75.186 1.433.51 1.996.948c.88.684 1.507 1.688 1.507 2.872c0 1.178-.62 2.177-1.492 2.86a5.3 5.3 0 0 1-1.929.938c.197.722.25 1.453.152 2.139c-.155 1.096-.71 2.134-1.731 2.723c-1.026.592-2.209.55-3.24.131a5.35 5.35 0 0 1-1.819-1.255c-.55.53-1.165.946-1.805 1.211c-.997.413-2.142.487-3.136-.087S5.498 19.06 5.356 17.99a5.9 5.9 0 0 1 .147-2.169a5.35 5.35 0 0 1-1.996-.948C2.627 14.19 2 13.185 2 12.002c0-1.179.621-2.179 1.493-2.862a5.3 5.3 0 0 1 1.928-.938a5.3 5.3 0 0 1-.152-2.138C5.424 4.967 5.979 3.929 7 3.34m5 4.661a4 4 0 1 0 0 8a4 4 0 0 0 0-8m0 2a2 2 0 1 1 0 4a2 2 0 0 1 0-4" />
           </svg>
         </span>
         <span class="dock-tooltip" aria-hidden="true">Services</span>
       </a>
 
-      <!-- 3. About -->
+      <!-- Item 3: About (MingCute User Profile) -->
       <a
         href="/about"
-        class="dock-item"
-        data-dock-item="about"
+        class="dock-tab"
+        data-dock-tab="about"
         role="tab"
         aria-label="About"
       >
-        <span class="dock-icon-wrap">
-          <svg class="dock-icon" width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="4" r="2.5" />
-            <path d="M6 10c0-.6.4-1 1-1h10c.6 0 1 .4 1 1 0 .6-.4 1-1 1h-2v3.5l2.2 5.5c.2.6-.1 1.2-.7 1.4-.6.2-1.2-.1-1.4-.7L13 15.5h-2l-2.1 5.2c-.2.6-.8.9-1.4.7-.6-.2-.9-.8-.7-1.4L9 14.5V11H7c-.6 0-1-.4-1-1z"/>
+        <span class="dock-tab-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" d="M12 13c2.396 0 4.575.694 6.178 1.672c.8.489 1.484 1.064 1.978 1.69c.486.615.844 1.351.844 2.138c0 .845-.411 1.512-1.003 1.986c-.56.45-1.299.747-2.084.955C16.336 21.86 14.23 22 12 22s-4.336-.14-5.913-.559c-.785-.207-1.524-.505-2.084-.955C3.41 20.012 3 19.345 3 18.5c0-.787.358-1.523.844-2.139c.494-.625 1.178-1.2 1.978-1.69C7.425 13.695 9.605 13 12 13m0-11a5 5 0 1 1 0 10a5 5 0 0 1 0-10" />
           </svg>
         </span>
         <span class="dock-tooltip" aria-hidden="true">About</span>
       </a>
     </div>
 
-    <!-- Vertical Hairline Divider -->
-    <div class="dock-divider" aria-hidden="true"></div>
-
-    <!-- Theme Switcher Utility Button -->
-    <div class="dock-utility-wrap">
-      <button
-        type="button"
-        class="dock-theme-btn"
-        aria-label="Toggle theme"
-        title="Toggle theme"
-        data-dock-theme-toggle
-      >
-        <span class="dock-icon-wrap theme-icon-wrap">
-          <!-- Sun icon (shown in dark mode) -->
-          <svg class="dock-icon theme-icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="12" r="4.5" />
-            <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg class="dock-icon theme-icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
-          </svg>
-        </span>
-        <span class="dock-tooltip" aria-hidden="true">Theme</span>
-      </button>
-    </div>
+    <!-- ── Island B: Detached Circular Satellite Action Button ── -->
+    <button
+      type="button"
+      class="dock-satellite-btn"
+      id="dockSatelliteBtn"
+      aria-label="Quick Connect and Actions"
+      aria-expanded="false"
+      aria-haspopup="dialog"
+    >
+      <span class="satellite-icon-slot">
+        <svg class="satellite-plus-glyph" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="12" y1="5" x2="12" y2="19"></line>
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+        </svg>
+      </span>
+      <span class="dock-tooltip" aria-hidden="true">Connect</span>
+    </button>
 
   </div>
+
+  <!-- Invisible Dismissal Backdrop -->
+  <div class="dock-backdrop" id="dockBackdrop" aria-hidden="true"></div>
+
 </nav>
 
 <style>
-  /* ── Dock Fixed Anchor ── */
-  .floating-dock-anchor {
+  /* ── Fixed Anchor at Viewport Bottom ── */
+  .dock-cluster-anchor {
     position: fixed;
-    bottom: max(20px, calc(20px + env(safe-area-inset-bottom, 0px)));
+    bottom: max(22px, calc(22px + env(safe-area-inset-bottom, 0px)));
     left: 0;
     right: 0;
     z-index: 9999;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     pointer-events: none;
+    user-select: none;
   }
 
-  /* ── Outer Continuous Glassmorphic Capsule ── */
-  .floating-dock {
+  /* ── Invisible Balancing Spacer (centers Island A precisely on screen) ── */
+  .dock-spacer {
+    width: 44px;
+    height: 44px;
+    pointer-events: none;
+    opacity: 0;
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 380px) {
+    .dock-spacer {
+      display: none;
+    }
+  }
+
+  /* ── Dual-Island Cluster Layout (8px intentional companion gap) ── */
+  .dock-cluster {
+    position: relative;
+    z-index: 20;
     pointer-events: auto;
     display: inline-flex;
     align-items: center;
-    padding: 3.5px;
-    border-radius: 9999px;
-    background: rgba(18, 18, 22, 0.76);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.5),
-      0 4px 12px rgba(0, 0, 0, 0.3),
-      inset 0 1px 0 rgba(255, 255, 255, 0.06);
-    animation: dockEntrance 500ms cubic-bezier(0.23, 1, 0.32, 1) 200ms both;
-    transition:
-      background-color 200ms ease,
-      border-color 200ms ease,
-      box-shadow 200ms ease;
-    user-select: none;
+    gap: 8px;
+    animation: dockEntrance 450ms cubic-bezier(0.23, 1, 0.32, 1) 150ms both;
   }
 
   @keyframes dockEntrance {
     0% {
       opacity: 0;
-      transform: translateY(18px) scale(0.94);
-      filter: blur(4px);
+      transform: translateY(16px) scale(0.96);
     }
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
-      filter: blur(0);
     }
   }
 
-  :global([data-theme="light"]) .floating-dock {
-    background: rgba(255, 255, 255, 0.82);
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.08),
-      0 4px 12px rgba(0, 0, 0, 0.04),
-      inset 0 1px 0 rgba(255, 255, 255, 0.9);
-  }
-
-  /* ── Navigation Group (Container for sliding pill + items) ── */
-  .dock-nav-group {
+  /* ═══════════════════════════════════════════════════════════════
+     ISLAND A: MAIN NAVIGATION CAPSULE (HARMONIZED GLASS)
+     Restrained 44px height with architectural hairline borders
+     ═══════════════════════════════════════════════════════════════ */
+  .dock-main-capsule {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 2px;
+    height: 44px;
+    padding: 3.5px;
+    border-radius: 9999px;
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border-subtle);
+    box-shadow:
+      0 12px 32px -4px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    box-sizing: border-box;
+    transition:
+      background-color 200ms ease,
+      border-color 200ms ease,
+      box-shadow 200ms ease;
   }
 
-  /* ── Fluid Sliding Highlight Pill ── */
+  :global([data-theme="dark"]) .dock-main-capsule {
+    background: rgba(18, 18, 22, 0.78);
+    border: 1px solid var(--border-subtle);
+    box-shadow:
+      0 12px 32px -4px rgba(0, 0, 0, 0.45),
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  }
+
+  /* ── Fluid Sliding Highlight Pill (Aligned with Builds/Designs Switch) ── */
   .dock-sliding-pill {
     position: absolute;
-    top: 2px;
-    bottom: 2px;
+    top: 3.5px;
+    bottom: 3.5px;
     left: 0;
-    width: 36px;
+    width: 54px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.12);
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.07);
     box-shadow:
-      inset 0 0 0 1px rgba(255, 255, 255, 0.1),
-      0 2px 8px rgba(0, 0, 0, 0.25);
+      0 1px 3px rgba(0, 0, 0, 0.08),
+      0 0 1px rgba(0, 0, 0, 0.04);
     pointer-events: none;
     z-index: 1;
     opacity: 0;
     will-change: transform, width, opacity;
+    box-sizing: border-box;
     transition:
-      transform 320ms cubic-bezier(0.23, 1, 0.32, 1),
-      width 280ms cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 180ms ease;
+      transform 280ms cubic-bezier(0.23, 1, 0.32, 1),
+      width 240ms cubic-bezier(0.23, 1, 0.32, 1),
+      opacity 160ms ease;
   }
 
-  :global([data-theme="light"]) .dock-sliding-pill {
-    background: #ffffff;
+  :global([data-theme="dark"]) .dock-sliding-pill {
+    background: rgba(255, 255, 255, 0.09);
+    border: 1px solid rgba(255, 255, 255, 0.11);
     box-shadow:
-      inset 0 0 0 1px rgba(0, 0, 0, 0.06),
-      0 2px 8px rgba(0, 0, 0, 0.07);
+      inset 0 1px 0 rgba(255, 255, 255, 0.15),
+      0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
-  /* ── Individual Nav Item ── */
-  .dock-item {
+  /* ── Individual Nav Tab ── */
+  .dock-tab {
     position: relative;
     z-index: 2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 38px;
-    height: 32px;
+    width: 54px;
+    height: 37px;
     border-radius: 9999px;
-    color: var(--text-secondary);
-    opacity: 0.72;
+    color: var(--text-muted);
     text-decoration: none;
     cursor: pointer;
     box-sizing: border-box;
     transition:
-      color 180ms cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
-      transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+      color 160ms var(--ease-smooth-out),
+      transform 140ms var(--ease-smooth-out);
     -webkit-tap-highlight-color: transparent;
   }
 
-  .dock-item.is-active {
+  .dock-tab.is-active {
     color: var(--text-primary);
-    opacity: 1;
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .dock-item:hover {
+    .dock-tab:hover {
       color: var(--text-primary);
-      opacity: 1;
     }
   }
 
-  .dock-item:active {
+  .dock-tab:active {
     transform: scale(0.92);
   }
 
-  .dock-icon-wrap {
+  .dock-tab-icon {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     pointer-events: none;
-  }
-
-  .dock-icon {
-    display: block;
-    flex-shrink: 0;
-    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+    transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .dock-item:hover .dock-icon {
-      transform: scale(1.08);
+    .dock-tab:hover .dock-tab-icon {
+      transform: scale(1.06);
     }
   }
 
-  /* ── Vertical Micro Hairline Divider ── */
-  .dock-divider {
-    width: 1px;
-    height: 16px;
-    margin: 0 4px;
-    background: rgba(255, 255, 255, 0.1);
-    flex-shrink: 0;
-  }
-
-  :global([data-theme="light"]) .dock-divider {
-    background: rgba(0, 0, 0, 0.08);
-  }
-
-  /* ── Theme Switcher Utility Button ── */
-  .dock-utility-wrap {
+  /* ═══════════════════════════════════════════════════════════════
+     ISLAND B: DETACHED CIRCULAR SATELLITE BUTTON (HARMONIZED)
+     Exact matching 44px height, frosted glass & hairline border
+     ═══════════════════════════════════════════════════════════════ */
+  .dock-satellite-btn {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-  }
-
-  .dock-theme-btn {
-    position: relative;
-    z-index: 2;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 36px;
-    height: 32px;
+    width: 44px;
+    height: 44px;
     border-radius: 9999px;
-    background: transparent;
-    border: none;
-    color: var(--text-secondary);
-    opacity: 0.78;
+    background: rgba(255, 255, 255, 0.84);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border: 1px solid var(--border-subtle);
+    box-shadow:
+      0 12px 32px -4px rgba(0, 0, 0, 0.08),
+      0 4px 12px rgba(0, 0, 0, 0.03),
+      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+    color: var(--text-primary);
     cursor: pointer;
+    padding: 0;
     box-sizing: border-box;
     transition:
-      color 180ms cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 180ms cubic-bezier(0.23, 1, 0.32, 1),
-      transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
+      color 160ms ease,
+      transform 180ms cubic-bezier(0.23, 1, 0.32, 1),
+      box-shadow 200ms ease,
+      background-color 200ms ease;
     -webkit-tap-highlight-color: transparent;
   }
 
+  :global([data-theme="dark"]) .dock-satellite-btn {
+    background: rgba(18, 18, 22, 0.78);
+    border: 1px solid var(--border-subtle);
+    box-shadow:
+      0 12px 32px -4px rgba(0, 0, 0, 0.45),
+      0 4px 12px rgba(0, 0, 0, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+    color: var(--text-secondary);
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .dock-theme-btn:hover {
+    .dock-satellite-btn:hover {
       color: var(--text-primary);
-      opacity: 1;
+      transform: translateY(-1px);
     }
   }
 
-  .dock-theme-btn:active {
+  .dock-satellite-btn:active {
+    transform: scale(0.90);
+  }
+
+  .satellite-icon-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 260ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .dock-satellite-btn.is-open .satellite-icon-slot {
+    transform: rotate(45deg);
+  }
+
+  /* ═══════════════════════════════════════════════════════════════
+     QUICK CONNECT & CONTROLS POPOVER SHEET (FLOW 3 + FLOW 2)
+     Unified with site surface tokens & Lisse squircle geometry
+     ═══════════════════════════════════════════════════════════════ */
+  .dock-popover-card {
+    position: absolute;
+    bottom: calc(100% + 12px);
+    left: 50%;
+    width: 250px;
+    max-width: calc(100vw - 32px);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(28px) saturate(180%);
+    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    box-shadow:
+      0 20px 48px -8px rgba(0, 0, 0, 0.12),
+      0 8px 24px rgba(0, 0, 0, 0.04);
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.96);
+    transform-origin: bottom center;
+    transition:
+      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 220ms cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 30;
+  }
+
+  :global([data-theme="dark"]) .dock-popover-card {
+    background: rgba(18, 18, 22, 0.94);
+    border: 1px solid var(--border-subtle);
+    box-shadow:
+      0 20px 48px -8px rgba(0, 0, 0, 0.6),
+      0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+
+  .dock-popover-card.is-open {
+    pointer-events: auto;
+    opacity: 1;
+    transform: translate(-50%, 0) scale(1);
+  }
+  /* 1-Tap Copy Email Row (Completely Borderless) */
+  .popover-email-box {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    background: var(--surface-subtle);
+    border: none;
+    border-radius: 9px;
+    padding: 7px 10px;
+    cursor: pointer;
+    transition:
+      background-color 160ms cubic-bezier(0.23, 1, 0.32, 1),
+      transform 140ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .popover-email-box:hover {
+      background: var(--surface-interactive);
+    }
+  }
+
+  .popover-email-box:active {
+    transform: scale(0.98);
+  }
+
+  .popover-email-left {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+  }
+
+  .popover-glyph {
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .email-val {
+    font-family: var(--font-sans);
+    font-size: 11.5px;
+    color: var(--text-primary);
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .popover-copy-action {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 16px;
+    height: 16px;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+
+  .copy-glyph {
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    transition: opacity 160ms ease, transform 160ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .copy-glyph--copied {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .popover-email-box.is-copied .copy-glyph--idle {
+    opacity: 0;
+    transform: scale(0.6);
+  }
+
+  .popover-email-box.is-copied .copy-glyph--copied {
+    opacity: 1;
+    transform: scale(1);
+  }
+
+  /* Tools & Utilities Row (Borderless Action Tiles) */
+  .popover-tools-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 6px;
+  }
+
+  .popover-tool-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    height: 32px;
+    border-radius: 9px;
+    background: var(--surface-subtle);
+    border: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-decoration: none;
+    transition:
+      background-color 160ms ease,
+      color 160ms ease,
+      transform 140ms ease;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .popover-tool-btn:hover {
+      background: var(--surface-interactive);
+      color: var(--text-primary);
+      transform: translateY(-1px);
+    }
+  }
+
+  .popover-tool-btn:active {
     transform: scale(0.92);
   }
 
-  .theme-icon-wrap {
-    transition: transform 350ms cubic-bezier(0.23, 1, 0.32, 1);
+  .tool-icon-slot {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .theme-icon-sun {
-    display: block;
-  }
-  .theme-icon-moon {
-    display: none;
-  }
-
-  :global([data-theme="light"]) .theme-icon-sun {
     display: none !important;
   }
-  :global([data-theme="light"]) .theme-icon-moon {
+  .theme-icon-moon {
     display: block !important;
   }
 
-  /* ── Precision Micro-Tooltips ── */
+  :global([data-theme="dark"]) .theme-icon-sun {
+    display: block !important;
+  }
+  :global([data-theme="dark"]) .theme-icon-moon {
+    display: none !important;
+  }
+
+  /* Backdrop for dismissing popover on outside click */
+  .dock-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    pointer-events: none;
+    opacity: 0;
+  }
+
+  .dock-backdrop.is-active {
+    pointer-events: auto;
+  }
+
+  /* ── Precision Micro-Tooltips on Hover ── */
   .dock-tooltip {
     position: absolute;
     bottom: calc(100% + 9px);
@@ -328,7 +627,7 @@
     transform-origin: bottom center;
     background: var(--surface-raised, #18181b);
     color: var(--text-primary);
-    border: 1px solid rgba(255, 255, 255, 0.12);
+    border: 1px solid var(--border-subtle);
     font-family: var(--font-sans);
     font-size: 11px;
     font-weight: 500;
@@ -353,34 +652,20 @@
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .dock-item:hover .dock-tooltip,
-    .dock-theme-btn:hover .dock-tooltip {
+    .dock-tab:hover .dock-tooltip,
+    .dock-satellite-btn:hover .dock-tooltip {
       opacity: 1;
       transform: translate(-50%) scale(1);
     }
   }
 
-  /* ── Mobile Responsive Refinement ── */
-  @media (max-width: 480px) {
-    .floating-dock {
-      padding: 3px;
-    }
-    .dock-item {
-      width: 42px;
-      height: 34px;
-    }
-    .dock-theme-btn {
-      width: 40px;
-      height: 34px;
-    }
-  }
-
+  /* ── Reduced Motion ── */
   @media (prefers-reduced-motion: reduce) {
-    .floating-dock,
+    .dock-cluster,
     .dock-sliding-pill,
-    .dock-item,
-    .dock-theme-btn,
-    .dock-tooltip {
+    .dock-tab,
+    .dock-satellite-btn,
+    .dock-popover-card {
       transition: none !important;
       animation: none !important;
     }
@@ -388,40 +673,46 @@
 </style>
 
 <script>
-  function initFloatingDock() {
-    const dock = document.querySelector<HTMLElement>('[data-floating-dock]');
-    const navGroup = document.querySelector<HTMLElement>('[data-dock-nav-group]');
+  function initDualIslandDock() {
+    const mainCapsule = document.querySelector<HTMLElement>('[data-dock-main-capsule]');
     const pill = document.querySelector<HTMLElement>('[data-dock-sliding-pill]');
-    const items = document.querySelectorAll<HTMLElement>('[data-dock-item]');
-    if (!dock || !navGroup || !pill || items.length === 0) return;
+    const tabs = document.querySelectorAll<HTMLElement>('[data-dock-tab]');
+    const satelliteBtn = document.getElementById('dockSatelliteBtn');
+    const popover = document.getElementById('dockPopover');
+    const backdrop = document.getElementById('dockBackdrop');
+    const emailBox = document.querySelector<HTMLElement>('[data-popover-copy-email]');
+    const themeToggleBtn = document.querySelector<HTMLButtonElement>('[data-popover-theme-toggle]');
 
-    let activeItem: HTMLElement | null = null;
+    if (!mainCapsule || !pill || tabs.length === 0) return;
+
+    let activeTab: HTMLElement | null = null;
     const isAboutPage = window.location.pathname.startsWith('/about');
 
-    // 1. Determine Initial Active Item
+    // ── 1. Determine Active Tab ──
     if (isAboutPage) {
-      activeItem = document.querySelector<HTMLElement>('[data-dock-item="about"]');
+      activeTab = document.querySelector<HTMLElement>('[data-dock-tab="about"]');
     } else {
       const hash = window.location.hash.replace('#', '');
       if (hash) {
-        activeItem = document.querySelector<HTMLElement>(`[data-dock-item="${hash}"]`);
+        activeTab = document.querySelector<HTMLElement>(`[data-dock-tab="${hash}"]`);
       }
-      if (!activeItem) {
-        activeItem = document.querySelector<HTMLElement>('[data-dock-item="projects"]');
+      if (!activeTab) {
+        activeTab = document.querySelector<HTMLElement>('[data-dock-tab="projects"]');
       }
     }
 
     function movePillTo(targetEl: HTMLElement, immediate = false) {
-      if (!pill || !navGroup || !targetEl) return;
-      const groupRect = navGroup.getBoundingClientRect();
-      const targetRect = targetEl.getBoundingClientRect();
-      const left = targetRect.left - groupRect.left;
-      const width = targetRect.width;
+      if (!pill || !mainCapsule || !targetEl) return;
+      // targetEl.offsetLeft & offsetWidth are pure layout coordinates immune to scale transforms
+      const left = targetEl.offsetLeft;
+      const width = targetEl.offsetWidth;
+
+      if (width <= 0) return;
 
       if (immediate) {
         pill.style.transition = 'none';
       } else {
-        pill.style.transition = 'transform 320ms cubic-bezier(0.23, 1, 0.32, 1), width 280ms cubic-bezier(0.23, 1, 0.32, 1), opacity 180ms ease';
+        pill.style.transition = 'transform 280ms cubic-bezier(0.23, 1, 0.32, 1), width 240ms cubic-bezier(0.23, 1, 0.32, 1), opacity 160ms ease';
       }
 
       pill.style.transform = `translateX(${left}px)`;
@@ -429,37 +720,55 @@
       pill.style.opacity = '1';
     }
 
-    function setActive(newActiveEl: HTMLElement | null) {
+    function setActive(newActiveEl: HTMLElement | null, immediate = false) {
       if (!newActiveEl) return;
-      activeItem = newActiveEl;
-      items.forEach((item) => item.classList.remove('is-active'));
-      activeItem.classList.add('is-active');
-      movePillTo(activeItem);
+      activeTab = newActiveEl;
+      tabs.forEach((tab) => tab.classList.remove('is-active'));
+      activeTab.classList.add('is-active');
+      movePillTo(activeTab, immediate);
     }
 
-    // Initialize pill position
-    if (activeItem) {
-      setActive(activeItem);
-      // Ensure correct dimensions after initial layout render
+    // Always align pill on init or view-transition swap
+    if (activeTab) {
+      setActive(activeTab, true);
       requestAnimationFrame(() => {
-        if (activeItem) movePillTo(activeItem, true);
+        requestAnimationFrame(() => {
+          if (activeTab) movePillTo(activeTab, true);
+        });
       });
     }
 
-    // 2. Magnetic Cursor Tracking on Desktop
-    items.forEach((item) => {
-      item.addEventListener('mouseenter', () => {
-        movePillTo(item);
+    // Prevent duplicate event listener bindings on repeated Astro navigations
+    if (mainCapsule.dataset.bound === 'true') {
+      return;
+    }
+    mainCapsule.dataset.bound = 'true';
+
+    // ── 2. Magnetic Hover & Smooth Navigation ──
+    let isClickScrolling = false;
+    let clickScrollTimer: ReturnType<typeof setTimeout> | null = null;
+
+    tabs.forEach((tab) => {
+      tab.addEventListener('mouseenter', () => {
+        movePillTo(tab);
       });
 
-      item.addEventListener('click', (e) => {
-        const href = item.getAttribute('href');
+      tab.addEventListener('click', (e) => {
+        const href = tab.getAttribute('href');
         if (href && href.startsWith('/#')) {
           const sectionId = href.replace('/#', '');
           const targetSection = document.getElementById(sectionId);
           if (targetSection && !isAboutPage) {
             e.preventDefault();
-            setActive(item);
+            setActive(tab);
+
+            // Lock scroll spy during smooth scroll so pill doesn't flicker
+            isClickScrolling = true;
+            if (clickScrollTimer) clearTimeout(clickScrollTimer);
+            clickScrollTimer = setTimeout(() => {
+              isClickScrolling = false;
+            }, 850);
+
             targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             history.pushState(null, '', `#${sectionId}`);
           }
@@ -467,14 +776,15 @@
       });
     });
 
-    // When mouse leaves the dock, slide back to currently active item
-    navGroup.addEventListener('mouseleave', () => {
-      if (activeItem) {
-        movePillTo(activeItem);
+    mainCapsule.addEventListener('mouseleave', () => {
+      if (activeTab) {
+        movePillTo(activeTab);
       }
     });
 
-    // 3. Scroll Spy for Home Page Sections
+    // ── 3. Scroll Spy for Homepage Sections ──
+    let observer: IntersectionObserver | null = null;
+
     if (!isAboutPage) {
       const sectionIds = ['projects', 'services'];
       const observedSections = sectionIds
@@ -482,25 +792,26 @@
         .filter(Boolean) as HTMLElement[];
 
       if (observedSections.length > 0 && typeof IntersectionObserver !== 'undefined') {
-        const observer = new IntersectionObserver(
+        observer = new IntersectionObserver(
           (entries) => {
-            // Find most visible section
+            if (isClickScrolling) return;
+
             const visible = entries.filter((e) => e.isIntersecting);
             if (visible.length > 0) {
               const topSection = visible.sort(
                 (a, b) => b.intersectionRatio - a.intersectionRatio
               )[0];
-              const matchedItem = document.querySelector<HTMLElement>(
-                `[data-dock-item="${topSection.target.id}"]`
+              const matchedTab = document.querySelector<HTMLElement>(
+                `[data-dock-tab="${topSection.target.id}"]`
               );
-              if (matchedItem && matchedItem !== activeItem) {
-                setActive(matchedItem);
+              if (matchedTab && matchedTab !== activeTab) {
+                setActive(matchedTab);
               }
             }
           },
           {
-            rootMargin: '-20% 0px -40% 0px',
-            threshold: [0.1, 0.3, 0.6],
+            rootMargin: '-15% 0px -40% 0px',
+            threshold: [0.15, 0.35, 0.6],
           }
         );
 
@@ -508,59 +819,143 @@
       }
     }
 
-    // 4. Window resize handler to keep pill perfectly positioned
-    window.addEventListener('resize', () => {
-      if (activeItem) movePillTo(activeItem, true);
-    });
-  }
+    // ── 4. Scroll Monitoring: Hero Reset & Popover Dismissal ──
+    let popoverOpenScrollY = 0;
 
-  // ── Theme Toggle Handler with Micro-Rotation ──
-  function initThemeToggle() {
-    const toggleBtn = document.querySelector<HTMLButtonElement>('[data-dock-theme-toggle]');
-    if (!toggleBtn) return;
+    const handleWindowScroll = () => {
+      // Auto-close popover if user scrolled by more than 35px
+      if (popover?.classList.contains('is-open') && Math.abs(window.scrollY - popoverOpenScrollY) > 35) {
+        closePopover();
+      }
 
-    const newBtn = toggleBtn.cloneNode(true) as HTMLButtonElement;
-    toggleBtn.parentNode?.replaceChild(newBtn, toggleBtn);
+      if (isClickScrolling || isAboutPage) return;
 
-    newBtn.addEventListener('click', (e) => {
+      // Reset to Projects (Work) when scrolled to the top hero section
+      const projectsSection = document.getElementById('projects');
+      const topCutoff = projectsSection ? Math.max(160, projectsSection.offsetTop - 180) : 260;
+      if (window.scrollY < topCutoff) {
+        const projectsTab = document.querySelector<HTMLElement>('[data-dock-tab="projects"]');
+        if (projectsTab && activeTab !== projectsTab) {
+          setActive(projectsTab);
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleWindowScroll, { passive: true });
+
+    // Auto-realign pill on resize or font loading
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        if (activeTab) movePillTo(activeTab, true);
+      });
+      ro.observe(mainCapsule);
+    }
+
+    const handleResize = () => {
+      if (activeTab) movePillTo(activeTab, true);
+    };
+    window.addEventListener('resize', handleResize);
+
+    // ── 5. Quick Connect Satellite Popover Toggle ──
+    function closePopover() {
+      popover?.classList.remove('is-open');
+      satelliteBtn?.classList.remove('is-open');
+      satelliteBtn?.setAttribute('aria-expanded', 'false');
+      backdrop?.classList.remove('is-active');
+    }
+
+    function openPopover() {
+      popoverOpenScrollY = window.scrollY;
+      popover?.classList.add('is-open');
+      satelliteBtn?.classList.add('is-open');
+      satelliteBtn?.setAttribute('aria-expanded', 'true');
+      backdrop?.classList.add('is-active');
+    }
+
+    satelliteBtn?.addEventListener('click', (e) => {
       e.preventDefault();
       e.stopPropagation();
-
-      const iconWrap = newBtn.querySelector<HTMLElement>('.theme-icon-wrap');
-      if (iconWrap) {
-        iconWrap.style.transform = 'rotate(180deg) scale(0.85)';
+      const isOpen = popover?.classList.contains('is-open');
+      if (isOpen) {
+        closePopover();
+      } else {
+        openPopover();
       }
-
-      const currentTheme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
-      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
-
-      document.documentElement.classList.add('theme-switching');
-      document.documentElement.dataset.theme = nextTheme;
-
-      try {
-        localStorage.setItem('portfolio-theme', nextTheme);
-      } catch (err) {
-        console.warn('LocalStorage error:', err);
-      }
-
-      setTimeout(() => {
-        document.documentElement.classList.remove('theme-switching');
-        if (iconWrap) {
-          iconWrap.style.transform = 'rotate(0deg) scale(1)';
-        }
-      }, 250);
     });
-  }
 
-  function setupDock() {
-    initFloatingDock();
-    initThemeToggle();
+    backdrop?.addEventListener('click', (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      closePopover();
+    });
+
+    popover?.addEventListener('click', (e) => {
+      e.stopPropagation();
+    });
+
+    const handleKeydown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && popover?.classList.contains('is-open')) {
+        closePopover();
+      }
+    };
+    window.addEventListener('keydown', handleKeydown);
+
+    // ── 6. 1-Tap Clipboard Email Copy ──
+    if (emailBox) {
+      emailBox.addEventListener('click', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        try {
+          await navigator.clipboard.writeText('egbobianicyril@gmail.com');
+          emailBox.classList.add('is-copied');
+          setTimeout(() => {
+            emailBox.classList.remove('is-copied');
+          }, 2000);
+        } catch (err) {
+          console.warn('Clipboard write failed:', err);
+        }
+      });
+    }
+
+    // ── 7. Integrated Theme Switcher ──
+    if (themeToggleBtn) {
+      themeToggleBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isDark = document.documentElement.dataset.theme === 'dark';
+        const nextTheme = isDark ? 'light' : 'dark';
+
+        document.documentElement.classList.add('theme-switching');
+        document.documentElement.dataset.theme = nextTheme;
+
+        try {
+          localStorage.setItem('portfolio-theme', nextTheme);
+        } catch (err) {
+          console.warn('LocalStorage error:', err);
+        }
+
+        setTimeout(() => {
+          document.documentElement.classList.remove('theme-switching');
+        }, 120);
+      });
+    }
+
+    // Clean up window listeners on Astro page navigation swap
+    document.addEventListener('astro:before-swap', () => {
+      window.removeEventListener('scroll', handleWindowScroll);
+      window.removeEventListener('keydown', handleKeydown);
+      window.removeEventListener('resize', handleResize);
+      observer?.disconnect();
+      if (ro) ro.disconnect();
+    }, { once: true });
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', setupDock);
+    document.addEventListener('DOMContentLoaded', initDualIslandDock);
   } else {
-    setupDock();
+    initDualIslandDock();
   }
-  document.addEventListener('astro:page-load', setupDock);
+  document.addEventListener('astro:page-load', initDualIslandDock);
 </script>

@@ -6,17 +6,16 @@ import photographyImg from '../assets/images/optimized/photography.webp?url';
 import footballImg from '../assets/images/optimized/football.webp?url';
 import cookingImg from '../assets/images/optimized/cooking.webp?url';
 import carsImg from '../assets/images/optimized/cars.webp?url';
-import soundscapesImg from '../assets/images/optimized/soundscapes.webp?url';
+import longWalksImg from '../assets/images/optimized/long-walks.jpg?url';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
-import BottomNav from '../components/BottomNav.astro';
 ---
 
 <Layout
   title="About Cyril Egbobiani — Software Engineer & Designer"
   description="The human half of Cyril Egbobiani. Background, philosophy, personal interests, photography, and creative explorations."
 >
-  <main class="min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-8 sm:pt-12 pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
+  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-8 sm:pt-12 pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
     <div class="mx-auto flex w-full max-w-[680px] flex-col">
 
       <!-- ── 1. Top Navigation Bar: Home (Left) + Theme Toggle (Right) ── -->
@@ -47,7 +46,7 @@ import BottomNav from '../components/BottomNav.astro';
             <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
           </svg>
           <!-- Moon icon (shown in light mode) -->
-          <svg class="theme-icon-moon size-4" viewBox="0 0 24 24" fill="currentColor" style="display: none;">
+          <svg class="theme-icon-moon size-4" viewBox="0 0 24 24" fill="currentColor">
             <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
           </svg>
         </button>
@@ -57,7 +56,7 @@ import BottomNav from '../components/BottomNav.astro';
       <div class="flex flex-col gap-24 sm:gap-28">
 
         <!-- ── 2. Hero Identity Showcase: Profile Card (Own Row) + Introduction ── -->
-        <section class="t-stagger is-shown flex flex-col gap-6">
+        <section class="flex flex-col gap-6">
         <!-- Row 1: Tactile Physical Ticket Pass Profile Card -->
         <div class="tkt-wrapper w-full max-w-[185px] sm:max-w-[195px] select-none" aria-label="Cyril Egbobiani — CE Archive verified pass" id="tktWrapper" data-tilt-card>
           <div class="tkt-card relative w-full bg-[#ececed] rounded-[4px] overflow-visible border border-[rgba(60,45,30,0.08)]" id="tktCard" data-tilt-target>
@@ -98,28 +97,8 @@ import BottomNav from '../components/BottomNav.astro';
 
               <!-- Bottom Stub: Verified Pass + Barcode -->
               <div class="tkt-stub-layer flex items-center justify-between gap-2 px-0.5">
-                <span class="font-sans text-[9.5px] font-bold uppercase tracking-[0.14em] text-[#18181b]">
-                  LIVING
-                </span>
-                <div class="w-11 h-3.5 text-[#18181b] opacity-85 shrink-0" role="img" aria-label="ticket barcode">
-                  <svg viewBox="0 0 56 18" fill="currentColor" class="w-full h-full" preserveAspectRatio="none">
-                    <rect x="0" y="0" width="2" height="18" />
-                    <rect x="4" y="0" width="3" height="18" />
-                    <rect x="9" y="0" width="1" height="18" />
-                    <rect x="12" y="0" width="2.5" height="18" />
-                    <rect x="16" y="0" width="1" height="18" />
-                    <rect x="19" y="0" width="3" height="18" />
-                    <rect x="24" y="0" width="1.5" height="18" />
-                    <rect x="27" y="0" width="2" height="18" />
-                    <rect x="31" y="0" width="3.5" height="18" />
-                    <rect x="36" y="0" width="1" height="18" />
-                    <rect x="39" y="0" width="2" height="18" />
-                    <rect x="43" y="0" width="1" height="18" />
-                    <rect x="46" y="0" width="3" height="18" />
-                    <rect x="51" y="0" width="1.5" height="18" />
-                    <rect x="54" y="0" width="2" height="18" />
-                  </svg>
-                </div>
+               
+                
               </div>
             </div>
           </div>
@@ -127,21 +106,19 @@ import BottomNav from '../components/BottomNav.astro';
 
         <!-- Row 2: Narrative & Biography -->
         <div class="flex flex-col gap-4 w-full">
-       
-
           <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)]">
             Drawing became a coping tool for me at a very young age, It was just me and my notebook... then it finished. I drew almost on anything in sight but my mum's beating finally humbled me.
           </p>
-
           <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)]">
-Then I came across tech, coding in particular. It was so weird seeing someone write some combination of letters just to create a rectangle, I didn't really like the process but was a big fan of the result.          </p>
+            Then I came across tech, coding in particular. It was so weird seeing someone write some combination of letters just to create a rectangle, I didn't really like the process but was a big fan of the result.
+          </p>
           <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)]">
-As time passed, I knew I had to learn how to code and it's been an awesome rollercoaster ever since.</p>
-
+            As time passed, I knew I had to learn how to code and it's been an awesome rollercoaster ever since.
+          </p>
         </div>
       </section>
 
-      <!-- ── 3. Dynamic Visual Moodboard / Hobbies Section ── -->
+      <!-- ── 3. Dynamic Visual Moodboard / Hobbies Section (Space10 Editorial Direction) ── -->
       <section class="flex flex-col gap-6 pt-2" aria-labelledby="hobbiesHeading">
         <div class="flex items-center justify-between">
           <h2 id="hobbiesHeading" class="section-title">
@@ -149,234 +126,133 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           </h2>
         </div>
 
-        <!-- Dynamic Handcrafted Collage Grid (Compact & Borderless) -->
-        <div class="dynamic-polaroid-grid grid grid-cols-1 sm:grid-cols-12 gap-3.5 sm:gap-4 w-full select-none" id="polaroidGallery">
+        <!-- Space10 Asymmetric Editorial Gallery Grid (Dynamic Widths & Heights) -->
+        <div class="space10-domain-grid grid grid-cols-1 sm:grid-cols-12 gap-x-5 gap-y-7 sm:gap-x-6 sm:gap-y-9 w-full select-none" id="domainGallery">
           
-          <!-- Card 1: Cars (Col 1-6) -->
-          <div class="sm:col-span-6">
-            <button
-              type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
-              data-lisse="14"
-              data-polaroid-card
-              data-base-rotate="-1"
-              aria-label="Cars (tap to reveal thoughts)"
+          <!-- Frame 1: Street Photography (Wide Landscape, Col 1-7) -->
+          <div class="sm:col-span-7 flex flex-col group">
+            <div
+              class="domain-frame relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              
             >
-              <div class="polaroid-frame relative w-full aspect-[16/10] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
-                <div class="polaroid-glare" aria-hidden="true"></div>
-                
-                <!-- Main Image (Blurs out on tap) -->
-                <img
-                  src={carsImg}
-                  alt="Automotive design & classic silhouettes"
-                  class="polaroid-img w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
-                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
-                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
-                    Obsessed with classic wedge silhouettes, pop-up headlights, manual gearboxes, and the pure tactile feedback of 80s aerodynamics.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bottom Bar: Title + Subtle Flip Hint -->
-              <div class="mt-1.5 px-0.5 flex items-center justify-between">
-                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Cars</span>
-                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
-                  <span class="indicator-read">Thoughts</span>
-                  <span class="indicator-close hidden">Close</span>
-                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
-                  </svg>
-                </span>
-              </div>
-            </button>
+              <img
+                src={photographyImg}
+                alt="Photography"
+                class="domain-img w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
+              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+                Photography
+              </span>
+              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+                Lagos can be a literal cinema atimes
+              </span>
+            </div>
           </div>
 
-          <!-- Card 2: Photography (Col 7-12) -->
-          <div class="sm:col-span-6">
-            <button
-              type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
-              data-lisse="14"
-              data-polaroid-card
-              data-base-rotate="1"
-              aria-label="Photography (tap to reveal thoughts)"
+          <!-- Frame 2: Automotive Design (Tall Vertical Portrait, Col 8-12) -->
+          <div class="sm:col-span-5 flex flex-col group">
+            <div
+              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              
             >
-              <div class="polaroid-frame relative w-full aspect-[16/10] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
-                <div class="polaroid-glare" aria-hidden="true"></div>
-                
-                <!-- Main Image (Blurs out on tap) -->
-                <img
-                  src={photographyImg}
-                  alt="Street photography around Lagos"
-                  class="polaroid-img w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
-                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
-                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
-                    Walking through Lagos with a 35mm prime lens, searching for honest light and unscripted rhythm in everyday chaos.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bottom Bar: Title + Subtle Flip Hint -->
-              <div class="mt-1.5 px-0.5 flex items-center justify-between">
-                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Photography</span>
-                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
-                  <span class="indicator-read">Thoughts</span>
-                  <span class="indicator-close hidden">Close</span>
-                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
-                  </svg>
-                </span>
-              </div>
-            </button>
+              <img
+                src={carsImg}
+                alt="Cars"
+                class="domain-img w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
+              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+                Cars
+              </span>
+              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+                Big fan of automotive design, my dream car is a gt63s 4 door coupe e-performance... yes, that one!
+              </span>
+            </div>
           </div>
 
-          <!-- Card 3: Football (Col 1-4) -->
-          <div class="sm:col-span-4">
-            <button
-              type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
-              data-lisse="14"
-              data-polaroid-card
-              data-base-rotate="-1"
-              aria-label="Football & Tactics (tap to reveal thoughts)"
+          <!-- Frame 3: Tactical Football (Medium Landscape, Col 1-4) -->
+          <div class="sm:col-span-4 flex flex-col group">
+            <div
+              class="domain-frame relative w-full aspect-[4/3] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              
             >
-              <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
-                <div class="polaroid-glare" aria-hidden="true"></div>
-                
-                <!-- Main Image (Blurs out on tap) -->
-                <img
-                  src={footballImg}
-                  alt="Football tactics and Arsenal matchdays"
-                  class="polaroid-img w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
-                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
-                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
-                    Systems architecture on grass. Studying positional play and pressing triggers under maximum pressure.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bottom Bar: Title + Subtle Flip Hint -->
-              <div class="mt-1.5 px-0.5 flex items-center justify-between">
-                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Football & Tactics</span>
-                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
-                  <span class="indicator-read">Thoughts</span>
-                  <span class="indicator-close hidden">Close</span>
-                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
-                  </svg>
-                </span>
-              </div>
-            </button>
+              <img
+                src={footballImg}
+                alt="Football"
+                class="domain-img w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
+              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+              football
+              </span>
+              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+                Come on you Gunners!!!
+              </span>
+            </div>
           </div>
 
-          <!-- Card 4: Cooking (Col 5-8) -->
-          <div class="sm:col-span-4">
-            <button
-              type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] rotate-1 hover:rotate-0"
-              data-lisse="14"
-              data-polaroid-card
-              data-base-rotate="1"
-              aria-label="Cooking (tap to reveal thoughts)"
+        
+
+          <!-- Frame 4: Culinary Craft (Wide Horizon, Col 9-12) -->
+          <div class="sm:col-span-4 flex flex-col group">
+            <div
+              class="domain-frame relative w-full aspect-[16/11] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              
             >
-              <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
-                <div class="polaroid-glare" aria-hidden="true"></div>
-                
-                <!-- Main Image (Blurs out on tap) -->
-                <img
-                  src={cookingImg}
-                  alt="Culinary cooking experiments and family recipes"
-                  class="polaroid-img w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
-                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
-                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
-                    Pure flow state away from screens. Recreating family recipes and balancing complex spices by instinct.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bottom Bar: Title + Subtle Flip Hint -->
-              <div class="mt-1.5 px-0.5 flex items-center justify-between">
-                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Cooking</span>
-                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
-                  <span class="indicator-read">Thoughts</span>
-                  <span class="indicator-close hidden">Close</span>
-                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
-                  </svg>
-                </span>
-              </div>
-            </button>
+              <img
+                src={cookingImg}
+                alt="Culinary cooking experiments and family recipes"
+                class="domain-img w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
+              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+                Cooking
+              </span>
+              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+               Mum really influence here and I'm not mad
+              </span>
+            </div>
           </div>
 
-          <!-- Card 5: Soundscapes (Col 9-12) -->
-          <div class="sm:col-span-4">
-            <button
-              type="button"
-              class="polaroid-card group relative w-full p-2 sm:p-2.5 bg-[var(--surface-subtle)] rounded-[14px] cursor-pointer text-left active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)] -rotate-1 hover:rotate-0"
-              data-lisse="14"
-              data-polaroid-card
-              data-base-rotate="-1"
-              aria-label="Soundscapes (tap to reveal thoughts)"
+          <!-- Frame 5: Long Walks (Col 9-12) -->
+          <div class="sm:col-span-4 flex flex-col group">
+            <div
+              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
             >
-              <div class="polaroid-frame relative w-full aspect-[4/3] rounded-[9px] overflow-hidden bg-[var(--surface)]" data-lisse="9">
-                <div class="polaroid-glare" aria-hidden="true"></div>
-                
-                <!-- Main Image (Blurs out on tap) -->
-                <img
-                  src={soundscapesImg}
-                  alt="Minimalist vinyl turntable and studio headphones workspace"
-                  class="polaroid-img w-full h-full object-cover"
-                  loading="lazy"
-                  decoding="async"
-                />
-
-                <!-- In-Place Subtext Narrative Overlay (Comes in on tap) -->
-                <div class="polaroid-text-overlay absolute inset-0 p-3.5 sm:p-4 flex flex-col justify-center bg-[var(--surface-raised)]/95 dark:bg-[#121215]/95 backdrop-blur-md">
-                  <p class="text-[12px] sm:text-[12.5px] leading-[1.5] text-[var(--text-primary)] font-normal m-0 select-text">
-                    Invisible architecture of mood. Analog vinyl warmth and high-tempo rhythms setting the tempo for code.
-                  </p>
-                </div>
-              </div>
-
-              <!-- Bottom Bar: Title + Subtle Flip Hint -->
-              <div class="mt-1.5 px-0.5 flex items-center justify-between">
-                <span class="font-display font-medium text-[13px] sm:text-[13.5px] text-[var(--text-primary)]">Soundscapes</span>
-                <span class="polaroid-flip-indicator inline-flex items-center gap-1 font-sans text-[11px] text-[var(--text-muted)] group-hover:text-[var(--text-secondary)] transition-[color,opacity] duration-160 opacity-80 group-hover:opacity-100">
-                  <span class="indicator-read">Thoughts</span>
-                  <span class="indicator-close hidden">Close</span>
-                  <svg class="indicator-icon size-3 transition-transform duration-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M7 17l9.2-9.2M17 17V8H8"/>
-                  </svg>
-                </span>
-              </div>
-            </button>
+              <img
+                src={longWalksImg}
+                alt="Long walks"
+                class="domain-img w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
+              />
+            </div>
+            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
+              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+                long walks
+              </span>
+              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+                My favorite way to decompress, observe the city, and think
+              </span>
+            </div>
           </div>
 
         </div>
 
-        <p class="text-[14.5px] sm:text-[15px] leading-[1.65] text-[var(--text-secondary)] mt-2">
-          Outside of designing tools and writing code, you will usually find me watching Arsenal match replays, experimenting in the kitchen with family recipes, walking around Lagos with a prime lens looking for honest light, or listening to analog vinyl & Afrobeats.
-        </p>
+      
       </section>
 
       <!-- ── 4. Contact & Footer matching home page ── -->
@@ -386,7 +262,6 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       </div>
     </div>
   </main>
-  <BottomNav />
 </Layout>
 
 <style>
@@ -495,121 +370,53 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
   }
 
   /* ─────────────────────────────────────────────────────────
-     DYNAMIC POLAROID CARDS (BORDERLESS, COMPACT & BLUR SWAP)
+     SPACE10 DYNAMIC ASYMMETRIC DOMAIN FRAMES
      ───────────────────────────────────────────────────────── */
-  .polaroid-card {
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.02);
-    will-change: transform, box-shadow;
-    transform-origin: center center;
-  }
-
-  .polaroid-card:hover {
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.03);
-  }
-
-  :global([data-theme="dark"]) .polaroid-card {
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
-  }
-
-  :global([data-theme="dark"]) .polaroid-card:hover {
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
-  }
-
-  /* Active In-Place Flipped Focus State */
-  .polaroid-card.is-flipped {
-    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.07), 0 2px 6px rgba(0, 0, 0, 0.03);
-  }
-
-  :global([data-theme="dark"]) .polaroid-card.is-flipped {
-    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.45);
-  }
-
-  .polaroid-frame {
+  .domain-frame {
     position: relative;
     overflow: hidden;
+    background-color: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
+    box-shadow: 0 1px 3px rgba(36, 20, 11, 0.03);
+    transition: border-color 240ms ease, box-shadow 260ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Image Transition: Crystal Sharp -> Atmospheric Ambient Glow */
-  .polaroid-img {
-    transition: filter 340ms cubic-bezier(0.23, 1, 0.32, 1),
-                opacity 340ms cubic-bezier(0.23, 1, 0.32, 1),
-                transform 420ms cubic-bezier(0.23, 1, 0.32, 1);
-    transform-origin: center center;
-    will-change: filter, opacity, transform;
+  .group:hover .domain-frame {
+    border-color: var(--border-default);
+    box-shadow: 0 6px 18px -4px rgba(36, 20, 11, 0.08);
   }
 
-  .polaroid-card.is-flipped .polaroid-img {
-    filter: blur(18px) brightness(0.65) saturate(1.2);
-    opacity: 0.2;
-    transform: scale(1.1);
+  :global([data-theme="dark"]) .domain-frame {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   }
 
-  /* Text Narrative Overlay: Hidden blur-away -> Crisp reveal */
-  .polaroid-text-overlay {
-    opacity: 0;
-    filter: blur(6px);
-    transform: translateY(4px) scale(0.98);
-    pointer-events: none;
-    transition: opacity 300ms cubic-bezier(0.23, 1, 0.32, 1),
-                filter 300ms cubic-bezier(0.23, 1, 0.32, 1),
-                transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: opacity, filter, transform;
+  :global([data-theme="dark"]) .group:hover .domain-frame {
+    border-color: rgba(255, 255, 255, 0.16);
+    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
   }
 
-  .polaroid-card.is-flipped .polaroid-text-overlay {
-    opacity: 1;
-    filter: blur(0px);
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+  .domain-img {
+    transition: transform 480ms cubic-bezier(0.23, 1, 0.32, 1);
+    will-change: transform;
   }
 
-  .polaroid-glare {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 5;
-    opacity: 0;
-    background: radial-gradient(
-      circle 180px at var(--glare-x, 50%) var(--glare-y, 50%),
-      rgba(255, 255, 255, 0.32) 0%,
-      rgba(255, 255, 255, 0.06) 45%,
-      transparent 75%
-    );
-    mix-blend-mode: overlay;
-    transition: opacity 240ms cubic-bezier(0.23, 1, 0.32, 1);
+  @media (hover: hover) and (pointer: fine) {
+    .group:hover .domain-img {
+      transform: scale(1.03);
+    }
   }
 
-  :global([data-theme="dark"]) .polaroid-glare {
-    background: radial-gradient(
-      circle 180px at var(--glare-x, 50%) var(--glare-y, 50%),
-      rgba(255, 255, 255, 0.16) 0%,
-      rgba(255, 255, 255, 0.03) 45%,
-      transparent 75%
-    );
-    mix-blend-mode: screen;
+  .domain-title {
+    transition: color 180ms ease;
   }
 
-  /* Subtle Indicator for Polaroid Behind-the-Scenes Thoughts */
-  .polaroid-flip-indicator .indicator-read { display: inline; }
-  .polaroid-flip-indicator .indicator-close { display: none; }
-  
-  .polaroid-card.is-flipped .polaroid-flip-indicator .indicator-read { display: none; }
-  .polaroid-card.is-flipped .polaroid-flip-indicator .indicator-close { display: inline; }
-  .polaroid-card.is-flipped .polaroid-flip-indicator .indicator-icon {
-    transform: rotate(45deg);
-  }
-  .polaroid-card.is-flipped .polaroid-flip-indicator {
+  .group:hover .domain-title {
     color: var(--text-primary);
-    opacity: 1;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .polaroid-card {
+    .domain-img {
       transform: none !important;
-      transition: none !important;
-    }
-    .polaroid-img,
-    .polaroid-text-overlay {
       transition: none !important;
     }
   }
@@ -624,16 +431,16 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
 <script>
   import { initLisse } from '../utils/lisse';
 
-  // ── Unified Physics-based 3D Card Tilt Controller (Profile Card & Polaroids) ──
+  // ── Unified Physics-based 3D Card Tilt Controller (Profile Card) ──
   function setup3DCardTilt() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
-    const cards = document.querySelectorAll<HTMLElement>('[data-tilt-card], .polaroid-card');
+    const cards = document.querySelectorAll<HTMLElement>('[data-tilt-card]');
 
     cards.forEach((wrapper) => {
       const target = wrapper.querySelector<HTMLElement>('[data-tilt-target]') || wrapper;
-      const glare = wrapper.querySelector<HTMLElement>('.tkt-glare, .polaroid-glare');
+      const glare = wrapper.querySelector<HTMLElement>('.tkt-glare');
 
       let isHovering = false;
       let isPressed = false;
@@ -645,21 +452,15 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
       let currentTranslateZ = 0;
       let targetTranslateZ = 0;
 
-      const isTicket = wrapper.classList.contains('tkt-wrapper');
-      const maxTilt = isTicket ? 9 : 3.8;
+      const maxTilt = 9;
 
       const updateSpring = () => {
-        if (isHovering && !wrapper.classList.contains('is-flipped')) {
+        if (isHovering) {
           currentRotateX += (targetRotateX - currentRotateX) * 0.14;
           currentRotateY += (targetRotateY - currentRotateY) * 0.14;
           currentTranslateZ += (targetTranslateZ - currentTranslateZ) * 0.14;
 
-          if (isTicket) {
-            target.style.transform = `perspective(900px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
-          } else {
-            const baseRot = parseFloat(wrapper.dataset.baseRotate || '0');
-            target.style.transform = `perspective(800px) rotate(${baseRot}deg) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
-          }
+          target.style.transform = `perspective(900px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
 
           rafId = requestAnimationFrame(updateSpring);
         }
@@ -687,7 +488,7 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           const glareY = (y / rect.height) * 100;
           glare.style.setProperty('--glare-x', `${glareX.toFixed(1)}%`);
           glare.style.setProperty('--glare-y', `${glareY.toFixed(1)}%`);
-          glare.style.opacity = isTicket ? '0.35' : '0.24';
+          glare.style.opacity = '0.35';
         }
       };
 
@@ -721,36 +522,8 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
           glare.style.opacity = '0';
         }
 
-        if (isTicket) {
-          target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1)';
-          target.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-        } else {
-          const baseRot = parseFloat(wrapper.dataset.baseRotate || '0');
-          target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1), box-shadow 250ms cubic-bezier(0.23, 1, 0.32, 1)';
-          target.style.transform = `perspective(800px) rotate(${baseRot}deg) rotateX(0deg) rotateY(0deg) translateZ(0px)`;
-        }
-      });
-    });
-  }
-
-  // ── In-Place Polaroid Image Blur & Narrative Text Swap Controller ──
-  function setupPolaroidInteractivity() {
-    const cards = document.querySelectorAll<HTMLButtonElement>('[data-polaroid-card]');
-
-    cards.forEach((card) => {
-      card.addEventListener('click', () => {
-        const isFlipped = card.classList.contains('is-flipped');
-        
-        if (isFlipped) {
-          card.classList.remove('is-flipped');
-          card.setAttribute('aria-expanded', 'false');
-        } else {
-          card.classList.add('is-flipped');
-          card.setAttribute('aria-expanded', 'true');
-        }
-
-        // Recompute continuous squircle clip paths with Lisse
-        initLisse();
+        target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1)';
+        target.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
       });
     });
   }
@@ -758,11 +531,12 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
   // ── Theme toggle handler for the top bar button ──
   function setupAboutThemeToggle() {
     const btn = document.querySelector('[data-about-theme-toggle]');
-    if (!btn) return;
+    if (!btn || btn.hasAttribute('data-bound')) return;
+    btn.setAttribute('data-bound', 'true');
 
     btn.addEventListener('click', () => {
-      const currentTheme = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
-      const nextTheme = currentTheme === 'dark' ? 'light' : 'dark';
+      const isDark = document.documentElement.dataset.theme === 'dark';
+      const nextTheme = isDark ? 'light' : 'dark';
 
       document.documentElement.classList.add('theme-switching');
       document.documentElement.dataset.theme = nextTheme;
@@ -783,7 +557,6 @@ As time passed, I knew I had to learn how to code and it's been an awesome rolle
   function initAboutPage() {
     initLisse();
     setup3DCardTilt();
-    setupPolaroidInteractivity();
     setupAboutThemeToggle();
   }
 

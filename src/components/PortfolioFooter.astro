@@ -7,10 +7,16 @@
   <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
 
   <div class="flex items-center justify-between gap-6">
-    <!-- Brand Stamp & Copyright -->
-    <div class="flex flex-col items-start gap-2">
-      <p class="m-0 font-sans text-xs text-[var(--text-muted)] tracking-tight">
-        © 2026 CYRIL EGBOBIANI &nbsp;·&nbsp; LAGOS, NG
+    <!-- Brand Stamp & Time Zone -->
+    <div class="flex items-center">
+      <p class="m-0 font-sans text-xs text-[var(--text-muted)] tracking-tight flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+        <span>© 2026</span>
+        <span class="opacity-40" aria-hidden="true">·</span>
+        <span>LAGOS, NG</span>
+        <span class="opacity-40" aria-hidden="true">·</span>
+        <span class="font-mono text-[11.5px] text-[var(--text-secondary)] tracking-normal">
+          <span data-lagos-time></span>WAT (UTC+1)
+        </span>
       </p>
     </div>
 
@@ -32,13 +38,44 @@
 </footer>
 
 <script>
-  const backTopBtn = document.querySelector<HTMLButtonElement>('[data-back-top]');
-  if (backTopBtn) {
-    backTopBtn.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
+  function updateLagosTime() {
+    const timeEls = document.querySelectorAll<HTMLElement>('[data-lagos-time]');
+    if (!timeEls.length) return;
+
+    try {
+      const now = new Date();
+      const timeStr = new Intl.DateTimeFormat('en-US', {
+        timeZone: 'Africa/Lagos',
+        hour: 'numeric',
+        minute: '2-digit',
+        hour12: true,
+      }).format(now);
+      timeEls.forEach((el) => {
+        el.textContent = `${timeStr} `;
       });
-    });
+    } catch {
+      timeEls.forEach((el) => {
+        el.textContent = '';
+      });
+    }
   }
+
+  function setupFooter() {
+    const backTopBtn = document.querySelector<HTMLButtonElement>('[data-back-top]');
+    if (backTopBtn && !backTopBtn.dataset.bound) {
+      backTopBtn.dataset.bound = 'true';
+      backTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth',
+        });
+      });
+    }
+
+    updateLagosTime();
+  }
+
+  setupFooter();
+  setInterval(updateLagosTime, 10000);
+  document.addEventListener('astro:page-load', setupFooter);
 </script>
