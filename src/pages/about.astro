@@ -1,6 +1,7 @@
 ---
 // src/pages/about.astro — Dedicated Profile & Human Half Page
 import Layout from '../components/Layout.astro';
+import PageTopNav from '../components/PageTopNav.astro';
 import profileIntroImg from '../assets/images/optimized/profile-intro.webp?url';
 import photographyImg from '../assets/images/optimized/photography.webp?url';
 import footballImg from '../assets/images/optimized/football.webp?url';
@@ -15,42 +16,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
   title="About Cyril Egbobiani — Software Engineer & Designer"
   description="The human half of Cyril Egbobiani. Background, philosophy, personal interests, photography, and creative explorations."
 >
-  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-8 sm:pt-12 pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
+  <PageTopNav />
+
+  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[124px] sm:pt-[156px] pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
     <div class="mx-auto flex w-full max-w-[680px] flex-col">
-
-      <!-- ── 1. Top Navigation Bar: Home (Left) + Theme Toggle (Right) ── -->
-      <nav class="flex w-full items-center justify-between mb-14 sm:mb-18" aria-label="Page navigation">
-        <a
-          href="/"
-          class="nav-icon-btn size-9 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-interactive)] text-[var(--text-secondary)] hover:text-[var(--text-primary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160 ease-[var(--ease-smooth-out)] active:scale-95 border border-[var(--border-subtle)] no-underline"
-          aria-label="Back to home"
-          title="Back to home"
-        >
-          <svg class="size-4 text-inherit" viewBox="0 0 24 24">
-            <path d="M0 0h24v24H0z" fill="none" />
-            <path fill="currentColor" fill-rule="evenodd" d="M10.772 2.688a2 2 0 0 1 2.456 0l8.384 6.521c.753.586.337 1.791-.615 1.791H20v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8h-.997c-.953 0-1.367-1.206-.615-1.79z" clip-rule="evenodd" />
-          </svg>
-        </a>
-
-        <!-- Theme Toggle Button -->
-        <button
-          type="button"
-          class="nav-icon-btn size-9 rounded-full bg-[var(--surface-subtle)] hover:bg-[var(--surface-interactive)] text-[var(--text-secondary)] inline-flex items-center justify-center transition-[background-color,color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] active:scale-95 cursor-pointer border border-[var(--border-subtle)]"
-          aria-label="Toggle theme"
-          title="Toggle theme"
-          data-about-theme-toggle
-        >
-          <!-- Sun icon (shown in dark mode) -->
-          <svg class="theme-icon-sun size-4" viewBox="0 0 24 24" fill="currentColor">
-            <circle cx="12" cy="12" r="4.5" />
-            <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77"/>
-          </svg>
-          <!-- Moon icon (shown in light mode) -->
-          <svg class="theme-icon-moon size-4" viewBox="0 0 24 24" fill="currentColor">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
-          </svg>
-        </button>
-      </nav>
 
       <!-- ── Main Sections (Matching Homepage gap-24 sm:gap-28 rhythm) ── -->
       <div class="flex flex-col gap-24 sm:gap-28">
@@ -420,17 +389,9 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
       transition: none !important;
     }
   }
-
-  /* Single Icon Visibility for Top Theme Toggle */
-  .theme-icon-sun { display: block; }
-  .theme-icon-moon { display: none; }
-  :global([data-theme="light"]) .theme-icon-sun { display: none !important; }
-  :global([data-theme="light"]) .theme-icon-moon { display: block !important; }
 </style>
 
 <script>
-  import { initLisse } from '../utils/lisse';
-
   // ── Unified Physics-based 3D Card Tilt Controller (Profile Card) ──
   function setup3DCardTilt() {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -528,36 +489,8 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
     });
   }
 
-  // ── Theme toggle handler for the top bar button ──
-  function setupAboutThemeToggle() {
-    const btn = document.querySelector('[data-about-theme-toggle]');
-    if (!btn || btn.hasAttribute('data-bound')) return;
-    btn.setAttribute('data-bound', 'true');
-
-    btn.addEventListener('click', () => {
-      const isDark = document.documentElement.dataset.theme === 'dark';
-      const nextTheme = isDark ? 'light' : 'dark';
-
-      document.documentElement.classList.add('theme-switching');
-      document.documentElement.dataset.theme = nextTheme;
-
-      try {
-        localStorage.setItem('portfolio-theme', nextTheme);
-      } catch (err) {
-        console.warn('LocalStorage error:', err);
-      }
-
-      setTimeout(() => {
-        document.documentElement.classList.remove('theme-switching');
-        initLisse();
-      }, 120);
-    });
-  }
-
   function initAboutPage() {
-    initLisse();
     setup3DCardTilt();
-    setupAboutThemeToggle();
   }
 
   if (document.readyState === 'loading') {

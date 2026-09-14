@@ -106,12 +106,6 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
     <slot />
 
     <script>
-      import { initLisse } from '../utils/lisse';
-
-      function initApp() {
-        initLisse();
-      }
-
       // Ensure theme is preserved during client-side navigation in Astro ClientRouter
       function syncTheme() {
         try {
@@ -143,15 +137,12 @@ const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
       if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', () => {
           syncTheme();
-          initApp();
         });
       } else {
         syncTheme();
-        initApp();
       }
       document.addEventListener('astro:page-load', () => {
         syncTheme();
-        initApp();
       });
     </script>
   </body>

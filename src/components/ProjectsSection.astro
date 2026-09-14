@@ -11,9 +11,8 @@ const builds = projects.map((p) => ({
   slug: p.slug,
   title: p.title,
   blurb: p.shortBlurb || p.description,
-  tone: p.tone,
   image: p.thumbnailImage || (p.heroMedia && 'src' in p.heroMedia ? p.heroMedia.src : undefined),
-  deviceType: p.heroMedia && 'device' in p.heroMedia ? p.heroMedia.device : 'phone',
+  deviceType: p.deviceType || (p.heroMedia && 'device' in p.heroMedia ? p.heroMedia.device : 'desktop'),
 }));
 
 // Placeholder network images with deliberately varied dimensions so the
@@ -54,47 +53,100 @@ const designs = [
 
   <div class="relative">
 
-    <!-- ── BUILDS: product cards ───────────────────────────── -->
+    <!-- ── BUILDS: framed showcase cards ───────────────────────── -->
     <div class="tab-panel builds-grid is-active" data-tab-panel data-tab-id="Builds">
       {builds.map((project, index) => (
-        <a href={`/projects/${project.slug}`} data-astro-prefetch class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}>
-          <div class={`shot shot--${project.tone}`} data-lisse="22">
-            {project.image ? (
-              project.deviceType === 'phone' ? (
-                <div class="shot__phone-frame">
-                  <div class="shot__phone-screen" data-lisse='{"radius": 17, "smoothing": 0.65}'>
+        <a
+          href={`/projects/${project.slug}`}
+          data-astro-prefetch
+          class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}
+        >
+          <div class="frame">
+            <div class="frame__stage">
+              {project.deviceType === 'phone' ? (
+                <div class="screen screen--phone">
+                  {project.image ? (
                     <Image
                       src={project.image}
                       alt={project.title}
                       width={375}
                       height={812}
-                      class="shot__phone-img"
+                      class="screen__img"
+                      loading={index === 0 ? 'eager' : 'lazy'}
+                      decoding="async"
+                    />
+                  ) : (
+                    <span class="screen__pending">Mobile Screen</span>
+                  )}
+                </div>
+              ) : (
+                <div class="screen screen--desktop">
+                  {project.image ? (
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      width={800}
+                      height={500}
+                      class="screen__img"
                       loading="lazy"
                       decoding="async"
                     />
-                  </div>
+                  ) : project.slug === '9to5er' ? (
+                    <div class="schematic-agency" aria-hidden="true">
+                      <div class="schematic-top">
+                        <span class="schematic-chip is-active">Workflow</span>
+                        <span class="schematic-chip">Hierarchy</span>
+                        <span class="schematic-chip">Health</span>
+                      </div>
+                      <div class="schematic-grid">
+                        <div class="schematic-card">
+                          <span class="schematic-card-label">Autonomy Score</span>
+                          <span class="schematic-card-val">94%</span>
+                          <div class="schematic-bar"><span style="width: 94%;"></span></div>
+                        </div>
+                        <div class="schematic-card">
+                          <span class="schematic-card-label">Design Velocity</span>
+                          <span class="schematic-card-val">High</span>
+                          <div class="schematic-bar"><span style="width: 82%;"></span></div>
+                        </div>
+                      </div>
+                    </div>
+                  ) : project.slug === 'token-extractor' ? (
+                    <div class="schematic-tokens" aria-hidden="true">
+                      <div class="schematic-tokens-head">
+                        <span class="schematic-tokens-title">Computed CSS AST</span>
+                        <span class="schematic-tokens-badge">Auto-Sync</span>
+                      </div>
+                      <div class="schematic-tokens-list">
+                        <div class="token-row">
+                          <span class="token-color-chip" style="background: #f97316;"></span>
+                          <span class="token-var">--color-accent:</span>
+                          <span class="token-val">#f97316</span>
+                        </div>
+                        <div class="token-row">
+                          <span class="token-color-chip" style="background: #6366f1;"></span>
+                          <span class="token-var">--font-family:</span>
+                          <span class="token-val">'Geist'</span>
+                        </div>
+                        <div class="token-row">
+                          <span class="token-color-chip" style="background: var(--surface-interactive);"></span>
+                          <span class="token-var">--border-radius:</span>
+                          <span class="token-val">16px</span>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div class="schematic-editorial" aria-hidden="true">
+                      <span class="schematic-editorial-tag">{project.title.toUpperCase()}</span>
+                      <span class="schematic-editorial-title">Editorial Style Sets & Spring Physics</span>
+                    </div>
+                  )}
                 </div>
-              ) : (
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  width={600}
-                  height={375}
-                  class="shot__img"
-                  loading="lazy"
-                  decoding="async"
-                />
-              )
-            ) : (
-              <span class="shot__pending">screenshot</span>
-            )}
+              )}
+            </div>
           </div>
 
-          <div class="card-head">
-            <h3 class="card-title">{project.title}</h3>
-             
-          </div>
-
+          <h3 class="card-title">{project.title}</h3>
           <p class="card-blurb">{project.blurb}</p>
         </a>
       ))}
@@ -103,7 +155,7 @@ const designs = [
     <!-- ── DESIGNS: masonry gallery, springs open on tap ───── -->
     <div class="tab-panel design-grid" data-tab-panel data-tab-id="Designs" hidden>
       {designs.map((item) => (
-        <button type="button" class="design-tile" data-zoom-tile data-lisse="18" aria-label={`Expand: ${item.alt}`}>
+        <button type="button" class="design-tile" data-zoom-tile aria-label={`Expand: ${item.alt}`}>
           <Image
             src={item.src}
             alt={item.alt}
@@ -275,7 +327,7 @@ const designs = [
     }
   }
 
-  /* ── Builds ───────────────────────────────────────────── */
+  /* ── Builds: framed showcase cards ───────────────────── */
   .builds-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -285,7 +337,9 @@ const designs = [
 
   @media (min-width: 640px) {
     .builds-grid {
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(2, 1fr);
+      column-gap: 28px;
+      row-gap: 48px;
     }
   }
 
@@ -293,123 +347,307 @@ const designs = [
     display: flex;
     flex-direction: column;
     text-decoration: none;
-    transition: transform 200ms var(--ease-smooth-out);
-    will-change: transform;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  .shot {
-    position: relative;
-    aspect-ratio: 1 / 1;
+  /* Double-bezel frame: outer ring + inset stage */
+  /* Tonal, low-contrast so cards sit into the page rather than on it */
+  .frame {
+    padding: 6px;
     border-radius: 22px;
-    border: none;
-    outline: none;
-    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    background: transparent;
+    transition: border-color 200ms ease;
+  }
+
+  .frame__stage {
+    position: relative;
+    aspect-ratio: 1 / 1.02;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: box-shadow 200ms var(--ease-smooth-out);
+    overflow: hidden;
+    border-radius: 16px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-subtle);
   }
 
-  .shot__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    border: none;
-    outline: none;
-    transition: transform 350ms var(--ease-smooth-out);
+  /* Flat screens — no device chrome, just a hairline */
+  .screen {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    border: 1px solid var(--border-default);
+    transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
     will-change: transform;
   }
 
-  .project-card:hover .shot__img {
-    transform: scale(1.04);
-  }
-
-  .shot__phone-frame {
-    position: relative;
+  .screen--phone {
     height: 86%;
     aspect-ratio: 9 / 19.5;
-    border: none;
-    outline: none;
-    filter: drop-shadow(0 14px 28px rgba(0, 0, 0, 0.28)) drop-shadow(0 2px 6px rgba(0, 0, 0, 0.12));
-    transition: transform 350ms var(--ease-smooth-out), filter 350ms var(--ease-smooth-out);
-    will-change: transform, filter;
+    border-radius: 3px;
   }
 
-  .shot__phone-screen {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
-    background: #0d0d0f;
-    border-radius: 17px;
-    border: none;
-    outline: none;
+  .screen--desktop {
+    width: 84%;
+    aspect-ratio: 16 / 11;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
-  .shot__phone-img {
+  .screen__img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    object-position: top;
     display: block;
-    border: none;
-    outline: none;
   }
 
-  .project-card:hover .shot__phone-frame {
-    transform: translateY(-4px) scale(1.03);
-    filter: drop-shadow(0 20px 38px rgba(0, 0, 0, 0.38)) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.16));
-  }
-
-  .shot__pending {
+  .screen__pending {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     font-size: 10.5px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-faint);
   }
 
-  .card-head {
+  /* 9to5er Agency UI Preview */
+  .schematic-agency {
+    width: 100%;
+    height: 100%;
+    padding: 16px;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     gap: 10px;
-    margin-top: 14px;
+    box-sizing: border-box;
+    user-select: none;
   }
 
-  .card-title {
-    margin: 0;
+  .schematic-top {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .schematic-chip {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: var(--surface-subtle);
+    color: var(--text-muted);
+    border: 1px solid var(--border-subtle);
+  }
+
+  .schematic-chip.is-active {
+    color: var(--text-secondary);
+    background: var(--surface-interactive);
+    border-color: var(--border-default);
+    font-weight: 500;
+  }
+
+  .schematic-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    flex: 1;
+  }
+
+  .schematic-card {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8px 10px;
+    border-radius: 8px;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
+    gap: 3px;
+  }
+
+  .schematic-card-label {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+
+  .schematic-card-val {
     font-family: var(--font-sans);
     font-size: 15px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.02em;
+  }
+
+  .schematic-bar {
+    width: 100%;
+    height: 4px;
+    border-radius: 9999px;
+    background: var(--border-subtle);
+    overflow: hidden;
+    margin-top: 2px;
+  }
+
+  .schematic-bar span {
+    display: block;
+    height: 100%;
+    background: var(--text-faint);
+    border-radius: 9999px;
+  }
+
+  /* Token Extractor CSS AST Preview */
+  .schematic-tokens {
+    width: 100%;
+    height: 100%;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 8px;
+    box-sizing: border-box;
+    user-select: none;
+  }
+
+  .schematic-tokens-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .schematic-tokens-title {
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+    color: var(--text-muted);
+  }
+
+  .schematic-tokens-badge {
+    font-family: var(--font-sans);
+    font-size: 9px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: var(--surface-subtle);
+    color: var(--text-muted);
+    font-weight: 500;
+  }
+
+  .schematic-tokens-list {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .token-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 7px;
+    border-radius: 6px;
+    background: var(--surface-subtle);
+    border: 1px solid var(--border-subtle);
+    font-family: ui-monospace, monospace;
+    font-size: 10px;
+  }
+
+  .token-color-chip {
+    width: 9px;
+    height: 9px;
+    border-radius: 3px;
+    border: 1px solid var(--border-default);
+    flex-shrink: 0;
+    opacity: 0.55;
+  }
+
+  .token-var {
+    color: var(--text-muted);
+  }
+
+  .token-val {
+    color: var(--text-secondary);
+    font-weight: 500;
+  }
+
+  /* Editorial Preview */
+  .schematic-editorial {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    text-align: center;
+    padding: 16px;
+  }
+
+  .schematic-editorial-tag {
+    font-family: var(--font-sans);
+    font-size: 10px;
+    letter-spacing: 0.16em;
     font-weight: 600;
+    color: var(--text-muted);
+  }
+
+  .schematic-editorial-title {
+    font-family: var(--font-sans);
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    letter-spacing: -0.02em;
+    max-width: 220px;
+  }
+
+  /* ── Card text ── */
+  /* Matches the list-item scale used in Experience & Services */
+  .card-title {
+    margin: 14px 0 0;
+    font-family: var(--font-sans);
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.35;
     letter-spacing: -0.02em;
     color: var(--text-primary);
-    min-width: 0;
   }
 
   .card-blurb {
-    margin: 4px 0 0;
+    margin: 3px 0 0;
     font-size: 13px;
-    line-height: 1.5;
+    line-height: 1.55;
+    letter-spacing: -0.01em;
     color: var(--text-muted);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    text-wrap: pretty;
+  }
+
+  @media (min-width: 640px) {
+    .card-title { font-size: 16px; }
+    .card-blurb { font-size: 13.5px; }
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .project-card:hover {
-      transform: translateY(-3px);
+    .project-card:hover .frame {
+      border-color: var(--border-default);
     }
-    .project-card:hover .shot {
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-    }
-    .project-card:hover .shot__img {
-      transform: scale(1.04);
+    .project-card:hover .screen {
+      transform: translateY(-4px) scale(1.015);
     }
   }
 
   .project-card:active {
-    transform: scale(0.97);
+    transform: scale(0.985);
+  }
+
+  .project-card:focus-visible {
+    outline: none;
+  }
+
+  .project-card:focus-visible .frame {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 3px;
   }
 
   /* ── Designs: true masonry via CSS columns ────────────── */
@@ -574,7 +812,7 @@ const designs = [
 
   @media (prefers-reduced-motion: reduce) {
     .project-card,
-    .shot__img,
+    .screen,
     .design-tile {
       transition: none;
     }
@@ -591,8 +829,6 @@ const designs = [
 </style>
 
 <script>
-  import { initLisse } from '../utils/lisse';
-
   function initProjectTabs() {
     const bar = document.querySelector<HTMLElement>('.tabs-bar');
     if (!bar) return;
@@ -644,10 +880,8 @@ const designs = [
           panel.classList.remove('is-entering');
           void panel.offsetWidth;
           panel.classList.add('is-entering');
-          initLisse();
           setTimeout(() => {
             panel.classList.remove('is-entering');
-            initLisse();
           }, 380);
         } else {
           panel.setAttribute('hidden', '');
@@ -792,7 +1026,6 @@ const designs = [
   }
 
   function initProjects() {
-    initLisse();
     initProjectTabs();
     initDesignZoom();
   }

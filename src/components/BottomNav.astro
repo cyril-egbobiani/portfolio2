@@ -165,6 +165,23 @@
         </span>
         <span class="dock-tooltip" aria-hidden="true">About</span>
       </a>
+
+      <!-- Item: Journal (notebook) -->
+      <a
+        href="/journal"
+        class="dock-tab"
+        data-dock-tab="journal"
+        role="tab"
+        aria-label="Journal"
+      >
+        <span class="dock-tab-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M0 0h24v24H0z" fill="none" />
+            <path fill="currentColor" fill-rule="evenodd" d="M5 2h13a2 2 0 0 1 2 2v16a2 2 0 0 1-2 2H5a1 1 0 0 1-1-1V3a1 1 0 0 1 1-1m3 2v16h1.5V4zm3.5 3v2H17V7zm0 4v2H17v-2z" />
+          </svg>
+        </span>
+        <span class="dock-tooltip" aria-hidden="true">Journal</span>
+      </a>
     </div>
 
     <!-- ── Island B: Detached Circular Satellite Action Button ── -->
@@ -255,14 +272,12 @@
     height: 44px;
     padding: 3.5px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.84);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: #ffffff;
     border: 1px solid var(--border-subtle);
     box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.08),
-      0 4px 12px rgba(0, 0, 0, 0.03),
-      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      0 12px 32px -4px rgba(0, 0, 0, 0.12),
+      0 4px 12px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 #ffffff;
     box-sizing: border-box;
     transition:
       background-color 200ms ease,
@@ -271,12 +286,12 @@
   }
 
   :global([data-theme="dark"]) .dock-main-capsule {
-    background: rgba(18, 18, 22, 0.78);
+    background: #141417;
     border: 1px solid var(--border-subtle);
     box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.45),
-      0 4px 12px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      0 12px 32px -4px rgba(0, 0, 0, 0.6),
+      0 4px 12px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
   }
 
   /* ── Fluid Sliding Highlight Pill (Aligned with Builds/Designs Switch) ── */
@@ -361,7 +376,7 @@
 
   /* ═══════════════════════════════════════════════════════════════
      ISLAND B: DETACHED CIRCULAR SATELLITE BUTTON (HARMONIZED)
-     Exact matching 44px height, frosted glass & hairline border
+     Exact matching 44px height, solid 100% surface & hairline border
      ═══════════════════════════════════════════════════════════════ */
   .dock-satellite-btn {
     position: relative;
@@ -371,14 +386,12 @@
     width: 44px;
     height: 44px;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.84);
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    background: #ffffff;
     border: 1px solid var(--border-subtle);
     box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.08),
-      0 4px 12px rgba(0, 0, 0, 0.03),
-      inset 0 1px 0 rgba(255, 255, 255, 0.95);
+      0 12px 32px -4px rgba(0, 0, 0, 0.12),
+      0 4px 12px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 #ffffff;
     color: var(--text-primary);
     cursor: pointer;
     padding: 0;
@@ -392,12 +405,12 @@
   }
 
   :global([data-theme="dark"]) .dock-satellite-btn {
-    background: rgba(18, 18, 22, 0.78);
+    background: #141417;
     border: 1px solid var(--border-subtle);
     box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.45),
-      0 4px 12px rgba(0, 0, 0, 0.2),
-      inset 0 1px 0 rgba(255, 255, 255, 0.07);
+      0 12px 32px -4px rgba(0, 0, 0, 0.6),
+      0 4px 12px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.08);
     color: var(--text-secondary);
   }
 
@@ -425,7 +438,7 @@
 
   /* ═══════════════════════════════════════════════════════════════
      QUICK CONNECT & CONTROLS POPOVER SHEET (FLOW 3 + FLOW 2)
-     Unified with site surface tokens & Lisse squircle geometry
+     Solid 100% surface with crisp elevation
      ═══════════════════════════════════════════════════════════════ */
   .dock-popover-card {
     position: absolute;
@@ -433,9 +446,7 @@
     left: 50%;
     width: 250px;
     max-width: calc(100vw - 32px);
-    background: rgba(255, 255, 255, 0.94);
-    backdrop-filter: blur(28px) saturate(180%);
-    -webkit-backdrop-filter: blur(28px) saturate(180%);
+    background: #ffffff;
     border: 1px solid var(--border-subtle);
     border-radius: 16px;
     padding: 10px;
@@ -443,8 +454,8 @@
     flex-direction: column;
     gap: 8px;
     box-shadow:
-      0 20px 48px -8px rgba(0, 0, 0, 0.12),
-      0 8px 24px rgba(0, 0, 0, 0.04);
+      0 20px 48px -8px rgba(0, 0, 0, 0.16),
+      0 8px 24px rgba(0, 0, 0, 0.06);
     pointer-events: none;
     opacity: 0;
     transform: translate(-50%, 8px) scale(0.96);
@@ -456,11 +467,11 @@
   }
 
   :global([data-theme="dark"]) .dock-popover-card {
-    background: rgba(18, 18, 22, 0.94);
+    background: #141417;
     border: 1px solid var(--border-subtle);
     box-shadow:
-      0 20px 48px -8px rgba(0, 0, 0, 0.6),
-      0 8px 24px rgba(0, 0, 0, 0.3);
+      0 20px 48px -8px rgba(0, 0, 0, 0.7),
+      0 8px 24px rgba(0, 0, 0, 0.4);
   }
 
   .dock-popover-card.is-open {
@@ -686,11 +697,14 @@
     if (!mainCapsule || !pill || tabs.length === 0) return;
 
     let activeTab: HTMLElement | null = null;
-    const isAboutPage = window.location.pathname.startsWith('/about');
+    const path = window.location.pathname;
+    // Inner pages pin their own tab instead of using the homepage scroll spy
+    const pinnedTab = path.startsWith('/about') ? 'about' : path.startsWith('/journal') ? 'journal' : null;
+    const isSubPage = pinnedTab !== null;
 
     // ── 1. Determine Active Tab ──
-    if (isAboutPage) {
-      activeTab = document.querySelector<HTMLElement>('[data-dock-tab="about"]');
+    if (isSubPage) {
+      activeTab = document.querySelector<HTMLElement>(`[data-dock-tab="${pinnedTab}"]`);
     } else {
       const hash = window.location.hash.replace('#', '');
       if (hash) {
@@ -758,7 +772,7 @@
         if (href && href.startsWith('/#')) {
           const sectionId = href.replace('/#', '');
           const targetSection = document.getElementById(sectionId);
-          if (targetSection && !isAboutPage) {
+          if (targetSection && !isSubPage) {
             e.preventDefault();
             setActive(tab);
 
@@ -785,7 +799,7 @@
     // ── 3. Scroll Spy for Homepage Sections ──
     let observer: IntersectionObserver | null = null;
 
-    if (!isAboutPage) {
+    if (!isSubPage) {
       const sectionIds = ['projects', 'services'];
       const observedSections = sectionIds
         .map((id) => document.getElementById(id))
@@ -815,7 +829,7 @@
           }
         );
 
-        observedSections.forEach((sec) => observer.observe(sec));
+        observedSections.forEach((sec) => observer?.observe(sec));
       }
     }
 
@@ -828,7 +842,7 @@
         closePopover();
       }
 
-      if (isClickScrolling || isAboutPage) return;
+      if (isClickScrolling || isSubPage) return;
 
       // Reset to Projects (Work) when scrolled to the top hero section
       const projectsSection = document.getElementById('projects');

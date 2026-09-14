@@ -1,0 +1,231 @@
+---
+// src/pages/journal/index.astro — All journal entries, grouped by year
+import Layout from '../../components/Layout.astro';
+import PageTopNav from '../../components/PageTopNav.astro';
+import JournalRow from '../../components/JournalRow.astro';
+import PortfolioFooter from '../../components/PortfolioFooter.astro';
+import { getJournalEntries, type JournalEntry } from '../../data/journal';
+
+const SUBSTACK_URL = 'https://cyriljnr.substack.com';
+
+const entries = await getJournalEntries();
+
+const years = new Map<number, JournalEntry[]>();
+for (const entry of entries) {
+  const year = entry.date.getUTCFullYear();
+  years.set(year, [...(years.get(year) ?? []), entry]);
+}
+
+const showFilters = entries.some((e) => e.external) && entries.some((e) => !e.external);
+const filters = [
+  { id: 'all', label: 'All' },
+  { id: 'here', label: 'Here' },
+  { id: 'elsewhere', label: 'Elsewhere' },
+];
+---
+
+<Layout
+  title="Journal — Cyril Egbobiani"
+  description="Journal entries by Cyril Egbobiani, written here and on Substack."
+>
+  <PageTopNav />
+
+  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
+    <div class="mx-auto flex w-full max-w-[680px] flex-col">
+      <header class="journal-header">
+        <h1 class="journal-heading">Journal</h1>
+        <p class="journal-lede">
+          Writing, mostly kept here — with the occasional post on{' '}
+          <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack</a>.
+        </p>
+      </header>
+
+      {showFilters && (
+        <div class="journal-filters" role="group" aria-label="Filter entries" data-journal-filters>
+          {filters.map((filter, index) => (
+            <button type="button" class="journal-filter" data-filter={filter.id} aria-pressed={index === 0 ? 'true' : 'false'}>
+              {filter.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {entries.length === 0 ? (
+        <p class="journal-empty">
+          <span class="journal-empty__hand">first entry coming soon</span>
+          <span>In the meantime, <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">subscribe on Substack</a>.</span>
+        </p>
+      ) : (
+        <div class="journal-years">
+          {[...years].map(([year, yearEntries]) => (
+            <section class="journal-year" data-journal-year>
+              <h2 class="journal-year__label">{year}</h2>
+              <ul class="m-0 p-0" role="list">
+                {yearEntries.map((entry) => <JournalRow entry={entry} showYear={false} />)}
+              </ul>
+            </section>
+          ))}
+        </div>
+      )}
+
+      <div class="journal-links">
+        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack ↗</a>
+        <a href="/journal/rss.xml">RSS</a>
+      </div>
+
+      <div class="mt-24 sm:mt-28">
+        <PortfolioFooter />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<style>
+  .journal-header {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 36px;
+  }
+
+  .journal-heading {
+    margin: 0;
+    font-size: 19.5px;
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .journal-lede {
+    margin: 0;
+    font-size: 15.5px;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+    color: var(--text-secondary);
+  }
+
+  .journal-lede a,
+  .journal-empty a {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--border-default);
+    text-underline-offset: 3px;
+  }
+
+  .journal-filters {
+    display: inline-flex;
+    align-self: flex-start;
+    gap: 2px;
+    padding: 3px;
+    margin-bottom: 20px;
+    border-radius: 9999px;
+    background: var(--surface-subtle);
+  }
+
+  .journal-filter {
+    padding: 6px 14px;
+    border: none;
+    border-radius: 9999px;
+    background: transparent;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition:
+      background-color 160ms var(--ease-smooth-out),
+      color 160ms var(--ease-smooth-out),
+      transform 120ms var(--ease-smooth-out);
+  }
+
+  .journal-filter[aria-pressed='true'] {
+    background: var(--surface);
+    color: var(--text-primary);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  }
+
+  .journal-filter:active {
+    transform: scale(0.96);
+  }
+
+  .journal-years {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  /* Year labels are the handwritten layer — the site annotating itself */
+  .journal-year__label {
+    margin: 0 0 4px;
+    font-family: var(--font-script);
+    font-size: 22px;
+    font-weight: 500;
+    line-height: 1.2;
+    color: var(--text-muted);
+  }
+
+  .journal-empty {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 28px 0;
+    border-top: 1px solid var(--border-subtle);
+    font-size: 14px;
+    color: var(--text-muted);
+  }
+
+  .journal-empty__hand {
+    font-family: var(--font-script);
+    font-size: 24px;
+    color: var(--text-secondary);
+  }
+
+  .journal-links {
+    display: flex;
+    gap: 16px;
+    margin-top: 40px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .journal-links a {
+    font-size: 13px;
+    color: var(--text-muted);
+    text-decoration: none;
+    transition: color 160ms var(--ease-smooth-out);
+  }
+
+  .journal-links a:hover {
+    color: var(--text-primary);
+  }
+</style>
+
+<script>
+  function initJournalFilters() {
+    const bar = document.querySelector<HTMLElement>('[data-journal-filters]');
+    if (!bar || bar.dataset.bound) return;
+    bar.dataset.bound = 'true';
+
+    bar.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!button) return;
+      const filter = button.dataset.filter;
+
+      bar.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+
+      document.querySelectorAll<HTMLElement>('[data-journal-year]').forEach((group) => {
+        let visible = 0;
+        group.querySelectorAll<HTMLElement>('[data-journal-source]').forEach((row) => {
+          const show = filter === 'all' || row.dataset.journalSource === filter;
+          row.hidden = !show;
+          if (show) visible += 1;
+        });
+        group.hidden = visible === 0;
+      });
+    });
+  }
+
+  document.addEventListener('astro:page-load', initJournalFilters);
+</script>

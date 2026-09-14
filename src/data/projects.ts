@@ -52,6 +52,9 @@ export interface ProjectData {
   highlights: string[];
   heroMedia?: HeroMedia;
   mediaGallery?: MediaItem[];
+  deviceType?: 'phone' | 'desktop' | 'browser';
+  badge?: string;
+  featured?: boolean;
   link?: string;
   prevSlug: string;
   prevTitle: string;
@@ -74,6 +77,9 @@ export const projects: ProjectData[] = [
       device: 'phone',
     },
     tone: 'a',
+    deviceType: 'phone',
+    badge: 'Mobile App & Ecosystem',
+    featured: true,
     year: '2026',
     role: 'Product Design & Full-Stack Engineering',
     stack: [
@@ -160,9 +166,12 @@ export const projects: ProjectData[] = [
     title: '9to5er',
     category: 'Builds',
     tone: 'b',
+    deviceType: 'desktop',
+    badge: 'Web Platform',
     year: '2026',
     role: 'Full Stack Engineering & Design',
     stack: ['Astro', 'TypeScript', 'Postgres', 'TailwindCSS'],
+    shortBlurb: 'Deep-dives and operational breakdowns of design & engineering agencies.',
     description: 'Deep-dives on agencies, for people about to join one.',
     problem:
       'Joining a new agency you are mostly guessing — what they really do, how they work, how organised they actually are. You can ask a general chatbot and get a confident summary of nothing.',
@@ -186,9 +195,12 @@ export const projects: ProjectData[] = [
     title: 'Token Extractor',
     category: 'Builds',
     tone: 'd',
+    deviceType: 'desktop',
+    badge: 'Browser Tool',
     year: '2024',
     role: 'Browser Extension & Tooling',
     stack: ['TypeScript', 'Browser Extension', 'Monorepo', 'CSS AST'],
+    shortBlurb: 'Browser extension extracting computed CSS tokens into JSON and Tailwind variables.',
     description: 'A browser extension that pulls the real design tokens off any page.',
     problem:
       'Rebuilding someone else’s design language usually means eyedropping it one hex code at a time and manually calculating font scales.',
@@ -212,9 +224,12 @@ export const projects: ProjectData[] = [
     title: 'Dubem',
     category: 'Designs',
     tone: 'c',
+    deviceType: 'desktop',
+    badge: 'Editorial Showcase',
     year: '2025',
     role: 'Art Direction & Frontend',
     stack: ['Astro', 'TypeScript', 'TailwindCSS', 'Motion'],
+    shortBlurb: 'Editorial portfolio built around distinct style sets and dynamic spring motion.',
     description: 'A site for a friend who models, built around her distinct style sets.',
     problem:
       'A model is judged on the same thing the portfolio is — how it looks. Standard portfolio templates flatten everyone into one identical, sterile square grid.',

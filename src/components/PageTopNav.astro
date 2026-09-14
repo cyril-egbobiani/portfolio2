@@ -1,0 +1,205 @@
+---
+// PageTopNav.astro — Fixed back button + theme toggle for inner pages,
+// floating over a progressive blur so content softens as it scrolls beneath.
+// Render it outside <main>: .page-blur-entry animates `filter`, which would
+// stop position: fixed from working for anything inside it.
+interface Props {
+  backHref?: string;
+  backLabel?: string;
+  /** Match the page's content column so the buttons line up with it */
+  maxWidth?: number;
+}
+
+const { backHref = '/', backLabel = 'Back to home', maxWidth = 680 } = Astro.props;
+const isHome = backHref === '/';
+---
+
+<nav class="page-top-nav" aria-label="Page navigation" style={`--nav-max: ${maxWidth}px`}>
+  <div class="page-top-nav__blur" aria-hidden="true">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+  </div>
+
+  <div class="page-top-nav__inner">
+    <a href={backHref} class="page-top-nav__btn" aria-label={backLabel} title={backLabel}>
+      {isHome ? (
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path fill="currentColor" fill-rule="evenodd" d="M10.772 2.688a2 2 0 0 1 2.456 0l8.384 6.521c.753.586.337 1.791-.615 1.791H20v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8h-.997c-.953 0-1.367-1.206-.615-1.79z" clip-rule="evenodd" />
+        </svg>
+      ) : (
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M19 12H5M11 18l-6-6 6-6" />
+        </svg>
+      )}
+    </a>
+
+    <button type="button" class="page-top-nav__btn" aria-label="Toggle theme" title="Toggle theme" data-page-theme-toggle>
+      <svg class="page-top-nav__sun" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <circle cx="12" cy="12" r="4.5" />
+        <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77" />
+      </svg>
+      <svg class="page-top-nav__moon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
+      </svg>
+    </button>
+  </div>
+</nav>
+
+<style>
+  .page-top-nav {
+    --nav-pad: 16px;
+    --nav-btn: 36px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 40;
+    pointer-events: none;
+  }
+
+  /* ── Progressive blur: stacked layers, strongest at the top edge ── */
+  .page-top-nav__blur {
+    position: absolute;
+    inset: 0 0 -28px 0;
+  }
+
+  .page-top-nav__blur > span,
+  .page-top-nav__blur::after {
+    position: absolute;
+    inset: 0;
+  }
+
+  .page-top-nav__blur > span:nth-child(1) {
+    backdrop-filter: blur(1px);
+    -webkit-backdrop-filter: blur(1px);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 55%, transparent 100%);
+  }
+
+  .page-top-nav__blur > span:nth-child(2) {
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 40%, transparent 80%);
+  }
+
+  .page-top-nav__blur > span:nth-child(3) {
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 25%, transparent 60%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 25%, transparent 60%);
+  }
+
+  .page-top-nav__blur > span:nth-child(4) {
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    mask-image: linear-gradient(to bottom, #000 0%, transparent 40%);
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 40%);
+  }
+
+  /* Soft tint so buttons stay legible over busy content */
+  .page-top-nav__blur::after {
+    content: '';
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--surface) 80%, transparent) 0%,
+      color-mix(in srgb, var(--surface) 40%, transparent) 50%,
+      transparent 100%
+    );
+  }
+
+  .page-top-nav__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: var(--nav-max, 680px);
+    margin: 0 auto;
+    padding: var(--nav-pad) 24px;
+    box-sizing: content-box;
+  }
+
+  @media (min-width: 640px) {
+    .page-top-nav__inner {
+      padding-inline: 32px;
+    }
+  }
+
+  .page-top-nav__btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: var(--nav-btn);
+    height: var(--nav-btn);
+    padding: 0;
+    border-radius: 9999px;
+    border: 1px solid var(--border-subtle);
+    background: var(--surface-subtle);
+    color: var(--text-secondary);
+    cursor: pointer;
+    text-decoration: none;
+    pointer-events: auto;
+    transition:
+      background-color 160ms var(--ease-smooth-out),
+      color 160ms var(--ease-smooth-out),
+      transform 160ms var(--ease-smooth-out);
+  }
+
+  .page-top-nav__btn svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .page-top-nav__btn:hover {
+      background: var(--surface-interactive);
+      color: var(--text-primary);
+    }
+  }
+
+  .page-top-nav__btn:active {
+    transform: scale(0.95);
+  }
+
+  .page-top-nav__btn:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+
+  .page-top-nav__sun {
+    display: none;
+  }
+
+  :global([data-theme='dark']) .page-top-nav__sun {
+    display: block;
+  }
+
+  :global([data-theme='dark']) .page-top-nav__moon {
+    display: none;
+  }
+</style>
+
+<script>
+  function initPageThemeToggle() {
+    const btn = document.querySelector<HTMLButtonElement>('[data-page-theme-toggle]');
+    if (!btn || btn.dataset.bound) return;
+    btn.dataset.bound = 'true';
+
+    btn.addEventListener('click', () => {
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+      root.classList.add('theme-switching');
+      root.dataset.theme = next;
+      try {
+        localStorage.setItem('portfolio-theme', next);
+      } catch {
+        // Storage unavailable — theme still applies for this visit
+      }
+      setTimeout(() => root.classList.remove('theme-switching'), 120);
+    });
+  }
+
+  document.addEventListener('astro:page-load', initPageThemeToggle);
+</script>
