@@ -1,18 +1,14 @@
 {
-	"pid": 4456,
-	"port": 4321,
-	"url": "http://localhost:4321",
+	"pid": 19916,
+	"port": 4323,
+	"url": "http://localhost:4323",
 	"urls": {
 		"local": [
-			"http://localhost:4321/"
+			"http://localhost:4323/"
 		],
-		"network": [
-			"http://192.168.100.222:4321/"
-		],
-		"networkInterfaceNames": [
-			"Wi-Fi"
-		]
+		"network": [],
+		"networkInterfaceNames": []
 	},
-	"background": true,
-	"startedAt": "2026-08-08T16:29:41.746Z"
+	"background": false,
+	"startedAt": "2026-09-15T08:27:19.579Z"
 }

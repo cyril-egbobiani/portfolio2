@@ -1,0 +1,108 @@
+---
+// NavArrow.astro — Back / forward / external arrow used across buttons and links.
+// Drawn as a separate head and shaft on a 20px grid with rounded caps, so on
+// hover (or keyboard focus) of the surrounding link or button the head leads and
+// the shaft stretches to follow it, instead of the whole glyph just sliding.
+interface Props {
+  direction?: 'left' | 'right' | 'up-right';
+  size?: number;
+  class?: string;
+}
+
+const { direction = 'right', size = 16, class: className = '' } = Astro.props;
+const isDiagonal = direction === 'up-right';
+---
+
+<svg
+  class:list={['nav-arrow', `nav-arrow--${direction}`, className]}
+  width={size}
+  height={size}
+  viewBox="0 0 20 20"
+  fill="none"
+  stroke="currentColor"
+  stroke-width="1.75"
+  stroke-linecap="round"
+  stroke-linejoin="round"
+  aria-hidden="true"
+>
+  {isDiagonal ? (
+    <>
+      <path class="nav-arrow__shaft" d="M5.75 14.25 13.5 6.5" />
+      <path class="nav-arrow__head" d="M7.75 5.75h6.5v6.5" />
+    </>
+  ) : (
+    <>
+      <path class="nav-arrow__shaft" d="M4.25 10h10.5" />
+      <path class="nav-arrow__head" d="M10.75 5.25 15.5 10l-4.75 4.75" />
+    </>
+  )}
+</svg>
+
+<style>
+  .nav-arrow {
+    display: block;
+    flex-shrink: 0;
+    overflow: visible;
+  }
+
+  /* Left is the right arrow mirrored, so both share one motion */
+  .nav-arrow--left {
+    transform: scaleX(-1);
+  }
+
+  .nav-arrow__head,
+  .nav-arrow__shaft {
+    transform-box: fill-box;
+    transition: transform 280ms var(--ease-smooth-out);
+  }
+
+  .nav-arrow__shaft {
+    transform-origin: left center;
+  }
+
+  .nav-arrow--up-right .nav-arrow__shaft {
+    transform-origin: left bottom;
+  }
+
+  /* The head moves 2px; the shaft scales by exactly the amount that keeps it attached */
+  @media (hover: hover) and (pointer: fine) {
+    :global(:is(a, button):hover) .nav-arrow__head {
+      transform: translateX(2px);
+    }
+
+    :global(:is(a, button):hover) .nav-arrow__shaft {
+      transform: scaleX(1.19);
+    }
+
+    :global(:is(a, button):hover) .nav-arrow--up-right .nav-arrow__head {
+      transform: translate(1.5px, -1.5px);
+    }
+
+    :global(:is(a, button):hover) .nav-arrow--up-right .nav-arrow__shaft {
+      transform: scale(1.19);
+    }
+  }
+
+  :global(:is(a, button):focus-visible) .nav-arrow__head {
+    transform: translateX(2px);
+  }
+
+  :global(:is(a, button):focus-visible) .nav-arrow__shaft {
+    transform: scaleX(1.19);
+  }
+
+  :global(:is(a, button):focus-visible) .nav-arrow--up-right .nav-arrow__head {
+    transform: translate(1.5px, -1.5px);
+  }
+
+  :global(:is(a, button):focus-visible) .nav-arrow--up-right .nav-arrow__shaft {
+    transform: scale(1.19);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .nav-arrow__head,
+    .nav-arrow__shaft {
+      transition: none;
+    }
+  }
+</style>

@@ -1,0 +1,23 @@
+---
+// Stat.astro — A number that counts up when it scrolls into view
+interface Props {
+  value: number;
+  label: string;
+  prefix?: string;
+  suffix?: string;
+  decimals?: number;
+}
+
+const { value, label, prefix = '', suffix = '', decimals = 0 } = Astro.props;
+const formatted = new Intl.NumberFormat('en-US', {
+  minimumFractionDigits: decimals,
+  maximumFractionDigits: decimals,
+}).format(value);
+---
+
+<div class="cs-stat" data-cs-reveal>
+  <span class="cs-stat__value">
+    {prefix}<span data-cs-count={value} data-cs-decimals={decimals}>{formatted}</span>{suffix}
+  </span>
+  <span class="cs-stat__label">{label}</span>
+</div>

@@ -1,17 +1,29 @@
 ---
+// ExperienceSection.astro — Where I've been.
+// A plain, always-visible timeline: each role says what was actually done there,
+// in a sentence or two, instead of a title-sized summary.
 import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
 import firstBankLogo from '../assets/images/first-bank-logo.png';
 import globeSvg from '../assets/images/globe.svg';
 
+// A point may name a project inline: `before` + linked label + `after`
+interface Point {
+  text?: string;
+  before?: string;
+  link?: { label: string; href: string };
+  after?: string;
+}
+
 interface ExperienceItem {
   company: string;
   role: string;
   dates: string;
-  location?: string;
-  logo?: ImageMetadata | string;
+  current?: boolean;
+  location: string;
+  logo: ImageMetadata;
   themeAdaptive?: boolean;
-  description: string;
+  points: Point[];
 }
 
 const experience: ExperienceItem[] = [
@@ -19,208 +31,260 @@ const experience: ExperienceItem[] = [
     company: 'International Energy Services Limited',
     role: 'Frontend Developer & Product Designer',
     dates: '2026 – Present',
+    current: true,
     location: 'Lagos, Nigeria',
     logo: ieslLogo,
-    themeAdaptive: false,
-    description: 'Leading digital product design and frontend architecture for enterprise energy management systems.',
+    points: [
+      { text: 'Redesigned the admin panel for the compliance system.' },
+      { text: 'Now redesigning the Audit Pro system, with more internal systems planned to follow.' },
+    ],
   },
   {
     company: 'Freelance',
-    role: 'Software Developer & Designer',
+    role: 'Designer & Developer',
     dates: '2025 – Present',
+    current: true,
     location: 'Remote',
     logo: globeSvg,
     themeAdaptive: true,
-    description: 'Designing and engineering bespoke digital experiences, brand identities, and WebGL canvases for global clients.',
+    points: [
+      {
+        before: 'Designed and built ',
+        link: { label: 'Dubem', href: '/projects/model-portfolio' },
+        after: ', a portfolio site for a model, organised around her style sets.',
+      },
+      { text: 'Currently building a mobile app for GLP users.' },
+    ],
   },
   {
     company: 'First Bank Digital Innovation Lab',
     role: 'Mobile Developer Intern',
-    dates: '2024 – 2024',
+    dates: '2024 · 6 months',
     location: 'Lagos, Nigeria',
     logo: firstBankLogo,
-    themeAdaptive: false,
-    description: 'Contributed to the core mobile banking application refactor and cross-platform design system components.',
+    points: [
+      { text: 'A six-month programme that set me on the path to Flutter.' },
+      {
+        before: 'Built an ',
+        link: { label: 'attendance system', href: '/projects/fbdil-attendance' },
+        after: ' with fellow developer and UX design interns.',
+      },
+    ],
   },
 ];
 ---
 
-<section class="relative flex flex-col gap-6" id="experience">
+<section class="relative flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="experience">
   <div class="section-head reveal-item">
     <div class="section-head__text flex items-baseline justify-between w-full">
       <h2 class="section-title">Where I've been</h2>
     </div>
   </div>
 
-  <div class="flex flex-col -mx-2.5 sm:-mx-3" data-experience-list>
-    {experience.map((item, index) => (
-      <div
-        class={`experience-card group relative flex flex-col overflow-hidden py-3 px-2.5 sm:px-3 rounded-xl border-b border-[var(--border-subtle)] last:border-b-0 cursor-pointer select-none reveal-item reveal-delay-${index + 1}`}
-        data-experience-item
-        data-visible="true"
-        data-expanded={index === 0 ? 'true' : 'false'}
-        role="button"
-        tabindex="0"
-        aria-expanded={index === 0 ? 'true' : 'false'}
-      >
-        <!-- Card Header Row -->
-        <div class="flex items-start gap-3.5 sm:gap-4">
-          <!-- Logo Badge -->
-          <div class={`experience-badge flex size-[44px] sm:size-[48px] shrink-0 items-center justify-center rounded-[10px] bg-[var(--surface-interactive)] border border-[var(--border-subtle)] p-2 transition-transform duration-200 ease-[var(--ease-smooth-out)] group-hover:scale-[1.03] ${item.themeAdaptive ? 'text-[var(--text-primary)]' : ''}`}>
-            {item.logo ? (
-              typeof item.logo === 'string' ? (
-                <img
-                  src={item.logo}
-                  alt={item.company}
-                  class={`max-h-full max-w-full h-auto w-auto object-contain shrink-0 ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
-                />
-              ) : (
-                <Image
-                  class={`max-h-full max-w-full h-auto w-auto object-contain shrink-0 ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
-                  src={item.logo}
-                  alt={item.company}
-                />
-              )
-            ) : (
-              <span class="font-sans text-sm font-semibold text-[var(--text-secondary)]">CY</span>
-            )}
-          </div>
-
-          <!-- Role Summary Header -->
-          <div class="flex min-w-0 flex-1 flex-col gap-1 pt-0.5">
-            <div class="flex items-center justify-between gap-2">
-              <h3 class="m-0 font-sans text-[15px] sm:text-[16px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-                {item.company}
-              </h3>
-              
-              <!-- Rotating Chevron Indicator (MingCute) -->
-              <div class="experience-chevron-box flex size-6 items-center justify-center rounded-full text-[var(--text-muted)] transition-[color,transform] duration-200 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)]">
-                <svg class="experience-chevron size-4 transition-transform duration-250 ease-[var(--ease-smooth-out)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                  <path d="M6 9l6 6 6-6" />
-                </svg>
-              </div>
-            </div>
-
-            <div class="flex flex-wrap items-center justify-between gap-2 text-[13px] text-[var(--text-muted)]">
-              <span class="font-sans">{item.role}</span>
-              <span class={`experience-dates font-sans tabular-nums text-xs ${item.dates.includes('Present') ? 'is-current text-[var(--text-primary)] font-medium' : 'text-[var(--text-muted)]'}`}>
-                {item.dates.includes('Present') && <span class="current-dot inline-block size-1.5 rounded-full bg-current opacity-70 mr-1.5" aria-hidden="true"></span>}
-                {item.dates}
-              </span>
-            </div>
-          </div>
+  <ol class="xp-list" role="list">
+    {experience.map((item) => (
+      <li class="xp">
+        <div class={`xp__badge ${item.themeAdaptive ? 'xp__badge--adaptive' : ''}`} aria-hidden="true">
+          <Image
+            src={item.logo}
+            alt=""
+            class={`xp__logo ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
+          />
         </div>
 
-        <!-- Expandable Role Drawer (0fr -> 1fr CSS Grid Animation) -->
-        <div
-          class="experience-drawer grid transition-[grid-template-rows,opacity] duration-250 ease-[var(--ease-smooth-out)]"
-          style={index === 0 ? 'grid-template-rows: 1fr; opacity: 1;' : 'grid-template-rows: 0fr; opacity: 0;'}
-          data-experience-content
-        >
-          <div class="overflow-hidden">
-            <div class="pt-2.5 pb-1 pl-[56px] sm:pl-[62px]">
-              <p class="m-0 font-sans text-[14px] sm:text-[14.5px] leading-[1.65] text-[var(--text-secondary)] font-normal">
-                {item.description}
-              </p>
-            </div>
+        <div class="xp__body">
+          <div class="xp__head">
+            <h3 class="xp__company">{item.company}</h3>
+            <span class="xp__dates">
+              {item.current && <span class="xp__now">Now</span>}
+              {item.dates}
+            </span>
           </div>
-        </div>
 
-      </div>
+          <p class="xp__role">
+            {item.role}
+            <span aria-hidden="true">·</span>
+            {item.location}
+          </p>
+
+          <ul class="xp__points" role="list">
+            {item.points.map((point) => (
+              <li>
+                {point.text}
+                {point.before}
+                {point.link && (
+                  <a href={point.link.href} class="xp__link" data-astro-prefetch>{point.link.label}</a>
+                )}
+                {point.after}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </li>
     ))}
-  </div>
+  </ol>
 </section>
 
 <style>
-  .experience-card {
-    transition: background-color 160ms var(--ease-smooth-out),
-                transform 140ms var(--ease-smooth-out);
+  .xp-list {
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .experience-card:hover {
-      background-color: var(--surface-subtle);
-    }
+  .xp {
+    display: flex;
+    gap: 16px;
+    padding: 20px 0;
   }
 
-  .experience-card:active {
-    transform: scale(0.99);
+  .xp:first-child {
+    padding-top: 4px;
   }
 
-  /* Chevron rotation state when expanded */
-  .experience-card[data-expanded="true"] .experience-chevron {
-    transform: rotate(180deg);
+  .xp + .xp {
+    border-top: 1px solid var(--border-subtle);
   }
 
-  /* Current roles indicator */
-  .experience-dates {
+  .xp__badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    padding: 8px;
+    border-radius: 10px;
+    background: var(--surface-subtle);
+  }
+
+  .xp__badge--adaptive {
+    color: var(--text-primary);
+  }
+
+  .xp__logo {
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    object-fit: contain;
+  }
+
+  .xp__body {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .xp__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 4px 12px;
+  }
+
+  .xp__company {
+    margin: 0;
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .xp__dates {
     display: inline-flex;
     align-items: center;
+    gap: 8px;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
-  @media (prefers-reduced-motion: reduce) {
-    .experience-card {
-      transition: none !important;
-      transform: none !important;
+  .xp__now {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-primary);
+    font-weight: 500;
+  }
+
+  .xp__now::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: currentColor;
+  }
+
+  .xp__role {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0 6px;
+    margin: 2px 0 0;
+    font-size: var(--text-base);
+    line-height: 1.5;
+    color: var(--text-muted);
+  }
+
+  .xp__points {
+    display: grid;
+    gap: 6px;
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .xp__points li {
+    position: relative;
+    padding-left: 14px;
+    font-size: var(--text-base);
+    line-height: 1.6;
+    color: var(--text-secondary);
+  }
+
+  .xp__points li::before {
+    content: '';
+    position: absolute;
+    top: 0.72em;
+    left: 1px;
+    width: 4px;
+    height: 1.5px;
+    border-radius: 1px;
+    background: var(--text-faint);
+  }
+
+  .xp__link {
+    color: var(--text-primary);
+    text-decoration: underline;
+    text-decoration-color: var(--border-default);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 160ms var(--ease-smooth-out);
+  }
+
+  .xp__link:hover {
+    text-decoration-color: var(--text-primary);
+  }
+
+  @media (min-width: 640px) {
+    .xp {
+      gap: 18px;
     }
-    .experience-chevron,
-    .experience-drawer {
-      transition: none !important;
+
+    .xp__badge {
+      width: 48px;
+      height: 48px;
+    }
+
+    .xp__company {
+      font-size: var(--text-base);
+    }
+
+    .xp__points li {
+      font-size: var(--text-base);
     }
   }
 </style>
-
-<script>
-  function initExperienceAccordion() {
-    const cards = Array.from(
-      document.querySelectorAll<HTMLElement>('[data-experience-item]')
-    );
-
-    cards.forEach((card) => {
-      const toggle = (expand: boolean) => {
-        card.setAttribute('data-expanded', String(expand));
-        card.setAttribute('aria-expanded', String(expand));
-        const drawer = card.querySelector<HTMLElement>('[data-experience-content]');
-        if (drawer) {
-          drawer.style.gridTemplateRows = expand ? '1fr' : '0fr';
-          drawer.style.opacity = expand ? '1' : '0';
-        }
-      };
-
-      // Click handler
-      card.onclick = () => {
-        const isExpanded = card.getAttribute('data-expanded') === 'true';
-
-        // Collapse others (accordion behavior)
-        cards.forEach((other) => {
-          if (other !== card) {
-            other.setAttribute('data-expanded', 'false');
-            other.setAttribute('aria-expanded', 'false');
-            const otherDrawer = other.querySelector<HTMLElement>('[data-experience-content]');
-            if (otherDrawer) {
-              otherDrawer.style.gridTemplateRows = '0fr';
-              otherDrawer.style.opacity = '0';
-            }
-          }
-        });
-
-        toggle(!isExpanded);
-      };
-
-      // Keyboard accessibility
-      card.onkeydown = (e: KeyboardEvent) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          card.click();
-        }
-      };
-    });
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initExperienceAccordion);
-  } else {
-    initExperienceAccordion();
-  }
-  document.addEventListener('astro:page-load', initExperienceAccordion);
-</script>

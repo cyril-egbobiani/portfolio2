@@ -1,0 +1,18 @@
+---
+// Takeaway.astro — A short callout that lands the point of a section
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<aside class="cs-block cs-takeaway" data-cs-reveal>
+  <span class="cs-takeaway__mark" aria-hidden="true">→</span>
+  <div>
+    <p class="cs-takeaway__title">{title}</p>
+    <div class="cs-takeaway__text">
+      <slot />
+    </div>
+  </div>
+</aside>

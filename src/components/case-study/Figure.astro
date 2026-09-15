@@ -1,0 +1,15 @@
+---
+// Figure.astro — Soft panel for screenshots, sketches or diagrams, with a caption
+interface Props {
+  caption?: string;
+}
+
+const { caption } = Astro.props;
+---
+
+<figure class="cs-block cs-figure" data-cs-reveal>
+  <div class="cs-figure__panel">
+    <slot />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

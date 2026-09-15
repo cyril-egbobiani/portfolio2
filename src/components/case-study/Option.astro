@@ -1,0 +1,43 @@
+---
+// Option.astro — One direction inside <Options>, with strengths and weaknesses
+interface Props {
+  name: string;
+  verdict?: 'chosen' | 'dropped';
+  pros?: string[];
+  cons?: string[];
+}
+
+const { name, verdict, pros = [], cons = [] } = Astro.props;
+---
+
+<div class="cs-option" data-cs-option data-cs-name={name} data-cs-verdict={verdict}>
+  <div class="cs-option__head">
+    <h3 class="cs-option__name">{name}</h3>
+    {verdict && (
+      <span class={`cs-verdict cs-verdict--${verdict}`}>{verdict === 'chosen' ? 'Chosen' : 'Dropped'}</span>
+    )}
+  </div>
+
+  <div class="cs-option__text">
+    <slot />
+  </div>
+
+  {(pros.length > 0 || cons.length > 0) && (
+    <div class="cs-option__lists">
+      {pros.length > 0 && (
+        <ul class="cs-option__list cs-option__list--pros" aria-label="Strengths">
+          {pros.map((item) => (
+            <li><span class="cs-mark" aria-hidden="true">+</span>{item}</li>
+          ))}
+        </ul>
+      )}
+      {cons.length > 0 && (
+        <ul class="cs-option__list cs-option__list--cons" aria-label="Weaknesses">
+          {cons.map((item) => (
+            <li><span class="cs-mark" aria-hidden="true">−</span>{item}</li>
+          ))}
+        </ul>
+      )}
+    </div>
+  )}
+</div>

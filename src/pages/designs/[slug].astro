@@ -1,0 +1,52 @@
+---
+// src/pages/designs/[slug].astro — Design case study (content: src/content/designs)
+import { getCollection, render } from 'astro:content';
+import CaseStudyLayout from '../../components/case-study/CaseStudyLayout.astro';
+import DesignThumb from '../../components/DesignThumb.astro';
+import { caseStudyComponents } from '../../components/case-study';
+
+export async function getStaticPaths() {
+  // Same order as the Designs tab; "Next" wraps around
+  const entries = (await getCollection('designs', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
+    (a, b) => a.data.order - b.data.order || b.data.year.localeCompare(a.data.year)
+  );
+
+  return entries.map((entry, index) => ({
+    params: { slug: entry.id },
+    props: { entry, next: entries.length > 1 ? entries[(index + 1) % entries.length] : undefined },
+  }));
+}
+
+const { entry, next } = Astro.props;
+const { Content } = await render(entry);
+const data = entry.data;
+---
+
+<CaseStudyLayout
+  kind="Design"
+  title={data.title}
+  summary={data.summary}
+  year={data.year}
+  role={data.role}
+  team={data.team}
+  tools={data.tools}
+  status={data.status}
+  links={data.links}
+  draft={data.draft}
+  backHref="/#designs"
+  backLabel="Back to design work"
+  next={next
+    ? {
+        href: `/designs/${next.id}`,
+        title: next.data.title,
+        summary: next.data.summary,
+        design: { sketch: next.data.sketch, final: next.data.final, device: next.data.device },
+      }
+    : undefined}
+>
+  <div slot="hero" class="cs-design-hero">
+    <DesignThumb title={data.title} sketch={data.sketch} final={data.final} device={data.device} eager />
+  </div>
+
+  <Content components={caseStudyComponents} />
+</CaseStudyLayout>

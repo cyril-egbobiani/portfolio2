@@ -1,0 +1,105 @@
+---
+title: Forge
+summary: A cross-platform spiritual ecosystem for youth — gamified scripture learning, background sermon audio streaming, a live prayer wall, and an admin portal for churches.
+year: '2026'
+role: Product Design & Full-Stack Engineering
+stack: [Flutter (Dart), Riverpod, React 19, TypeScript, Node.js, Express, MongoDB, Socket.IO, Figma Token API]
+---
+
+{/*
+  Forge is early. As you learn more, add:
+  - <Options> for directions you considered and why you dropped them
+  - <Quote> for feedback from your first users or church leaders
+  - <Stats> with real usage numbers once you have them
+  - <Learnings> in the reflection section
+*/}
+
+<Section id="problem" label="The problem" title="Faith apps for young people felt static, and churches couldn't reach them in the moment">
+
+Most faith applications for young audiences suffer from static text walls, disconnected design-to-engineering handoffs, and fragmented admin tools.
+
+<Insights>
+<Insight label="Pain point #1" title="Static text walls">
+Content is delivered as long pages of text, with little built for how young people actually engage.
+</Insight>
+<Insight label="Pain point #2" title="No real-time connection">
+When churches request prayer, youth have no real-time context or way to respond.
+</Insight>
+<Insight label="Pain point #3" title="Disconnected handoffs">
+Design and engineering handoffs are disconnected, so designs and the shipped product drift apart.
+</Insight>
+<Insight label="Pain point #4" title="Fragmented admin tools">
+Churches juggle separate tools to manage content and their community.
+</Insight>
+</Insights>
+
+</Section>
+
+<Section id="solution" label="Solution" title="One connected ecosystem instead of scattered tools">
+
+I designed and built an integrated three-tier ecosystem: a Flutter mobile app driven by an automated Figma-to-code token script, real-time Socket.IO prayer requests, a background audio and video player, and a React 19 admin portal backed by a Node.js, Express, and MongoDB API.
+
+<Figure>
+<Phone src="/projects/forge/Onboarding-Screen 1.webp" alt="Forge onboarding flow" caption="Onboarding" />
+<Phone src="/projects/forge/bright-warm-editorial.webp" alt="Forge home screen" caption="Home" />
+<Phone src="/projects/forge/prayer-section.webp" alt="Real-time church prayer wall" caption="Live prayer wall" />
+<Phone src="/projects/forge/teachings-archive.webp" alt="Forge teachings archive" caption="Teachings archive" />
+</Figure>
+
+<Stats>
+<Stat value={3} label="connected tiers: mobile app, admin portal, and API" />
+<Stat value={3} label="permission roles: member, leader, and admin" />
+<Stat value={9} label="technologies across the stack" />
+</Stats>
+
+</Section>
+
+<Section id="architecture" label="How it's built" title="Three tiers, each with one clear job">
+
+<Insights>
+<Insight label="01" title="Mobile app — Flutter">
+Material 3, Riverpod state management, Lottie animations, bento grid layouts, a just_audio background player, and Socket.IO real-time prayer.
+</Insight>
+<Insight label="02" title="Admin portal — React 19">
+Vite, Tailwind CSS, React Hook Form, and Axios for managing devotionals, scheduling events, and moderating community prayer requests.
+</Insight>
+<Insight label="03" title="API — Node.js, Express, MongoDB">
+A REST API with JWT authentication, refresh token rotation, role-based access control, and a Multer media pipeline, deployed on Render.
+</Insight>
+</Insights>
+
+</Section>
+
+<Section id="decision-tokens" label="Design decisions" title="Design tokens flow straight from Figma into Flutter">
+
+A Python script (`extract_tokens.py`) parses raw Figma JSON directly into Flutter `AppSpacing`, `AppColors`, and typography constants, so the app's spacing, colour, and type come from the same source as the designs.
+
+<Takeaway title="Why it matters">
+Design changes reach the app through the pipeline instead of being re-typed by hand.
+</Takeaway>
+
+</Section>
+
+<Section id="decision-prayer" label="Design decisions" title="Prayer requests arrive the moment they're shared">
+
+Socket.IO channels surface live church prayer counters and group request chats, so young people see and respond to requests in real time.
+
+</Section>
+
+<Section id="decision-media" label="Design decisions" title="Sermons keep playing when the app is in the background">
+
+Background audio streaming (`just_audio` and `audio_service`) and video playback (`chewie`) make sermons and devotions something you can listen to on the go.
+
+</Section>
+
+<Section id="decision-access" label="Design decisions" title="What you can do follows your role">
+
+End-to-end security with refresh token rotation and role-based permissions for members, leaders, and admins.
+
+</Section>
+
+<Section id="reflection" label="Reflection" title="Still early, and learning from our first users">
+
+Forge is at an early stage, with its first users just coming on board. The next chapter of this case study is what they teach us.
+
+</Section>

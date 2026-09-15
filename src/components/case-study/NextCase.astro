@@ -1,0 +1,38 @@
+---
+// NextCase.astro — "Next case study" row closing a case study.
+// One horizontal row at every width: a small preview tile, the title and summary,
+// and an arrow, so it reads as a link rather than a large block.
+import { Image } from 'astro:assets';
+import NavArrow from '../NavArrow.astro';
+import type { NextCaseProps } from './types';
+
+type Props = NextCaseProps;
+
+const { href, title, summary, image, device = 'phone', design } = Astro.props;
+const tileDevice = design ? design.device : device;
+const initial = title.trim().charAt(0).toUpperCase();
+---
+
+<nav class="cs-next" data-cs-reveal aria-label="Next case study">
+  <a href={href} class="cs-next__card" data-astro-prefetch>
+    <span class={`cs-next__thumb cs-next__thumb--${tileDevice}`} aria-hidden="true">
+      {design ? (
+        <Image src={design.final} alt="" width={240} class="cs-next__shot" loading="lazy" decoding="async" />
+      ) : image ? (
+        <img src={encodeURI(image)} alt="" class="cs-next__shot" loading="lazy" decoding="async" />
+      ) : (
+        <span class="cs-next__initial">{initial}</span>
+      )}
+    </span>
+
+    <span class="cs-next__text">
+      <span class="cs-next__label">Next case study</span>
+      <span class="cs-next__title">{title}</span>
+      <span class="cs-next__summary">{summary}</span>
+    </span>
+
+    <span class="cs-next__arrow" aria-hidden="true">
+      <NavArrow direction="right" size={18} />
+    </span>
+  </a>
+</nav>

@@ -1,30 +1,27 @@
 ---
 // ProjectsSection.astro
-// Builds  → product cards. Anything listed here is shipped and reachable.
-// Designs → visual work. No cards, no detail pages: a masonry gallery that
+// Builds  → product cards linking to /projects/<slug>.
+// Designs → design case studies (src/content/designs) linking to /designs/<slug>,
+//           each card showing a "sketch → final" thumbnail.
 import { Image } from 'astro:assets';
+import { getCollection } from 'astro:content';
 import { projects } from '../data/projects';
+import DesignThumb from './DesignThumb.astro';
 
 const tabs = ['Builds', 'Designs'];
 
 const builds = projects.map((p) => ({
   slug: p.slug,
   title: p.title,
-  blurb: p.shortBlurb || p.description,
-  image: p.thumbnailImage || (p.heroMedia && 'src' in p.heroMedia ? p.heroMedia.src : undefined),
-  deviceType: p.deviceType || (p.heroMedia && 'device' in p.heroMedia ? p.heroMedia.device : 'desktop'),
+  blurb: p.shortBlurb,
+  image: p.thumbnailImage,
+  deviceType: p.deviceType,
 }));
 
-// Placeholder network images with deliberately varied dimensions so the
-// masonry sizing is visible. Swap for real design work.
-const designs = [
-  { src: 'https://images.unsplash.com/photo-1600132806370-bf17e65e942f?auto=format&fit=crop&w=800&h=1080&q=80', alt: 'Design study, portrait', w: 800, h: 1080 },
-  { src: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=800&h=520&q=80', alt: 'Dashboard layout', w: 800, h: 520 },
-  { src: 'https://images.unsplash.com/photo-1555774698-0b77e0d5fac6?auto=format&fit=crop&w=800&h=800&q=80', alt: 'Interface detail', w: 800, h: 800 },
-  { src: 'https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?auto=format&fit=crop&w=800&h=1200&q=80', alt: 'Mobile screens', w: 800, h: 1200 },
-  { src: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&h=600&q=80', alt: 'Visual exploration', w: 800, h: 600 },
-  { src: 'https://images.unsplash.com/photo-1634017839464-5c339ebe3cb4?auto=format&fit=crop&w=800&h=950&q=80', alt: 'Type and colour study', w: 800, h: 950 },
-];
+// Drafts show while developing only. Lower `order` comes first, then newest year.
+const designs = (await getCollection('designs', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
+  (a, b) => a.data.order - b.data.order || b.data.year.localeCompare(a.data.year)
+);
 ---
 
 <section class="flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="projects">
@@ -63,35 +60,23 @@ const designs = [
         >
           <div class="frame">
             <div class="frame__stage">
-              {project.deviceType === 'phone' ? (
+              {project.image ? (
+                <Image
+                  src={project.image}
+                  alt={`${project.title} preview`}
+                  width={project.deviceType === 'phone' ? 375 : 1200}
+                  height={project.deviceType === 'phone' ? 812 : 675}
+                  class={`card-shot card-shot--${project.deviceType}`}
+                  loading={index === 0 ? 'eager' : 'lazy'}
+                  decoding="async"
+                />
+              ) : project.deviceType === 'phone' ? (
                 <div class="screen screen--phone">
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      width={375}
-                      height={812}
-                      class="screen__img"
-                      loading={index === 0 ? 'eager' : 'lazy'}
-                      decoding="async"
-                    />
-                  ) : (
-                    <span class="screen__pending">Mobile Screen</span>
-                  )}
+                  <span class="screen__pending">Mobile Screen</span>
                 </div>
               ) : (
                 <div class="screen screen--desktop">
-                  {project.image ? (
-                    <Image
-                      src={project.image}
-                      alt={project.title}
-                      width={800}
-                      height={500}
-                      class="screen__img"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  ) : project.slug === '9to5er' ? (
+                  {project.slug === '9to5er' ? (
                     <div class="schematic-agency" aria-hidden="true">
                       <div class="schematic-top">
                         <span class="schematic-chip is-active">Workflow</span>
@@ -119,12 +104,12 @@ const designs = [
                       </div>
                       <div class="schematic-tokens-list">
                         <div class="token-row">
-                          <span class="token-color-chip" style="background: #f97316;"></span>
+                          <span class="token-color-chip" style="background: var(--text-primary);"></span>
                           <span class="token-var">--color-accent:</span>
-                          <span class="token-val">#f97316</span>
+                          <span class="token-val">#000000</span>
                         </div>
                         <div class="token-row">
-                          <span class="token-color-chip" style="background: #6366f1;"></span>
+                          <span class="token-color-chip" style="background: var(--text-muted);"></span>
                           <span class="token-var">--font-family:</span>
                           <span class="token-val">'Geist'</span>
                         </div>
@@ -135,10 +120,14 @@ const designs = [
                         </div>
                       </div>
                     </div>
-                  ) : (
+                  ) : project.slug === 'model-portfolio' ? (
                     <div class="schematic-editorial" aria-hidden="true">
                       <span class="schematic-editorial-tag">{project.title.toUpperCase()}</span>
                       <span class="schematic-editorial-title">Editorial Style Sets & Spring Physics</span>
+                    </div>
+                  ) : (
+                    <div class="schematic-editorial" aria-hidden="true">
+                      <span class="schematic-editorial-tag">{project.title.toUpperCase()}</span>
                     </div>
                   )}
                 </div>
@@ -152,37 +141,43 @@ const designs = [
       ))}
     </div>
 
-    <!-- ── DESIGNS: masonry gallery, springs open on tap ───── -->
-    <div class="tab-panel design-grid" data-tab-panel data-tab-id="Designs" hidden>
-      {designs.map((item) => (
-        <button type="button" class="design-tile" data-zoom-tile aria-label={`Expand: ${item.alt}`}>
-          <Image
-            src={item.src}
-            alt={item.alt}
-            width={item.w}
-            height={item.h}
-            loading="lazy"
-            decoding="async"
-          />
-          <span class="design-tile__hint" aria-hidden="true">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-              <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-            </svg>
-          </span>
-        </button>
-      ))}
+    <!-- ── DESIGNS: case studies, sketch → final ─────────────── -->
+    <div class="tab-panel builds-grid" data-tab-panel data-tab-id="Designs" hidden>
+      {designs.length > 0 ? (
+        designs.map((study, index) => (
+          <a
+            href={`/designs/${study.id}`}
+            data-astro-prefetch
+            class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}
+          >
+            <div class="frame">
+              <div class="frame__stage">
+                <DesignThumb
+                  title={study.data.title}
+                  sketch={study.data.sketch}
+                  final={study.data.final}
+                  device={study.data.device}
+                />
+              </div>
+            </div>
+
+            <h3 class="card-title">
+              {study.data.title}
+              {study.data.draft && <span class="card-draft">Draft</span>}
+            </h3>
+            <p class="card-blurb">{study.data.summary}</p>
+          </a>
+        ))
+      ) : (
+        <p class="designs-empty">
+          <span class="designs-empty__hand">case studies on the way</span>
+          <span>Sketches, wireframes, and the thinking behind the final screens.</span>
+        </p>
+      )}
     </div>
 
   </div>
 </section>
-
-<!-- Zoom overlay -->
-<div id="design-zoom-backdrop" class="design-backdrop" aria-hidden="true"></div>
-<button id="design-zoom-close" class="design-close" type="button" aria-label="Close expanded image">
-  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M6 6l12 12M18 6L6 18" />
-  </svg>
-</button>
 
 <style>
   .section-head {
@@ -211,7 +206,6 @@ const designs = [
     height: calc(100% - 6px);
     background: var(--surface);
     border-radius: 9999px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08), 0 0 1px rgba(255, 255, 255, 0.05);
     will-change: transform, width;
     pointer-events: none;
     box-sizing: border-box;
@@ -225,7 +219,7 @@ const designs = [
     justify-content: center;
     padding: 6px 18px;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-sm);
     font-weight: 500;
     line-height: 1.2;
     color: var(--text-muted);
@@ -266,11 +260,6 @@ const designs = [
     display: grid !important;
   }
 
-  .design-grid:not([hidden]),
-  .design-grid.is-active {
-    display: block !important;
-  }
-
   @keyframes tabFadeIn {
     0% {
       opacity: 0;
@@ -285,25 +274,17 @@ const designs = [
   }
 
   /* Stagger child cards/tiles as the active panel slides into view */
-  .tab-panel.is-entering .project-card,
-  .tab-panel.is-entering .design-tile {
+  .tab-panel.is-entering .project-card {
     animation: tabItemCascade 340ms cubic-bezier(0.23, 1, 0.32, 1) both;
   }
 
-  .tab-panel.is-entering .project-card:nth-child(1),
-  .tab-panel.is-entering .design-tile:nth-child(1) { animation-delay: 0ms; }
+  .tab-panel.is-entering .project-card:nth-child(1) { animation-delay: 0ms; }
 
-  .tab-panel.is-entering .project-card:nth-child(2),
-  .tab-panel.is-entering .design-tile:nth-child(2) { animation-delay: 45ms; }
+  .tab-panel.is-entering .project-card:nth-child(2) { animation-delay: 45ms; }
 
-  .tab-panel.is-entering .project-card:nth-child(3),
-  .tab-panel.is-entering .design-tile:nth-child(3) { animation-delay: 90ms; }
+  .tab-panel.is-entering .project-card:nth-child(3) { animation-delay: 90ms; }
 
-  .tab-panel.is-entering .project-card:nth-child(4),
-  .tab-panel.is-entering .design-tile:nth-child(4) { animation-delay: 135ms; }
-
-  .tab-panel.is-entering .design-tile:nth-child(5) { animation-delay: 180ms; }
-  .tab-panel.is-entering .design-tile:nth-child(6) { animation-delay: 225ms; }
+  .tab-panel.is-entering .project-card:nth-child(4) { animation-delay: 135ms; }
 
   @keyframes tabItemCascade {
     0% {
@@ -318,8 +299,7 @@ const designs = [
 
   @media (prefers-reduced-motion: reduce) {
     .tab-panel,
-    .tab-panel.is-entering .project-card,
-    .tab-panel.is-entering .design-tile {
+    .tab-panel.is-entering .project-card {
       animation: none !important;
       opacity: 1 !important;
       transform: none !important;
@@ -351,14 +331,9 @@ const designs = [
     transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Double-bezel frame: outer ring + inset stage */
-  /* Tonal, low-contrast so cards sit into the page rather than on it */
+  /* One quiet panel per card; screenshots sit on it square-edged, unframed */
   .frame {
-    padding: 6px;
-    border-radius: 22px;
-    border: 1px solid var(--border-subtle);
-    background: transparent;
-    transition: border-color 200ms ease;
+    border-radius: 16px;
   }
 
   .frame__stage {
@@ -369,16 +344,13 @@ const designs = [
     justify-content: center;
     overflow: hidden;
     border-radius: 16px;
-    border: 1px solid var(--border-subtle);
     background: var(--surface-subtle);
   }
 
-  /* Flat screens — no device chrome, just a hairline */
   .screen {
     position: relative;
     overflow: hidden;
     background: var(--surface);
-    border: 1px solid var(--border-default);
     transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
     will-change: transform;
   }
@@ -386,13 +358,11 @@ const designs = [
   .screen--phone {
     height: 86%;
     aspect-ratio: 9 / 19.5;
-    border-radius: 3px;
   }
 
   .screen--desktop {
     width: 84%;
     aspect-ratio: 16 / 11;
-    border-radius: 8px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -416,6 +386,25 @@ const designs = [
     letter-spacing: 0.14em;
     text-transform: uppercase;
     color: var(--text-faint);
+  }
+
+  /* Mockup images sit straight on the panel: no inner frame, nothing cropped */
+  .card-shot {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 90%;
+    max-height: 88%;
+    object-fit: contain;
+    transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  .card-shot--desktop {
+    width: 90%;
+  }
+
+  .card-shot--phone {
+    height: 86%;
   }
 
   /* 9to5er Agency UI Preview */
@@ -607,7 +596,7 @@ const designs = [
   .card-title {
     margin: 14px 0 0;
     font-family: var(--font-sans);
-    font-size: 15px;
+    font-size: var(--text-base);
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: -0.02em;
@@ -616,7 +605,7 @@ const designs = [
 
   .card-blurb {
     margin: 3px 0 0;
-    font-size: 13px;
+    font-size: var(--text-base);
     line-height: 1.55;
     letter-spacing: -0.01em;
     color: var(--text-muted);
@@ -624,15 +613,16 @@ const designs = [
   }
 
   @media (min-width: 640px) {
-    .card-title { font-size: 16px; }
-    .card-blurb { font-size: 13.5px; }
+    .card-title { font-size: var(--text-base); }
+    .card-blurb { font-size: var(--text-base); }
   }
 
   @media (hover: hover) and (pointer: fine) {
     .project-card:hover .frame {
       border-color: var(--border-default);
     }
-    .project-card:hover .screen {
+    .project-card:hover .screen,
+    .project-card:hover .card-shot {
       transform: translateY(-4px) scale(1.015);
     }
   }
@@ -650,148 +640,35 @@ const designs = [
     outline-offset: 3px;
   }
 
-  /* ── Designs: true masonry via CSS columns ────────────── */
-  .design-grid {
-    columns: 2;
-    column-gap: 14px;
-  }
-
-  .design-tile {
-    display: block;
-    width: 100%;
-    margin: 0 0 14px;
-    padding: 0;
-    border: none;
-    outline: none;
-    border-radius: 18px;
-    overflow: hidden;
-    background: transparent;
-    cursor: zoom-in;
-    position: relative;
-    break-inside: avoid;
-    -webkit-column-break-inside: avoid;
-    transition: transform var(--duration-fast) var(--ease-smooth-out);
-  }
-
-  /* Height follows the image's own dimensions — this is what makes the grid dynamic */
-  .design-tile img {
-    display: block;
-    width: 100%;
-    height: auto;
-    border: none;
-    outline: none;
-  }
-
-  .design-tile__hint {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 26px;
-    height: 26px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  /* ── Designs: case study cards reuse the Builds card styles ── */
+  .card-draft {
+    margin-left: 8px;
+    padding: 1px 7px;
     border-radius: 9999px;
-    background: rgba(13, 13, 13, 0.6);
-    backdrop-filter: blur(6px);
-    color: #fff;
-    opacity: 0;
-    transform: scale(0.9);
-    transition:
-      opacity var(--duration-quick) var(--ease-smooth-out),
-      transform var(--duration-quick) var(--ease-smooth-out);
+    background: var(--surface-interactive);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0;
+    color: var(--text-muted);
+    vertical-align: 2px;
   }
 
-  .design-tile__hint svg { width: 13px; height: 13px; }
-
-  @media (hover: hover) and (pointer: fine) {
-    .design-tile:hover {
-      transform: translateY(-2px);
-    }
-
-    .design-tile:hover .design-tile__hint {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  .design-tile:active { transform: scale(0.985); }
-
-  .design-tile:focus-visible {
-    outline: 2px solid var(--text-primary);
-    outline-offset: 2px;
-  }
-
-  @media (max-width: 420px) {
-    .design-grid { column-gap: 10px; }
-    .design-tile { margin-bottom: 10px; }
-  }
-
-  /* ── Zoom overlay ─────────────────────────────────────── */
-  .design-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 60;
-    background: rgba(9, 9, 9, 0.92);
-    backdrop-filter: blur(10px);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 260ms var(--ease-smooth-out);
-  }
-
-  .design-backdrop.is-active {
-    opacity: 1;
-    pointer-events: auto;
-  }
-
-  .design-close {
-    position: fixed;
-    top: 18px;
-    right: 18px;
-    z-index: 62;
-    width: 38px;
-    height: 38px;
+  .designs-empty {
+    grid-column: 1 / -1;
     display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(28, 28, 28, 0.72);
-    backdrop-filter: blur(8px);
-    color: #fff;
-    cursor: pointer;
-    opacity: 0;
-    pointer-events: none;
-    transform: scale(0.92);
-    transition:
-      opacity 200ms var(--ease-smooth-out),
-      transform 200ms var(--ease-smooth-out),
-      background-color 160ms var(--ease-smooth-out);
+    flex-direction: column;
+    gap: 6px;
+    margin: 0;
+    padding: 28px 0;
+    border-top: 1px solid var(--border-subtle);
+    font-size: var(--text-base);
+    color: var(--text-muted);
   }
 
-  .design-close.is-active {
-    opacity: 1;
-    pointer-events: auto;
-    transform: scale(1);
-  }
-
-  .design-close svg { width: 17px; height: 17px; }
-
-  @media (hover: hover) and (pointer: fine) {
-    .design-close:hover { background: rgba(45, 45, 45, 0.85); }
-  }
-
-  .design-close:active { transform: scale(0.92); }
-
-  :global(.design-zoom-clone) {
-    position: fixed;
-    z-index: 61;
-    object-fit: contain;
-    border-radius: 10px;
-    cursor: zoom-out;
-    transform-origin: top left;
-    will-change: transform;
-    user-select: none;
+  .designs-empty__hand {
+    font-family: var(--font-script);
+    font-size: 24px;
+    color: var(--text-secondary);
   }
 
   /* Staggered entry on tab activation */
@@ -813,12 +690,11 @@ const designs = [
   @media (prefers-reduced-motion: reduce) {
     .project-card,
     .screen,
-    .design-tile {
+    .card-shot {
       transition: none;
     }
 
-    .project-card:hover,
-    .design-tile:hover {
+    .project-card:hover {
       transform: none;
     }
 
@@ -904,6 +780,31 @@ const designs = [
       });
     }
 
+    // Deep link: /#designs opens the Designs tab (case study back links, "What I do")
+    if (window.location.hash === '#designs') {
+      activateTab('Designs');
+      document.getElementById('projects')?.scrollIntoView({ block: 'start' });
+    }
+
+    // Same-page links to /#designs: the page router swallows the hash change,
+    // so catch the click first and switch tabs directly
+    if (!(window as any).__designsLinkBound) {
+      (window as any).__designsLinkBound = true;
+      document.addEventListener(
+        'click',
+        (event) => {
+          const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href="/#designs"]');
+          const designsTab = document.querySelector<HTMLButtonElement>('[data-tab-trigger][data-tab-id="Designs"]');
+          if (!link || !designsTab || window.location.pathname !== '/') return;
+          event.preventDefault();
+          designsTab.click();
+          document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          history.replaceState(null, '', '/#designs');
+        },
+        { capture: true }
+      );
+    }
+
     // Initial pill placement
     const active = bar.querySelector<HTMLButtonElement>('.tab.tab-active') || triggers[0];
     if (active) {
@@ -912,122 +813,8 @@ const designs = [
     }
   }
 
-  // ── FLIP spring zoom for design tiles ───────────────────
-  function initDesignZoom() {
-    const backdrop = document.getElementById('design-zoom-backdrop');
-    const closeBtn = document.getElementById('design-zoom-close');
-    const tiles = document.querySelectorAll<HTMLButtonElement>('[data-zoom-tile]');
-    if (!tiles.length) return;
-
-    const SPRING = 'cubic-bezier(0.23, 1, 0.32, 1)';
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    let clone: HTMLImageElement | null = null;
-    let sourceTile: HTMLElement | null = null;
-    let isZoomed = false;
-    let isAnimating = false;
-
-    const retract = () => {
-      if (!clone || !sourceTile || !isZoomed || isAnimating) return;
-      isZoomed = false;
-      isAnimating = true;
-
-      backdrop?.classList.remove('is-active');
-      closeBtn?.classList.remove('is-active');
-
-      const finish = () => {
-        if (sourceTile) sourceTile.style.opacity = '1';
-        clone?.remove();
-        clone = null;
-        sourceTile = null;
-        isAnimating = false;
-        document.body.style.overflow = '';
-      };
-
-      if (reduceMotion) {
-        finish();
-        return;
-      }
-
-      clone.style.transition = `transform 340ms ${SPRING}`;
-      clone.style.transform = 'translate3d(0px, 0px, 0) scale(1)';
-      clone.addEventListener('transitionend', finish, { once: true });
-    };
-
-    tiles.forEach((tile) => {
-      if (tile.hasAttribute('data-zoom-bound')) return;
-      tile.setAttribute('data-zoom-bound', 'true');
-
-      tile.addEventListener('click', () => {
-        if (isZoomed || isAnimating) return;
-
-        const img = tile.querySelector('img');
-        if (!img) return;
-
-        const rect = img.getBoundingClientRect();
-
-        clone = img.cloneNode(true) as HTMLImageElement;
-        clone.className = 'design-zoom-clone';
-        clone.style.left = `${rect.left}px`;
-        clone.style.top = `${rect.top}px`;
-        clone.style.width = `${rect.width}px`;
-        clone.style.height = `${rect.height}px`;
-        document.body.appendChild(clone);
-
-        sourceTile = tile;
-        tile.style.opacity = '0';
-        isZoomed = true;
-
-        backdrop?.classList.add('is-active');
-        closeBtn?.classList.add('is-active');
-        document.body.style.overflow = 'hidden';
-
-        const maxW = Math.min(window.innerWidth * 0.9, 1100);
-        const maxH = Math.min(window.innerHeight * 0.86, 940);
-        let targetW = maxW;
-        let targetH = maxW * (rect.height / rect.width);
-        if (targetH > maxH) {
-          targetH = maxH;
-          targetW = maxH * (rect.width / rect.height);
-        }
-
-        const scale = targetW / rect.width;
-        const translateX = (window.innerWidth - targetW) / 2 - rect.left;
-        const translateY = (window.innerHeight - targetH) / 2 - rect.top;
-
-        if (reduceMotion) {
-          clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
-        } else {
-          void clone.offsetWidth;
-          clone.style.transition = `transform 420ms ${SPRING}`;
-          clone.style.transform = `translate3d(${translateX}px, ${translateY}px, 0) scale(${scale})`;
-        }
-
-        clone.addEventListener('click', retract);
-        closeBtn?.focus();
-      });
-    });
-
-    if (backdrop && !backdrop.hasAttribute('data-zoom-bound')) {
-      backdrop.setAttribute('data-zoom-bound', 'true');
-      backdrop.addEventListener('click', retract);
-    }
-    if (closeBtn && !closeBtn.hasAttribute('data-zoom-bound')) {
-      closeBtn.setAttribute('data-zoom-bound', 'true');
-      closeBtn.addEventListener('click', retract);
-    }
-
-    if (!(window as any).__designZoomKeyBound) {
-      (window as any).__designZoomKeyBound = true;
-      window.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') retract();
-      });
-    }
-  }
-
   function initProjects() {
     initProjectTabs();
-    initDesignZoom();
   }
 
   if (document.readyState === 'loading') {

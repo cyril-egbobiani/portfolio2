@@ -43,7 +43,7 @@
           <rect x="9" y="9" width="13" height="13" rx="2"/>
           <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
         </svg>
-        <svg class="copy-glyph copy-glyph--copied" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="copy-glyph copy-glyph--copied" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="20 6 9 17 4 12"/>
         </svg>
       </div>
@@ -89,7 +89,7 @@
 
       <!-- LinkedIn -->
       <a
-        href="https://www.linkedin.com"
+        href="https://www.linkedin.com/in/cyril-egbobiani-6802002b8/"
         target="_blank"
         rel="noopener noreferrer"
         class="popover-tool-btn"
@@ -138,7 +138,7 @@
         class="dock-tab"
         data-dock-tab="services"
         role="tab"
-        aria-label="Services"
+        aria-label="What I do"
       >
         <span class="dock-tab-icon">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -146,7 +146,7 @@
             <path fill="currentColor" d="M7 3.34c1.026-.592 2.209-.55 3.24-.13a5.35 5.35 0 0 1 1.82 1.254a5.9 5.9 0 0 1 1.804-1.21c.997-.413 2.142-.488 3.136.086s1.502 1.602 1.644 2.672a5.9 5.9 0 0 1-.147 2.169c.75.186 1.433.51 1.996.948c.88.684 1.507 1.688 1.507 2.872c0 1.178-.62 2.177-1.492 2.86a5.3 5.3 0 0 1-1.929.938c.197.722.25 1.453.152 2.139c-.155 1.096-.71 2.134-1.731 2.723c-1.026.592-2.209.55-3.24.131a5.35 5.35 0 0 1-1.819-1.255c-.55.53-1.165.946-1.805 1.211c-.997.413-2.142.487-3.136-.087S5.498 19.06 5.356 17.99a5.9 5.9 0 0 1 .147-2.169a5.35 5.35 0 0 1-1.996-.948C2.627 14.19 2 13.185 2 12.002c0-1.179.621-2.179 1.493-2.862a5.3 5.3 0 0 1 1.928-.938a5.3 5.3 0 0 1-.152-2.138C5.424 4.967 5.979 3.929 7 3.34m5 4.661a4 4 0 1 0 0 8a4 4 0 0 0 0-8m0 2a2 2 0 1 1 0 4a2 2 0 0 1 0-4" />
           </svg>
         </span>
-        <span class="dock-tooltip" aria-hidden="true">Services</span>
+        <span class="dock-tooltip" aria-hidden="true">What I do</span>
       </a>
 
       <!-- Item 3: About (MingCute User Profile) -->
@@ -272,12 +272,9 @@
     height: 44px;
     padding: 3.5px;
     border-radius: 9999px;
-    background: #ffffff;
+    background: var(--surface-raised);
     border: 1px solid var(--border-subtle);
-    box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.12),
-      0 4px 12px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 #ffffff;
+    box-shadow: 0 6px 20px -10px rgba(0, 0, 0, 0.14);
     box-sizing: border-box;
     transition:
       background-color 200ms ease,
@@ -286,12 +283,7 @@
   }
 
   :global([data-theme="dark"]) .dock-main-capsule {
-    background: #141417;
-    border: 1px solid var(--border-subtle);
-    box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.6),
-      0 4px 12px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: none;
   }
 
   /* ── Fluid Sliding Highlight Pill (Aligned with Builds/Designs Switch) ── */
@@ -302,11 +294,8 @@
     left: 0;
     width: 54px;
     border-radius: 9999px;
-    background: #ffffff;
-    border: 1px solid rgba(0, 0, 0, 0.07);
-    box-shadow:
-      0 1px 3px rgba(0, 0, 0, 0.08),
-      0 0 1px rgba(0, 0, 0, 0.04);
+    background: var(--surface-interactive);
+    border: 0;
     pointer-events: none;
     z-index: 1;
     opacity: 0;
@@ -316,14 +305,6 @@
       transform 280ms cubic-bezier(0.23, 1, 0.32, 1),
       width 240ms cubic-bezier(0.23, 1, 0.32, 1),
       opacity 160ms ease;
-  }
-
-  :global([data-theme="dark"]) .dock-sliding-pill {
-    background: rgba(255, 255, 255, 0.09);
-    border: 1px solid rgba(255, 255, 255, 0.11);
-    box-shadow:
-      inset 0 1px 0 rgba(255, 255, 255, 0.15),
-      0 1px 3px rgba(0, 0, 0, 0.3);
   }
 
   /* ── Individual Nav Tab ── */
@@ -386,12 +367,9 @@
     width: 44px;
     height: 44px;
     border-radius: 9999px;
-    background: #ffffff;
+    background: var(--surface-raised);
     border: 1px solid var(--border-subtle);
-    box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.12),
-      0 4px 12px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 #ffffff;
+    box-shadow: 0 6px 20px -10px rgba(0, 0, 0, 0.14);
     color: var(--text-primary);
     cursor: pointer;
     padding: 0;
@@ -405,12 +383,7 @@
   }
 
   :global([data-theme="dark"]) .dock-satellite-btn {
-    background: #141417;
-    border: 1px solid var(--border-subtle);
-    box-shadow:
-      0 12px 32px -4px rgba(0, 0, 0, 0.6),
-      0 4px 12px rgba(0, 0, 0, 0.35),
-      inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    box-shadow: none;
     color: var(--text-secondary);
   }
 
@@ -446,16 +419,14 @@
     left: 50%;
     width: 250px;
     max-width: calc(100vw - 32px);
-    background: #ffffff;
+    background: var(--surface-raised);
     border: 1px solid var(--border-subtle);
     border-radius: 16px;
     padding: 10px;
     display: flex;
     flex-direction: column;
     gap: 8px;
-    box-shadow:
-      0 20px 48px -8px rgba(0, 0, 0, 0.16),
-      0 8px 24px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 12px 32px -14px rgba(0, 0, 0, 0.16);
     pointer-events: none;
     opacity: 0;
     transform: translate(-50%, 8px) scale(0.96);
@@ -467,11 +438,7 @@
   }
 
   :global([data-theme="dark"]) .dock-popover-card {
-    background: #141417;
-    border: 1px solid var(--border-subtle);
-    box-shadow:
-      0 20px 48px -8px rgba(0, 0, 0, 0.7),
-      0 8px 24px rgba(0, 0, 0, 0.4);
+    box-shadow: none;
   }
 
   .dock-popover-card.is-open {
@@ -636,7 +603,7 @@
     left: 50%;
     transform: translate(-50%) scale(0.92);
     transform-origin: bottom center;
-    background: var(--surface-raised, #18181b);
+    background: var(--surface-raised);
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
     font-family: var(--font-sans);
@@ -651,15 +618,7 @@
     transition:
       opacity 140ms cubic-bezier(0.23, 1, 0.32, 1),
       transform 140ms cubic-bezier(0.23, 1, 0.32, 1);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
     z-index: 100;
-  }
-
-  :global([data-theme="light"]) .dock-tooltip {
-    background: #ffffff;
-    color: #18181b;
-    border-color: rgba(0, 0, 0, 0.1);
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
   }
 
   @media (hover: hover) and (pointer: fine) {

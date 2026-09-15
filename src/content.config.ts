@@ -19,4 +19,42 @@ const journal = defineCollection({
   }),
 });
 
-export const collections = { journal };
+// Facts shown in every case study intro (projects and designs)
+const caseStudyFacts = {
+  title: z.string(),
+  summary: z.string(),
+  year: z.string(),
+  role: z.string(),
+  team: z.array(z.string()).default([]),
+  status: z.string().optional(),
+  links: z.array(z.object({ label: z.string(), href: z.url() })).default([]),
+  draft: z.boolean().default(false),
+};
+
+// Project case studies live in src/content/projects/<slug>.mdx, one per card
+// in src/data/projects.ts (the card list sets which appear and in what order).
+const projects = defineCollection({
+  loader: glob({ pattern: '*.{md,mdx}', base: './src/content/projects' }),
+  schema: z.object({
+    ...caseStudyFacts,
+    stack: z.array(z.string()).default([]),
+  }),
+});
+
+// Design case studies live in src/content/designs/*.mdx, rendered at
+// /designs/<file-name>. `sketch` and `final` build the card thumbnail;
+// images sit in src/content/designs/images/ and are optimised at build time.
+const designs = defineCollection({
+  loader: glob({ pattern: '*.{md,mdx}', base: './src/content/designs' }),
+  schema: ({ image }) =>
+    z.object({
+      ...caseStudyFacts,
+      tools: z.array(z.string()).default([]),
+      device: z.enum(['phone', 'desktop']).default('phone'),
+      sketch: image(),
+      final: image(),
+      order: z.number().default(0),
+    }),
+});
+
+export const collections = { journal, projects, designs };

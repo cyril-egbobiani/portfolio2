@@ -1,6 +1,7 @@
 ---
 // JournalRow.astro — One journal entry in a list (homepage + /journal)
 import { formatJournalDate, sourceLabel, type JournalEntry } from '../data/journal';
+import NavArrow from './NavArrow.astro';
 
 interface Props {
   entry: JournalEntry;
@@ -31,9 +32,7 @@ const linkAttrs = entry.external
       {entry.external ? (
         <>
           {sourceLabel(entry.source)}
-          <svg class="journal-row__arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M7 17L17 7M17 7H8M17 7V16" />
-          </svg>
+          <NavArrow direction="up-right" size={12} />
         </>
       ) : (
         <>{entry.readingMinutes} min read</>
@@ -80,7 +79,7 @@ const linkAttrs = entry.external
 
   .journal-row__date {
     grid-area: date;
-    font-size: 12px;
+    font-size: var(--text-sm);
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
     white-space: nowrap;
@@ -95,7 +94,7 @@ const linkAttrs = entry.external
   }
 
   .journal-row__title {
-    font-size: 15px;
+    font-size: var(--text-base);
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: -0.02em;
@@ -103,7 +102,7 @@ const linkAttrs = entry.external
   }
 
   .journal-row__excerpt {
-    font-size: 13px;
+    font-size: var(--text-base);
     line-height: 1.55;
     color: var(--text-muted);
     display: -webkit-box;
@@ -113,8 +112,8 @@ const linkAttrs = entry.external
   }
 
   @media (min-width: 640px) {
-    .journal-row__title { font-size: 16px; }
-    .journal-row__excerpt { font-size: 13.5px; }
+    .journal-row__title { font-size: var(--text-base); }
+    .journal-row__excerpt { font-size: var(--text-base); }
   }
 
   .journal-row__meta {
@@ -122,15 +121,9 @@ const linkAttrs = entry.external
     display: inline-flex;
     align-items: center;
     gap: 3px;
-    font-size: 12px;
+    font-size: var(--text-sm);
     color: var(--text-muted);
     white-space: nowrap;
-  }
-
-  .journal-row__arrow {
-    width: 11px;
-    height: 11px;
-    transition: transform 160ms var(--ease-smooth-out);
   }
 
   .journal-row__draft {
@@ -149,10 +142,6 @@ const linkAttrs = entry.external
     .journal-row:hover {
       background: var(--surface-subtle);
     }
-
-    .journal-row:hover .journal-row__arrow {
-      transform: translate(1.5px, -1.5px);
-    }
   }
 
   .journal-row:active {
@@ -165,8 +154,7 @@ const linkAttrs = entry.external
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .journal-row,
-    .journal-row__arrow {
+    .journal-row {
       transition: none;
     }
   }

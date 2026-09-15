@@ -1,0 +1,139 @@
+---
+// CaseStudyLayout.astro — Shared shell for project and design case studies:
+// fixed top nav, section rail, intro with facts, optional hero, body, next card.
+import Layout from '../Layout.astro';
+import PageTopNav from '../PageTopNav.astro';
+import PortfolioFooter from '../PortfolioFooter.astro';
+import NextCase from './NextCase.astro';
+import NavArrow from '../NavArrow.astro';
+import type { CaseStudyLink, NextCaseProps } from './types';
+import '../../styles/article.css';
+import '../../styles/case-study.css';
+
+interface Props {
+  kind: 'Project' | 'Design';
+  title: string;
+  summary: string;
+  year: string;
+  role: string;
+  team?: string[];
+  tools?: string[];
+  toolsLabel?: string;
+  status?: string;
+  links?: CaseStudyLink[];
+  draft?: boolean;
+  backHref: string;
+  backLabel: string;
+  next?: NextCaseProps;
+}
+
+const {
+  kind,
+  title,
+  summary,
+  year,
+  role,
+  team = [],
+  tools = [],
+  toolsLabel = 'Tools',
+  status,
+  links = [],
+  draft = false,
+  backHref,
+  backLabel,
+  next,
+} = Astro.props;
+
+const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
+---
+
+<Layout title={`${title} — ${kicker} | Cyril Egbobiani`} description={summary}>
+  <div class="entry-progress" data-read-progress aria-hidden="true"></div>
+
+  <PageTopNav backHref={backHref} backLabel={backLabel} />
+
+  <!-- Outside <main>: the page entry animation would break position: fixed -->
+  <nav class="cs-rail" data-cs-rail aria-label="Sections">
+    <div class="cs-rail__track">
+      <ol class="cs-rail__list"></ol>
+    </div>
+  </nav>
+
+  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
+    <div class="mx-auto flex w-full max-w-[680px] flex-col" data-cs>
+      <article class="entry" data-entry>
+        <header class="cs-intro" id="intro" data-cs-intro>
+          <p class="cs-kicker">
+            <span>{kicker}</span>
+            {status && <span class="cs-status">{status}</span>}
+            {draft && <span class="entry-draft">Draft</span>}
+          </p>
+          <h1 class="cs-title">{title}</h1>
+          <p class="cs-summary">{summary}</p>
+
+          <!-- Facts sit in a quiet row under the summary; the stack gets its own line as tags -->
+          <dl class:list={['cs-facts', { 'cs-facts--no-team': team.length === 0 }]}>
+            <div class="cs-fact cs-fact--role">
+              <dt>Role</dt>
+              <dd>{role}</dd>
+            </div>
+            <div class="cs-fact">
+              <dt>Year</dt>
+              <dd>{year}</dd>
+            </div>
+            {team.length > 0 && (
+              <div class="cs-fact">
+                <dt>Team</dt>
+                <dd>{team.map((member) => <span>{member}</span>)}</dd>
+              </div>
+            )}
+            {tools.length > 0 && (
+              <div class="cs-fact cs-fact--wide">
+                <dt>{toolsLabel}</dt>
+                <dd>
+                  <ul class="cs-tags" role="list">
+                    {tools.map((tool) => <li>{tool}</li>)}
+                  </ul>
+                </dd>
+              </div>
+            )}
+          </dl>
+
+          {links.length > 0 && (
+            <p class="cs-links">
+              {links.map((link) => (
+                <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<NavArrow direction="up-right" size={12} /></a>
+              ))}
+            </p>
+          )}
+        </header>
+
+        {Astro.slots.has('hero') && (
+          <div class="cs-hero">
+            <slot name="hero" />
+          </div>
+        )}
+
+        <div class="entry-body cs-body" data-entry-body>
+          <slot />
+        </div>
+      </article>
+
+      {next && <NextCase {...next} />}
+
+      <div class="mt-24 sm:mt-28">
+        <PortfolioFooter />
+      </div>
+    </div>
+  </main>
+</Layout>
+
+<script>
+  import { initArticlePage } from '../../utils/article';
+  import { initCaseStudy } from '../../utils/case-study';
+
+  document.addEventListener('astro:page-load', () => {
+    initArticlePage();
+    initCaseStudy();
+  });
+</script>

@@ -1,0 +1,36 @@
+---
+title: Token Extractor
+summary: A browser extension that pulls the real design tokens off any page.
+year: '2024'
+role: Browser Extension & Tooling
+stack: [TypeScript, Browser Extension, Monorepo, CSS AST]
+---
+
+{/*
+  Add as you can: screenshots of the extension in <Figure>, the approaches you
+  compared in <Options>, and <Learnings> from shipping your first open-source build.
+*/}
+
+<Section id="problem" label="The problem" title="Rebuilding a design language meant eyedropping one hex code at a time">
+
+Recreating someone else's design language usually means eyedropping it one hex code at a time and manually calculating font scales.
+
+</Section>
+
+<Section id="solution" label="Solution" title="Read the tokens straight from the page's computed styles">
+
+The extension parses a page in real time and extracts its tokens — colours, shadows, typography, and spacing — into clean JSON or CSS variables.
+
+<Insights>
+<Insight label="01" title="Tokens from any live page">
+Extracts colours, shadows, fonts, and layout tokens directly from the page's DOM.
+</Insight>
+<Insight label="02" title="Ready to paste">
+Copy tokens straight into CSS variables or Tailwind token formats.
+</Insight>
+<Insight label="03" title="Built to grow">
+My first open-source build, architected as a modular monorepo.
+</Insight>
+</Insights>
+
+</Section>

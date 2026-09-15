@@ -13,7 +13,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
 ---
 
 <Layout
-  title="About Cyril Egbobiani — Software Engineer & Designer"
+  title="About Cyril Egbobiani — Software Engineer & Product Designer"
   description="The human half of Cyril Egbobiani. Background, philosophy, personal interests, photography, and creative explorations."
 >
   <PageTopNav />
@@ -28,7 +28,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
         <section class="flex flex-col gap-6">
         <!-- Row 1: Tactile Physical Ticket Pass Profile Card -->
         <div class="tkt-wrapper w-full max-w-[185px] sm:max-w-[195px] select-none" aria-label="Cyril Egbobiani — CE Archive verified pass" id="tktWrapper" data-tilt-card>
-          <div class="tkt-card relative w-full bg-[#ececed] rounded-[4px] overflow-visible border border-[rgba(60,45,30,0.08)]" id="tktCard" data-tilt-target>
+          <div class="tkt-card relative w-full bg-[var(--surface-subtle)] rounded-[4px] overflow-visible border border-[var(--border-subtle)]" id="tktCard" data-tilt-target>
 
             <!-- Tactile Cardstock Grain Overlay -->
             <div class="tkt-paper-texture pointer-events-none" aria-hidden="true"></div>
@@ -45,7 +45,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
             <!-- Column Layout Inside Card -->
             <div class="tkt-inner-content flex flex-col p-3 gap-2.5">
               <!-- Top Framed B&W Photo -->
-              <div class="tkt-photo-layer w-full aspect-[4/3.8] rounded-[2px] overflow-hidden bg-[#e2e2e5] border border-[rgba(0,0,0,0.06)]">
+              <div class="tkt-photo-layer w-full aspect-[4/3.8] overflow-hidden bg-[var(--surface-interactive)]">
                 <img
                   src={profileIntroImg}
                   alt="Cyril Egbobiani"
@@ -60,7 +60,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
               <!-- Dashed Perforation Line with Side Notches -->
               <div class="relative w-full my-0.5 flex items-center" aria-hidden="true">
                 <div class="absolute -left-[22px] size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
-                <div class="w-full border-t border-dashed border-[#d4d4d8]"></div>
+                <div class="w-full border-t border-dashed border-[var(--border-default)]"></div>
                 <div class="absolute -right-[22px] size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
               </div>
 
@@ -75,13 +75,13 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
 
         <!-- Row 2: Narrative & Biography -->
         <div class="flex flex-col gap-4 w-full">
-          <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)]">
+          <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
             Drawing became a coping tool for me at a very young age, It was just me and my notebook... then it finished. I drew almost on anything in sight but my mum's beating finally humbled me.
           </p>
-          <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)]">
+          <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
             Then I came across tech, coding in particular. It was so weird seeing someone write some combination of letters just to create a rectangle, I didn't really like the process but was a big fan of the result.
           </p>
-          <p class="text-[15.5px] leading-[1.7] text-[var(--text-secondary)]">
+          <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
             As time passed, I knew I had to learn how to code and it's been an awesome rollercoaster ever since.
           </p>
         </div>
@@ -101,7 +101,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
           <!-- Frame 1: Street Photography (Wide Landscape, Col 1-7) -->
           <div class="sm:col-span-7 flex flex-col group">
             <div
-              class="domain-frame relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              class="domain-frame relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-subtle)]"
               
             >
               <img
@@ -113,10 +113,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
               />
             </div>
             <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
                 Photography
               </span>
-              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
                 Lagos can be a literal cinema atimes
               </span>
             </div>
@@ -125,7 +125,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
           <!-- Frame 2: Automotive Design (Tall Vertical Portrait, Col 8-12) -->
           <div class="sm:col-span-5 flex flex-col group">
             <div
-              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)]"
               
             >
               <img
@@ -137,10 +137,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
               />
             </div>
             <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
                 Cars
               </span>
-              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
                 Big fan of automotive design, my dream car is a gt63s 4 door coupe e-performance... yes, that one!
               </span>
             </div>
@@ -149,7 +149,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
           <!-- Frame 3: Tactical Football (Medium Landscape, Col 1-4) -->
           <div class="sm:col-span-4 flex flex-col group">
             <div
-              class="domain-frame relative w-full aspect-[4/3] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              class="domain-frame relative w-full aspect-[4/3] overflow-hidden bg-[var(--surface-subtle)]"
               
             >
               <img
@@ -161,10 +161,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
               />
             </div>
             <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
               football
               </span>
-              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
                 Come on you Gunners!!!
               </span>
             </div>
@@ -175,7 +175,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
           <!-- Frame 4: Culinary Craft (Wide Horizon, Col 9-12) -->
           <div class="sm:col-span-4 flex flex-col group">
             <div
-              class="domain-frame relative w-full aspect-[16/11] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              class="domain-frame relative w-full aspect-[16/11] overflow-hidden bg-[var(--surface-subtle)]"
               
             >
               <img
@@ -187,10 +187,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
               />
             </div>
             <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
                 Cooking
               </span>
-              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
                Mum really influence here and I'm not mad
               </span>
             </div>
@@ -199,7 +199,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
           <!-- Frame 5: Long Walks (Col 9-12) -->
           <div class="sm:col-span-4 flex flex-col group">
             <div
-              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)] border border-[var(--border-subtle)]"
+              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)]"
             >
               <img
                 src={longWalksImg}
@@ -210,10 +210,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
               />
             </div>
             <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[13px] sm:text-[13.5px] font-semibold text-[var(--text-primary)] leading-snug">
+              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
                 long walks
               </span>
-              <span class="domain-desc font-sans text-[11.5px] sm:text-[12px] leading-[1.45] text-[var(--text-secondary)] mt-0.5">
+              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
                 My favorite way to decompress, observe the city, and think
               </span>
             </div>
@@ -260,7 +260,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
   .tkt-card {
     position: relative;
     width: 100%;
-    background-color: #ececed;
+    background-color: var(--surface-subtle);
     border-radius: 4px;
     box-shadow: none;
     transform-style: preserve-3d;
@@ -345,23 +345,6 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
     position: relative;
     overflow: hidden;
     background-color: var(--surface-subtle);
-    border: 1px solid var(--border-subtle);
-    box-shadow: 0 1px 3px rgba(36, 20, 11, 0.03);
-    transition: border-color 240ms ease, box-shadow 260ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .group:hover .domain-frame {
-    border-color: var(--border-default);
-    box-shadow: 0 6px 18px -4px rgba(36, 20, 11, 0.08);
-  }
-
-  :global([data-theme="dark"]) .domain-frame {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
-  }
-
-  :global([data-theme="dark"]) .group:hover .domain-frame {
-    border-color: rgba(255, 255, 255, 0.16);
-    box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.5);
   }
 
   .domain-img {

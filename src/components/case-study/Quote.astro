@@ -1,0 +1,16 @@
+---
+// Quote.astro — Feedback in someone's own words
+interface Props {
+  /** Who said it, e.g. "Youth leader, first test session" */
+  who?: string;
+}
+
+const { who } = Astro.props;
+---
+
+<figure class="cs-block cs-quote" data-cs-reveal>
+  <blockquote class="cs-quote__text">
+    <slot />
+  </blockquote>
+  {who && <figcaption class="cs-quote__who">— {who}</figcaption>}
+</figure>

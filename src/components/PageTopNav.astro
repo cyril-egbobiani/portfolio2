@@ -3,6 +3,8 @@
 // floating over a progressive blur so content softens as it scrolls beneath.
 // Render it outside <main>: .page-blur-entry animates `filter`, which would
 // stop position: fixed from working for anything inside it.
+import NavArrow from './NavArrow.astro';
+
 interface Props {
   backHref?: string;
   backLabel?: string;
@@ -29,9 +31,7 @@ const isHome = backHref === '/';
           <path fill="currentColor" fill-rule="evenodd" d="M10.772 2.688a2 2 0 0 1 2.456 0l8.384 6.521c.753.586.337 1.791-.615 1.791H20v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8h-.997c-.953 0-1.367-1.206-.615-1.79z" clip-rule="evenodd" />
         </svg>
       ) : (
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <path d="M19 12H5M11 18l-6-6 6-6" />
-        </svg>
+        <NavArrow direction="left" size={16} />
       )}
     </a>
 
@@ -135,7 +135,7 @@ const isHome = backHref === '/';
     height: var(--nav-btn);
     padding: 0;
     border-radius: 9999px;
-    border: 1px solid var(--border-subtle);
+    border: 0;
     background: var(--surface-subtle);
     color: var(--text-secondary);
     cursor: pointer;

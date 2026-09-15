@@ -83,8 +83,8 @@
 
   /* ── Typography & Modular Font Scale Tokens (cmrg.me aligned) ── */
   --text-xs: 12px;
-  --text-sm: 13.5px;
-  --text-base: 15.5px;
+  --text-sm: 14px; /* small: dates, labels, captions, tags */
+  --text-base: 16px; /* base: all readable text */
   --text-lg: 18.5px;
   --text-xl: 22px;
   --text-2xl: 28px;
@@ -92,32 +92,37 @@
   --leading-body: 1.6;
   --leading-heading: 1.25;
 
-  /* Surfaces – light (clean gallery paper & architectural mist) */
-  --surface: #fafafb;
-  --surface-subtle: #f1f1f4;
-  --surface-interactive: #e5e5e9;
-  --surface-raised: #ffffff;
-  --surface-inverse: #09090b;
+  /* ── Colour: pure black and white ────────────────────────────
+     Every colour on the site is a neutral grey between #000 and #fff.
+     Greys carry no tint; feedback and accents stay monochrome too. */
 
-  /* Text hierarchy – light (deep carbon obsidian ink & neutral slate) */
-  --text-primary: #09090b;
-  --text-secondary: #3f3f46;
-  --text-muted: #71717a;
-  --text-faint: #a1a1aa;
+  /* Surfaces – light */
+  --surface: #ffffff;
+  --surface-subtle: #f5f5f5;
+  --surface-interactive: #ebebeb;
+  /* Raised elements (dock, popovers, tooltips) share the card grey */
+  --surface-raised: #f5f5f5;
+  --surface-inverse: #000000;
+
+  /* Text hierarchy – light */
+  --text-primary: #000000;
+  --text-secondary: #404040;
+  --text-muted: #737373;
+  --text-faint: #a3a3a3;
   --text-on-accent: #ffffff;
-  --text-on-inverse: #fafafb;
+  --text-on-inverse: #ffffff;
 
-  /* Borders – light (delicate neutral hairlines) */
+  /* Borders – light */
   --border-subtle: rgba(0, 0, 0, 0.06);
-  --border-default: rgba(0, 0, 0, 0.11);
-  --border-strong: rgba(0, 0, 0, 0.20);
+  --border-default: rgba(0, 0, 0, 0.1);
+  --border-strong: rgba(0, 0, 0, 0.18);
 
-  /* Accents — pure carbon obsidian */
-  --accent: #18181b;
-  --accent-hover: #27272a;
-  --accent-soft: rgba(0, 0, 0, 0.05);
-  --rose: #f43f5e;
-  --rose-hover: #e11d48;
+  /* Accents */
+  --accent: #000000;
+  --accent-hover: #262626;
+  --accent-soft: rgba(0, 0, 0, 0.07);
+  --rose: #000000;
+  --rose-hover: #262626;
 
   /* Handwriting ink & annotations */
   --ink: var(--text-secondary);
@@ -127,13 +132,13 @@
   --shadow-logo: none;
 
   /* Feedback */
-  --success: #16a34a;
-  --warning: #d97706;
-  --danger: #dc2626;
+  --success: #000000;
+  --warning: #000000;
+  --danger: #000000;
 
-  /* Shadows — minimal neutral shadows */
-  --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.04);
-  --shadow-card-hover: 0 4px 12px rgba(0, 0, 0, 0.08);
+  /* Shadows — kept to a whisper */
+  --shadow-card: none;
+  --shadow-card-hover: none;
 
   /* Typography — Unified Geist System */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -142,38 +147,37 @@
 }
 
 /* ═══════════════════════════════════════════════════════════════
-   DARK THEME — #09090B Obsidian Monochrome Noir Canvas
-   Pure carbon black noir, radiant titanium ivory text & neutral accents.
+   DARK THEME — pure black canvas, white text, neutral greys between.
    ═══════════════════════════════════════════════════════════════ */
 [data-theme="dark"] {
   color-scheme: dark;
 
-  /* Canvas: #09090b — sleek obsidian carbon noir */
-  --surface: #09090b;
-  --surface-subtle: #141417;
-  --surface-interactive: #1f1f24;
-  --surface-raised: #141417;
-  --surface-inverse: #fafafb;
+  /* Surfaces – dark: pure black canvas */
+  --surface: #000000;
+  --surface-subtle: #0f0f0f;
+  --surface-interactive: #1a1a1a;
+  --surface-raised: #0f0f0f;
+  --surface-inverse: #ffffff;
 
-  /* Text: Pure radiant titanium white headings (#f4f4f6), neutral silver graphite body (#a1a1aa) */
-  --text-primary: #f4f4f6;
-  --text-secondary: #a1a1aa;
-  --text-muted: #71717a;
-  --text-faint: #3f3f46;
-  --text-on-accent: #09090b;
-  --text-on-inverse: #09090b;
+  /* Text hierarchy – dark */
+  --text-primary: #ffffff;
+  --text-secondary: #a3a3a3;
+  --text-muted: #737373;
+  --text-faint: #404040;
+  --text-on-accent: #000000;
+  --text-on-inverse: #000000;
 
-  /* Borders: Crisp ivory-white hairlines */
-  --border-subtle: rgba(255, 255, 255, 0.07);
-  --border-default: rgba(255, 255, 255, 0.12);
+  /* Borders – dark */
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --border-default: rgba(255, 255, 255, 0.13);
   --border-strong: rgba(255, 255, 255, 0.22);
 
-  /* Accents — radiant pure titanium white */
-  --accent: #f4f4f6;
-  --accent-hover: #e4e4e7;
-  --accent-soft: rgba(255, 255, 255, 0.08);
-  --rose: #f43f5e;
-  --rose-hover: #fda4af;
+  /* Accents */
+  --accent: #ffffff;
+  --accent-hover: #e5e5e5;
+  --accent-soft: rgba(255, 255, 255, 0.12);
+  --rose: #ffffff;
+  --rose-hover: #e5e5e5;
 
   /* Handwriting ink */
   --ink: var(--text-secondary);
@@ -183,9 +187,9 @@
   --shadow-logo: none;
 
   /* Feedback */
-  --success: #4ade80;
-  --warning: #fbbf24;
-  --danger: #f87171;
+  --success: #ffffff;
+  --warning: #ffffff;
+  --danger: #ffffff;
 
   /* NO drop shadows — flat surfaces only */
   --shadow-card: none;
@@ -391,7 +395,7 @@
 
   .section-title {
     font-family: var(--font-sans);
-    font-size: 15.5px;
+    font-size: var(--text-base);
     font-weight: 500;
     font-style: normal;
     color: var(--text-primary);
@@ -503,7 +507,7 @@
   .section-title {
     margin: 0;
     font-family: var(--font-sans);
-    font-size: 15.5px;
+    font-size: var(--text-base);
     font-weight: 500;
     letter-spacing: -0.015em;
     color: var(--text-primary);
@@ -512,7 +516,7 @@
 
   .section-aside {
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-sm);
     font-weight: 400;
     color: var(--text-muted);
     letter-spacing: -0.01em;
@@ -520,7 +524,7 @@
 
   .hand-label {
     font-family: var(--font-sans);
-    font-size: 14px;
+    font-size: var(--text-sm);
     font-weight: 500;
     line-height: 1.2;
     color: var(--text-muted);
@@ -587,39 +591,6 @@
   .status--live .status__dot,
   .status--shipped .status__dot {
     background: var(--success);
-  }
-
-  /* Screenshot placeholder tints — sleek monochrome cards */
-  .shot--a {
-    background: radial-gradient(120% 120% at 50% 25%, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 50%, #0d0d0f 100%), #0d0d0f;
-  }
-
-  .shot--b {
-    background: linear-gradient(148deg, #222227 0%, #151518 62%, #0e0e11 100%);
-  }
-
-  .shot--c {
-    background: linear-gradient(148deg, #1f1f23 0%, #131316 62%, #0d0d0f 100%);
-  }
-
-  .shot--d {
-    background: linear-gradient(148deg, #26262c 0%, #161619 62%, #101012 100%);
-  }
-
-  :root:not([data-theme='dark']) .shot--a {
-    background: radial-gradient(120% 120% at 50% 25%, rgba(0, 0, 0, 0.04) 0%, rgba(0, 0, 0, 0.01) 60%, #f4f4f7 100%);
-  }
-
-  :root:not([data-theme='dark']) .shot--b {
-    background: linear-gradient(148deg, #e7e7eb 0%, #f2f2f5 100%);
-  }
-
-  :root:not([data-theme='dark']) .shot--c {
-    background: linear-gradient(148deg, #eaeaf0 0%, #f6f6f9 100%);
-  }
-
-  :root:not([data-theme='dark']) .shot--d {
-    background: linear-gradient(148deg, #ececf0 0%, #f5f5f8 100%);
   }
 
   /* ─────────────────────────────────────────────────────────

@@ -1,0 +1,280 @@
+/* src/styles/article.css — Long-form article styles shared by journal entries
+   and design case studies: reading progress, body copy, margin notes. */
+
+/* ── Reading progress: a thin pencil line ── */
+.entry-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 50;
+  height: 2px;
+  background: var(--text-faint);
+  transform: scaleX(0);
+  transform-origin: left center;
+  pointer-events: none;
+}
+
+/* ── Header ── */
+.entry-header {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 36px;
+}
+
+.entry-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.entry-draft {
+  margin-left: 4px;
+  padding: 1px 7px;
+  border-radius: 9999px;
+  background: var(--surface-interactive);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.entry-title {
+  margin: 0;
+  font-size: 19.5px;
+  font-weight: 600;
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+  text-wrap: balance;
+}
+
+@media (min-width: 640px) {
+  .entry-title {
+    font-size: 22px;
+  }
+}
+
+.entry-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+/* ── Body copy ── */
+.entry-body {
+  position: relative;
+  font-size: var(--text-base);
+  line-height: 1.75;
+  letter-spacing: -0.01em;
+  color: var(--text-secondary);
+}
+
+.entry-body > :first-child {
+  margin-top: 0;
+}
+
+.entry-body p,
+.entry-body ul,
+.entry-body ol,
+.entry-body blockquote,
+.entry-body pre,
+.entry-body figure {
+  margin: 0 0 1.15em;
+}
+
+.entry-body h2,
+.entry-body h3 {
+  margin: 2.2em 0 0.6em;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+/* Keep linked headings clear of the fixed top navigation */
+.entry-body h2,
+.entry-body h3 {
+  scroll-margin-top: 96px;
+}
+
+.entry-body h2 { font-size: 17px; }
+.entry-body h3 { font-size: var(--text-base); }
+
+.entry-body strong {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.entry-body a {
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--border-default);
+  text-underline-offset: 3px;
+  transition: text-decoration-color 160ms var(--ease-smooth-out);
+}
+
+.entry-body a:hover {
+  text-decoration-color: var(--text-muted);
+}
+
+.entry-body ul,
+.entry-body ol {
+  padding-left: 1.25em;
+}
+
+.entry-body ul { list-style: disc; }
+.entry-body ol { list-style: decimal; }
+
+.entry-body li {
+  margin: 0.35em 0;
+  padding-left: 0.2em;
+}
+
+.entry-body li::marker {
+  color: var(--text-faint);
+}
+
+.entry-body blockquote {
+  padding-left: 16px;
+  border-left: 2px solid var(--border-default);
+  color: var(--text-muted);
+}
+
+.entry-body hr {
+  margin: 2.4em 0;
+  border: none;
+  border-top: 1px solid var(--border-subtle);
+}
+
+/* Tall phone screenshots stay within view; wide shots still fill the column */
+.entry-body img {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  max-height: min(80vh, 640px);
+  height: auto;
+}
+
+.entry-body :not(pre) > code {
+  padding: 0.1em 0.35em;
+  border-radius: 5px;
+  background: var(--surface-subtle);
+  font-size: 0.88em;
+  color: var(--text-primary);
+}
+
+.entry-body pre {
+  padding: 14px 16px;
+  border-radius: 12px;
+  overflow-x: auto;
+  font-size: var(--text-sm);
+  line-height: 1.6;
+}
+
+/* Code stays black and white: override the syntax theme's colours */
+.entry-body pre.astro-code,
+.entry-body pre.astro-code span {
+  background-color: var(--surface-subtle) !important;
+  color: var(--text-secondary) !important;
+}
+
+/* Footnote references */
+.entry-body sup a {
+  padding: 0 2px;
+  font-size: 11px;
+  color: var(--text-muted);
+  text-decoration: none;
+}
+
+.entry-body .sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* Footnotes stay at the bottom on narrow screens */
+.entry-body section[data-footnotes] {
+  margin-top: 3em;
+  padding-top: 1.2em;
+  border-top: 1px solid var(--border-subtle);
+  font-size: var(--text-sm);
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+
+.entry-body section[data-footnotes] ol {
+  margin: 0;
+}
+
+[data-margin-notes] section[data-footnotes] {
+  display: none;
+}
+
+/* ── Margin notes: footnotes handwritten beside their line (wide screens) ── */
+.entry-margin-note {
+  position: absolute;
+  right: -224px;
+  width: 184px;
+  font-family: var(--font-script);
+  font-size: 19px;
+  line-height: 1.2;
+  letter-spacing: 0;
+  color: var(--ink);
+  transform: rotate(-1.4deg);
+  transform-origin: left top;
+}
+
+.entry-margin-note p {
+  display: inline;
+  margin: 0;
+}
+
+.entry-margin-note code {
+  font-size: 0.8em;
+}
+
+.entry-margin-note__num {
+  margin-right: 5px;
+  font-family: var(--font-sans);
+  font-size: 10px;
+  color: var(--text-faint);
+  vertical-align: 3px;
+}
+
+/* ── End of entry ── */
+.entry-end {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 48px;
+  padding-top: 16px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.entry-end a {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+  text-decoration: none;
+  transition: color 160ms var(--ease-smooth-out);
+}
+
+.entry-end a:hover {
+  color: var(--text-primary);
+}

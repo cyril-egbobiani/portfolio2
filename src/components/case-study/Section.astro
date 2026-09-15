@@ -1,0 +1,20 @@
+---
+// Section.astro — One chapter of a case study: small label, claim headline, content.
+// Sections sharing a label ("Design decision") become one entry in the rail.
+interface Props {
+  id: string;
+  label: string;
+  /** State the conclusion, not the topic */
+  title: string;
+}
+
+const { id, label, title } = Astro.props;
+---
+
+<section class="cs-section" id={id} data-cs-section data-cs-label={label}>
+  <p class="cs-label">{label}</p>
+  <h2 class="cs-heading">{title}</h2>
+  <div class="cs-prose">
+    <slot />
+  </div>
+</section>

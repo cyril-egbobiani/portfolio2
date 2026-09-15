@@ -4,6 +4,7 @@ import Layout from '../../components/Layout.astro';
 import PageTopNav from '../../components/PageTopNav.astro';
 import JournalRow from '../../components/JournalRow.astro';
 import PortfolioFooter from '../../components/PortfolioFooter.astro';
+import NavArrow from '../../components/NavArrow.astro';
 import { getJournalEntries, type JournalEntry } from '../../data/journal';
 
 const SUBSTACK_URL = 'https://cyriljnr.substack.com';
@@ -69,7 +70,7 @@ const filters = [
       )}
 
       <div class="journal-links">
-        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack ↗</a>
+        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack<NavArrow direction="up-right" size={12} /></a>
         <a href="/journal/rss.xml">RSS</a>
       </div>
 
@@ -99,7 +100,7 @@ const filters = [
 
   .journal-lede {
     margin: 0;
-    font-size: 15.5px;
+    font-size: var(--text-base);
     line-height: 1.7;
     letter-spacing: -0.01em;
     color: var(--text-secondary);
@@ -129,7 +130,7 @@ const filters = [
     border-radius: 9999px;
     background: transparent;
     font-family: var(--font-sans);
-    font-size: 13px;
+    font-size: var(--text-sm);
     font-weight: 500;
     color: var(--text-muted);
     cursor: pointer;
@@ -142,7 +143,6 @@ const filters = [
   .journal-filter[aria-pressed='true'] {
     background: var(--surface);
     color: var(--text-primary);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
   }
 
   .journal-filter:active {
@@ -172,7 +172,7 @@ const filters = [
     margin: 0;
     padding: 28px 0;
     border-top: 1px solid var(--border-subtle);
-    font-size: 14px;
+    font-size: var(--text-base);
     color: var(--text-muted);
   }
 
@@ -191,7 +191,10 @@ const filters = [
   }
 
   .journal-links a {
-    font-size: 13px;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: var(--text-sm);
     color: var(--text-muted);
     text-decoration: none;
     transition: color 160ms var(--ease-smooth-out);

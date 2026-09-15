@@ -1,0 +1,17 @@
+---
+// Insight.astro — A card for a finding, pain point, or part of a system
+interface Props {
+  label?: string;
+  title: string;
+}
+
+const { label, title } = Astro.props;
+---
+
+<article class="cs-card" data-cs-reveal>
+  {label && <p class="cs-card__label">{label}</p>}
+  <h3 class="cs-card__title">{title}</h3>
+  <div class="cs-card__text">
+    <slot />
+  </div>
+</article>

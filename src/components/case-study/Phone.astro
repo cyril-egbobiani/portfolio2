@@ -1,0 +1,19 @@
+---
+// Phone.astro — A phone screenshot, usually placed inside <Figure>
+interface Props {
+  /** Path inside /public, e.g. /projects/forge/home.webp */
+  src: string;
+  alt: string;
+  caption?: string;
+  size?: 'md' | 'lg';
+}
+
+const { src, alt, caption, size = 'md' } = Astro.props;
+---
+
+<figure class={`cs-phone cs-phone--${size}`}>
+  <div class="cs-phone__screen">
+    <img src={encodeURI(src)} alt={alt} loading={size === 'lg' ? 'eager' : 'lazy'} decoding="async" />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

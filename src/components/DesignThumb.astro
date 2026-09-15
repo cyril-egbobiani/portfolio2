@@ -1,0 +1,133 @@
+---
+// DesignThumb.astro — "Sketch to final" thumbnail for design case studies
+import { Image } from 'astro:assets';
+
+interface Props {
+  title: string;
+  sketch: ImageMetadata;
+  final: ImageMetadata;
+  device?: 'phone' | 'desktop';
+  eager?: boolean;
+}
+
+const { title, sketch, final, device = 'phone', eager = false } = Astro.props;
+const width = device === 'phone' ? 320 : 640;
+const loading = eager ? 'eager' : 'lazy';
+---
+
+<div class={`dthumb dthumb--${device}`}>
+  <figure class="dthumb__item dthumb__item--sketch">
+    <div class="dthumb__shot">
+      <Image src={sketch} alt={`${title}, early sketch`} width={width} class="dthumb__img" loading={loading} decoding="async" />
+    </div>
+    <figcaption class="dthumb__label">sketch</figcaption>
+  </figure>
+
+  <svg class="dthumb__arrow" viewBox="0 0 48 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <path d="M3 15c9-8 22-10 38-5" />
+    <path d="M35 5l6 5-7 4" />
+  </svg>
+
+  <figure class="dthumb__item dthumb__item--final">
+    <div class="dthumb__shot">
+      <Image src={final} alt={`${title}, final design`} width={width} class="dthumb__img" loading={loading} decoding="async" />
+    </div>
+    <figcaption class="dthumb__label">final</figcaption>
+  </figure>
+</div>
+
+<style>
+  .dthumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4%;
+    width: 100%;
+    height: 100%;
+    padding: 6% 8% 10%;
+    box-sizing: border-box;
+  }
+
+  .dthumb__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    min-width: 0;
+  }
+
+  .dthumb--phone .dthumb__item {
+    height: 100%;
+  }
+
+  .dthumb--phone .dthumb__shot {
+    height: 100%;
+    aspect-ratio: 9 / 19.5;
+  }
+
+  .dthumb--desktop .dthumb__item {
+    width: 44%;
+  }
+
+  .dthumb--desktop .dthumb__shot {
+    width: 100%;
+    aspect-ratio: 16 / 11;
+  }
+
+  /* Screenshots keep square edges, no frame */
+  .dthumb__shot {
+    position: relative;
+    overflow: hidden;
+    background: var(--surface);
+    transition: transform 320ms var(--ease-smooth-out);
+  }
+
+  /* The sketch reads as paper: desaturated and slightly askew */
+  .dthumb__item--sketch .dthumb__shot {
+    transform: rotate(-2deg);
+  }
+
+  .dthumb__item--sketch .dthumb__img {
+    filter: grayscale(1) contrast(1.05);
+    opacity: 0.85;
+  }
+
+  .dthumb__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top;
+  }
+
+  .dthumb__arrow {
+    flex-shrink: 0;
+    width: 11%;
+    max-width: 44px;
+    color: var(--text-faint);
+  }
+
+  .dthumb__label {
+    font-family: var(--font-script);
+    font-size: 17px;
+    line-height: 1;
+    color: var(--text-muted);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    :global(.project-card:hover) .dthumb__item--sketch .dthumb__shot {
+      transform: rotate(-3deg);
+    }
+
+    :global(.project-card:hover) .dthumb__item--final .dthumb__shot {
+      transform: translateY(-3px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .dthumb__shot {
+      transition: none;
+    }
+  }
+</style>
