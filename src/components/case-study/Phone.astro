@@ -1,19 +1,33 @@
 ---
-// Phone.astro — A phone screenshot, usually placed inside <Figure>
+// Phone.astro — A phone screenshot, usually placed inside <Figure>.
+// Pass an imported image (optimised by Astro) or a path inside /public.
+import { Image } from 'astro:assets';
+
 interface Props {
-  /** Path inside /public, e.g. /projects/forge/home.webp */
-  src: string;
+  src: string | ImageMetadata;
   alt: string;
   caption?: string;
   size?: 'md' | 'lg';
 }
 
 const { src, alt, caption, size = 'md' } = Astro.props;
+const loading = size === 'lg' ? 'eager' : 'lazy';
 ---
 
 <figure class={`cs-phone cs-phone--${size}`}>
   <div class="cs-phone__screen">
-    <img src={encodeURI(src)} alt={alt} loading={size === 'lg' ? 'eager' : 'lazy'} decoding="async" />
+    {typeof src === 'string' ? (
+      <img src={encodeURI(src)} alt={alt} loading={loading} decoding="async" />
+    ) : (
+      <Image
+        src={src}
+        alt={alt}
+        widths={size === 'lg' ? [240, 480] : [160, 320]}
+        sizes={size === 'lg' ? '230px' : '150px'}
+        loading={loading}
+        decoding="async"
+      />
+    )}
   </div>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>

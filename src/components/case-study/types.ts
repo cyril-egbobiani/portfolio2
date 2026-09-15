@@ -10,7 +10,7 @@ export interface NextCaseProps {
   title: string;
   summary: string;
   /** Screenshot shown on the card (project case studies) */
-  image?: string;
+  image?: ImageMetadata;
   device?: 'phone' | 'desktop';
   /** Sketch → final pair shown on the card (design case studies) */
   design?: {

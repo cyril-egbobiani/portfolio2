@@ -689,19 +689,19 @@
    ───────────────────────────────────────────────────────── */
 
 /* Direct page entry / hard reload blur-in */
+/* Initial page entry: a small rise only. Content is never transparent or
+   blurred on load, so the browser can measure Largest Contentful Paint and
+   the animation stays on the compositor (transform only). */
 .page-blur-entry {
-  animation: pageInitialBlurIn 380ms cubic-bezier(0.23, 1, 0.32, 1) both;
-  will-change: filter, opacity;
+  animation: pageInitialRise 420ms cubic-bezier(0.23, 1, 0.32, 1) both;
 }
 
-@keyframes pageInitialBlurIn {
+@keyframes pageInitialRise {
   from {
-    opacity: 0;
-    filter: blur(12px);
+    transform: translateY(6px);
   }
   to {
-    opacity: 1;
-    filter: blur(0px);
+    transform: none;
   }
 }
 

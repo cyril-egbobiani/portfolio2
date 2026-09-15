@@ -2,7 +2,8 @@
 // src/pages/about.astro — Dedicated Profile & Human Half Page
 import Layout from '../components/Layout.astro';
 import PageTopNav from '../components/PageTopNav.astro';
-import profileIntroImg from '../assets/images/optimized/profile-intro.webp?url';
+import { Image } from 'astro:assets';
+import profileIntroImg from '../assets/images/optimized/profile-intro.webp';
 import photographyImg from '../assets/images/optimized/photography.webp?url';
 import footballImg from '../assets/images/optimized/football.webp?url';
 import cookingImg from '../assets/images/optimized/cooking.webp?url';
@@ -46,11 +47,10 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
             <div class="tkt-inner-content flex flex-col p-3 gap-2.5">
               <!-- Top Framed B&W Photo -->
               <div class="tkt-photo-layer w-full aspect-[4/3.8] overflow-hidden bg-[var(--surface-interactive)]">
-                <img
+                <Image
                   src={profileIntroImg}
                   alt="Cyril Egbobiani"
-                  width="400"
-                  height="380"
+                  width={400}
                   class="w-full h-full object-cover object-[50%_25%] filter grayscale contrast-[1.08] brightness-[0.98]"
                   loading="eager"
                   decoding="async"

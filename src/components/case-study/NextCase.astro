@@ -19,7 +19,7 @@ const initial = title.trim().charAt(0).toUpperCase();
       {design ? (
         <Image src={design.final} alt="" width={240} class="cs-next__shot" loading="lazy" decoding="async" />
       ) : image ? (
-        <img src={encodeURI(image)} alt="" class="cs-next__shot" loading="lazy" decoding="async" />
+        <Image src={image} alt="" widths={[120, 240]} sizes="100px" class="cs-next__shot" loading="lazy" decoding="async" />
       ) : (
         <span class="cs-next__initial">{initial}</span>
       )}

@@ -64,8 +64,8 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
                 <Image
                   src={project.image}
                   alt={`${project.title} preview`}
-                  width={project.deviceType === 'phone' ? 375 : 1200}
-                  height={project.deviceType === 'phone' ? 812 : 675}
+                  widths={project.deviceType === 'phone' ? [160, 320] : [320, 640]}
+                  sizes={project.deviceType === 'phone' ? '150px' : '(min-width: 640px) 300px, 80vw'}
                   class={`card-shot card-shot--${project.deviceType}`}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
@@ -252,6 +252,10 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
   .tab-panel:not([hidden]),
   .tab-panel.is-active {
     display: block !important;
+  }
+
+  /* Animate only when switching tabs, never on first load */
+  .tab-panel.is-entering {
     animation: tabFadeIn 320ms cubic-bezier(0.23, 1, 0.32, 1) both;
   }
 
@@ -264,12 +268,10 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     0% {
       opacity: 0;
       transform: translateY(12px) scale(0.988);
-      filter: blur(4px);
     }
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
-      filter: blur(0);
     }
   }
 

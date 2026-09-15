@@ -1,7 +1,8 @@
 ---
 // PortfolioIntro.astro — Hero introduction on index.astro
+import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
-import profileIntroImg from '../assets/images/optimized/profile-intro.webp?url';
+import profileIntroImg from '../assets/images/optimized/profile-intro.webp';
 
 const socials = [
   {
@@ -45,8 +46,10 @@ const socials = [
         aria-label="About Cyril Egbobiani"
         title="About Cyril"
       >
-        <img
+        <Image
           src={profileIntroImg}
+          width={96}
+          fetchpriority="high"
           alt="Cyril Egbobiani"
           class="avatar-photo absolute inset-0 w-full h-full object-cover object-[50%_25%] filter  contrast-[1.06]"
           loading="eager"
@@ -71,8 +74,9 @@ const socials = [
         target="_blank"
         rel="noopener noreferrer"
         class="inline-company-link"
-      ><img
-        src={ieslLogo.src}
+      ><Image
+        src={ieslLogo}
+        height={28}
         alt=""
         class="inline-company-icon"
         style="display: inline-block !important; height: 14px !important; width: auto !important; vertical-align: -2px !important; margin-right: 5px !important; border-radius: 2px !important;"
