@@ -8,7 +8,8 @@ const {
   image = '/images/profile-1.png',
 } = Astro.props;
 
-const siteUrl = 'https://portfolio-screeching.brimble.app';
+// Set once in astro.config.mjs (`site`)
+const siteUrl = (Astro.site?.origin ?? 'https://cyril-jnr.vercel.app');
 const canonicalUrl = `${siteUrl}${Astro.url.pathname}`;
 ---
 

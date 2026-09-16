@@ -2,4 +2,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://portfolio-screeching.brimble.app/sitemap.xml
+Sitemap: https://cyril-jnr.vercel.app/sitemap.xml
