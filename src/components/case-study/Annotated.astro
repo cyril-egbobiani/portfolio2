@@ -1,0 +1,60 @@
+---
+// Annotated.astro — A screenshot with numbered points and a matching legend.
+// Hover, focus or tap a number (or a legend row) to highlight its pair.
+// Points use percentages of the image: { x: 0–100, y: 0–100, text }.
+import { Image } from 'astro:assets';
+
+interface Point {
+  x: number;
+  y: number;
+  text: string;
+}
+
+interface Props {
+  src: string | ImageMetadata;
+  alt: string;
+  points: Point[];
+  caption?: string;
+  /** Phone-shaped screens sit in a soft panel at phone width. Detected for imported images. */
+  portrait?: boolean;
+}
+
+const { src, alt, points, caption } = Astro.props;
+const portrait = Astro.props.portrait ?? (typeof src !== 'string' && src.height > src.width);
+const uid = `cs-annotated-${Math.random().toString(36).slice(2, 8)}`;
+---
+
+<figure class:list={['cs-block cs-annotated', { 'is-portrait': portrait }]} data-cs-annotated>
+  <div class="cs-annotated__stage">
+    {typeof src === 'string' ? (
+      <img src={encodeURI(src)} alt={alt} loading="lazy" decoding="async" />
+    ) : (
+      <Image src={src} alt={alt} widths={[480, 960]} sizes="(min-width: 640px) 380px, 100vw" loading="lazy" decoding="async" />
+    )}
+
+    {points.map((point, index) => (
+      <button
+        type="button"
+        class="cs-annotated__spot"
+        style={`--x: ${point.x}%; --y: ${point.y}%`}
+        aria-label={`Point ${index + 1}`}
+        aria-describedby={`${uid}-${index}`}
+        data-cs-point={index}
+      >
+        {index + 1}
+      </button>
+    ))}
+  </div>
+
+  <div class="cs-annotated__side">
+    <ol class="cs-annotated__legend" role="list">
+      {points.map((point, index) => (
+        <li class="cs-annotated__item" id={`${uid}-${index}`} data-cs-point={index}>
+          <span class="cs-annotated__num" aria-hidden="true">{index + 1}</span>
+          <span>{point.text}</span>
+        </li>
+      ))}
+    </ol>
+    {caption && <figcaption>{caption}</figcaption>}
+  </div>
+</figure>

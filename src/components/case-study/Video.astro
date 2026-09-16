@@ -1,0 +1,47 @@
+---
+// Video.astro — A short, muted clip that loops and plays only while on screen.
+// Nothing downloads until it scrolls into view (preload="none" + poster).
+// Reduced motion: it never autoplays; the viewer presses play.
+// A play/pause button is always available.
+// Keep clips short (around 10–15s, a few MB). Put files in /public/videos/
+// or pass a full URL for larger hosted files.
+interface Props {
+  /** MP4 source: a path inside /public or a full URL */
+  src: string;
+  /** Optional WebM source, preferred by browsers that support it */
+  webm?: string;
+  /** Still image shown before the clip loads */
+  poster?: string;
+  /** What the clip shows, for screen readers */
+  label: string;
+  caption?: string;
+  loop?: boolean;
+}
+
+const { src, webm, poster, label, caption, loop = true } = Astro.props;
+const resolve = (url?: string) => (url ? (/^https?:\/\//.test(url) ? url : encodeURI(url)) : undefined);
+---
+
+<figure class="cs-block cs-video" data-cs-video>
+  <div class="cs-video__frame">
+    <video muted playsinline preload="none" loop={loop} poster={resolve(poster)} aria-label={label} data-cs-video-el>
+      {webm && <source src={resolve(webm)} type="video/webm" />}
+      <source src={resolve(src)} type="video/mp4" />
+    </video>
+
+    <span class="cs-video__progress" aria-hidden="true">
+      <span data-cs-video-progress></span>
+    </span>
+
+    <button type="button" class="cs-video__toggle" aria-label="Play video" data-cs-video-toggle>
+      <svg class="cs-video__icon cs-video__icon--play" viewBox="0 0 24 24" aria-hidden="true">
+        <path d="M8.5 5.8v12.4a.8.8 0 0 0 1.2.7l9.6-6.2a.8.8 0 0 0 0-1.4L9.7 5.1a.8.8 0 0 0-1.2.7Z" fill="currentColor" />
+      </svg>
+      <svg class="cs-video__icon cs-video__icon--pause" viewBox="0 0 24 24" aria-hidden="true">
+        <rect x="7" y="5.5" width="3.4" height="13" rx="1" fill="currentColor" />
+        <rect x="13.6" y="5.5" width="3.4" height="13" rx="1" fill="currentColor" />
+      </svg>
+    </button>
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

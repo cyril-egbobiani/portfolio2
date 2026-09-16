@@ -1,6 +1,6 @@
 ---
 title: Forge
-summary: A cross-platform spiritual ecosystem for youth — gamified scripture learning, background sermon audio streaming, a live prayer wall, and an admin portal for churches.
+summary: A cross-platform spiritual ecosystem for youth gamified scripture learning, background sermon audio streaming, a live prayer wall, and an admin portal for churches.
 year: '2026'
 role: Product Design & Full-Stack Engineering
 stack: [Flutter (Dart), Riverpod, React 19, TypeScript, Node.js, Express, MongoDB, Socket.IO, Figma Token API]
@@ -19,16 +19,16 @@ stack: [Flutter (Dart), Riverpod, React 19, TypeScript, Node.js, Express, MongoD
 Most faith applications for young audiences suffer from static text walls, disconnected design-to-engineering handoffs, and fragmented admin tools.
 
 <Insights>
-<Insight label="Pain point #1" title="Static text walls">
+<Insight label="Pain point 1" title="Static text walls">
 Content is delivered as long pages of text, with little built for how young people actually engage.
 </Insight>
-<Insight label="Pain point #2" title="No real-time connection">
+<Insight label="Pain point 2" title="No real-time connection">
 When churches request prayer, youth have no real-time context or way to respond.
 </Insight>
-<Insight label="Pain point #3" title="Disconnected handoffs">
+<Insight label="Pain point 3" title="Disconnected handoffs">
 Design and engineering handoffs are disconnected, so designs and the shipped product drift apart.
 </Insight>
-<Insight label="Pain point #4" title="Fragmented admin tools">
+<Insight label="Pain point 4" title="Fragmented admin tools">
 Churches juggle separate tools to manage content and their community.
 </Insight>
 </Insights>
@@ -37,7 +37,7 @@ Churches juggle separate tools to manage content and their community.
 
 <Section id="solution" label="Solution" title="One connected ecosystem instead of scattered tools">
 
-I designed and built an integrated three-tier ecosystem: a Flutter mobile app driven by an automated Figma-to-code token script, real-time Socket.IO prayer requests, a background audio and video player, and a React 19 admin portal backed by a Node.js, Express, and MongoDB API.
+I designed and built an integrated three-tier ecosystem: a Flutter mobile app driven by an automated Figma-to-code token script, real-time Socket.IO prayer requests, a background audio and video player, and a React-based admin web portal backed by a Node.js, Express, and MongoDB API.
 
 <Figure>
 <Phone src="/projects/forge/Onboarding-Screen 1.webp" alt="Forge onboarding flow" caption="Onboarding" />
@@ -57,13 +57,13 @@ I designed and built an integrated three-tier ecosystem: a Flutter mobile app dr
 <Section id="architecture" label="How it's built" title="Three tiers, each with one clear job">
 
 <Insights>
-<Insight label="01" title="Mobile app — Flutter">
+<Insight label="01" title="Mobile app - Flutter">
 Material 3, Riverpod state management, Lottie animations, bento grid layouts, a just_audio background player, and Socket.IO real-time prayer.
 </Insight>
-<Insight label="02" title="Admin portal — React 19">
+<Insight label="02" title="Admin portal - React 19">
 Vite, Tailwind CSS, React Hook Form, and Axios for managing devotionals, scheduling events, and moderating community prayer requests.
 </Insight>
-<Insight label="03" title="API — Node.js, Express, MongoDB">
+<Insight label="03" title="API - Node.js, Express, MongoDB">
 A REST API with JWT authentication, refresh token rotation, role-based access control, and a Multer media pipeline, deployed on Render.
 </Insight>
 </Insights>

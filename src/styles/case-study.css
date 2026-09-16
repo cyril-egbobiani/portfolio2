@@ -654,11 +654,9 @@
   background: var(--surface-subtle);
 }
 
-.cs-takeaway__mark {
-  font-family: var(--font-script);
-  font-size: 26px;
-  line-height: 0.9;
-  color: var(--text-muted);
+/* Beacon sits level with the title line */
+.cs-takeaway__beacon {
+  margin-top: 0;
 }
 
 .cs-body .cs-takeaway__title {
@@ -711,6 +709,414 @@
 
 .cs-body .cs-learnings li p {
   margin: 0;
+}
+
+/* ── Design decision: label, headline, optional media, reasoning ── */
+.cs-body .cs-decision__media {
+  margin: 16px 0 20px;
+}
+
+.cs-body .cs-decision__media > .cs-block,
+.cs-body .cs-decision__media > p > .cs-block {
+  margin: 0;
+}
+
+.cs-decision__grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 640px) {
+  .cs-decision--side .cs-decision__grid {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 28px;
+    align-items: start;
+  }
+
+  /* Reasoning on the left, media on the right */
+  .cs-body .cs-decision--side .cs-decision__media {
+    order: 2;
+    margin: 0;
+  }
+}
+
+/* ── Reasons: labelled rows (Problem / Decision / Why) ── */
+.cs-body .cs-reasons {
+  max-width: 60ch;
+}
+
+.cs-reason {
+  display: grid;
+  gap: 2px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cs-reason:last-child {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.cs-reason__label {
+  font-size: var(--text-sm);
+  color: var(--text-muted);
+}
+
+.cs-reason__text,
+.cs-body .cs-reason__text p {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: 1.6;
+  color: var(--text-secondary);
+}
+
+@media (min-width: 640px) {
+  .cs-reason {
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 16px;
+  }
+
+  .cs-reason__label {
+    padding-top: 2px;
+  }
+
+  .cs-decision--side .cs-reason {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
+
+/* Shared media frame: soft fill, square-edged content */
+.cs-video__frame,
+.cs-compare__stage,
+.cs-annotated__stage {
+  position: relative;
+  overflow: hidden;
+  background: var(--surface-subtle);
+}
+
+.cs-video figcaption,
+.cs-compare figcaption {
+  margin-top: 10px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* ── Video clip ── */
+.cs-video,
+.cs-compare {
+  margin: 0;
+}
+
+.cs-video video {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.cs-video__progress {
+  position: absolute;
+  right: 56px;
+  bottom: 27px;
+  left: 14px;
+  height: 2px;
+  overflow: hidden;
+  background: color-mix(in srgb, #fff 40%, transparent);
+  pointer-events: none;
+}
+
+.cs-video__progress span {
+  display: block;
+  height: 100%;
+  background: #fff;
+  transform: scaleX(0);
+  transform-origin: left center;
+}
+
+.cs-video__toggle,
+.cs-compare__tag {
+  background: color-mix(in srgb, var(--surface) 82%, transparent);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.cs-video__toggle {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: transform 160ms var(--ease-smooth-out);
+}
+
+.cs-video__toggle:active {
+  transform: scale(0.94);
+}
+
+.cs-video__toggle:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+.cs-video__icon {
+  width: 16px;
+  height: 16px;
+}
+
+.cs-video__icon--pause,
+.cs-video[data-playing] .cs-video__icon--play {
+  display: none;
+}
+
+.cs-video[data-playing] .cs-video__icon--pause {
+  display: block;
+}
+
+/* ── Before / after slider ── */
+.cs-compare__stage {
+  --pos: 50%;
+  user-select: none;
+  touch-action: pan-y;
+}
+
+.cs-body .cs-compare__img,
+.cs-body .cs-annotated__stage img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  border: 0;
+  border-radius: 0;
+}
+
+.cs-compare__after {
+  position: absolute;
+  inset: 0;
+  clip-path: inset(0 0 0 var(--pos));
+}
+
+.cs-body .cs-compare__after .cs-compare__img {
+  height: 100%;
+  object-fit: cover;
+}
+
+.cs-compare__tag {
+  position: absolute;
+  top: 12px;
+  padding: 2px 9px;
+  border-radius: 9999px;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  pointer-events: none;
+}
+
+.cs-compare__tag--before {
+  left: 12px;
+}
+
+.cs-compare__tag--after {
+  right: 12px;
+}
+
+.cs-compare__handle {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: var(--pos);
+  width: 2px;
+  background: var(--text-primary);
+  transform: translateX(-1px);
+  pointer-events: none;
+}
+
+.cs-compare__handle::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m9 7-5 5 5 5M15 7l5 5-5 5'/%3E%3C/svg%3E")
+      center / 16px no-repeat,
+    #fff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+  transform: translate(-50%, -50%);
+  transition: transform 200ms var(--ease-bounce);
+}
+
+.cs-compare__stage:active .cs-compare__handle::after {
+  transform: translate(-50%, -50%) scale(1.12);
+}
+
+/* The native range input covers the image: drag, tap and arrow keys all work */
+.cs-compare__range {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  opacity: 0;
+  cursor: ew-resize;
+}
+
+.cs-compare__stage:has(.cs-compare__range:focus-visible) {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+/* Phone-shaped screens: a soft panel with the screen at phone width */
+.cs-compare.is-portrait > .cs-compare__stage,
+.cs-annotated.is-portrait .cs-annotated__stage {
+  width: 100%;
+  max-width: 260px;
+  margin-inline: auto;
+}
+
+.cs-compare.is-portrait {
+  padding: 28px 20px;
+  border-radius: 16px;
+  background: var(--surface-subtle);
+}
+
+.cs-compare.is-portrait .cs-compare__stage {
+  background: var(--surface);
+}
+
+@media (min-width: 640px) {
+  .cs-annotated.is-portrait {
+    grid-template-columns: 260px minmax(0, 1fr);
+    gap: 32px;
+  }
+}
+
+/* ── Annotated screenshot ── */
+.cs-annotated {
+  display: grid;
+  gap: 16px;
+  margin: 0;
+}
+
+@media (min-width: 640px) {
+  .cs-annotated {
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
+    gap: 24px;
+    align-items: center;
+  }
+}
+
+.cs-annotated__spot {
+  position: absolute;
+  top: var(--y);
+  left: var(--x);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  margin: -12px 0 0 -12px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--text-primary);
+  color: var(--surface);
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--surface) 55%, transparent);
+  transition: transform 200ms var(--ease-bounce);
+}
+
+.cs-annotated__spot.is-active {
+  transform: scale(1.2);
+}
+
+.cs-annotated__spot:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
+}
+
+.cs-body .cs-annotated__legend {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cs-body .cs-annotated__item {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 10px;
+  margin: 0;
+  padding: 8px 10px;
+  border-radius: 10px;
+  font-size: var(--text-base);
+  line-height: 1.5;
+  color: var(--text-secondary);
+  cursor: default;
+  transition:
+    background-color 160ms var(--ease-smooth-out),
+    color 160ms var(--ease-smooth-out);
+}
+
+.cs-body .cs-annotated__item::before {
+  content: none;
+}
+
+.cs-body .cs-annotated__item.is-active {
+  background: var(--surface-subtle);
+  color: var(--text-primary);
+}
+
+.cs-annotated__num {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  margin-top: 1px;
+  border-radius: 9999px;
+  background: var(--surface-interactive);
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 500;
+  transition:
+    background-color 160ms var(--ease-smooth-out),
+    color 160ms var(--ease-smooth-out);
+}
+
+.cs-annotated__item.is-active .cs-annotated__num {
+  background: var(--text-primary);
+  color: var(--surface);
+}
+
+.cs-annotated figcaption {
+  margin: 10px 10px 0;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-annotated__spot,
+  .cs-annotated__item,
+  .cs-annotated__num,
+  .cs-compare__handle::after,
+  .cs-video__toggle {
+    transition: none;
+  }
 }
 
 /* ── Next case study: one compact row at every width ── */

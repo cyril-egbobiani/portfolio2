@@ -1,5 +1,6 @@
 // src/utils/case-study.ts — Interactions for case study pages (projects and designs):
-// section rail, scroll reveals, count-up stats, option tabs, image zoom.
+// section rail, scroll reveals, count-up stats, option tabs, image zoom,
+// and decision media: videos, before/after sliders, annotated screenshots.
 // Everything is progressive: without JavaScript the page reads top to bottom.
 
 type Cleanup = () => void;
@@ -16,6 +17,9 @@ export function initCaseStudy() {
   initCounts(page, cleanups);
   initOptions(page, cleanups);
   initZoom(page, cleanups);
+  initVideos(page, cleanups);
+  initCompare(page);
+  initAnnotated(page);
   page.dataset.csReady = '';
 
   document.addEventListener('astro:before-swap', () => cleanups.forEach((cleanup) => cleanup()), { once: true });
@@ -370,5 +374,95 @@ function initZoom(page: HTMLElement, cleanups: Cleanup[]) {
   cleanups.push(() => {
     document.removeEventListener('keydown', onKey);
     finish();
+  });
+}
+
+// ── Videos: play muted while on screen, pause when not; the viewer can always pause ──
+function initVideos(page: HTMLElement, cleanups: Cleanup[]) {
+  page.querySelectorAll<HTMLElement>('[data-cs-video]').forEach((figure) => {
+    const video = figure.querySelector<HTMLVideoElement>('[data-cs-video-el]');
+    const toggle = figure.querySelector<HTMLButtonElement>('[data-cs-video-toggle]');
+    const bar = figure.querySelector<HTMLElement>('[data-cs-video-progress]');
+    if (!video || !toggle) return;
+
+    // With reduced motion nothing autoplays; the viewer presses play
+    let heldByViewer = reduceMotion();
+
+    const sync = () => {
+      const playing = !video.paused;
+      figure.toggleAttribute('data-playing', playing);
+      toggle.setAttribute('aria-label', playing ? 'Pause video' : 'Play video');
+    };
+    const onTime = () => {
+      if (bar && video.duration) bar.style.transform = `scaleX(${video.currentTime / video.duration})`;
+    };
+
+    video.addEventListener('play', sync);
+    video.addEventListener('pause', sync);
+    video.addEventListener('timeupdate', onTime);
+
+    toggle.addEventListener('click', () => {
+      if (video.paused) {
+        heldByViewer = false;
+        video.play().catch(() => {});
+      } else {
+        heldByViewer = true;
+        video.pause();
+      }
+    });
+
+    if (!('IntersectionObserver' in window)) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) {
+          video.pause();
+          return;
+        }
+        if (!heldByViewer) video.play().catch(() => {});
+      },
+      { threshold: 0.4 }
+    );
+    observer.observe(figure);
+
+    cleanups.push(() => {
+      observer.disconnect();
+      video.pause();
+    });
+  });
+}
+
+// ── Before/after: the range input drives the divider position ──
+function initCompare(page: HTMLElement) {
+  page.querySelectorAll<HTMLElement>('[data-cs-compare-stage]').forEach((stage) => {
+    const range = stage.querySelector<HTMLInputElement>('[data-cs-compare-range]');
+    if (!range) return;
+    const update = () => stage.style.setProperty('--pos', `${range.value}%`);
+    range.addEventListener('input', update);
+    update();
+  });
+}
+
+// ── Annotated screenshot: a point and its legend row highlight together ──
+function initAnnotated(page: HTMLElement) {
+  page.querySelectorAll<HTMLElement>('[data-cs-annotated]').forEach((group) => {
+    const items = [...group.querySelectorAll<HTMLElement>('[data-cs-point]')];
+    let pinned: string | null = null;
+
+    const show = (index: string | null) => {
+      items.forEach((el) => el.classList.toggle('is-active', index !== null && el.dataset.csPoint === index));
+    };
+
+    items.forEach((el) => {
+      const index = el.dataset.csPoint ?? null;
+      el.addEventListener('pointerenter', () => show(index));
+      el.addEventListener('pointerleave', () => show(pinned));
+      el.addEventListener('focus', () => show(index));
+      el.addEventListener('blur', () => show(pinned));
+      // A tap pins the pair so it stays highlighted on touch screens
+      el.addEventListener('click', () => {
+        pinned = pinned === index ? null : index;
+        show(pinned);
+      });
+    });
   });
 }

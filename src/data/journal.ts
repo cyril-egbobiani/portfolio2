@@ -2,6 +2,7 @@
 // Merges entries written on this site with posts pulled from Substack
 // into one date-sorted list.
 import { getCollection } from 'astro:content';
+import type { ImageMetadata } from 'astro';
 import { getSubstackPosts } from '../utils/substack';
 
 export type JournalSource = 'here' | 'substack' | 'medium' | 'other';
@@ -17,6 +18,8 @@ export interface JournalEntry {
   tags: string[];
   draft: boolean;
   readingMinutes?: number;
+  /** Up to three pictures: optimised assets, or remote URLs from Substack */
+  images: (ImageMetadata | string)[];
 }
 
 const SOURCE_LABELS: Record<JournalSource, string> = {
@@ -44,6 +47,10 @@ export function formatJournalDate(date: Date, withYear = true): string {
   });
 }
 
+export function formatJournalDay(date: Date): string {
+  return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'UTC' });
+}
+
 export async function getJournalEntries(): Promise<JournalEntry[]> {
   // Drafts are visible while developing, never in production builds.
   const showDrafts = import.meta.env.DEV;
@@ -62,6 +69,7 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
       tags: entry.data.tags,
       draft: entry.data.draft,
       readingMinutes: externalUrl ? undefined : readingMinutes(entry.body),
+      images: entry.data.images,
     };
   });
 
@@ -79,6 +87,7 @@ export async function getJournalEntries(): Promise<JournalEntry[]> {
       source: 'substack',
       tags: [],
       draft: false,
+      images: post.image ? [post.image] : [],
     }));
 
   return [...entries, ...substack].sort((a, b) => b.date.valueOf() - a.date.valueOf());

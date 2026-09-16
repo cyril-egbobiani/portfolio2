@@ -1,0 +1,59 @@
+---
+// Compare.astro — Before/after slider for two images of the same view.
+// Drag (or use arrow keys) to reveal the "after" image over the "before".
+// Both images should share the same aspect ratio. Pass imported images
+// (optimised by Astro) or paths inside /public.
+import { Image } from 'astro:assets';
+
+interface Props {
+  before: string | ImageMetadata;
+  after: string | ImageMetadata;
+  /** What is being compared, for screen readers */
+  alt: string;
+  beforeLabel?: string;
+  afterLabel?: string;
+  caption?: string;
+  /** Phone-shaped screens sit in a soft panel at phone width. Detected for imported images. */
+  portrait?: boolean;
+  /** Starting position of the divider, 0–100 */
+  start?: number;
+}
+
+const { before, after, alt, beforeLabel = 'Before', afterLabel = 'After', caption, start = 50 } = Astro.props;
+const portrait = Astro.props.portrait ?? (typeof before !== 'string' && before.height > before.width);
+const widths = portrait ? [280, 560] : [680, 1360];
+const sizes = portrait ? '280px' : '(min-width: 720px) 680px, 100vw';
+---
+
+<figure class:list={['cs-block cs-compare', { 'is-portrait': portrait }]} data-cs-compare>
+  <div class="cs-compare__stage" style={`--pos: ${start}%`} data-cs-compare-stage>
+    {typeof before === 'string' ? (
+      <img class="cs-compare__img" src={encodeURI(before)} alt={`${alt}: ${beforeLabel.toLowerCase()}`} loading="lazy" decoding="async" />
+    ) : (
+      <Image class="cs-compare__img" src={before} alt={`${alt}: ${beforeLabel.toLowerCase()}`} widths={widths} sizes={sizes} loading="lazy" decoding="async" />
+    )}
+
+    <div class="cs-compare__after">
+      {typeof after === 'string' ? (
+        <img class="cs-compare__img" src={encodeURI(after)} alt={`${alt}: ${afterLabel.toLowerCase()}`} loading="lazy" decoding="async" />
+      ) : (
+        <Image class="cs-compare__img" src={after} alt={`${alt}: ${afterLabel.toLowerCase()}`} widths={widths} sizes={sizes} loading="lazy" decoding="async" />
+      )}
+    </div>
+
+    <span class="cs-compare__tag cs-compare__tag--before" aria-hidden="true">{beforeLabel}</span>
+    <span class="cs-compare__tag cs-compare__tag--after" aria-hidden="true">{afterLabel}</span>
+    <span class="cs-compare__handle" aria-hidden="true"></span>
+
+    <input
+      type="range"
+      class="cs-compare__range"
+      min="0"
+      max="100"
+      value={start}
+      aria-label={`Slide to compare ${beforeLabel.toLowerCase()} and ${afterLabel.toLowerCase()}`}
+      data-cs-compare-range
+    />
+  </div>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

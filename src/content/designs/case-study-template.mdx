@@ -12,6 +12,9 @@ order: 99
 draft: true
 ---
 
+import templateSketch from './images/template-sketch.svg';
+import templateFinal from './images/template-final.svg';
+
 {/*
   This is a draft template: it shows in `npm run dev` and never in production.
   Copy it for each real case study, swap the images and words, then delete it.
@@ -80,6 +83,75 @@ The one-line result of this decision.
 </Takeaway>
 
 </Section>
+
+{/*
+  Four decision layouts — mix them per decision. Each one is a <Decision>;
+  media goes in slot="media" and is optional.
+
+  1. Evidence first (default layout): media, then labelled reasons.
+  2. layout="side": reasons on the left, media on the right (media first on phones).
+  3. <Compare> for before/after, 4. <Annotated> for a screen with numbered points.
+
+  Media can be <Video>, <Compare>, <Annotated>, <Figure> or <Phone>.
+  Videos: keep them short and muted, put files in /public/videos/, e.g.
+
+  <Video slot="media" src="/videos/forge-prayer.mp4" poster="/videos/forge-prayer.webp" label="Logging a prayer in two taps" />
+
+  Imported images (import shot from './images/shot.png') are optimised;
+  strings are used as-is from /public.
+*/}
+
+<Decision id="decision-evidence" title="Example: evidence first, when the screen proves the point">
+
+<Figure slot="media" caption="Swap this for a screenshot or a short <Video>.">
+![Final screen](./images/template-final.svg)
+</Figure>
+
+<Reasons>
+<Reason label="Problem">What was getting in the way, in one line.</Reason>
+<Reason label="Decision">What you chose to do about it.</Reason>
+<Reason label="Why">The reasoning or evidence behind the choice.</Reason>
+<Reason label="Trade-off">What it cost, and why that was acceptable.</Reason>
+</Reasons>
+
+</Decision>
+
+<Decision id="decision-side" layout="side" title="Example: side by side, when the reasoning and screen belong together">
+
+<Phone slot="media" src={templateFinal} alt="Final screen" />
+
+<Reasons>
+<Reason label="Problem">What was getting in the way.</Reason>
+<Reason label="Decision">What you chose to do about it.</Reason>
+<Reason label="Why">The reasoning behind the choice.</Reason>
+</Reasons>
+
+</Decision>
+
+<Decision id="decision-compare" title="Example: before and after, when the change is the story">
+
+<Compare slot="media" before={templateSketch} after={templateFinal} alt="Home screen" beforeLabel="Sketch" afterLabel="Final" caption="Drag to compare." />
+
+One or two lines on what changed between the two, and why it matters.
+
+</Decision>
+
+<Decision id="decision-annotated" title="Example: an annotated screen, when several small details add up">
+
+<Annotated
+  slot="media"
+  src={templateFinal}
+  alt="Final home screen"
+  points={[
+    { x: 50, y: 18, text: 'A detail at the top of the screen and why it is there.' },
+    { x: 30, y: 52, text: 'A second detail, like a state, label or spacing choice.' },
+    { x: 70, y: 84, text: 'A third detail near the bottom.' },
+  ]}
+/>
+
+A short wrap-up of how these details work together.
+
+</Decision>
 
 <Section id="final" label="Final" title="Example: the finished screens">
 

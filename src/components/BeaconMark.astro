@@ -1,0 +1,135 @@
+---
+// BeaconMark.astro — A quiet dot that sends out ripples to mark a key point.
+// Standalone so it can sit in any layout (takeaway card, decision list, side column).
+// Ripples take on spectrum colours while the nearest [data-beacon-host] is hovered
+// or has keyboard focus inside it.
+interface Props {
+  size?: number;
+  class?: string;
+}
+
+const { size = 32, class: className = '' } = Astro.props;
+---
+
+<span class:list={['beacon', className]} style={`--beacon-size: ${size}px`} aria-hidden="true" data-beacon>
+  <span class="beacon__ring"></span>
+  <span class="beacon__ring"></span>
+  <span class="beacon__ring"></span>
+  <span class="beacon__core"></span>
+</span>
+
+<style>
+  .beacon {
+    --beacon-core: calc(var(--beacon-size) * 0.22);
+    position: relative;
+    display: inline-flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: var(--beacon-size);
+    height: var(--beacon-size);
+    color: var(--text-primary);
+  }
+
+  .beacon__core {
+    position: relative;
+    z-index: 1;
+    width: var(--beacon-core);
+    height: var(--beacon-core);
+    border-radius: 9999px;
+    background: currentColor;
+  }
+
+  .beacon__ring {
+    position: absolute;
+    width: var(--beacon-core);
+    height: var(--beacon-core);
+    border: 1.5px solid currentColor;
+    border-radius: 9999px;
+    opacity: 0;
+    animation: beaconRipple 2.4s cubic-bezier(0.2, 0.7, 0.3, 1) infinite;
+    transition: border-color 240ms var(--ease-smooth-out);
+  }
+
+  .beacon__ring:nth-child(2) {
+    animation-delay: 0.8s;
+  }
+
+  .beacon__ring:nth-child(3) {
+    animation-delay: 1.6s;
+  }
+
+  /* Off-screen beacons stop rippling */
+  .beacon[data-paused] .beacon__ring {
+    animation-play-state: paused;
+  }
+
+  :global([data-beacon-host]:is(:hover, :focus-within)) .beacon__ring:nth-child(1) {
+    border-color: hsl(0 85% 58%);
+  }
+
+  :global([data-beacon-host]:is(:hover, :focus-within)) .beacon__ring:nth-child(2) {
+    border-color: hsl(140 70% 45%);
+  }
+
+  :global([data-beacon-host]:is(:hover, :focus-within)) .beacon__ring:nth-child(3) {
+    border-color: hsl(220 85% 60%);
+  }
+
+  @keyframes beaconRipple {
+    0% {
+      transform: scale(1);
+      opacity: 0.9;
+    }
+    100% {
+      transform: scale(4.2);
+      opacity: 0;
+    }
+  }
+
+  /* Reduced motion: frozen ripples, still readable as a signal */
+  @media (prefers-reduced-motion: reduce) {
+    .beacon__ring {
+      animation: none;
+    }
+
+    .beacon__ring:nth-child(1) {
+      opacity: 0.45;
+      transform: scale(2);
+    }
+
+    .beacon__ring:nth-child(2) {
+      opacity: 0.25;
+      transform: scale(3);
+    }
+
+    .beacon__ring:nth-child(3) {
+      opacity: 0.12;
+      transform: scale(4);
+    }
+  }
+</style>
+
+<script>
+  function initBeacons() {
+    const beacons = [...document.querySelectorAll<HTMLElement>('[data-beacon]:not([data-beacon-bound])')];
+    if (beacons.length === 0 || !('IntersectionObserver' in window)) return;
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const el = entry.target as HTMLElement;
+        if (entry.isIntersecting) el.removeAttribute('data-paused');
+        else el.setAttribute('data-paused', '');
+      });
+    });
+
+    beacons.forEach((beacon) => {
+      beacon.setAttribute('data-beacon-bound', '');
+      observer.observe(beacon);
+    });
+
+    document.addEventListener('astro:before-swap', () => observer.disconnect(), { once: true });
+  }
+
+  document.addEventListener('astro:page-load', initBeacons);
+</script>

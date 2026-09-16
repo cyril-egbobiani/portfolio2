@@ -6,9 +6,11 @@ import { z } from 'astro/zod';
 // Journal entries live in src/content/journal/*.md.
 // Written here → rendered at /journal/<file-name>.
 // Written elsewhere → set `externalUrl` (and `source`) and the entry links out.
+// `images`: up to three pictures shown fanned beside the entry in the list,
+// e.g. screenshots from src/assets (optimised at build time).
 const journal = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/journal' }),
-  schema: z.object({
+  schema: ({ image }) => z.object({
     title: z.string(),
     date: z.coerce.date(),
     excerpt: z.string(),
@@ -16,6 +18,7 @@ const journal = defineCollection({
     draft: z.boolean().default(false),
     externalUrl: z.url().optional(),
     source: z.enum(['substack', 'medium', 'other']).optional(),
+    images: z.array(image()).max(3).default([]),
   }),
 });
 

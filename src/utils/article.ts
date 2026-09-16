@@ -11,7 +11,11 @@ export function initArticlePage() {
   const wide = window.matchMedia('(min-width: 1180px)');
 
   // Lift footnotes into the margin beside the line that references them
+  let noteListeners: AbortController | null = null;
   const placeMarginNotes = () => {
+    noteListeners?.abort();
+    noteListeners = new AbortController();
+    const { signal } = noteListeners;
     body.querySelectorAll('.entry-margin-note').forEach((note) => note.remove());
     article.removeAttribute('data-margin-notes');
     if (!wide.matches) return;
@@ -22,7 +26,10 @@ export function initArticlePage() {
     const bodyTop = body.getBoundingClientRect().top;
     let nextFreeTop = 0;
 
-    refs.forEach((ref) => {
+    // Each sheet lands at a slightly different angle, like notes stuck on by hand
+    const tilts = [-1.4, 1.1, -0.7, 1.6, -1.9, 0.8];
+
+    refs.forEach((ref, index) => {
       const source = document.getElementById(decodeURIComponent(ref.hash.slice(1)));
       if (!source) return;
 
@@ -35,6 +42,17 @@ export function initArticlePage() {
       num.className = 'entry-margin-note__num';
       num.textContent = ref.textContent ?? '';
       note.prepend(num);
+      note.style.setProperty('--tilt', `${tilts[index % tilts.length]}deg`);
+
+      // Hovering the reference (or the note) straightens and lifts the sheet
+      const activate = () => note.classList.add('is-active');
+      const deactivate = () => note.classList.remove('is-active');
+      [ref, note].forEach((el) => {
+        el.addEventListener('pointerenter', activate, { signal });
+        el.addEventListener('pointerleave', deactivate, { signal });
+      });
+      ref.addEventListener('focus', activate, { signal });
+      ref.addEventListener('blur', deactivate, { signal });
 
       body.appendChild(note);
       const top = Math.max(ref.getBoundingClientRect().top - bodyTop - 4, nextFreeTop);

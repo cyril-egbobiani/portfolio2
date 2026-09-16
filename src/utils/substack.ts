@@ -9,6 +9,8 @@ export interface SubstackPost {
   url: string;
   date: Date;
   excerpt: string;
+  /** Cover image from the feed, when the post has one */
+  image?: string;
 }
 
 let cached: Promise<SubstackPost[]> | null = null;
@@ -30,6 +32,7 @@ async function loadFeed(): Promise<SubstackPost[]> {
         url: readTag(item, 'link'),
         date: new Date(readTag(item, 'pubDate')),
         excerpt: decode(readTag(item, 'description')),
+        image: item.match(/<enclosure[^>]*url="([^"]+)"[^>]*type="image/)?.[1],
       }))
       .filter((post) => post.title && post.url && !Number.isNaN(post.date.valueOf()));
   } catch {

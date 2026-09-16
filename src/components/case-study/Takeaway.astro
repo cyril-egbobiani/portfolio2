@@ -1,5 +1,7 @@
 ---
 // Takeaway.astro — A short callout that lands the point of a section
+import BeaconMark from '../BeaconMark.astro';
+
 interface Props {
   title: string;
 }
@@ -7,8 +9,8 @@ interface Props {
 const { title } = Astro.props;
 ---
 
-<aside class="cs-block cs-takeaway" data-cs-reveal>
-  <span class="cs-takeaway__mark" aria-hidden="true">→</span>
+<aside class="cs-block cs-takeaway" data-cs-reveal data-beacon-host>
+  <BeaconMark size={28} class="cs-takeaway__beacon" />
   <div>
     <p class="cs-takeaway__title">{title}</p>
     <div class="cs-takeaway__text">

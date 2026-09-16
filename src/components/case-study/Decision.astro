@@ -1,0 +1,51 @@
+---
+// Decision.astro — One design decision: label, claim headline, optional media, reasoning.
+//   layout="stacked" (default): evidence first — media sits between the headline
+//                                and the reasoning.
+//   layout="side":               reasoning on the left, media on the right;
+//                                on phones the media comes first, under the headline.
+// Put media in slot="media": <Video>, <Compare>, <Annotated>, <Figure> or <Phone>.
+// Decisions sharing a label ("Design decisions") share one entry in the rail.
+interface Props {
+  id: string;
+  /** State the conclusion, not the topic */
+  title: string;
+  label?: string;
+  layout?: 'stacked' | 'side';
+}
+
+const { id, title, label = 'Design decisions', layout = 'stacked' } = Astro.props;
+const hasMedia = Astro.slots.has('media');
+---
+
+<section class:list={['cs-section', 'cs-decision', `cs-decision--${layout}`]} id={id} data-cs-section data-cs-label={label}>
+  <p class="cs-label">{label}</p>
+
+  {layout === 'side' ? (
+    <>
+      <h2 class="cs-heading">{title}</h2>
+      <div class="cs-decision__grid">
+        {hasMedia && (
+          <div class="cs-decision__media">
+            <slot name="media" />
+          </div>
+        )}
+        <div class="cs-decision__text cs-prose">
+          <slot />
+        </div>
+      </div>
+    </>
+  ) : (
+    <>
+      <h2 class="cs-heading">{title}</h2>
+      {hasMedia && (
+        <div class="cs-decision__media">
+          <slot name="media" />
+        </div>
+      )}
+      <div class="cs-prose">
+        <slot />
+      </div>
+    </>
+  )}
+</section>

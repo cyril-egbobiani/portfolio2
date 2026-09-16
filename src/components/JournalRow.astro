@@ -1,160 +1,196 @@
 ---
-// JournalRow.astro — One journal entry in a list (homepage + /journal)
-import { formatJournalDate, sourceLabel, type JournalEntry } from '../data/journal';
+// JournalRow.astro — One journal entry as a wide tile: date, title, one-line
+// summary, and up to three pictures fanned on the right (they spread on hover).
+import { Image } from 'astro:assets';
+import { formatJournalDay, sourceLabel, type JournalEntry } from '../data/journal';
 import NavArrow from './NavArrow.astro';
 
 interface Props {
   entry: JournalEntry;
-  showYear?: boolean;
 }
 
-const { entry, showYear = true } = Astro.props;
+const { entry } = Astro.props;
 const linkAttrs = entry.external
   ? { target: '_blank', rel: 'noopener noreferrer' }
   : { 'data-astro-prefetch': '' };
+const images = entry.images.slice(0, 3);
 ---
 
-<li class="journal-row-item" data-journal-source={entry.external ? 'elsewhere' : 'here'}>
-  <a href={entry.href} class="journal-row" {...linkAttrs}>
-    <time class="journal-row__date" datetime={entry.date.toISOString()}>
-      {formatJournalDate(entry.date, showYear)}
-    </time>
-
-    <span class="journal-row__body">
-      <span class="journal-row__title">
-        {entry.title}
-        {entry.draft && <span class="journal-row__draft">Draft</span>}
+<li class="journal-tile-item" data-journal-source={entry.external ? 'elsewhere' : 'here'}>
+  <a href={entry.href} class="journal-tile" {...linkAttrs}>
+    <span class="journal-tile__body">
+      <span class="journal-tile__meta">
+        <time datetime={entry.date.toISOString()}>{formatJournalDay(entry.date)}</time>
+        <span aria-hidden="true">·</span>
+        {entry.external ? (
+          <span class="journal-tile__source">
+            {sourceLabel(entry.source)}
+            <NavArrow direction="up-right" size={11} />
+          </span>
+        ) : (
+          <span>{entry.readingMinutes} min read</span>
+        )}
+        {entry.draft && <span class="journal-tile__draft">Draft</span>}
       </span>
-      <span class="journal-row__excerpt">{entry.excerpt}</span>
+      <span class="journal-tile__title">{entry.title}</span>
+      <span class="journal-tile__excerpt">{entry.excerpt}</span>
     </span>
 
-    <span class="journal-row__meta">
-      {entry.external ? (
-        <>
-          {sourceLabel(entry.source)}
-          <NavArrow direction="up-right" size={12} />
-        </>
-      ) : (
-        <>{entry.readingMinutes} min read</>
-      )}
-    </span>
+    {images.length > 0 && (
+      <span class="journal-tile__photos" aria-hidden="true">
+        {images.map((image) =>
+          typeof image === 'string' ? (
+            <img class="journal-tile__photo" src={image} alt="" width="56" height="56" loading="lazy" decoding="async" />
+          ) : (
+            <Image class="journal-tile__photo" src={image} alt="" width={56} height={56} densities={[1, 2]} loading="lazy" decoding="async" />
+          )
+        )}
+      </span>
+    )}
   </a>
 </li>
 
 <style>
-  .journal-row-item {
+  .journal-tile-item {
     list-style: none;
   }
 
-  .journal-row-item + .journal-row-item {
-    border-top: 1px solid var(--border-subtle);
-  }
-
-  /* Mobile: date + meta on top, title block below */
-  .journal-row {
+  .journal-tile {
     display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-areas:
-      'date meta'
-      'body body';
-    column-gap: 16px;
-    row-gap: 5px;
-    margin: 0 -12px;
-    padding: 14px 12px;
-    border-radius: 12px;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 16px;
+    border-radius: 20px;
+    background: var(--surface-subtle);
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
     transition:
-      background-color 160ms var(--ease-smooth-out),
-      transform 160ms var(--ease-smooth-out);
+      background-color 200ms var(--ease-smooth-out),
+      transform 320ms var(--ease-bounce);
   }
 
   @media (min-width: 640px) {
-    .journal-row {
-      grid-template-columns: 92px 1fr auto;
-      grid-template-areas: 'date body meta';
-      align-items: baseline;
+    .journal-tile {
+      gap: 20px;
+      padding: 16px 18px;
     }
   }
 
-  .journal-row__date {
-    grid-area: date;
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .journal-row__body {
-    grid-area: body;
+  .journal-tile__body {
     display: flex;
     flex-direction: column;
     gap: 3px;
     min-width: 0;
   }
 
-  .journal-row__title {
+  .journal-tile__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 3px;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .journal-tile__source {
+    display: inline-flex;
+    align-items: center;
+    gap: 2px;
+  }
+
+  .journal-tile__title {
     font-size: var(--text-base);
     font-weight: 500;
     line-height: 1.35;
     letter-spacing: -0.02em;
     color: var(--text-primary);
+    text-wrap: pretty;
   }
 
-  .journal-row__excerpt {
-    font-size: var(--text-base);
-    line-height: 1.55;
-    color: var(--text-muted);
+  .journal-tile__excerpt {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
     display: -webkit-box;
-    -webkit-line-clamp: 2;
+    -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
-  @media (min-width: 640px) {
-    .journal-row__title { font-size: var(--text-base); }
-    .journal-row__excerpt { font-size: var(--text-base); }
-  }
-
-  .journal-row__meta {
-    grid-area: meta;
-    display: inline-flex;
-    align-items: center;
-    gap: 3px;
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
-  .journal-row__draft {
-    margin-left: 8px;
-    padding: 1px 7px;
+  .journal-tile__draft {
+    padding: 0 7px;
     border-radius: 9999px;
     background: var(--surface-interactive);
     font-size: 11px;
     font-weight: 500;
-    letter-spacing: 0;
+    line-height: 18px;
     color: var(--text-muted);
-    vertical-align: 2px;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .journal-row:hover {
-      background: var(--surface-subtle);
+  /* Pictures fanned like photos dropped on a desk */
+  .journal-tile__photos {
+    display: flex;
+    padding: 4px 10px 4px 2px;
+  }
+
+  .journal-tile__photo {
+    display: block;
+    flex: none;
+    width: 44px;
+    height: 44px;
+    margin-right: -10px;
+    border-radius: 11px;
+    object-fit: cover;
+    object-position: top;
+    background: var(--surface-interactive);
+    box-shadow: 0 0 0 2.5px var(--surface-subtle);
+    transition:
+      transform 420ms var(--ease-bounce),
+      box-shadow 200ms var(--ease-smooth-out);
+  }
+
+  .journal-tile__photo:nth-child(1) { transform: rotate(-7deg); }
+  .journal-tile__photo:nth-child(2) { transform: rotate(4deg) translateY(-2px); }
+  .journal-tile__photo:nth-child(3) { transform: rotate(-3deg); }
+
+  @media (min-width: 640px) {
+    .journal-tile__photo {
+      width: 52px;
+      height: 52px;
+      border-radius: 13px;
     }
   }
 
-  .journal-row:active {
+  @media (hover: hover) and (pointer: fine) {
+    .journal-tile:hover {
+      background: var(--surface-interactive);
+      transform: translateY(-2px);
+    }
+
+    .journal-tile:hover .journal-tile__photo {
+      box-shadow: 0 0 0 2.5px var(--surface-interactive);
+    }
+
+    .journal-tile:hover .journal-tile__photo:nth-child(1) { transform: rotate(-12deg) translateX(-5px); }
+    .journal-tile:hover .journal-tile__photo:nth-child(2) { transform: rotate(0deg) translateY(-6px); }
+    .journal-tile:hover .journal-tile__photo:nth-child(3) { transform: rotate(8deg) translateX(6px); }
+  }
+
+  .journal-tile:active {
     transform: scale(0.99);
   }
 
-  .journal-row:focus-visible {
+  .journal-tile:focus-visible {
     outline: 2px solid var(--text-primary);
     outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .journal-row {
+    .journal-tile,
+    .journal-tile__photo {
       transition: none;
     }
   }

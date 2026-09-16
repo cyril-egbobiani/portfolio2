@@ -1,0 +1,15 @@
+---
+// Reason.astro — One labelled row inside <Reasons>
+interface Props {
+  label: string;
+}
+
+const { label } = Astro.props;
+---
+
+<div class="cs-reason">
+  <span class="cs-reason__label">{label}</span>
+  <div class="cs-reason__text">
+    <slot />
+  </div>
+</div>
