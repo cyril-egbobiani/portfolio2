@@ -1,6 +1,6 @@
 ---
 // ProjectsSection.astro
-// Builds  → product cards linking to /projects/<slug>.
+// Builds  → one full-width tile per project, linking to /projects/<slug>.
 // Designs → design case studies (src/content/designs) linking to /designs/<slug>,
 //           each card showing a "sketch → final" thumbnail.
 import { Image } from 'astro:assets';
@@ -10,13 +10,16 @@ import DesignThumb from './DesignThumb.astro';
 
 const tabs = ['Builds', 'Designs'];
 
-const builds = projects.map((p) => ({
-  slug: p.slug,
-  title: p.title,
-  blurb: p.shortBlurb,
-  image: p.thumbnailImage,
-  deviceType: p.deviceType,
-}));
+// Builds: one full-width tile per project, strongest screenshots first.
+// Screens sit whole on each tile, phones and browsers alike.
+const buildOrder = ['forge', 'gdg-babcock', 'fbdil-attendance', 'token-extractor', 'model-portfolio', '9to5er'];
+
+const builds = buildOrder.flatMap((slug) => {
+  const project = projects.find((p) => p.slug === slug);
+  return project
+    ? [{ slug, title: project.title, blurb: project.shortBlurb, image: project.thumbnailImage, device: project.deviceType }]
+    : [];
+});
 
 // Drafts show while developing only. Lower `order` comes first, then newest year.
 const designs = (await getCollection('designs', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
@@ -50,93 +53,52 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
 
   <div class="relative">
 
-    <!-- ── BUILDS: framed showcase cards ───────────────────────── -->
-    <div class="tab-panel builds-grid is-active" data-tab-panel data-tab-id="Builds">
-      {builds.map((project, index) => (
+    <!-- ── BUILDS: one column of full-width tiles ─────────────── -->
+    <div class="tab-panel bento is-active" data-tab-panel data-tab-id="Builds">
+      {builds.map((tile, index) => (
         <a
-          href={`/projects/${project.slug}`}
+          href={`/projects/${tile.slug}`}
           data-astro-prefetch
-          class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}
+          class={`bento-item reveal-item reveal-delay-${(index % 4) + 1}`}
         >
-          <div class="frame">
-            <div class="frame__stage">
-              {project.image ? (
+          <div class="bento-tile">
+            <div class="bento-art">
+              {tile.image ? (
                 <Image
-                  src={project.image}
-                  alt={`${project.title} preview`}
-                  widths={project.deviceType === 'phone' ? [160, 320] : [320, 640]}
-                  sizes={project.deviceType === 'phone' ? '150px' : '(min-width: 640px) 300px, 80vw'}
-                  class={`card-shot card-shot--${project.deviceType}`}
+                  src={tile.image}
+                  alt={`${tile.title} preview`}
+                  widths={tile.device === 'phone' ? [240, 480] : [640, 1280]}
+                  sizes={tile.device === 'phone' ? '(min-width: 640px) 200px, 45vw' : '(min-width: 640px) 580px, 86vw'}
+                  class={`bento-shot bento-shot--${tile.device}`}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
                 />
-              ) : project.deviceType === 'phone' ? (
-                <div class="screen screen--phone">
-                  <span class="screen__pending">Mobile Screen</span>
+              ) : tile.slug === 'token-extractor' ? (
+                <div class="art-tokens" aria-hidden="true">
+                  <span class="art-tokens__file">tokens.json</span>
+                  <span>{'{'}</span>
+                  <span class="art-tokens__line"><b>"radius.md"</b>: <i>"12px"</i>,</span>
+                  <span class="art-tokens__line"><b>"surface"</b>: <i>"#f5f5f5"</i>,</span>
+                  <span class="art-tokens__line"><b>"font.sans"</b>: <i>"Geist"</i></span>
+                  <span>{'}'}</span>
+                </div>
+              ) : tile.slug === 'model-portfolio' ? (
+                <div class="art-editorial" aria-hidden="true">
+                  <span class="art-editorial__a"></span>
+                  <span class="art-editorial__stack"><span></span><span></span></span>
+                  <span class="art-editorial__c"></span>
                 </div>
               ) : (
-                <div class="screen screen--desktop">
-                  {project.slug === '9to5er' ? (
-                    <div class="schematic-agency" aria-hidden="true">
-                      <div class="schematic-top">
-                        <span class="schematic-chip is-active">Workflow</span>
-                        <span class="schematic-chip">Hierarchy</span>
-                        <span class="schematic-chip">Health</span>
-                      </div>
-                      <div class="schematic-grid">
-                        <div class="schematic-card">
-                          <span class="schematic-card-label">Autonomy Score</span>
-                          <span class="schematic-card-val">94%</span>
-                          <div class="schematic-bar"><span style="width: 94%;"></span></div>
-                        </div>
-                        <div class="schematic-card">
-                          <span class="schematic-card-label">Design Velocity</span>
-                          <span class="schematic-card-val">High</span>
-                          <div class="schematic-bar"><span style="width: 82%;"></span></div>
-                        </div>
-                      </div>
-                    </div>
-                  ) : project.slug === 'token-extractor' ? (
-                    <div class="schematic-tokens" aria-hidden="true">
-                      <div class="schematic-tokens-head">
-                        <span class="schematic-tokens-title">Computed CSS AST</span>
-                        <span class="schematic-tokens-badge">Auto-Sync</span>
-                      </div>
-                      <div class="schematic-tokens-list">
-                        <div class="token-row">
-                          <span class="token-color-chip" style="background: var(--text-primary);"></span>
-                          <span class="token-var">--color-accent:</span>
-                          <span class="token-val">#000000</span>
-                        </div>
-                        <div class="token-row">
-                          <span class="token-color-chip" style="background: var(--text-muted);"></span>
-                          <span class="token-var">--font-family:</span>
-                          <span class="token-val">'Geist'</span>
-                        </div>
-                        <div class="token-row">
-                          <span class="token-color-chip" style="background: var(--surface-interactive);"></span>
-                          <span class="token-var">--border-radius:</span>
-                          <span class="token-val">16px</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : project.slug === 'model-portfolio' ? (
-                    <div class="schematic-editorial" aria-hidden="true">
-                      <span class="schematic-editorial-tag">{project.title.toUpperCase()}</span>
-                      <span class="schematic-editorial-title">Editorial Style Sets & Spring Physics</span>
-                    </div>
-                  ) : (
-                    <div class="schematic-editorial" aria-hidden="true">
-                      <span class="schematic-editorial-tag">{project.title.toUpperCase()}</span>
-                    </div>
-                  )}
+                <div class="art-type" aria-hidden="true">
+                  <span class="art-type__name">{tile.title}</span>
+                  <span class="art-type__line"></span>
+                  <span class="art-type__line art-type__line--short"></span>
                 </div>
               )}
             </div>
           </div>
-
-          <h3 class="card-title">{project.title}</h3>
-          <p class="card-blurb">{project.blurb}</p>
+          <h3 class="bento-title">{tile.title}</h3>
+          <p class="bento-blurb">{tile.blurb}</p>
         </a>
       ))}
     </div>
@@ -309,7 +271,224 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     }
   }
 
-  /* ── Builds: framed showcase cards ───────────────────── */
+  /* ── Builds: one column of full-width tiles ───────────── */
+  .bento {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 40px;
+  }
+
+  .bento:not([hidden]),
+  .bento.is-active {
+    display: grid !important;
+  }
+
+  @media (min-width: 640px) {
+    .bento {
+      gap: 48px;
+    }
+  }
+
+  .bento-item {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .bento-tile {
+    position: relative;
+    aspect-ratio: 4 / 3.4;
+    overflow: hidden;
+    border-radius: 18px;
+    background: var(--surface-subtle);
+    transition: transform 360ms var(--ease-bounce);
+  }
+
+  @media (min-width: 640px) {
+    .bento-tile {
+      aspect-ratio: 16 / 10;
+      border-radius: 20px;
+    }
+  }
+
+  .bento-art {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 520ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  /* Screenshots sit straight on the tile, whole and uncropped */
+  .bento-shot {
+    display: block;
+    width: auto;
+    height: auto;
+    max-width: 84%;
+    max-height: 84%;
+    object-fit: contain;
+  }
+
+  /* Phone screens fill more of their narrow tile */
+  .bento-shot--phone {
+    max-width: 88%;
+    max-height: 86%;
+  }
+
+  .bento-shot--desktop {
+    max-width: 86%;
+    max-height: 78%;
+  }
+
+  .bento-title {
+    margin: 12px 0 0;
+    font-size: var(--text-base);
+    font-weight: 500;
+    line-height: 1.35;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
+  }
+
+  .bento-blurb {
+    margin: 3px 0 0;
+    font-size: var(--text-base);
+    line-height: 1.55;
+    color: var(--text-muted);
+    text-wrap: pretty;
+  }
+
+  /* ── Drawn art for projects without screenshots ── */
+  .art-tokens {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    width: min(78%, 260px);
+    padding: 14px 16px;
+    border-radius: 12px;
+    background: var(--surface);
+    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.5;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+
+  .art-tokens__file {
+    margin-bottom: 4px;
+    font-size: 11px;
+    color: var(--text-faint);
+  }
+
+  .art-tokens__line {
+    padding-left: 14px;
+  }
+
+  .art-tokens b {
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .art-tokens i {
+    font-style: normal;
+    color: var(--text-secondary);
+  }
+
+  .art-editorial {
+    display: grid;
+    grid-template-columns: 1.25fr 1fr 1fr;
+    gap: 6px;
+    width: min(74%, 250px);
+    height: 70%;
+  }
+
+  .art-editorial span {
+    border-radius: 6px;
+  }
+
+  .art-editorial__a {
+    background: var(--text-muted);
+  }
+
+  .art-editorial__stack {
+    display: grid;
+    gap: 6px;
+  }
+
+  .art-editorial__stack span:first-child {
+    background: var(--surface-interactive);
+  }
+
+  .art-editorial__stack span:last-child {
+    background: var(--text-secondary);
+  }
+
+  .art-editorial__c {
+    margin-top: 22%;
+    background: var(--text-faint);
+  }
+
+  .art-type {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    width: 76%;
+  }
+
+  .art-type__name {
+    margin-bottom: 4px;
+    font-size: 44px;
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.05em;
+    color: var(--text-primary);
+  }
+
+  .art-type__line {
+    display: block;
+    width: 82%;
+    height: 5px;
+    border-radius: 3px;
+    background: var(--surface-interactive);
+  }
+
+  .art-type__line--short {
+    width: 56%;
+  }
+
+  /* ── Hover: the tile lifts, its art zooms in slightly ── */
+  @media (hover: hover) and (pointer: fine) {
+    .bento-item:hover .bento-tile {
+      transform: translateY(-3px);
+    }
+
+    .bento-item:hover .bento-art {
+      transform: scale(1.04);
+    }
+  }
+
+  .bento-item:active .bento-tile {
+    transform: scale(0.985);
+  }
+
+  .bento-item:focus-visible {
+    outline: none;
+  }
+
+  .bento-item:focus-visible .bento-tile {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 3px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bento-tile,
+    .bento-art {
+      transition: none;
+    }
+  }
+
+  /* ── Designs: case study cards ───────────────────────── */
   .builds-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -333,7 +512,6 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* One quiet panel per card; screenshots sit on it square-edged, unframed */
   .frame {
     border-radius: 16px;
   }
@@ -347,250 +525,6 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     overflow: hidden;
     border-radius: 16px;
     background: var(--surface-subtle);
-  }
-
-  .screen {
-    position: relative;
-    overflow: hidden;
-    background: var(--surface);
-    transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform;
-  }
-
-  .screen--phone {
-    height: 86%;
-    aspect-ratio: 9 / 19.5;
-  }
-
-  .screen--desktop {
-    width: 84%;
-    aspect-ratio: 16 / 11;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-
-  .screen__img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top;
-    display: block;
-  }
-
-  .screen__pending {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10.5px;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--text-faint);
-  }
-
-  /* Mockup images sit straight on the panel: no inner frame, nothing cropped */
-  .card-shot {
-    display: block;
-    width: auto;
-    height: auto;
-    max-width: 90%;
-    max-height: 88%;
-    object-fit: contain;
-    transition: transform 320ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .card-shot--desktop {
-    width: 90%;
-  }
-
-  .card-shot--phone {
-    height: 86%;
-  }
-
-  /* 9to5er Agency UI Preview */
-  .schematic-agency {
-    width: 100%;
-    height: 100%;
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-    box-sizing: border-box;
-    user-select: none;
-  }
-
-  .schematic-top {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  }
-
-  .schematic-chip {
-    font-family: var(--font-sans);
-    font-size: 10px;
-    padding: 2px 8px;
-    border-radius: 9999px;
-    background: var(--surface-subtle);
-    color: var(--text-muted);
-    border: 1px solid var(--border-subtle);
-  }
-
-  .schematic-chip.is-active {
-    color: var(--text-secondary);
-    background: var(--surface-interactive);
-    border-color: var(--border-default);
-    font-weight: 500;
-  }
-
-  .schematic-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-    flex: 1;
-  }
-
-  .schematic-card {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 8px 10px;
-    border-radius: 8px;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border-subtle);
-    gap: 3px;
-  }
-
-  .schematic-card-label {
-    font-family: var(--font-sans);
-    font-size: 9px;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-  }
-
-  .schematic-card-val {
-    font-family: var(--font-sans);
-    font-size: 15px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    letter-spacing: -0.02em;
-  }
-
-  .schematic-bar {
-    width: 100%;
-    height: 4px;
-    border-radius: 9999px;
-    background: var(--border-subtle);
-    overflow: hidden;
-    margin-top: 2px;
-  }
-
-  .schematic-bar span {
-    display: block;
-    height: 100%;
-    background: var(--text-faint);
-    border-radius: 9999px;
-  }
-
-  /* Token Extractor CSS AST Preview */
-  .schematic-tokens {
-    width: 100%;
-    height: 100%;
-    padding: 14px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 8px;
-    box-sizing: border-box;
-    user-select: none;
-  }
-
-  .schematic-tokens-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-  }
-
-  .schematic-tokens-title {
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-    color: var(--text-muted);
-  }
-
-  .schematic-tokens-badge {
-    font-family: var(--font-sans);
-    font-size: 9px;
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: var(--surface-subtle);
-    color: var(--text-muted);
-    font-weight: 500;
-  }
-
-  .schematic-tokens-list {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .token-row {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 4px 7px;
-    border-radius: 6px;
-    background: var(--surface-subtle);
-    border: 1px solid var(--border-subtle);
-    font-family: ui-monospace, monospace;
-    font-size: 10px;
-  }
-
-  .token-color-chip {
-    width: 9px;
-    height: 9px;
-    border-radius: 3px;
-    border: 1px solid var(--border-default);
-    flex-shrink: 0;
-    opacity: 0.55;
-  }
-
-  .token-var {
-    color: var(--text-muted);
-  }
-
-  .token-val {
-    color: var(--text-secondary);
-    font-weight: 500;
-  }
-
-  /* Editorial Preview */
-  .schematic-editorial {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    text-align: center;
-    padding: 16px;
-  }
-
-  .schematic-editorial-tag {
-    font-family: var(--font-sans);
-    font-size: 10px;
-    letter-spacing: 0.16em;
-    font-weight: 600;
-    color: var(--text-muted);
-  }
-
-  .schematic-editorial-title {
-    font-family: var(--font-sans);
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text-secondary);
-    letter-spacing: -0.02em;
-    max-width: 220px;
   }
 
   /* ── Card text ── */
@@ -623,8 +557,7 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     .project-card:hover .frame {
       border-color: var(--border-default);
     }
-    .project-card:hover .screen,
-    .project-card:hover .card-shot {
+    .project-card:hover .frame__stage > * {
       transform: translateY(-4px) scale(1.015);
     }
   }
@@ -690,9 +623,7 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .project-card,
-    .screen,
-    .card-shot {
+    .project-card {
       transition: none;
     }
 

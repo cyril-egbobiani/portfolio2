@@ -37,8 +37,9 @@ const socials = [
   <!-- Text Content Block -->
   <div class="hero-text-block flex flex-col gap-4 sm:gap-5 w-full">
     <!-- 1. Dual-Craft Identity Header Lockup -->
-    <!-- Avatar matches the name + title column: two lines of base text at leading-snug (1.375) = 2.75 × --text-base -->
-    <div class="flex items-center gap-3 mb-1">
+    <!-- Avatar matches the name + title column: two lines of base text at leading-snug (1.375) = 2.75 × --text-base.
+         Top-aligned so it stays beside the name when the title wraps on narrow screens. -->
+    <div class="flex items-start gap-3 mb-1">
       <!-- Lisse Squircle Avatar Frame -->
       <a
         href="/about"
@@ -63,13 +64,13 @@ const socials = [
           Cyril Egbobiani
         </h1>
         <div class="text-[16px] text-[var(--text-muted)] font-normal leading-snug">
-          Software Engineer | Designer
+          Software Engineer &amp; Product Designer
         </div>
       </div>
     </div>
 
     <p class="lede">
-      I'm a software engineer and ux designer at <a
+      I'm a software engineer and product designer at <a
         href="https://ieslglobal.com/"
         target="_blank"
         rel="noopener noreferrer"
@@ -80,18 +81,18 @@ const socials = [
         alt=""
         class="inline-company-icon"
         style="display: inline-block !important; height: 14px !important; width: auto !important; vertical-align: -2px !important; margin-right: 5px !important; border-radius: 2px !important;"
-      />International Energy Services Limited</a>.
+      />International Energy Services Limited</a>, where I design and build internal systems.
     </p>
 
     <p class="lede">
-      I realized there is no proper software without a good design, either in the system or ux field. I'm mostly involved in how these two domains work hand in hand to deliver a wonderful user experience.
+      I believe good software starts with good design, so most of my work sits where the two meet.
     </p>
 
     <p class="lede">
-      Currently, I'm building <a href="/projects/forge" class="inline-company-link" data-astro-prefetch>Forge</a>, a faith app for youth communities. I'm based in Lagos and open to <a
+      Currently, I'm building <a href="/projects/forge" class="inline-company-link" data-astro-prefetch>Forge</a>, a faith app for youth communities. Alongside my role, I take on a small number of <a
         href="#contact"
         class="inline-company-link"
-      ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" role="img" aria-label="Spinning wireframe globe in spectrum colours"></canvas></span>freelance collaborations</a>.
+      ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" role="img" aria-label="Spinning wireframe globe in spectrum colours"></canvas></span>freelance projects</a>.
     </p>
 
     <!-- Minimalist Social Links + Profile Page Link -->

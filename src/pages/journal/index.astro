@@ -51,6 +51,7 @@ const filters = [
 
       {showFilters && (
         <div class="journal-filters" role="group" aria-label="Filter entries" data-journal-filters>
+          <span class="journal-filters__pill" aria-hidden="true" data-journal-pill></span>
           {filters.map((filter, index) => (
             <button type="button" class="journal-filter" data-filter={filter.id} aria-pressed={index === 0 ? 'true' : 'false'}>
               {filter.label}
@@ -72,7 +73,7 @@ const filters = [
                 {group.month}
                 <span>
                   {group.year !== currentYear && <>{group.year} · </>}
-                  {group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}
+                  <span data-journal-count>{group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}</span>
                 </span>
               </h2>
               <ul class="journal-month__list" role="list">
@@ -80,6 +81,11 @@ const filters = [
               </ul>
             </section>
           ))}
+          {showFilters && (
+            <p class="journal-none" data-journal-none hidden>
+              <span class="journal-empty__hand">nothing here yet</span>
+            </p>
+          )}
         </div>
       )}
 
@@ -129,16 +135,39 @@ const filters = [
   }
 
   .journal-filters {
+    position: relative;
     display: inline-flex;
     align-self: flex-start;
     gap: 2px;
     padding: 3px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     border-radius: 9999px;
     background: var(--surface-subtle);
   }
 
+  /* One pill slides under the pressed filter (same motion as Builds / Designs) */
+  .journal-filters__pill {
+    position: absolute;
+    top: 3px;
+    bottom: 3px;
+    left: 0;
+    width: 0;
+    border-radius: 9999px;
+    background: var(--surface);
+    pointer-events: none;
+    transition:
+      transform 300ms var(--ease-smooth-out),
+      width 300ms var(--ease-smooth-out);
+  }
+
+  /* Until the script places the pill, the pressed button paints its own */
+  .journal-filters:not(.has-pill) .journal-filter[aria-pressed='true'] {
+    background: var(--surface);
+  }
+
   .journal-filter {
+    position: relative;
+    z-index: 1;
     padding: 6px 14px;
     border: none;
     border-radius: 9999px;
@@ -148,19 +177,62 @@ const filters = [
     font-weight: 500;
     color: var(--text-muted);
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
     transition:
-      background-color 160ms var(--ease-smooth-out),
-      color 160ms var(--ease-smooth-out),
+      color 200ms var(--ease-smooth-out),
       transform 120ms var(--ease-smooth-out);
   }
 
   .journal-filter[aria-pressed='true'] {
-    background: var(--surface);
     color: var(--text-primary);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .journal-filter:hover {
+      color: var(--text-primary);
+    }
   }
 
   .journal-filter:active {
     transform: scale(0.96);
+  }
+
+  .journal-filter:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 1px;
+  }
+
+  /* Entries that come back after a filter change settle in one after another */
+  :global(.journal-tile-item.is-entering) {
+    animation: journalTileIn 360ms var(--ease-smooth-out) both;
+    animation-delay: calc(var(--stagger, 0) * 40ms);
+  }
+
+  .journal-month.is-entering .journal-month__label {
+    animation: journalTileIn 360ms var(--ease-smooth-out) both;
+  }
+
+  @keyframes journalTileIn {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+  }
+
+  .journal-none {
+    margin: 0;
+    padding: 8px 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .journal-filters__pill {
+      transition: none;
+    }
+
+    :global(.journal-tile-item.is-entering),
+    .journal-month.is-entering .journal-month__label {
+      animation: none;
+    }
   }
 
   .journal-months {
@@ -242,23 +314,85 @@ const filters = [
     if (!bar || bar.dataset.bound) return;
     bar.dataset.bound = 'true';
 
-    bar.addEventListener('click', (event) => {
-      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
-      if (!button) return;
+    const pill = bar.querySelector<HTMLElement>('[data-journal-pill]');
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-filter]')];
+    const groups = [...document.querySelectorAll<HTMLElement>('[data-journal-group]')];
+    const none = document.querySelector<HTMLElement>('[data-journal-none]');
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    const placePill = (button: HTMLElement, animate: boolean) => {
+      if (!pill || button.offsetWidth === 0) return;
+      if (!animate) pill.style.transition = 'none';
+      pill.style.width = `${button.offsetWidth}px`;
+      pill.style.transform = `translateX(${button.offsetLeft}px)`;
+      if (!animate) {
+        void pill.offsetWidth;
+        pill.style.transition = '';
+      }
+      bar.classList.add('has-pill');
+    };
+
+    const pressed = () => buttons.find((b) => b.getAttribute('aria-pressed') === 'true') ?? buttons[0];
+
+    const apply = (button: HTMLButtonElement) => {
       const filter = button.dataset.filter;
+      buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
+      placePill(button, true);
 
-      bar.querySelectorAll('[data-filter]').forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
-
-      document.querySelectorAll<HTMLElement>('[data-journal-group]').forEach((group) => {
+      let stagger = 0;
+      let total = 0;
+      groups.forEach((group) => {
         let visible = 0;
         group.querySelectorAll<HTMLElement>('[data-journal-source]').forEach((row) => {
           const show = filter === 'all' || row.dataset.journalSource === filter;
+          const wasHidden = row.hidden;
           row.hidden = !show;
-          if (show) visible += 1;
+          if (!show) return;
+          visible += 1;
+          // Replay the entrance on every entry that is showing after the change
+          if (!reduceMotion) {
+            row.classList.remove('is-entering');
+            void row.offsetWidth;
+            row.style.setProperty('--stagger', String(stagger++));
+            row.classList.add('is-entering');
+          } else if (wasHidden) {
+            row.classList.remove('is-entering');
+          }
         });
+
+        const wasGroupHidden = group.hidden;
         group.hidden = visible === 0;
+        if (!group.hidden && wasGroupHidden && !reduceMotion) {
+          group.classList.remove('is-entering');
+          void group.offsetWidth;
+          group.classList.add('is-entering');
+        }
+
+        const count = group.querySelector<HTMLElement>('[data-journal-count]');
+        if (count) count.textContent = `${visible} ${visible === 1 ? 'entry' : 'entries'}`;
+        total += visible;
       });
+
+      if (none) none.hidden = total > 0;
+    };
+
+    bar.addEventListener('click', (event) => {
+      const button = (event.target as HTMLElement).closest<HTMLButtonElement>('[data-filter]');
+      if (!button || button.getAttribute('aria-pressed') === 'true') return;
+      apply(button);
     });
+
+    // Clean up the entrance classes once they have played
+    document.querySelector('.journal-months')?.addEventListener('animationend', (event) => {
+      const target = event.target as HTMLElement;
+      (target.closest('.is-entering') ?? target).classList.remove('is-entering');
+    });
+
+    const realign = () => placePill(pressed(), false);
+    realign();
+    document.fonts?.ready.then(realign);
+    window.addEventListener('resize', realign);
+    document.addEventListener('astro:before-swap', () => window.removeEventListener('resize', realign), { once: true });
   }
 
   document.addEventListener('astro:page-load', initJournalFilters);
