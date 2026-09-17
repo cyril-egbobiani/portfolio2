@@ -2,9 +2,11 @@
 // PortfolioFooter.astro — Minimalist footer with MingCute back-to-top icon button
 ---
 
-<footer class="flex flex-col gap-8 pt-4 pb-12 reveal-item" id="footer">
-  <!-- Hair-line separator with faded gradient mask -->
-  <div class="w-full border-t border-dashed border-[var(--border-subtle)] border-masked-x" role="separator" aria-hidden="true"></div>
+<footer class="flex flex-col gap-6 pt-4 pb-12 reveal-item" id="footer">
+  <!-- Pointer ripples: a calm dot grid; moving the pointer (or tapping) sends rings across it. Decorative. -->
+  <div class="ripples" data-ripples aria-hidden="true">
+    <canvas class="ripples__canvas"></canvas>
+  </div>
 
   <div class="flex items-center justify-between gap-6">
     <!-- Brand Stamp & Time Zone -->
@@ -32,6 +34,210 @@
     </div>
   </div>
 </footer>
+
+<style>
+  .ripples {
+    position: relative;
+    width: 100%;
+    height: 140px;
+    touch-action: pan-y;
+    /* Fade the grid out at the sides and top so it melts into the page */
+    -webkit-mask-image:
+      linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+      linear-gradient(to bottom, transparent, #000 30%);
+    -webkit-mask-composite: source-in;
+    mask-image:
+      linear-gradient(to right, transparent, #000 12%, #000 88%, transparent),
+      linear-gradient(to bottom, transparent, #000 30%);
+    mask-composite: intersect;
+  }
+
+  @media (min-width: 640px) {
+    .ripples {
+      height: 170px;
+    }
+  }
+
+  .ripples__canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+  }
+</style>
+
+<script>
+  // ── Pointer ripples ──
+  // A dot grid that drifts gently on its own. Moving the pointer (or tapping) drops
+  // rings that travel outward, lifting and darkening the dots they pass.
+  // Savings: plain Canvas 2D with no dependencies; runs only while on screen and the
+  // tab is visible; 30fps while rippling and 12fps when idle; pixel ratio capped at 1.5;
+  // a still grid for reduced motion; everything is released on page change.
+  const SPACING = 11;
+  const RING_SPEED = 170; // px per second
+  const RING_LIFE = 1.8; // seconds
+  const MAX_RINGS = 6;
+
+  interface Ring {
+    x: number;
+    y: number;
+    born: number;
+  }
+
+  function initRipples() {
+    const host = document.querySelector<HTMLElement>('[data-ripples]');
+    const canvas = host?.querySelector('canvas');
+    const ctx = canvas?.getContext('2d');
+    if (!host || !canvas || !ctx || host.dataset.bound) return;
+    host.dataset.bound = 'true';
+
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const rings: Ring[] = [];
+    let width = 0;
+    let height = 0;
+    let ink = '#000';
+    let frame = 0;
+    let last = 0;
+    let lastRing = 0;
+    let visible = false;
+    const start = performance.now();
+
+    const readInk = () => {
+      ink = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#000';
+    };
+
+    const resize = () => {
+      const rect = host.getBoundingClientRect();
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
+      width = rect.width;
+      height = rect.height;
+      canvas.width = Math.round(width * dpr);
+      canvas.height = Math.round(height * dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+
+    const draw = (now: number) => {
+      const t = reduceMotion.matches ? 0 : (now - start) / 1000;
+      const drift = reduceMotion.matches ? 0 : 1;
+
+      // Drop rings that have finished travelling
+      while (rings.length && (now - rings[0].born) / 1000 > RING_LIFE) rings.shift();
+
+      ctx.clearRect(0, 0, width, height);
+      ctx.fillStyle = ink;
+
+      for (let y = SPACING / 2; y < height; y += SPACING) {
+        for (let x = SPACING / 2; x < width; x += SPACING) {
+          let offset = (Math.sin(x * 0.03 + t * 0.8) + Math.cos(y * 0.05 + t * 0.6)) * 1.2 * drift;
+          let alpha = 0.22;
+
+          for (const ring of rings) {
+            const age = (now - ring.born) / 1000;
+            const edge = Math.hypot(x - ring.x, y - ring.y) - age * RING_SPEED;
+            const strength = Math.exp((-edge * edge) / 260) * (1 - age / RING_LIFE);
+            offset += strength * 6;
+            alpha += strength * 0.7;
+          }
+
+          const size = 1.2 + Math.max(0, offset) * 0.25;
+          ctx.globalAlpha = Math.min(1, alpha);
+          ctx.fillRect(x - size / 2, y + offset - size / 2, size, size);
+        }
+      }
+      ctx.globalAlpha = 1;
+    };
+
+    const loop = (now: number) => {
+      frame = requestAnimationFrame(loop);
+      // Full smoothness only while rings are moving; a slow idle drift otherwise
+      const interval = rings.length ? 33 : 83;
+      if (now - last < interval) return;
+      last = now;
+      draw(now);
+    };
+
+    const play = () => {
+      if (frame || !visible || document.hidden) return;
+      if (reduceMotion.matches) {
+        draw(performance.now());
+        return;
+      }
+      frame = requestAnimationFrame(loop);
+    };
+
+    const pause = () => {
+      cancelAnimationFrame(frame);
+      frame = 0;
+    };
+
+    const addRing = (event: PointerEvent, force = false) => {
+      if (reduceMotion.matches) return;
+      const now = performance.now();
+      if (!force && now - lastRing < 120) return;
+      const rect = host.getBoundingClientRect();
+      rings.push({ x: event.clientX - rect.left, y: event.clientY - rect.top, born: now });
+      if (rings.length > MAX_RINGS) rings.shift();
+      lastRing = now;
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (event.pointerType === 'mouse') addRing(event);
+    };
+    const onPointerDown = (event: PointerEvent) => addRing(event, true);
+    const onVisibility = () => (document.hidden ? pause() : play());
+    const onMotionChange = () => {
+      pause();
+      rings.length = 0;
+      play();
+    };
+
+    const intersection = new IntersectionObserver(
+      ([entry]) => {
+        visible = entry.isIntersecting;
+        visible ? play() : pause();
+      },
+      { rootMargin: '120px 0px' }
+    );
+    intersection.observe(host);
+
+    const sizeWatcher = new ResizeObserver(() => {
+      resize();
+      if (!frame) draw(performance.now());
+    });
+    sizeWatcher.observe(host);
+
+    // Follow theme switches so the dots stay the text colour
+    const themeWatcher = new MutationObserver(() => {
+      readInk();
+      if (!frame) draw(performance.now());
+    });
+    themeWatcher.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    host.addEventListener('pointermove', onPointerMove);
+    host.addEventListener('pointerdown', onPointerDown);
+    document.addEventListener('visibilitychange', onVisibility);
+    reduceMotion.addEventListener('change', onMotionChange);
+
+    readInk();
+    resize();
+
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        pause();
+        intersection.disconnect();
+        sizeWatcher.disconnect();
+        themeWatcher.disconnect();
+        host.removeEventListener('pointermove', onPointerMove);
+        host.removeEventListener('pointerdown', onPointerDown);
+        document.removeEventListener('visibilitychange', onVisibility);
+        reduceMotion.removeEventListener('change', onMotionChange);
+      },
+      { once: true }
+    );
+  }
+
+  document.addEventListener('astro:page-load', initRipples);
+</script>
 
 <script>
   function updateLagosTime() {
