@@ -24,7 +24,7 @@ draft: false                  # optional, defaults to false
 
 ## Margin notes
 
-Footnotes are written the usual Markdown way.[^1] On wide screens they are lifted out of the footer and handwritten into the margin beside the line they belong to; on smaller screens they stay at the bottom.[^2]
+Footnotes are written the usual Markdown way.[^1] On every screen size they are lifted out of the footer and handwritten just under the paragraph they belong to.[^2]
 
 ## Posts written elsewhere
 

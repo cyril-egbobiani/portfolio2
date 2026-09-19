@@ -8,59 +8,38 @@ export function initArticlePage() {
   if (!article || !body) return;
 
   const bar = document.querySelector<HTMLElement>('[data-read-progress]');
-  const wide = window.matchMedia('(min-width: 1180px)');
-
-  // Lift footnotes into the margin beside the line that references them
-  let noteListeners: AbortController | null = null;
-  const placeMarginNotes = () => {
-    noteListeners?.abort();
-    noteListeners = new AbortController();
-    const { signal } = noteListeners;
-    body.querySelectorAll('.entry-margin-note').forEach((note) => note.remove());
-    article.removeAttribute('data-margin-notes');
-    if (!wide.matches) return;
+  // Footnotes become handwritten asides tucked under the block that references them
+  const placeNotes = () => {
+    body.querySelectorAll('.entry-note').forEach((note) => note.remove());
 
     const refs = body.querySelectorAll<HTMLAnchorElement>('a[data-footnote-ref]');
     if (refs.length === 0) return;
 
-    const bodyTop = body.getBoundingClientRect().top;
-    let nextFreeTop = 0;
-
-    // Each sheet lands at a slightly different angle, like notes stuck on by hand
-    const tilts = [-1.4, 1.1, -0.7, 1.6, -1.9, 0.8];
-
-    refs.forEach((ref, index) => {
+    refs.forEach((ref) => {
       const source = document.getElementById(decodeURIComponent(ref.hash.slice(1)));
       if (!source) return;
 
+      // The top-level block (paragraph, list, quote) the reference sits in
+      let block: HTMLElement | null = ref;
+      while (block && block.parentElement !== body) block = block.parentElement;
+      if (!block) return;
+
       const note = document.createElement('aside');
-      note.className = 'entry-margin-note';
+      note.className = 'entry-note';
       note.innerHTML = source.innerHTML;
       note.querySelectorAll('[data-footnote-backref]').forEach((back) => back.remove());
+      note.insertAdjacentHTML(
+        'afterbegin',
+        '<svg class="entry-note__hook" viewBox="0 0 18 18" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 2c-.4 5 .6 9 5 10.6 2 .7 4.3.6 7 .2"/><path d="M12.4 10.2 15.2 12.8 12.2 15"/></svg>'
+      );
 
-      const num = document.createElement('span');
-      num.className = 'entry-margin-note__num';
-      num.textContent = ref.textContent ?? '';
-      note.prepend(num);
-      note.style.setProperty('--tilt', `${tilts[index % tilts.length]}deg`);
-
-      // Hovering the reference (or the note) straightens and lifts the sheet
-      const activate = () => note.classList.add('is-active');
-      const deactivate = () => note.classList.remove('is-active');
-      [ref, note].forEach((el) => {
-        el.addEventListener('pointerenter', activate, { signal });
-        el.addEventListener('pointerleave', deactivate, { signal });
-      });
-      ref.addEventListener('focus', activate, { signal });
-      ref.addEventListener('blur', deactivate, { signal });
-
-      body.appendChild(note);
-      const top = Math.max(ref.getBoundingClientRect().top - bodyTop - 4, nextFreeTop);
-      note.style.top = `${top}px`;
-      nextFreeTop = top + note.offsetHeight + 16;
+      // Several notes on one block stack in reading order
+      let after: Element = block;
+      while (after.nextElementSibling?.classList.contains('entry-note')) after = after.nextElementSibling;
+      after.after(note);
     });
 
-    article.setAttribute('data-margin-notes', '');
+    article.setAttribute('data-notes-inline', '');
   };
 
   const updateProgress = () => {
@@ -71,22 +50,16 @@ export function initArticlePage() {
     bar.style.transform = `scaleX(${progress})`;
   };
 
-  const onResize = () => {
-    placeMarginNotes();
-    updateProgress();
-  };
-
-  placeMarginNotes();
+  placeNotes();
   updateProgress();
-  document.fonts?.ready.then(placeMarginNotes);
 
   window.addEventListener('scroll', updateProgress, { passive: true });
-  window.addEventListener('resize', onResize);
+  window.addEventListener('resize', updateProgress);
   document.addEventListener(
     'astro:before-swap',
     () => {
       window.removeEventListener('scroll', updateProgress);
-      window.removeEventListener('resize', onResize);
+      window.removeEventListener('resize', updateProgress);
     },
     { once: true }
   );

@@ -44,6 +44,7 @@
   --font-display: var(--font-sans);
   --font-mono: var(--font-sans);
   --font-script: "Caveat", cursive;
+  --font-note: "Patrick Hand", var(--font-script); /* journal & case-study footnotes */
 
   /* ── Motion tokens ───────────────────────────────────────────
      Premium easing: cubic-bezier(0.16, 1, 0.3, 1) — the benji.org

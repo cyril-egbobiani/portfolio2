@@ -3,7 +3,6 @@
 import { getCollection, render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import PageTopNav from '../../components/PageTopNav.astro';
-import PortfolioFooter from '../../components/PortfolioFooter.astro';
 import NavArrow from '../../components/NavArrow.astro';
 import { formatJournalDate, readingMinutes } from '../../data/journal';
 import '../../styles/article.css';
@@ -51,13 +50,14 @@ const minutes = readingMinutes(entry.body);
       </article>
 
       <nav class="entry-end" aria-label="Journal">
-        <a href="/journal" data-astro-prefetch><NavArrow direction="left" size={14} />All entries</a>
-        <a href="https://cyriljnr.substack.com" target="_blank" rel="noopener noreferrer">Subscribe on Substack<NavArrow direction="up-right" size={12} /></a>
+        <a href="/journal" data-astro-prefetch><span>All entries</span><NavArrow direction="right" size={16} /></a>
+        <a href="https://cyriljnr.substack.com" target="_blank" rel="noopener noreferrer"><span>Subscribe on Substack</span><NavArrow direction="up-right" size={14} /></a>
+        <button type="button" data-entry-top>
+          <span>Back to top</span>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
+        </button>
       </nav>
-
-      <div class="mt-14">
-        <PortfolioFooter compact />
-      </div>
+      <p class="entry-end__time"><span data-entry-time></span>in Lagos</p>
     </div>
   </main>
 </Layout>
@@ -65,5 +65,25 @@ const minutes = readingMinutes(entry.body);
 <script>
   import { initArticlePage } from '../../utils/article';
 
-  document.addEventListener('astro:page-load', initArticlePage);
+  // The entry ends with its own links and the time in Lagos instead of the site footer
+  function initEntryEnd() {
+    const time = document.querySelector<HTMLElement>('[data-entry-time]');
+    if (time) {
+      try {
+        const now = new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Lagos', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date());
+        time.textContent = `${now} `;
+      } catch {
+        time.parentElement?.remove();
+      }
+    }
+
+    document.querySelector('[data-entry-top]')?.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+  }
+
+  document.addEventListener('astro:page-load', () => {
+    initArticlePage();
+    initEntryEnd();
+  });
 </script>

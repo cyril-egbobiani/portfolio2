@@ -1,5 +1,5 @@
 /* src/styles/article.css — Long-form article styles shared by journal entries
-   and design case studies: reading progress, body copy, margin notes. */
+   and design case studies: reading progress, body copy, notes. */
 
 /* ── Reading progress: a thin pencil line ── */
 .entry-progress {
@@ -219,124 +219,106 @@
   margin: 0;
 }
 
-[data-margin-notes] section[data-footnotes] {
+/* Once notes are tucked inline, the list and the little numbers are redundant */
+[data-notes-inline] section[data-footnotes],
+[data-notes-inline] .entry-body sup:has(> a[data-footnote-ref]) {
   display: none;
 }
 
-/* ── Margin notes: footnotes handwritten on a torn-off ruled pad sheet (wide screens) ──
-   The note carries the shadow (filter follows the torn edge); ::before is the paper,
-   ::after the lifted corner. The paper stays white in dark mode, like a real sheet. */
-.entry-margin-note {
-  --rule: 24px;
-  --pad-top: 20px;
-  position: absolute;
-  right: -228px;
-  z-index: 1;
-  box-sizing: border-box;
-  width: 196px;
-  padding: var(--pad-top) 14px 12px 32px;
-  font-family: var(--font-script);
-  font-size: 19px;
-  line-height: var(--rule);
+/* ── Notes: footnotes handwritten just under the line they belong to ── */
+.entry-note {
+  position: relative;
+  margin: -0.35em 0 1.3em;
+  padding-left: 30px;
+  font-family: var(--font-note);
+  font-size: 17.5px;
+  line-height: 1.4;
   letter-spacing: 0;
-  color: #262626;
-  isolation: isolate;
-  filter: drop-shadow(0 1px 0.5px rgba(0, 0, 0, 0.1)) drop-shadow(0 5px 7px rgba(0, 0, 0, 0.1));
-  transform: rotate(var(--tilt, -1.2deg));
-  transform-origin: 30% 0;
-  transition:
-    transform 320ms var(--ease-bounce),
-    filter 320ms var(--ease-smooth-out);
+  color: var(--ink);
 }
 
-/* Paper: fibre grain, red margin rule, pale blue ruled lines, torn perforated top edge */
-.entry-margin-note::before {
-  content: "";
+.entry-note__hook {
   position: absolute;
-  inset: 0;
-  z-index: -1;
-  background:
-    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .33 0 0 0 0 .3 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"),
-    linear-gradient(to right, transparent 22px, rgba(214, 120, 120, 0.45) 22px, rgba(214, 120, 120, 0.45) 23px, transparent 23px, transparent 25px, rgba(214, 120, 120, 0.2) 25px, rgba(214, 120, 120, 0.2) 26px, transparent 26px),
-    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--rule) - 1px), rgba(118, 146, 186, 0.3) calc(var(--rule) - 1px), rgba(118, 146, 186, 0.3) var(--rule)),
-    linear-gradient(170deg, #fefefd 0%, #fbfbf8 60%, #f6f5f1 100%);
-  background-position: 0 0, 0 0, 0 calc(var(--pad-top) + 1px), 0 0;
-  background-size: 180px 180px, auto, 100% calc(100% - var(--pad-top) - 1px), auto;
-  background-repeat: repeat, no-repeat, repeat-y, no-repeat;
-  /* Small bites along the top, where the sheet tore off the pad */
-  -webkit-mask:
-    radial-gradient(circle at 3px 0, transparent 1.6px, #000 2.2px) 0 0 / 6px 4px repeat-x,
-    linear-gradient(#000, #000) 0 4px / 100% 100% no-repeat;
-  mask:
-    radial-gradient(circle at 3px 0, transparent 1.6px, #000 2.2px) 0 0 / 6px 4px repeat-x,
-    linear-gradient(#000, #000) 0 4px / 100% 100% no-repeat;
+  top: 0.1em;
+  left: 6px;
+  width: 18px;
+  height: 18px;
+  color: var(--text-faint);
 }
 
-/* Bottom corner lifting slightly off the page */
-.entry-margin-note::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 0;
-  z-index: -1;
-  width: 22px;
-  height: 22px;
-  background: linear-gradient(315deg, rgba(0, 0, 0, 0.07) 0%, rgba(255, 255, 255, 0.6) 45%, transparent 70%);
-  border-top-left-radius: 100% 60%;
-  pointer-events: none;
-}
-
-.entry-margin-note.is-active {
-  z-index: 2;
-  filter: drop-shadow(0 2px 1px rgba(0, 0, 0, 0.1)) drop-shadow(0 12px 14px rgba(0, 0, 0, 0.14));
-  transform: rotate(0deg) translateY(-3px);
-}
-
-.entry-margin-note p {
+.entry-note p {
   display: inline;
   margin: 0;
 }
 
-.entry-margin-note code {
+.entry-note code {
   font-size: 0.8em;
 }
 
-.entry-margin-note__num {
-  margin-right: 5px;
-  font-family: var(--font-sans);
-  font-size: 10px;
-  line-height: 1;
-  color: #8f8f8f;
-  vertical-align: 3px;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .entry-margin-note {
-    transition: none;
-  }
-}
-
-/* ── End of entry ── */
+/* ── End of entry: the three next steps as full-width rows ── */
 .entry-end {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 12px;
-  margin-top: 48px;
-  padding-top: 16px;
+  flex-direction: column;
+  margin-top: 56px;
   border-top: 1px solid var(--border-subtle);
 }
 
-.entry-end a {
-  display: inline-flex;
+.entry-end a,
+.entry-end button {
+  display: flex;
   align-items: center;
-  gap: 5px;
-  font-size: var(--text-sm);
-  color: var(--text-muted);
+  justify-content: space-between;
+  gap: 12px;
+  height: 52px;
+  padding: 0 4px;
+  border: 0;
+  border-bottom: 1px solid var(--border-subtle);
+  background: none;
+  color: var(--text-primary);
+  font: 400 var(--text-base) / 1 var(--font-sans);
+  letter-spacing: -0.01em;
+  text-align: left;
   text-decoration: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: padding 200ms var(--ease-smooth-out);
+}
+
+.entry-end svg {
+  flex-shrink: 0;
+  color: var(--text-muted);
   transition: color 160ms var(--ease-smooth-out);
 }
 
-.entry-end a:hover {
-  color: var(--text-primary);
+@media (hover: hover) and (pointer: fine) {
+  .entry-end a:hover,
+  .entry-end button:hover {
+    padding-left: 8px;
+  }
+
+  .entry-end a:hover svg,
+  .entry-end button:hover svg {
+    color: var(--text-primary);
+  }
+}
+
+.entry-end a:focus-visible,
+.entry-end button:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -2px;
+  border-radius: 4px;
+}
+
+.entry-end__time {
+  margin: 16px 0 0;
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+  font-variant-numeric: tabular-nums;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .entry-end a,
+  .entry-end button {
+    transition: none;
+  }
 }
