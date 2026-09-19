@@ -1,7 +1,27 @@
 ---
 // PortfolioFooter.astro — Minimalist footer with MingCute back-to-top icon button
+// `compact`: one quiet line (clock + back to top) for reading pages, so the page
+// ends on its own "Next" link instead of the ripple grid.
+interface Props {
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
 ---
 
+{compact ? (
+<footer class="footer-compact" id="footer">
+  <span class="font-sans text-[14px] text-[var(--text-secondary)] tabular-nums">
+    <span data-lagos-time></span>WAT (UTC+1)
+  </span>
+  <button type="button" class="back-top-text" data-back-top>
+    Back to top
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+      <path d="M12 19V5M5 12l7-7 7 7" />
+    </svg>
+  </button>
+</footer>
+) : (
 <footer class="flex flex-col gap-6 pt-4 pb-12 reveal-item" id="footer">
   <!-- Pointer ripples: a calm dot grid; moving the pointer (or tapping) sends rings across it. Decorative. -->
   <div class="ripples" data-ripples aria-hidden="true">
@@ -34,8 +54,62 @@
     </div>
   </div>
 </footer>
+)}
 
 <style>
+  .footer-compact {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    /* No divider of its own: pages end on one already (.entry-end rule, the Next card) */
+    padding: 0 0 40px;
+  }
+
+  .back-top-text {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    height: 32px;
+    margin-right: -10px;
+    padding: 0 10px;
+    border: 0;
+    border-radius: 9999px;
+    background: transparent;
+    color: var(--text-muted);
+    font: 400 var(--text-sm) / 1 var(--font-sans);
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition:
+      color 160ms ease,
+      background-color 160ms ease,
+      transform 140ms var(--ease-smooth-out);
+  }
+
+  .back-top-text svg {
+    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .back-top-text:hover {
+      color: var(--text-primary);
+      background: var(--surface-subtle);
+    }
+
+    .back-top-text:hover svg {
+      transform: translateY(-2px);
+    }
+  }
+
+  .back-top-text:active {
+    transform: scale(0.96);
+  }
+
+  .back-top-text:focus-visible {
+    outline: 2px solid var(--text-primary);
+    outline-offset: 2px;
+  }
+
   .ripples {
     position: relative;
     width: 100%;
