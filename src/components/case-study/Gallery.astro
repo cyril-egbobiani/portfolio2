@@ -1,0 +1,80 @@
+---
+// Gallery.astro — The screens of a project, side by side under the title.
+// Swipe on touch, drag or use the arrow keys on desktop; click a screen to enlarge it.
+import { Image } from 'astro:assets';
+
+interface Item {
+  src: string | ImageMetadata;
+  alt: string;
+  label: string;
+}
+
+interface Props {
+  items: Item[];
+  device?: 'phone' | 'desktop';
+}
+
+const { items, device = 'phone' } = Astro.props;
+const widths = device === 'phone' ? [200, 400] : [360, 720];
+const sizes = device === 'phone' ? '190px' : '320px';
+---
+
+<figure class:list={['cs-gallery', `cs-gallery--${device}`]} data-cs-gallery>
+  <div class="cs-gallery__track" tabindex="0" role="group" aria-label="Project screens" data-cs-gallery-track>
+    {items.map((item, index) => (
+      <div class="cs-gallery__item">
+        {typeof item.src === 'string' ? (
+          <img
+            src={encodeURI(item.src)}
+            alt={item.alt}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            fetchpriority={index === 0 ? 'high' : undefined}
+            decoding="async"
+          />
+        ) : (
+          <Image
+            src={item.src}
+            alt={item.alt}
+            widths={widths}
+            sizes={sizes}
+            loading={index === 0 ? 'eager' : 'lazy'}
+            decoding="async"
+          />
+        )}
+      </div>
+    ))}
+  </div>
+
+  <figcaption class="cs-gallery__caption">
+    <span class="cs-gallery__labels" data-cs-gallery-labels>
+      {items.map((item, index) => (
+        <span class:list={['cs-gallery__label', { 'is-current': index === 0 }]} data-cs-gallery-label={index}>{item.label}</span>
+      ))}
+    </span>
+    <span class="cs-gallery__nav">
+      <span class="cs-gallery__count">
+        <span data-cs-gallery-index>1</span>/{items.length}
+      </span>
+      <span class="cs-gallery__dots" data-cs-gallery-dots>
+        {items.map((item, index) => (
+          <button
+            type="button"
+            class:list={['cs-gallery__dot', { 'is-current': index === 0 }]}
+            aria-label={`Show ${item.label}`}
+            data-cs-gallery-dot={index}
+          ></button>
+        ))}
+      </span>
+      <button type="button" class="cs-gallery__step" aria-label="Previous screen" data-cs-gallery-step="-1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M14 6l-6 6 6 6" />
+        </svg>
+      </button>
+      <button type="button" class="cs-gallery__step" aria-label="Next screen" data-cs-gallery-step="1">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M10 6l6 6-6 6" />
+        </svg>
+      </button>
+    </span>
+  </figcaption>
+</figure>

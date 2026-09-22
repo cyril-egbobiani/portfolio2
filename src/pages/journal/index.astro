@@ -39,13 +39,13 @@ const filters = [
 >
   <PageTopNav />
 
-  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
+  <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
     <div class="mx-auto flex w-full max-w-[680px] flex-col">
       <header class="journal-header">
         <h1 class="journal-heading">Journal</h1>
         <p class="journal-lede">
           Writing, mostly kept here with the occasional post on{' '}
-          <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack</a>.
+          <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack<span class="sr-only"> (opens in a new tab)</span></a>.
         </p>
       </header>
 
@@ -60,10 +60,13 @@ const filters = [
         </div>
       )}
 
+      <!-- Says out loud what the filter did, for anyone not watching the list -->
+      <p class="sr-only" role="status" aria-live="polite" data-journal-status></p>
+
       {entries.length === 0 ? (
         <p class="journal-empty">
           <span class="journal-empty__hand">first entry coming soon</span>
-          <span>In the meantime, <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">subscribe on Substack</a>.</span>
+          <span>In the meantime, <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">subscribe on Substack<span class="sr-only"> (opens in a new tab)</span></a>.</span>
         </p>
       ) : (
         <div class="journal-months">
@@ -90,7 +93,7 @@ const filters = [
       )}
 
       <div class="journal-links">
-        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack<NavArrow direction="up-right" size={12} /></a>
+        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack<NavArrow direction="up-right" size={12} /><span class="sr-only"> (opens in a new tab)</span></a>
         <a href="/journal/rss.xml">RSS</a>
       </div>
 
@@ -195,6 +198,14 @@ const filters = [
 
   .journal-filter:active {
     transform: scale(0.96);
+  }
+
+  /* Touch screens get a full-size target without changing the desktop look */
+  @media (pointer: coarse) {
+    .journal-filter {
+      min-height: 40px;
+      padding: 0 16px;
+    }
   }
 
   .journal-filter:focus-visible {
@@ -318,6 +329,7 @@ const filters = [
     const buttons = [...bar.querySelectorAll<HTMLButtonElement>('[data-filter]')];
     const groups = [...document.querySelectorAll<HTMLElement>('[data-journal-group]')];
     const none = document.querySelector<HTMLElement>('[data-journal-none]');
+    const status = document.querySelector<HTMLElement>('[data-journal-status]');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     const placePill = (button: HTMLElement, animate: boolean) => {
@@ -334,8 +346,15 @@ const filters = [
 
     const pressed = () => buttons.find((b) => b.getAttribute('aria-pressed') === 'true') ?? buttons[0];
 
-    const apply = (button: HTMLButtonElement) => {
+    const apply = (button: HTMLButtonElement, { push = true } = {}) => {
       const filter = button.dataset.filter;
+      // The choice lives in the URL, so a filtered view can be shared or reloaded
+      if (push) {
+        const url = new URL(window.location.href);
+        if (filter && filter !== 'all') url.searchParams.set('show', filter);
+        else url.searchParams.delete('show');
+        history.pushState({ filter }, '', url);
+      }
       buttons.forEach((b) => b.setAttribute('aria-pressed', String(b === button)));
       placePill(button, true);
 
@@ -374,6 +393,9 @@ const filters = [
       });
 
       if (none) none.hidden = total > 0;
+      if (status) {
+        status.textContent = `${button.textContent?.trim()}: ${total} ${total === 1 ? 'entry' : 'entries'}`;
+      }
     };
 
     bar.addEventListener('click', (event) => {
@@ -381,6 +403,16 @@ const filters = [
       if (!button || button.getAttribute('aria-pressed') === 'true') return;
       apply(button);
     });
+
+    // Open a shared link, or press Back, and the right filter is showing
+    const fromUrl = () => {
+      const wanted = new URL(window.location.href).searchParams.get('show') ?? 'all';
+      const button = buttons.find((b) => b.dataset.filter === wanted) ?? buttons[0];
+      if (button.getAttribute('aria-pressed') !== 'true') apply(button, { push: false });
+    };
+    const onPopState = () => fromUrl();
+    window.addEventListener('popstate', onPopState);
+    fromUrl();
 
     // Clean up the entrance classes once they have played
     document.querySelector('.journal-months')?.addEventListener('animationend', (event) => {
@@ -392,7 +424,14 @@ const filters = [
     realign();
     document.fonts?.ready.then(realign);
     window.addEventListener('resize', realign);
-    document.addEventListener('astro:before-swap', () => window.removeEventListener('resize', realign), { once: true });
+    document.addEventListener(
+      'astro:before-swap',
+      () => {
+        window.removeEventListener('resize', realign);
+        window.removeEventListener('popstate', onPopState);
+      },
+      { once: true }
+    );
   }
 
   document.addEventListener('astro:page-load', initJournalFilters);

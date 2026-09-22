@@ -40,6 +40,8 @@ const nextCard = projects.find((project) => project.slug === nextId);
   toolsLabel="Stack"
   status={data.status}
   links={data.links}
+  gallery={data.gallery}
+  galleryDevice={data.galleryDevice}
   draft={data.draft}
   backHref="/#projects"
   backLabel="Back to work"
@@ -53,7 +55,8 @@ const nextCard = projects.find((project) => project.slug === nextId);
       }
     : undefined}
 >
-  {card?.thumbnailImage && (
+  {/* The gallery replaces the single hero shot when a project has one */}
+  {data.gallery.length === 0 && card?.thumbnailImage && (
     <Figure slot="hero">
       {card.deviceType === 'phone' ? (
         <Phone src={card.thumbnailImage} alt={`${data.title} app screen`} size="lg" />

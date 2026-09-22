@@ -1,0 +1,116 @@
+---
+// SystemMap.astro — A node map of how a project is put together.
+// Boxes are placed on a 600×250 grid; the connecting paths are worked out from
+// the boxes, so only the ends need naming. Hovering a box highlights its links.
+// On phones the drawing is replaced by the same information as a list.
+interface Node {
+  id: string;
+  /** Position and size on the 600×250 grid */
+  x: number;
+  y: number;
+  w?: number;
+  h?: number;
+  title: string;
+  sub?: string;
+  /** The heart of the system: filled instead of outlined */
+  core?: boolean;
+}
+
+interface Edge {
+  from: string;
+  to: string;
+  label?: string;
+}
+
+interface Props {
+  nodes: Node[];
+  edges?: Edge[];
+  /** Read out to screen readers in place of the drawing */
+  caption: string;
+}
+
+const { nodes, edges = [], caption } = Astro.props;
+const W = 600;
+const H = 250;
+
+const sized = nodes.map((node) => ({ ...node, w: node.w ?? 150, h: node.h ?? 48 }));
+const byId = new Map(sized.map((node) => [node.id, node]));
+
+// A path leaves one box and enters the other from the nearest side; boxes on the
+// same line get a straight run, the rest a soft curve.
+const paths = edges.flatMap((edge) => {
+  const a = byId.get(edge.from);
+  const b = byId.get(edge.to);
+  if (!a || !b) return [];
+
+  const ac = { x: a.x + a.w / 2, y: a.y + a.h / 2 };
+  const bc = { x: b.x + b.w / 2, y: b.y + b.h / 2 };
+  const horizontal = Math.abs(ac.x - bc.x) >= Math.abs(ac.y - bc.y);
+
+  const start = horizontal
+    ? { x: ac.x < bc.x ? a.x + a.w : a.x, y: ac.y }
+    : { x: ac.x, y: ac.y < bc.y ? a.y + a.h : a.y };
+  const end = horizontal
+    ? { x: ac.x < bc.x ? b.x : b.x + b.w, y: bc.y }
+    : { x: bc.x, y: ac.y < bc.y ? b.y : b.y + b.h };
+
+  const d =
+    start.y === end.y || start.x === end.x
+      ? `M${start.x} ${start.y} L${end.x} ${end.y}`
+      : horizontal
+        ? `M${start.x} ${start.y} C${(start.x + end.x) / 2} ${start.y} ${(start.x + end.x) / 2} ${end.y} ${end.x} ${end.y}`
+        : `M${start.x} ${start.y} C${start.x} ${(start.y + end.y) / 2} ${end.x} ${(start.y + end.y) / 2} ${end.x} ${end.y}`;
+
+  return [{ ...edge, d, mid: { x: (start.x + end.x) / 2, y: (start.y + end.y) / 2 }, horizontal }];
+});
+
+// The list shown on phones: every box, with what it connects to
+const links = sized.map((node) => ({
+  node,
+  to: edges
+    .filter((edge) => edge.from === node.id || edge.to === node.id)
+    .map((edge) => {
+      const other = byId.get(edge.from === node.id ? edge.to : edge.from);
+      return other ? `${other.title}${edge.label ? ` (${edge.label})` : ''}` : '';
+    })
+    .filter(Boolean),
+}));
+---
+
+<figure class="cs-block cs-map" data-cs-map data-cs-reveal>
+  <svg class="cs-map__svg" viewBox={`0 0 ${W} ${H}`} role="img" aria-label={caption}>
+    {paths.map((path) => (
+      <>
+        <path class="cs-map__edge" d={path.d} data-cs-map-edge={`${path.from}|${path.to}`} />
+        {path.label && (
+          <text
+            class="cs-map__edge-label"
+            x={path.mid.x}
+            y={path.mid.y + (path.horizontal ? -8 : -4)}
+            text-anchor="middle"
+          >
+            {path.label}
+          </text>
+        )}
+      </>
+    ))}
+
+    {sized.map((node) => (
+      <g class:list={['cs-map__node', { 'is-core': node.core }]} data-cs-map-node={node.id} tabindex="0">
+        <rect x={node.x} y={node.y} width={node.w} height={node.h} rx="10" />
+        <text class="cs-map__title" x={node.x + 12} y={node.y + (node.sub ? 21 : node.h / 2 + 4)}>{node.title}</text>
+        {node.sub && <text class="cs-map__sub" x={node.x + 12} y={node.y + 37}>{node.sub}</text>}
+      </g>
+    ))}
+  </svg>
+
+  <ul class="cs-map__list" role="list">
+    {links.map(({ node, to }) => (
+      <li class:list={[{ 'is-core': node.core }]}>
+        <b>{node.title}</b>
+        {node.sub && <span>{node.sub}</span>}
+        {to.length > 0 && <span class="cs-map__to">↔ {to.join(', ')}</span>}
+      </li>
+    ))}
+  </ul>
+</figure>

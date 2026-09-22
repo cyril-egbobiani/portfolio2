@@ -7,6 +7,7 @@ import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { projects } from '../data/projects';
 import DesignThumb from './DesignThumb.astro';
+import NavArrow from './NavArrow.astro';
 
 const tabs = ['Builds', 'Designs'];
 
@@ -41,7 +42,10 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
           class={`tab font-sans text-xs font-medium ${index === 0 ? 'tab-active' : ''}`}
           type="button"
           role="tab"
+          id={`tab-${tab.toLowerCase()}`}
           aria-selected={index === 0 ? 'true' : 'false'}
+          aria-controls={`panel-${tab.toLowerCase()}`}
+          tabindex={index === 0 ? 0 : -1}
           data-tab-trigger
           data-tab-id={tab}
         >
@@ -54,7 +58,7 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
   <div class="relative">
 
     <!-- ── BUILDS: one column of full-width tiles ─────────────── -->
-    <div class="tab-panel bento is-active" data-tab-panel data-tab-id="Builds">
+    <div class="tab-panel bento is-active" id="panel-builds" role="tabpanel" aria-labelledby="tab-builds" data-tab-panel data-tab-id="Builds">
       {builds.map((tile, index) => (
         <a
           href={`/projects/${tile.slug}`}
@@ -99,12 +103,13 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
           </div>
           <h3 class="bento-title">{tile.title}</h3>
           <p class="bento-blurb">{tile.blurb}</p>
+          <span class="bento-cue">Case study<NavArrow direction="right" size={12} /></span>
         </a>
       ))}
     </div>
 
     <!-- ── DESIGNS: case studies, sketch → final ─────────────── -->
-    <div class="tab-panel builds-grid" data-tab-panel data-tab-id="Designs" hidden>
+    <div class="tab-panel builds-grid" id="panel-designs" role="tabpanel" aria-labelledby="tab-designs" data-tab-panel data-tab-id="Designs" hidden>
       {designs.length > 0 ? (
         designs.map((study, index) => (
           <a
@@ -128,6 +133,7 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
               {study.data.draft && <span class="card-draft">Draft</span>}
             </h3>
             <p class="card-blurb">{study.data.summary}</p>
+            <span class="bento-cue">Case study<NavArrow direction="right" size={12} /></span>
           </a>
         ))
       ) : (
@@ -191,6 +197,13 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     border-radius: 9999px;
     transition: color 160ms var(--ease-smooth-out), transform 120ms var(--ease-smooth-out);
     user-select: none;
+  }
+
+  @media (pointer: coarse) {
+    .tab {
+      min-height: 40px;
+      padding: 0 18px;
+    }
   }
 
   .tab:active {
@@ -349,6 +362,25 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     line-height: 1.35;
     letter-spacing: -0.02em;
     color: var(--text-primary);
+  }
+
+  /* Every card says where it leads, on touch as well as hover */
+  .bento-cue {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-muted);
+    transition: color 200ms var(--ease-smooth-out);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .bento-item:hover .bento-cue,
+    .project-card:hover .bento-cue {
+      color: var(--text-primary);
+    }
   }
 
   .bento-blurb {
@@ -667,13 +699,20 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
       }
     };
 
-    const activateTab = (id: string) => {
+    // The open tab lives in the URL, so it survives a reload, a share and Back
+    const hashFor = (id: string) => (id === 'Designs' ? '#designs' : '#projects');
+
+    const activateTab = (id: string, { push = false } = {}) => {
       const nextTrigger = bar.querySelector<HTMLButtonElement>(`[data-tab-trigger][data-tab-id="${id}"]`);
+      if (push && window.location.hash !== hashFor(id)) {
+        history.pushState({ tab: id }, '', hashFor(id));
+      }
 
       triggers.forEach((trigger) => {
         const isActive = trigger.dataset.tabId === id;
         trigger.classList.toggle('tab-active', isActive);
         trigger.setAttribute('aria-selected', String(isActive));
+        trigger.tabIndex = isActive ? 0 : -1;
       });
 
       if (nextTrigger) {
@@ -709,7 +748,27 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
         if (!targetBtn) return;
         e.preventDefault();
         const id = targetBtn.dataset.tabId;
-        if (id) activateTab(id);
+        if (id) activateTab(id, { push: true });
+      });
+
+      // Left and Right arrows move between tabs
+      bar.addEventListener('keydown', (event) => {
+        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
+        event.preventDefault();
+        const list = [...triggers];
+        const current = list.findIndex((t) => t.getAttribute('aria-selected') === 'true');
+        const step = event.key === 'ArrowRight' ? 1 : -1;
+        const next = list[(current + step + list.length) % list.length];
+        const id = next.dataset.tabId;
+        if (id) {
+          activateTab(id, { push: true });
+          next.focus();
+        }
+      });
+
+      // Back and Forward step between the two tabs
+      window.addEventListener('popstate', () => {
+        activateTab(window.location.hash === '#designs' ? 'Designs' : 'Builds');
       });
     }
 

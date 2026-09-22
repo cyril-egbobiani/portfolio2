@@ -5,8 +5,9 @@ import Layout from '../Layout.astro';
 import PageTopNav from '../PageTopNav.astro';
 import PortfolioFooter from '../PortfolioFooter.astro';
 import NextCase from './NextCase.astro';
+import Gallery from './Gallery.astro';
 import NavArrow from '../NavArrow.astro';
-import type { CaseStudyLink, NextCaseProps } from './types';
+import type { CaseStudyLink, GalleryItem, NextCaseProps } from './types';
 import '../../styles/article.css';
 import '../../styles/case-study.css';
 
@@ -21,6 +22,9 @@ interface Props {
   toolsLabel?: string;
   status?: string;
   links?: CaseStudyLink[];
+  /** Screens shown in a row under the summary */
+  gallery?: GalleryItem[];
+  galleryDevice?: 'phone' | 'desktop';
   draft?: boolean;
   backHref: string;
   backLabel: string;
@@ -38,6 +42,8 @@ const {
   toolsLabel = 'Tools',
   status,
   links = [],
+  gallery = [],
+  galleryDevice = 'phone',
   draft = false,
   backHref,
   backLabel,
@@ -59,7 +65,7 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
     </div>
   </nav>
 
-  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
+  <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
     <div class="mx-auto flex w-full max-w-[680px] flex-col" data-cs>
       <article class="entry" data-entry>
         <header class="cs-intro" id="intro" data-cs-intro>
@@ -71,9 +77,9 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
           <h1 class="cs-title">{title}</h1>
           <p class="cs-summary">{summary}</p>
 
-          <!-- Facts sit in a quiet row under the summary; the stack gets its own line as tags -->
-          <dl class:list={['cs-facts', { 'cs-facts--no-team': team.length === 0 }]}>
-            <div class="cs-fact cs-fact--role">
+          <!-- Facts: label on the left, value on the right, hairlines between -->
+          <dl class="cs-facts">
+            <div class="cs-fact">
               <dt>Role</dt>
               <dd>{role}</dd>
             </div>
@@ -84,28 +90,28 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
             {team.length > 0 && (
               <div class="cs-fact">
                 <dt>Team</dt>
-                <dd>{team.map((member) => <span>{member}</span>)}</dd>
+                <dd>{team.join(' · ')}</dd>
               </div>
             )}
             {tools.length > 0 && (
-              <div class="cs-fact cs-fact--wide">
+              <div class="cs-fact">
                 <dt>{toolsLabel}</dt>
-                <dd>
-                  <ul class="cs-tags" role="list">
-                    {tools.map((tool) => <li>{tool}</li>)}
-                  </ul>
+                <dd>{tools.join(' · ')}</dd>
+              </div>
+            )}
+            {links.length > 0 && (
+              <div class="cs-fact">
+                <dt>Live</dt>
+                <dd class="cs-fact__links">
+                  {links.map((link) => (
+                    <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<NavArrow direction="up-right" size={12} /></a>
+                  ))}
                 </dd>
               </div>
             )}
           </dl>
 
-          {links.length > 0 && (
-            <p class="cs-links">
-              {links.map((link) => (
-                <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<NavArrow direction="up-right" size={12} /></a>
-              ))}
-            </p>
-          )}
+          {gallery.length > 0 && <Gallery items={gallery} device={galleryDevice} />}
         </header>
 
         {Astro.slots.has('hero') && (

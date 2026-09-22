@@ -26,7 +26,7 @@ const minutes = readingMinutes(entry.body);
 
   <PageTopNav backHref="/journal" backLabel="Back to journal" />
 
-  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
+  <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
     <div class="mx-auto flex w-full max-w-[680px] flex-col">
       <article class="entry" data-entry>
         <header class="entry-header">

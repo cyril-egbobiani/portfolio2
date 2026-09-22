@@ -1,5 +1,5 @@
 // src/utils/case-study.ts — Interactions for case study pages (projects and designs):
-// section rail, scroll reveals, count-up stats, option tabs, image zoom,
+// section rail, scroll reveals, count-up stats, option tabs, image zoom, gallery,
 // and decision media: videos, before/after sliders, annotated screenshots.
 // Everything is progressive: without JavaScript the page reads top to bottom.
 
@@ -17,6 +17,8 @@ export function initCaseStudy() {
   initCounts(page, cleanups);
   initOptions(page, cleanups);
   initZoom(page, cleanups);
+  initGallery(page, cleanups);
+  initSystemMap(page);
   initVideos(page, cleanups);
   initCompare(page);
   initAnnotated(page);
@@ -271,17 +273,20 @@ function initOptions(page: HTMLElement, cleanups: Cleanup[]) {
 
 // ── Image zoom: images spring out of their frame to fill the screen ──
 function initZoom(page: HTMLElement, cleanups: Cleanup[]) {
-  const images = [...page.querySelectorAll<HTMLImageElement>('.cs-figure img, .cs-phone img')];
+  const images = [...page.querySelectorAll<HTMLImageElement>('.cs-figure img, .cs-phone img, .cs-gallery__item img')];
   if (images.length === 0) return;
 
   let clone: HTMLImageElement | null = null;
   let source: HTMLImageElement | null = null;
   let backdrop: HTMLElement | null = null;
+  let closeButton: HTMLButtonElement | null = null;
   let closing = false;
 
   const finish = () => {
     clone?.remove();
     backdrop?.remove();
+    closeButton?.remove();
+    closeButton = null;
     if (source) source.style.visibility = '';
     source?.focus({ preventScroll: true });
     clone = source = backdrop = null;
@@ -329,6 +334,17 @@ function initZoom(page: HTMLElement, cleanups: Cleanup[]) {
     });
     clone.addEventListener('click', close);
     document.body.append(clone);
+
+    // A visible way out: Escape is not an option on a phone
+    closeButton = document.createElement('button');
+    closeButton.type = 'button';
+    closeButton.className = 'cs-zoom-close';
+    closeButton.setAttribute('aria-label', 'Close image');
+    closeButton.innerHTML =
+      '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M7 7l10 10M17 7 7 17"/></svg>';
+    closeButton.addEventListener('click', close);
+    document.body.append(closeButton);
+    closeButton.focus({ preventScroll: true });
 
     source = img;
     img.style.visibility = 'hidden';
@@ -463,6 +479,187 @@ function initAnnotated(page: HTMLElement) {
         pinned = pinned === index ? null : index;
         show(pinned);
       });
+    });
+  });
+}
+
+// ── Gallery: drag to scroll the row of screens (touch and keys work on their own) ──
+function initGallery(page: HTMLElement, cleanups: Cleanup[]) {
+  const tracks = [...page.querySelectorAll<HTMLElement>('[data-cs-gallery-track]')];
+  if (tracks.length === 0) return;
+
+  // The strip runs the full width of the page, so it has to know how much of
+  // that width the scrollbar takes, or the page would scroll sideways
+  const measureScrollbar = () => {
+    const width = window.innerWidth - document.documentElement.clientWidth;
+    document.documentElement.style.setProperty('--scrollbar', `${Math.max(0, width)}px`);
+  };
+  measureScrollbar();
+  window.addEventListener('resize', measureScrollbar);
+  cleanups.push(() => window.removeEventListener('resize', measureScrollbar));
+
+  tracks.forEach((track) => {
+    // The caption names only the screen in front of you, sliding as you scroll
+    const figure = track.closest('.cs-gallery');
+    const labels = [...(figure?.querySelectorAll<HTMLElement>('[data-cs-gallery-label]') ?? [])];
+    const counter = figure?.querySelector<HTMLElement>('[data-cs-gallery-index]');
+    const items = [...track.children] as HTMLElement[];
+    const steps = [...(figure?.querySelectorAll<HTMLButtonElement>('[data-cs-gallery-step]') ?? [])];
+    const dots = [...(figure?.querySelectorAll<HTMLButtonElement>('[data-cs-gallery-dot]') ?? [])];
+    let current = -1;
+
+    const setCurrent = (index: number) => {
+      if (index === current || index < 0) return;
+      current = index;
+      labels.forEach((label, i) => {
+        label.classList.toggle('is-current', i === index);
+        label.classList.toggle('is-past', i < index);
+      });
+      if (counter) counter.textContent = String(index + 1);
+      dots.forEach((dot, i) => {
+        dot.classList.toggle('is-current', i === index);
+        dot.setAttribute('aria-current', String(i === index));
+      });
+      const end = track.scrollWidth - track.clientWidth;
+      // When everything already fits, position controls have nothing to say
+      figure?.classList.toggle('is-static', end < 40);
+      steps.forEach((step) => {
+        const back = Number(step.dataset.csGalleryStep) < 0;
+        step.disabled = back ? track.scrollLeft < 4 : track.scrollLeft >= end - 4;
+      });
+    };
+
+    // A dot jumps straight to its screen
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => {
+        items[index]?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', inline: 'start', block: 'nearest' });
+      });
+    });
+
+    // The arrows move one screen at a time; scrollIntoView respects scroll-padding
+    steps.forEach((step) => {
+      step.addEventListener('click', () => {
+        const next = items[Math.min(items.length - 1, Math.max(0, current + Number(step.dataset.csGalleryStep)))];
+        next?.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', inline: 'start', block: 'nearest' });
+      });
+    });
+
+    let ticking = false;
+    const onScroll = () => {
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(() => {
+        ticking = false;
+        // Whichever screen sits closest to where the strip starts is the one being read
+        const startEdge = track.getBoundingClientRect().left + parseFloat(getComputedStyle(track).paddingLeft || '0');
+        let best = 0;
+        let bestDistance = Infinity;
+        items.forEach((item, index) => {
+          const distance = Math.abs(item.getBoundingClientRect().left - startEdge);
+          if (distance < bestDistance) {
+            bestDistance = distance;
+            best = index;
+          }
+        });
+        setCurrent(best);
+      });
+    };
+
+    track.addEventListener('scroll', onScroll, { passive: true });
+    setCurrent(0);
+    // Ends of the strip can only be judged once the images have their size
+    const settle = setTimeout(() => {
+      current = -1;
+      onScroll();
+    }, 400);
+    cleanups.push(() => {
+      track.removeEventListener('scroll', onScroll);
+      clearTimeout(settle);
+    });
+
+    let down = false;
+    let startX = 0;
+    let startLeft = 0;
+    let moved = false;
+
+    const onPointerDown = (event: PointerEvent) => {
+      if (event.pointerType !== 'mouse' || event.button !== 0) return;
+      down = true;
+      moved = false;
+      startX = event.clientX;
+      startLeft = track.scrollLeft;
+    };
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!down) return;
+      const dx = event.clientX - startX;
+      if (!moved && Math.abs(dx) > 4) {
+        moved = true;
+        track.classList.add('is-dragging');
+        track.setPointerCapture(event.pointerId);
+      }
+      if (moved) track.scrollLeft = startLeft - dx;
+    };
+
+    const onPointerUp = () => {
+      down = false;
+      track.classList.remove('is-dragging');
+    };
+
+    // A drag should not open the image it finished on
+    const onClick = (event: MouseEvent) => {
+      if (!moved) return;
+      event.preventDefault();
+      event.stopPropagation();
+      moved = false;
+    };
+
+    track.addEventListener('pointerdown', onPointerDown);
+    track.addEventListener('pointermove', onPointerMove);
+    track.addEventListener('pointerup', onPointerUp);
+    track.addEventListener('pointercancel', onPointerUp);
+    track.addEventListener('click', onClick, true);
+
+    cleanups.push(() => {
+      track.removeEventListener('pointerdown', onPointerDown);
+      track.removeEventListener('pointermove', onPointerMove);
+      track.removeEventListener('pointerup', onPointerUp);
+      track.removeEventListener('pointercancel', onPointerUp);
+      track.removeEventListener('click', onClick, true);
+    });
+  });
+}
+
+// ── System map: hovering a box lights up what it talks to ──
+function initSystemMap(page: HTMLElement) {
+  page.querySelectorAll<HTMLElement>('[data-cs-map]').forEach((map) => {
+    const nodes = [...map.querySelectorAll<SVGGElement>('[data-cs-map-node]')];
+    const edges = [...map.querySelectorAll<SVGPathElement>('[data-cs-map-edge]')];
+
+    const light = (id: string | null) => {
+      edges.forEach((edge) => {
+        const [from, to] = (edge.dataset.csMapEdge ?? '').split('|');
+        edge.classList.toggle('is-lit', id !== null && (from === id || to === id));
+      });
+      nodes.forEach((node) => {
+        const own = node.dataset.csMapNode;
+        const linked =
+          id !== null &&
+          (own === id ||
+            edges.some((edge) => {
+              const [from, to] = (edge.dataset.csMapEdge ?? '').split('|');
+              return (from === id && to === own) || (to === id && from === own);
+            }));
+        node.classList.toggle('is-lit', linked);
+      });
+    };
+
+    nodes.forEach((node) => {
+      const id = node.dataset.csMapNode ?? null;
+      node.addEventListener('pointerenter', () => light(id));
+      node.addEventListener('focus', () => light(id));
+      node.addEventListener('pointerleave', () => light(null));
+      node.addEventListener('blur', () => light(null));
     });
   });
 }

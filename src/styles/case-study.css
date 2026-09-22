@@ -9,14 +9,21 @@
   display: none;
 }
 
-@media (min-width: 1180px) {
+/* The rail keeps a wide gap from the column so it reads as a margin note */
+@media (min-width: 1280px) {
   .cs-rail {
     display: block;
     position: fixed;
     top: 132px;
-    left: max(24px, calc(50% - 340px - 216px));
+    left: max(24px, calc(50% - 340px - 264px));
     width: 176px;
     z-index: 30;
+  }
+}
+
+@media (min-width: 1440px) {
+  .cs-rail {
+    left: calc(50% - 340px - 312px);
   }
 }
 
@@ -97,7 +104,7 @@
 
 .cs-title {
   margin: 0;
-  font-size: 22px;
+  font-size: 32px;
   font-weight: 600;
   line-height: 1.25;
   letter-spacing: -0.025em;
@@ -107,60 +114,61 @@
 
 .cs-summary {
   margin: 0;
-  max-width: 58ch;
+  max-width: 52ch;
   font-size: var(--text-base);
   line-height: 1.7;
   letter-spacing: -0.01em;
   color: var(--text-secondary);
 }
 
-/* Facts: role, year, team in a row; stack on its own line as tags */
+/* Facts: one row each, label left and value right, hairlines between */
 .cs-facts {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px 24px;
-  margin: 16px 0 0;
-  padding-top: 20px;
+  margin: 20px 0 0;
+}
+
+.cs-fact {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 10px 0;
   border-top: 1px solid var(--border-subtle);
 }
 
-.cs-fact--wide {
-  grid-column: 1 / -1;
+.cs-fact:last-child {
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .cs-fact dt {
-  margin-bottom: 4px;
+  flex: none;
   font-size: var(--text-sm);
   color: var(--text-muted);
 }
 
 .cs-fact dd {
   margin: 0;
-  font-size: var(--text-base);
-  line-height: 1.5;
+  font-size: var(--text-sm);
+  line-height: 1.6;
   color: var(--text-primary);
+  text-align: right;
+  text-wrap: pretty;
 }
 
-.cs-fact dd span {
-  display: block;
-}
-
-.cs-tags {
+.cs-fact__links {
   display: flex;
   flex-wrap: wrap;
-  gap: 6px;
-  margin: 2px 0 0;
-  padding: 0;
-  list-style: none;
+  justify-content: flex-end;
+  gap: 14px;
 }
 
-.cs-tags li {
-  padding: 4px 10px;
-  border-radius: 9999px;
-  background: var(--surface-subtle);
-  font-size: var(--text-sm);
-  line-height: 1.4;
-  color: var(--text-secondary);
+.cs-fact__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-primary);
+  text-decoration: underline;
+  text-decoration-color: var(--border-default);
+  text-underline-offset: 3px;
 }
 
 .cs-links {
@@ -183,17 +191,312 @@
 
 @media (min-width: 640px) {
   .cs-title {
-    font-size: 26px;
+    font-size: 40px;
+  }
+}
+
+/* ── Gallery: the project's screens in a row under the summary ── */
+/* Sits well clear of the facts above it: the strip reads as its own band */
+.cs-gallery {
+  margin: 26px 0 4px;
+}
+
+@media (min-width: 640px) {
+  .cs-gallery {
+    margin-top: 38px;
+  }
+}
+
+.cs-gallery__track {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  /* Runs to the page edges on small screens so it reads as a strip */
+  margin-inline: -24px;
+  padding-inline: 24px;
+  /* Screens snap to the text's left edge, not the edge of the phone */
+  scroll-padding-left: 24px;
+  padding-block: 2px;
+  cursor: grab;
+  /* Without this, images loading in shift the strip along as they arrive */
+  overflow-anchor: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.cs-gallery__track::-webkit-scrollbar {
+  display: none;
+}
+
+.cs-gallery__track.is-dragging {
+  cursor: grabbing;
+  scroll-snap-type: none;
+}
+
+.cs-gallery__track:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+@media (min-width: 640px) {
+  .cs-gallery__track {
+    gap: 12px;
+    margin-inline: -32px;
+    padding-inline: 32px;
+    scroll-padding-left: 32px;
+  }
+}
+
+/* Wide screens: the strip breaks out of the text column and runs to both page
+   edges, so it reads as a gallery. Screens still start on the text's left edge.
+   --scrollbar comes from the script; without it a visible scrollbar would push
+   the page sideways. */
+@media (min-width: 760px) {
+  .cs-gallery__track {
+    /* Left edge lines up with the text; the strip runs off the right of the page.
+       Written in px, not %, because percentages mean different things to
+       padding and scroll-padding (one measures the box, the other the scrollport). */
+    --gutter: max(32px, calc((100vw - var(--scrollbar, 0px) - 680px) / 2));
+    margin-inline: calc(-1 * var(--gutter));
+    padding-left: var(--gutter);
+    padding-right: 24px;
+    scroll-padding-left: var(--gutter);
+    /* Gentle snapping: it lines screens up without fighting a drag */
+    scroll-snap-type: x proximity;
   }
 
-  .cs-facts {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 24px 32px;
+}
+
+.cs-gallery__item {
+  flex: none;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--surface-subtle);
+  scroll-snap-align: start;
+  transition: transform 320ms var(--ease-smooth-out);
+}
+
+.cs-gallery--phone .cs-gallery__item {
+  width: 150px;
+}
+
+.cs-gallery--desktop .cs-gallery__item {
+  width: 280px;
+}
+
+@media (min-width: 640px) {
+  .cs-gallery--phone .cs-gallery__item {
+    width: 172px;
   }
 
-  /* Without a team, the role takes the space so it doesn't wrap */
-  .cs-facts--no-team .cs-fact--role {
-    grid-column: span 2;
+  .cs-gallery--desktop .cs-gallery__item {
+    width: 320px;
+  }
+}
+
+/* Roomier screens: bigger screens, and the strip always has somewhere to go */
+@media (min-width: 1024px) {
+  .cs-gallery--phone .cs-gallery__item {
+    width: 208px;
+  }
+
+  .cs-gallery--desktop .cs-gallery__item {
+    width: 380px;
+  }
+}
+
+.cs-gallery__item img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 0;
+  border-radius: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-gallery__item:hover {
+    transform: translateY(-3px);
+  }
+}
+
+/* Caption: only the screen you are looking at, sliding up as you scroll */
+.cs-gallery__caption {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 12px;
+  font-size: var(--text-sm);
+  line-height: 1.4;
+  color: var(--text-muted);
+}
+
+.cs-gallery__labels {
+  position: relative;
+  display: block;
+  flex: 1;
+  height: 1.4em;
+  overflow: hidden;
+}
+
+.cs-gallery__label {
+  position: absolute;
+  inset: 0;
+  color: var(--text-primary);
+  opacity: 0;
+  transform: translateY(100%);
+  transition:
+    transform 420ms var(--ease-smooth-out),
+    opacity 240ms var(--ease-smooth-out);
+}
+
+.cs-gallery__label.is-current {
+  opacity: 1;
+  transform: none;
+}
+
+/* Screens already passed leave upwards */
+.cs-gallery__label.is-past {
+  transform: translateY(-100%);
+}
+
+.cs-gallery__nav {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 4px;
+}
+
+
+
+/* Nothing to scroll: the dots and arrows step aside */
+.cs-gallery.is-static .cs-gallery__nav {
+  display: none;
+}
+
+/* Dots: where you are in the strip, and a way to jump */
+.cs-gallery__dots {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  margin-right: 2px;
+}
+
+.cs-gallery__dot {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  position: relative;
+}
+
+@media (pointer: coarse) {
+  .cs-gallery__dot {
+    width: 26px;
+    height: 30px;
+  }
+}
+
+.cs-gallery__dot::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  border-radius: 9999px;
+  background: var(--border-strong);
+  transform: translate(-50%, -50%);
+  transition:
+    width 260ms var(--ease-smooth-out),
+    background-color 200ms var(--ease-smooth-out);
+}
+
+.cs-gallery__dot.is-current::after {
+  width: 16px;
+  border-radius: 9999px;
+  background: var(--text-primary);
+}
+
+.cs-gallery__dot:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: -2px;
+  border-radius: 9999px;
+}
+
+/* The counter stays for screen readers only, the dots say it visually */
+.cs-gallery__count {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-gallery__dot::after {
+    transition: none;
+  }
+}
+
+/* Arrow buttons: a click target for people who don't drag */
+.cs-gallery__step {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--surface-subtle);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition:
+    background-color 160ms var(--ease-smooth-out),
+    color 160ms var(--ease-smooth-out),
+    opacity 160ms var(--ease-smooth-out);
+}
+
+.cs-gallery__step:hover {
+  background: var(--surface-interactive);
+  color: var(--text-primary);
+}
+
+.cs-gallery__step:active {
+  transform: scale(0.94);
+}
+
+.cs-gallery__step[disabled] {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.cs-gallery__step:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-gallery__step {
+    display: inline-flex;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-gallery__label {
+    transition: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-gallery__item {
+    transition: none;
   }
 }
 
@@ -222,7 +525,13 @@
 .cs-body {
   display: flex;
   flex-direction: column;
-  gap: 80px;
+  gap: 52px;
+}
+
+@media (min-width: 640px) {
+  .cs-body {
+    gap: 64px;
+  }
 }
 
 .cs-section {
@@ -236,13 +545,20 @@
 }
 
 .cs-body .cs-heading {
-  margin: 0 0 12px;
-  font-size: 18px;
+  margin: 0 0 14px;
+  max-width: 26ch;
+  font-size: 20px;
   font-weight: 500;
   line-height: 1.35;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--text-primary);
   text-wrap: balance;
+}
+
+@media (min-width: 640px) {
+  .cs-body .cs-heading {
+    font-size: 24px;
+  }
 }
 
 .cs-prose > p,
@@ -267,17 +583,12 @@
   margin-bottom: 0;
 }
 
-/* ── Figure: soft panel + caption; images keep square edges ── */
+/* ── Figure: images straight on the page, caption underneath ── */
 .cs-figure__panel {
   display: flex;
   flex-wrap: wrap;
   align-items: flex-start;
-  justify-content: center;
-  gap: 20px;
-  padding: 28px 20px;
-  border-radius: 16px;
-  background: var(--surface-subtle);
-  overflow: hidden;
+  gap: 12px;
 }
 
 .cs-figure__panel > p {
@@ -286,9 +597,9 @@
 
 .cs-body .cs-figure__panel img,
 .cs-hero .cs-figure__panel img {
-  max-height: 460px;
+  max-height: 420px;
   border: 0;
-  border-radius: 0;
+  border-radius: 6px;
 }
 
 .cs-figure figcaption {
@@ -296,13 +607,11 @@
   font-size: var(--text-sm);
   line-height: 1.5;
   color: var(--text-muted);
-  text-align: center;
 }
 
 @media (min-width: 640px) {
   .cs-figure__panel {
-    gap: 28px;
-    padding: 40px 32px;
+    gap: 16px;
   }
 }
 
@@ -335,6 +644,7 @@
 .cs-phone__screen {
   width: 100%;
   overflow: hidden;
+  border-radius: 6px;
   background: var(--surface);
 }
 
@@ -345,7 +655,7 @@
   height: auto;
   max-height: none;
   border: 0;
-  border-radius: 0;
+  border-radius: 6px;
 }
 
 .cs-phone figcaption {
@@ -353,37 +663,226 @@
   font-size: var(--text-sm);
   line-height: 1.35;
   color: var(--text-muted);
-  text-align: center;
 }
 
-/* ── Insight cards ── */
-.cs-insights {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 8px;
+/* ── Diagram: artwork drawn elsewhere, or a placeholder until it arrives ── */
+.cs-diagram {
+  margin: 0;
 }
 
-@media (min-width: 640px) {
-  .cs-insights {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
+.cs-body .cs-diagram__img {
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  border: 0;
+  border-radius: 6px;
 }
 
-.cs-card {
-  padding: 18px 20px;
-  border-radius: 14px;
+.cs-diagram__slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  border-radius: 6px;
+  border: 1px dashed var(--border-default);
   background: var(--surface-subtle);
 }
 
+.cs-diagram__slot span {
+  font-size: var(--text-sm);
+  color: var(--text-faint);
+}
+
+.cs-diagram figcaption {
+  margin-top: 10px;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-muted);
+}
+
+/* ── System map: how a project is put together ── */
+.cs-map {
+  margin: 0;
+}
+
+.cs-map__svg {
+  display: none;
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+/* The drawing needs room to stay readable; phones get the list instead */
+@media (min-width: 640px) {
+  .cs-map__svg {
+    display: block;
+  }
+}
+
+.cs-map__edge {
+  fill: none;
+  stroke: var(--border-default);
+  stroke-width: 1.5;
+  transition:
+    stroke 200ms var(--ease-smooth-out),
+    stroke-width 200ms var(--ease-smooth-out);
+}
+
+.cs-map__edge.is-lit {
+  stroke: var(--text-primary);
+  stroke-width: 2.5;
+}
+
+.cs-map__edge-label {
+  fill: var(--text-muted);
+  font-family: var(--font-sans);
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cs-map__node {
+  cursor: default;
+  outline: none;
+}
+
+.cs-map__node rect {
+  fill: var(--surface);
+  stroke: var(--border-default);
+  stroke-width: 1;
+  transition:
+    stroke 200ms var(--ease-smooth-out),
+    fill 200ms var(--ease-smooth-out);
+}
+
+.cs-map__node.is-core rect {
+  fill: var(--text-primary);
+  stroke: var(--text-primary);
+}
+
+.cs-map__node.is-lit rect {
+  stroke: var(--text-primary);
+}
+
+.cs-map__node:focus-visible rect {
+  stroke: var(--text-primary);
+  stroke-width: 2;
+}
+
+.cs-map__title {
+  fill: var(--text-primary);
+  font-family: var(--font-sans);
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.cs-map__sub {
+  fill: var(--text-secondary);
+  font-family: var(--font-sans);
+  font-size: 9.5px;
+}
+
+.cs-map__node.is-core .cs-map__title {
+  fill: var(--surface);
+}
+
+.cs-map__node.is-core .cs-map__sub {
+  fill: var(--text-faint);
+}
+
+/* Phone fallback: the same parts and links, written out */
+@media (max-width: 639px) {
+  .cs-body .cs-map__list {
+    display: grid;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+}
+
+@media (min-width: 640px) {
+  .cs-body .cs-map__list {
+    display: none;
+  }
+}
+
+.cs-body .cs-map__list li {
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: var(--surface-subtle);
+}
+
+.cs-body .cs-map__list li::before {
+  content: none;
+}
+
+.cs-map__list b {
+  display: block;
+  font-size: var(--text-base);
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.cs-map__list span {
+  display: block;
+  font-size: var(--text-sm);
+  line-height: 1.5;
+  color: var(--text-secondary);
+}
+
+.cs-map__list .cs-map__to {
+  margin-top: 2px;
+  color: var(--text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cs-map__edge,
+  .cs-map__node rect {
+    transition: none;
+  }
+}
+
+/* ── Insights: a labelled row each, divided by hairlines ── */
+.cs-insights {
+  display: grid;
+  gap: 0;
+}
+
+.cs-card {
+  display: grid;
+  gap: 3px;
+  padding: 12px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cs-card:last-child {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+@media (min-width: 640px) {
+  .cs-card {
+    grid-template-columns: 170px minmax(0, 1fr);
+    column-gap: 20px;
+    padding: 14px 0;
+  }
+
+  .cs-card__text {
+    grid-column: 2;
+  }
+}
+
 .cs-body .cs-card__label {
-  margin: 0 0 8px;
+  margin: 0;
   font-size: var(--text-sm);
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
 
 .cs-body .cs-card__title {
-  margin: 0 0 6px;
+  margin: 0;
   font-size: var(--text-base);
   font-weight: 500;
   line-height: 1.4;
@@ -396,7 +895,7 @@
   margin: 0;
   font-size: var(--text-base);
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--text-secondary);
 }
 
 /* ── Stats: plain numbers over a hairline ── */
@@ -648,10 +1147,9 @@
 .cs-takeaway {
   display: flex;
   align-items: flex-start;
-  gap: 14px;
-  padding: 18px 20px;
-  border-radius: 14px;
-  background: var(--surface-subtle);
+  gap: 12px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--border-default);
 }
 
 /* Beacon sits level with the title line */
@@ -670,7 +1168,39 @@
   margin: 0;
   font-size: var(--text-base);
   line-height: 1.6;
-  color: var(--text-muted);
+  color: var(--text-secondary);
+}
+
+/* ── Choice: one decision inside a "Design decisions" section ── */
+.cs-body .cs-choice {
+  padding: 20px 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cs-body .cs-choice:last-child {
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.cs-body .cs-choice__title {
+  margin: 0 0 8px;
+  max-width: 34ch;
+  font-size: 17px;
+  font-weight: 500;
+  line-height: 1.35;
+  letter-spacing: -0.02em;
+  color: var(--text-primary);
+}
+
+.cs-body .cs-choice__body > p {
+  margin: 0 0 10px;
+}
+
+.cs-body .cs-choice__body > :last-child {
+  margin-bottom: 0;
+}
+
+.cs-body .cs-choice .cs-takeaway {
+  margin: 12px 0 0;
 }
 
 /* ── Learnings: a numbered list divided by hairlines ── */
@@ -1296,6 +1826,31 @@
 
 .cs-zoom-backdrop.is-active {
   opacity: 1;
+}
+
+/* Close button for an enlarged image */
+.cs-zoom-close {
+  position: fixed;
+  top: max(16px, env(safe-area-inset-top, 0px));
+  right: 16px;
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 9999px;
+  background: var(--surface-raised);
+  color: var(--text-primary);
+  cursor: pointer;
+  box-shadow: 0 8px 24px -12px rgba(0, 0, 0, 0.4);
+}
+
+.cs-zoom-close:focus-visible {
+  outline: 2px solid var(--text-primary);
+  outline-offset: 3px;
 }
 
 .cs-zoom-clone {

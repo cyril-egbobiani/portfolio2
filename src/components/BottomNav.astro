@@ -24,7 +24,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
 <nav class="qm" aria-label="Main" data-qm>
   <div class="qm-backdrop" data-qm-backdrop aria-hidden="true"></div>
 
-  <div class="qm-sheet" id="qmSheet" data-qm-sheet inert>
+  <div class="qm-sheet" id="qmSheet" role="dialog" aria-modal="true" aria-label="Menu" data-qm-sheet inert>
     <ul class="qm-list" role="list">
       {links.map((link, index) => (
         <li style={`--i: ${index}`}>
@@ -51,9 +51,9 @@ const EMAIL = 'egbobianicyril@gmail.com';
         <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
           <path fill="currentColor" d="M4 4a2 2 0 0 1 2-2h8.586a2 2 0 0 1 1.414.586l3.414 3.414A2 2 0 0 1 20 7.414V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm10 0v3a1 1 0 0 0 1 1h3zM8 12a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2z" />
         </svg>
-        Résumé
+        Résumé<span class="sr-only"> (opens in a new tab)</span>
       </a>
-      <a href="https://www.linkedin.com/in/cyril-egbobiani-6802002b8/" target="_blank" rel="noopener noreferrer" class="qm-action" aria-label="LinkedIn">
+      <a href="https://www.linkedin.com/in/cyril-egbobiani-6802002b8/" target="_blank" rel="noopener noreferrer" class="qm-action" aria-label="LinkedIn (opens in a new tab)">
         <svg width="16" height="16" viewBox="1.2 1.2 21.6 21.6" aria-hidden="true">
           <path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z" />
         </svg>
@@ -71,6 +71,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
   </div>
 
   <button type="button" class="qm-button" aria-expanded="false" aria-controls="qmSheet" data-qm-toggle>
+    <span class="qm-button__dot" aria-hidden="true"></span>
     <span class="qm-button__where" data-qm-where>Home</span>
     <span class="qm-button__hint" data-qm-hint>Menu</span>
     <span class="qm-button__icon" aria-hidden="true">
@@ -158,8 +159,18 @@ const EMAIL = 'egbobianicyril@gmail.com';
   }
 
   .qm-button:focus-visible {
-    outline: 2px solid var(--text-primary);
+    outline: 2px solid var(--brand);
     outline-offset: 3px;
+  }
+
+  /* The one spot of colour at rest: it marks the section you're on */
+  .qm-button__dot {
+    width: 6px;
+    height: 6px;
+    margin-right: -4px;
+    border-radius: 9999px;
+    background: var(--brand);
+    box-shadow: 0 0 0 3px var(--brand-soft);
   }
 
   .qm-button__where {
@@ -309,10 +320,11 @@ const EMAIL = 'egbobianicyril@gmail.com';
 
   .qm-link[aria-current] {
     background: var(--surface-interactive);
+    color: var(--brand);
   }
 
   .qm-link[aria-current] .qm-link__icon {
-    color: var(--text-primary);
+    color: var(--brand);
   }
 
   .qm-link[aria-current] .qm-link__key {
@@ -342,7 +354,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
 
   .qm-link:focus-visible,
   .qm-action:focus-visible {
-    outline: 2px solid var(--text-primary);
+    outline: 2px solid var(--brand);
     outline-offset: -2px;
   }
 
@@ -413,8 +425,10 @@ const EMAIL = 'egbobianicyril@gmail.com';
     display: block;
   }
 
+  /* Confirmation is the other place colour earns its keep */
   .qm-action.is-copied {
-    color: var(--text-primary);
+    background: var(--brand-soft);
+    color: var(--brand);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -524,7 +538,8 @@ const EMAIL = 'egbobianicyril@gmail.com';
     // ── Interaction ──
     // Focus moves into the sheet only for keyboard activation (a tap or click has detail > 0)
     toggle.addEventListener('click', (event) => setOpen(!open, { focus: event.detail === 0 }));
-    backdrop.addEventListener('click', () => setOpen(false));
+    // Closing from the backdrop hands focus back to the button, not the page body
+    backdrop.addEventListener('click', () => setOpen(false, { focus: sheet.contains(document.activeElement) }));
 
     const go = (link: HTMLAnchorElement, event?: Event) => {
       const href = link.getAttribute('href') ?? '';
@@ -546,6 +561,22 @@ const EMAIL = 'egbobianicyril@gmail.com';
       if (event.key === 'Escape') {
         event.preventDefault();
         setOpen(false, { focus: true });
+        return;
+      }
+      // Tab stays inside the sheet while it is open
+      if (event.key === 'Tab') {
+        const stops = [...sheet.querySelectorAll<HTMLElement>('a[href], button:not([disabled])')];
+        if (stops.length === 0) return;
+        const first = stops[0];
+        const last = stops[stops.length - 1];
+        const active = document.activeElement;
+        if (event.shiftKey && (active === first || !sheet.contains(active))) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && active === last) {
+          event.preventDefault();
+          first.focus();
+        }
         return;
       }
       if (/^[1-4]$/.test(event.key) && !event.metaKey && !event.ctrlKey && !event.altKey) {
@@ -576,6 +607,15 @@ const EMAIL = 'egbobianicyril@gmail.com';
       }
     });
 
+    // The label names what pressing it will do, not just "switch theme"
+    const describeTheme = () => {
+      if (!theme) return;
+      const goingDark = document.documentElement.dataset.theme !== 'dark';
+      theme.setAttribute('aria-label', goingDark ? 'Switch to dark theme' : 'Switch to light theme');
+    };
+    describeTheme();
+    new MutationObserver(describeTheme).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
     theme?.addEventListener('click', () => {
       const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
       document.documentElement.classList.add('theme-switching');
@@ -585,6 +625,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
       } catch {
         // Storage can be unavailable (private mode); the theme still switches for this visit
       }
+      describeTheme();
       setTimeout(() => document.documentElement.classList.remove('theme-switching'), 120);
     });
 

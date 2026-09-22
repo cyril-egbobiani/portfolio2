@@ -1,0 +1,18 @@
+---
+// Screens.astro — A named row of screens inside a case study section, for
+// showing a flow step by step ("Searching for a place", "Blocked outside it").
+// Same behaviour as the gallery under the title: swipe, drag, arrow keys, zoom.
+import Gallery from './Gallery.astro';
+import type { GalleryItem } from './types';
+
+interface Props {
+  items: GalleryItem[];
+  device?: 'phone' | 'desktop';
+}
+
+const { items, device = 'phone' } = Astro.props;
+---
+
+<div class="cs-block cs-screens" data-cs-reveal>
+  <Gallery items={items} device={device} />
+</div>

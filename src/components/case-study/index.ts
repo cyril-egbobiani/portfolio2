@@ -1,8 +1,10 @@
 // Components available inside case study MDX files without importing them.
 // Passed to <Content components={caseStudyComponents} /> on the case study pages.
 import Annotated from './Annotated.astro';
+import Choice from './Choice.astro';
 import Compare from './Compare.astro';
 import Decision from './Decision.astro';
+import Diagram from './Diagram.astro';
 import Figure from './Figure.astro';
 import Insight from './Insight.astro';
 import Insights from './Insights.astro';
@@ -13,7 +15,9 @@ import Phone from './Phone.astro';
 import Quote from './Quote.astro';
 import Reason from './Reason.astro';
 import Reasons from './Reasons.astro';
+import Screens from './Screens.astro';
 import Section from './Section.astro';
+import SystemMap from './SystemMap.astro';
 import Stat from './Stat.astro';
 import Stats from './Stats.astro';
 import Takeaway from './Takeaway.astro';
@@ -21,8 +25,10 @@ import Video from './Video.astro';
 
 export const caseStudyComponents = {
   Annotated,
+  Choice,
   Compare,
   Decision,
+  Diagram,
   Figure,
   Insight,
   Insights,
@@ -33,8 +39,10 @@ export const caseStudyComponents = {
   Quote,
   Reason,
   Reasons,
+  Screens,
   Section,
   Stat,
+  SystemMap,
   Stats,
   Takeaway,
   Video,

@@ -5,6 +5,15 @@ export interface CaseStudyLink {
   href: string;
 }
 
+/** One screen in the gallery under a case study title */
+export interface GalleryItem {
+  /** An imported image (optimised) or a path inside /public */
+  src: string | ImageMetadata;
+  alt: string;
+  /** Short name shown in the caption, e.g. "Prayer wall" */
+  label: string;
+}
+
 export interface NextCaseProps {
   href: string;
   title: string;

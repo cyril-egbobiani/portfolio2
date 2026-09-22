@@ -1,0 +1,35 @@
+---
+// Diagram.astro — A diagram you draw elsewhere and drop in as an image.
+// With no `src` it renders a placeholder at the right size, so the page keeps
+// its rhythm until the artwork arrives.
+import { Image } from 'astro:assets';
+
+interface Props {
+  /** An imported image (optimised) or a path inside /public */
+  src?: string | ImageMetadata;
+  /** Describe the diagram for anyone who cannot see it */
+  alt?: string;
+  caption?: string;
+  /** Shape of the space it occupies, e.g. "16 / 9" */
+  ratio?: string;
+  /** Shown inside the placeholder while the diagram is being drawn */
+  placeholder?: string;
+}
+
+const { src, alt = '', caption, ratio = '16 / 9', placeholder = 'System diagram' } = Astro.props;
+---
+
+<figure class="cs-block cs-diagram" data-cs-reveal>
+  {src ? (
+    typeof src === 'string' ? (
+      <img class="cs-diagram__img" src={encodeURI(src)} alt={alt} loading="lazy" decoding="async" />
+    ) : (
+      <Image class="cs-diagram__img" src={src} alt={alt} widths={[680, 1360]} sizes="(min-width: 720px) 680px, 100vw" loading="lazy" decoding="async" />
+    )
+  ) : (
+    <div class="cs-diagram__slot" style={`aspect-ratio: ${ratio}`} role="img" aria-label={`${placeholder} — artwork to come`}>
+      <span>{placeholder}</span>
+    </div>
+  )}
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>

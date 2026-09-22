@@ -1,0 +1,17 @@
+---
+// Choice.astro — One decision inside a "Design decisions" section: a claim,
+// a line or two of reasoning, and an optional <Takeaway>. Hairlines separate
+// them, so four decisions read as one considered list instead of four sections.
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+---
+
+<div class="cs-choice" data-cs-reveal>
+  <h3 class="cs-choice__title">{title}</h3>
+  <div class="cs-choice__body">
+    <slot />
+  </div>
+</div>

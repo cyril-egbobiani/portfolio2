@@ -36,12 +36,26 @@ const caseStudyFacts = {
 
 // Project case studies live in src/content/projects/<slug>.mdx, one per card
 // in src/data/projects.ts (the card list sets which appear and in what order).
+// `gallery` fills the row of screens under the title. A path starting with "/"
+// is served from /public as it is; a relative path (./images/x.png) is resolved
+// and optimised at build time.
 const projects = defineCollection({
   loader: glob({ pattern: '*.{md,mdx}', base: './src/content/projects' }),
-  schema: z.object({
-    ...caseStudyFacts,
-    stack: z.array(z.string()).default([]),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      ...caseStudyFacts,
+      stack: z.array(z.string()).default([]),
+      gallery: z
+        .array(
+          z.object({
+            src: z.union([z.string().startsWith('/'), image()]),
+            alt: z.string(),
+            label: z.string(),
+          })
+        )
+        .default([]),
+      galleryDevice: z.enum(['phone', 'desktop']).default('phone'),
+    }),
 });
 
 // Design case studies live in src/content/designs/*.mdx, rendered at

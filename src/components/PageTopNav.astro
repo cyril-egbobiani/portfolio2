@@ -25,17 +25,20 @@ const isHome = backHref === '/';
   </div>
 
   <div class="page-top-nav__inner">
-    <a href={backHref} class="page-top-nav__btn" aria-label={backLabel} title={backLabel}>
+    <a href={backHref} class:list={['page-top-nav__btn', { 'page-top-nav__btn--labelled': !isHome }]} aria-label={backLabel} title={backLabel}>
       {isHome ? (
         <svg viewBox="0 0 24 24" aria-hidden="true">
           <path fill="currentColor" fill-rule="evenodd" d="M10.772 2.688a2 2 0 0 1 2.456 0l8.384 6.521c.753.586.337 1.791-.615 1.791H20v8a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2v-8h-.997c-.953 0-1.367-1.206-.615-1.79z" clip-rule="evenodd" />
         </svg>
       ) : (
-        <NavArrow direction="left" size={16} />
+        <>
+          <NavArrow direction="left" size={16} />
+          <span class="page-top-nav__label">{backLabel}</span>
+        </>
       )}
     </a>
 
-    <button type="button" class="page-top-nav__btn" aria-label="Toggle theme" title="Toggle theme" data-page-theme-toggle>
+    <button type="button" class="page-top-nav__btn" aria-label="Switch theme" title="Switch theme" data-page-theme-toggle>
       <svg class="page-top-nav__sun" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
         <circle cx="12" cy="12" r="4.5" />
         <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77" />
@@ -147,6 +150,27 @@ const isHome = backHref === '/';
       transform 160ms var(--ease-smooth-out);
   }
 
+  /* Inner pages say where "back" goes, once there is room for the words */
+  .page-top-nav__label {
+    display: none;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  @media (min-width: 640px) {
+    .page-top-nav__btn--labelled {
+      width: auto;
+      gap: 6px;
+      padding: 0 14px 0 11px;
+      border-radius: 9999px;
+    }
+
+    .page-top-nav__label {
+      display: inline;
+    }
+  }
+
   .page-top-nav__btn svg {
     width: 16px;
     height: 16px;
@@ -184,7 +208,19 @@ const isHome = backHref === '/';
 <script>
   function initPageThemeToggle() {
     const btn = document.querySelector<HTMLButtonElement>('[data-page-theme-toggle]');
-    if (!btn || btn.dataset.bound) return;
+    if (!btn) return;
+
+    // The label names what pressing it will do, so the current theme is never a guess
+    const describe = () => {
+      const goingDark = document.documentElement.dataset.theme !== 'dark';
+      const label = goingDark ? 'Switch to dark theme' : 'Switch to light theme';
+      btn.setAttribute('aria-label', label);
+      btn.setAttribute('title', label);
+    };
+    describe();
+    new MutationObserver(describe).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+
+    if (btn.dataset.bound) return;
     btn.dataset.bound = 'true';
 
     btn.addEventListener('click', () => {
@@ -192,6 +228,7 @@ const isHome = backHref === '/';
       const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
       root.classList.add('theme-switching');
       root.dataset.theme = next;
+      describe();
       try {
         localStorage.setItem('portfolio-theme', next);
       } catch {

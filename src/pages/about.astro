@@ -19,7 +19,7 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
 >
   <PageTopNav />
 
-  <main class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[124px] sm:pt-[156px] pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
+  <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[124px] sm:pt-[156px] pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
     <div class="mx-auto flex w-full max-w-[680px] flex-col">
 
       <!-- ── Main Sections (Matching Homepage gap-24 sm:gap-28 rhythm) ── -->
@@ -75,6 +75,9 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
 
         <!-- Row 2: Narrative & Biography -->
         <div class="flex flex-col gap-4 w-full">
+          <h1 class="m-0 text-[22px] sm:text-[26px] font-semibold leading-[1.25] tracking-[-0.025em] text-[var(--text-primary)]">
+            About Cyril
+          </h1>
           <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
             Drawing became a coping tool for me at a very young age, It was just me and my notebook... then it finished. I drew almost on anything in sight but my mum's beating finally humbled me.
           </p>
