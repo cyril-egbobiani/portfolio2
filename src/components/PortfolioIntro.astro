@@ -43,7 +43,7 @@ const socials = [
       <!-- Lisse Squircle Avatar Frame -->
       <a
         href="/about"
-        class="avatar-squircle-wrap relative size-[calc(var(--text-base)*2.75)] rounded-full shrink-0 overflow-hidden bg-[var(--surface-subtle)] select-none block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--focus-ring)]"
+        class="avatar-squircle-wrap relative size-[calc(var(--text-base)*2.75)] rounded-full shrink-0 overflow-hidden bg-[var(--surface-subtle)] select-none block"
         aria-label="About Cyril Egbobiani"
         title="About Cyril"
       >
@@ -60,7 +60,7 @@ const socials = [
 
       <!-- Identity Text Stack -->
       <div class="flex flex-col min-w-0 justify-center">
-        <h1 class="font-display text-[16px] font-medium tracking-[-0.01em] text-[var(--text-primary)] leading-snug m-0">
+        <h1 class="font-display text-[16px] font-semibold tracking-[-0.01em] text-[var(--text-primary)] leading-snug m-0">
           Cyril Egbobiani
         </h1>
         <div class="text-[16px] text-[var(--text-muted)] font-normal leading-snug">
@@ -81,7 +81,7 @@ const socials = [
         alt=""
         class="inline-company-icon"
         style="display: inline-block !important; height: 14px !important; width: auto !important; vertical-align: -2px !important; margin-right: 5px !important; border-radius: 2px !important;"
-      />International Energy Services Limited</a>, where I design and build internal systems.
+      />International Energy Services Limited<span class="sr-only"> (opens in a new tab)</span></a>, where I design and build internal systems.
     </p>
 
     <p class="lede">
@@ -92,7 +92,7 @@ const socials = [
       Currently, I'm building <a href="/projects/forge" class="inline-company-link" data-astro-prefetch>Forge</a>, a faith app for youth communities. Alongside my role, I take on a small number of <a
         href="#contact"
         class="inline-company-link"
-      ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" role="img" aria-label="Spinning wireframe globe in spectrum colours"></canvas></span>freelance projects</a>.
+      ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" aria-hidden="true"></canvas></span>freelance projects</a>.
     </p>
 
     <!-- Minimalist Social Links + Profile Page Link -->
@@ -104,10 +104,10 @@ const socials = [
             target={social.href.startsWith('mailto:') ? '_self' : '_blank'}
             rel={social.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
             class="social-link"
-            aria-label={social.name}
           >
             <span class="social-link__icon" set:html={social.icon} />
             <span>{social.name}</span>
+            {!social.href.startsWith('mailto:') && <span class="sr-only"> (opens in a new tab)</span>}
           </a>
         ))}
       </div>
@@ -186,7 +186,7 @@ const socials = [
   }
 
   .mini-3d-globe:active {
-    transform: scale(0.94);
+    transform: scale(0.96);
   }
 
   /* Lisse Squircle Avatar */
@@ -203,7 +203,7 @@ const socials = [
   }
 
   .avatar-squircle-wrap:active {
-    transform: scale(0.97);
+    transform: scale(0.96);
   }
 
   /* Tactile Social Pills */

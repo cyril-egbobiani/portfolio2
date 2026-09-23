@@ -110,8 +110,8 @@
   /* Text hierarchy – light */
   --text-primary: #000000;
   --text-secondary: #404040;
-  --text-muted: #737373;
-  --text-faint: #a3a3a3;
+  --text-muted: #6e6e6e; /* 4.5:1 on --surface-subtle, the tightest pair it renders on */
+  --text-faint: #a3a3a3; /* non-text only: borders, placeholders, disabled marks */
   --text-on-accent: #ffffff;
   --text-on-inverse: #ffffff;
 
@@ -175,8 +175,8 @@
   /* Text hierarchy – dark */
   --text-primary: #ffffff;
   --text-secondary: #a3a3a3;
-  --text-muted: #737373;
-  --text-faint: #404040;
+  --text-muted: #7c7c7c; /* 4.5:1 on --surface-subtle in dark */
+  --text-faint: #404040; /* non-text only */
   --text-on-accent: #000000;
   --text-on-inverse: #000000;
 

@@ -1,5 +1,6 @@
 ---
 // ContactSection.astro — Interactive Contact Section
+const EMAIL = 'egbobianicyril@gmail.com';
 ---
 
 <section class="relative flex flex-col gap-5" id="contact">
@@ -22,11 +23,11 @@
       
       <!-- Interactive Email Copy Pill -->
       <div
-        class="email-box group relative flex items-center justify-between gap-3 rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 cursor-pointer select-none transition-[background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] active:scale-[0.98]"
+        class="email-box group relative flex items-center justify-between gap-3 rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 cursor-pointer select-none transition-[background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
         data-copy-box
         role="button"
         tabindex="0"
-        aria-label="Copy email address"
+        aria-label={`Copy email address ${EMAIL}`}
       >
         <div class="flex items-center gap-2 min-w-0 flex-1">
           <span class="truncate font-sans text-[16px] text-[var(--text-primary)]">
@@ -60,25 +61,25 @@
           href="https://x.com/CyrilEgbobiani"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-[14px] font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
+          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-sm font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
         >
-          X
+          X<span class="sr-only"> (opens in a new tab)</span>
         </a>
         <a
           href="https://www.linkedin.com/in/cyril-egbobiani-6802002b8/"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-[14px] font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
+          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-sm font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
         >
-          LinkedIn
+          LinkedIn<span class="sr-only"> (opens in a new tab)</span>
         </a>
         <a
           href="https://github.com/cyril-egbobiani"
           target="_blank"
           rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-[14px] font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
+          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-sm font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
         >
-          GitHub
+          GitHub<span class="sr-only"> (opens in a new tab)</span>
         </a>
       </div>
 
@@ -89,7 +90,7 @@
 <style>
   .email-box:active,
   .social-pill:active {
-    transform: scale(0.98);
+    transform: scale(0.96);
   }
 
   /* ── Morph & Elastic Stretch Badge ── */

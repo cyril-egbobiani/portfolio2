@@ -395,7 +395,7 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     padding-top: 10px;
     border-top: 1px solid var(--border-subtle);
     font-size: var(--text-sm);
-    color: var(--text-faint);
+    color: var(--text-muted);
     letter-spacing: 0.005em;
     transition: color 200ms var(--ease-smooth-out);
   }
@@ -412,7 +412,7 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
   @media (hover: hover) and (pointer: fine) {
     .bento-item:hover .bento-meta,
     .project-card:hover .bento-meta {
-      color: var(--text-muted);
+      color: var(--text-secondary);
     }
 
     .bento-item:hover .bento-meta :global(svg),
