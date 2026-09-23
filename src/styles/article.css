@@ -89,9 +89,8 @@
 .entry-body h2,
 .entry-body h3 {
   margin: 2.2em 0 0.6em;
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -0.02em;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
   color: var(--text-primary);
 }
 
@@ -101,8 +100,18 @@
   scroll-margin-top: 96px;
 }
 
-.entry-body h2 { font-size: 17px; }
-.entry-body h3 { font-size: var(--text-base); }
+/* Both on the base step, like .cs-heading. Weight separates the two levels
+   and the space above carries the break, so no third size is needed. */
+.entry-body h2 {
+  margin-top: 2.6em;
+  font-size: var(--text-base);
+  font-weight: 600;
+}
+
+.entry-body h3 {
+  font-size: var(--text-base);
+  font-weight: 500;
+}
 
 .entry-body strong {
   font-weight: 600;
