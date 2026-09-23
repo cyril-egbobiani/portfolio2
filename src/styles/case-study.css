@@ -524,21 +524,17 @@
   color: var(--text-muted);
 }
 
+/* Base size, like the prose under it: the 52-64px gap between sections
+   makes the break, and weight tells you which line is the claim. */
 .cs-body .cs-heading {
-  margin: 0 0 14px;
-  max-width: 26ch;
-  font-size: 20px;
-  font-weight: 500;
-  line-height: 1.35;
-  letter-spacing: -0.025em;
+  margin: 0 0 10px;
+  max-width: 42ch;
+  font-size: var(--text-base);
+  font-weight: 600;
+  line-height: 1.4;
+  letter-spacing: -0.015em;
   color: var(--text-primary);
   text-wrap: balance;
-}
-
-@media (min-width: 640px) {
-  .cs-body .cs-heading {
-    font-size: 24px;
-  }
 }
 
 .cs-prose > p,
@@ -1107,7 +1103,7 @@
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 17px;
+  font-size: var(--text-base);
   line-height: 1.55;
   letter-spacing: -0.015em;
   color: var(--text-primary);
@@ -1164,8 +1160,8 @@
 .cs-body .cs-choice__title {
   margin: 0 0 8px;
   max-width: 34ch;
-  font-size: 17px;
-  font-weight: 500;
+  font-size: var(--text-base);
+  font-weight: 600;
   line-height: 1.35;
   letter-spacing: -0.02em;
   color: var(--text-primary);
