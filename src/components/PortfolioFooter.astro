@@ -14,8 +14,7 @@ const { compact = false } = Astro.props;
   <span class="font-sans text-[14px] text-[var(--text-secondary)] tabular-nums">
     <span data-lagos-time></span>WAT (UTC+1)
   </span>
-  <button type="button" class="back-top-text" data-back-top>
-    Back to top
+  <button type="button" class="back-top-text" data-back-top aria-label="Scroll back to top" title="Back to top">
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
       <path d="M12 19V5M5 12l7-7 7 7" />
     </svg>
@@ -69,10 +68,11 @@ const { compact = false } = Astro.props;
   .back-top-text {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    justify-content: center;
+    width: 32px;
     height: 32px;
-    margin-right: -10px;
-    padding: 0 10px;
+    margin-right: -8px;
+    padding: 0;
     border: 0;
     border-radius: 9999px;
     background: transparent;

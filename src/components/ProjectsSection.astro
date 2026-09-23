@@ -15,11 +15,26 @@ const tabs = ['Builds', 'Designs'];
 // Screens sit whole on each tile, phones and browsers alike.
 const buildOrder = ['forge', 'gdg-babcock', 'fbdil-attendance', 'token-extractor', 'model-portfolio', '9to5er'];
 
+// The case studies are the source of truth for year and stack, so a tile's
+// meta line never drifts from the page it opens. Reordering `stack:` in the
+// frontmatter changes which two technologies a tile advertises.
+const studies = await getCollection('projects', ({ data }) => import.meta.env.DEV || !data.draft);
+
 const builds = buildOrder.flatMap((slug) => {
   const project = projects.find((p) => p.slug === slug);
-  return project
-    ? [{ slug, title: project.title, blurb: project.shortBlurb, image: project.thumbnailImage, device: project.deviceType }]
-    : [];
+  if (!project) return [];
+  const study = studies.find((s) => s.id === slug);
+  const stack = (study?.data.stack ?? [])
+    .map((item) => item.replace(/\s*\([^)]*\)/g, '').trim()) // "Flutter (Dart)" → "Flutter"
+    .slice(0, 2);
+  return [{
+    slug,
+    title: project.title,
+    blurb: project.shortBlurb,
+    image: project.thumbnailImage,
+    device: project.deviceType,
+    meta: [study?.data.year, stack.join(', ')].filter(Boolean).join(' · '),
+  }];
 });
 
 // Drafts show while developing only. Lower `order` comes first, then newest year.
@@ -103,7 +118,11 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
           </div>
           <h3 class="bento-title">{tile.title}</h3>
           <p class="bento-blurb">{tile.blurb}</p>
-          <span class="bento-cue">Case study<NavArrow direction="right" size={12} /></span>
+          <!-- Facts, not an instruction: the whole tile is already the link -->
+          <span class="bento-meta">
+            {tile.meta}
+            <NavArrow direction="right" size={12} />
+          </span>
         </a>
       ))}
     </div>
@@ -133,7 +152,10 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
               {study.data.draft && <span class="card-draft">Draft</span>}
             </h3>
             <p class="card-blurb">{study.data.summary}</p>
-            <span class="bento-cue">Case study<NavArrow direction="right" size={12} /></span>
+            <span class="bento-meta">
+              {[study.data.year, study.data.tools.slice(0, 2).join(', ')].filter(Boolean).join(' · ')}
+              <NavArrow direction="right" size={12} />
+            </span>
           </a>
         ))
       ) : (
@@ -364,22 +386,48 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     color: var(--text-primary);
   }
 
-  /* Every card says where it leads, on touch as well as hover */
-  .bento-cue {
-    display: inline-flex;
+  /* Year and stack sit on a hairline; the arrow waits for intent */
+  .bento-meta {
+    display: flex;
     align-items: center;
-    gap: 5px;
-    margin-top: 8px;
+    gap: 8px;
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
     font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--text-muted);
+    color: var(--text-faint);
+    letter-spacing: 0.005em;
     transition: color 200ms var(--ease-smooth-out);
   }
 
+  .bento-meta :global(svg) {
+    margin-left: auto;
+    opacity: 0;
+    transform: translateX(-4px);
+    transition:
+      opacity 200ms var(--ease-smooth-out),
+      transform 200ms var(--ease-smooth-out);
+  }
+
   @media (hover: hover) and (pointer: fine) {
-    .bento-item:hover .bento-cue,
-    .project-card:hover .bento-cue {
+    .bento-item:hover .bento-meta,
+    .project-card:hover .bento-meta {
+      color: var(--text-muted);
+    }
+
+    .bento-item:hover .bento-meta :global(svg),
+    .project-card:hover .bento-meta :global(svg) {
+      opacity: 1;
+      transform: translateX(0);
       color: var(--text-primary);
+    }
+  }
+
+  /* Without hover there's no way to reveal it, so it simply stays put */
+  @media (hover: none) {
+    .bento-meta :global(svg) {
+      opacity: 1;
+      transform: none;
     }
   }
 

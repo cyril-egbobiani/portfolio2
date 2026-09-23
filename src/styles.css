@@ -82,16 +82,18 @@
   --stagger-blur: 3px;
   --stagger-ease: cubic-bezier(0.16, 1, 0.3, 1);
 
-  /* ── Typography & Modular Font Scale Tokens (cmrg.me aligned) ── */
-  --text-xs: 12px;
-  --text-sm: 14px; /* small: dates, labels, captions, tags */
-  --text-base: 16px; /* base: all readable text */
-  --text-lg: 18.5px;
-  --text-xl: 22px;
-  --text-2xl: 28px;
-  --text-3xl: 34px;
+  /* ── Type scale: three steps, nothing between ────────────────
+     One font means hierarchy comes from scale, not variety. Seven
+     sizes clustered between 12 and 34px read as a default; three
+     with a violent jump between them read as a decision.
+       display — the page title, once per page
+       base    — everything you actually read
+       small   — the metadata around it */
+  --text-display: clamp(36px, 6.4vw, 56px);
+  --text-base: 16px;
+  --text-sm: 13px;
   --leading-body: 1.6;
-  --leading-heading: 1.25;
+  --leading-heading: 1.08;
 
   /* ── Colour: pure black and white ────────────────────────────
      Every colour on the site is a neutral grey between #000 and #fff.

@@ -19,7 +19,6 @@ interface Props {
   role: string;
   team?: string[];
   tools?: string[];
-  toolsLabel?: string;
   status?: string;
   links?: CaseStudyLink[];
   /** Screens shown in a row under the summary */
@@ -39,7 +38,6 @@ const {
   role,
   team = [],
   tools = [],
-  toolsLabel = 'Tools',
   status,
   links = [],
   gallery = [],
@@ -69,47 +67,43 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
     <div class="mx-auto flex w-full max-w-[680px] flex-col" data-cs>
       <article class="entry" data-entry>
         <header class="cs-intro" id="intro" data-cs-intro>
-          <p class="cs-kicker">
-            <span>{kicker}</span>
-            {status && <span class="cs-status">{status}</span>}
-            {draft && <span class="entry-draft">Draft</span>}
-          </p>
+          <!-- No "Case study" label: they just clicked one. Status is
+               the only thing here they don't already know. -->
+          {(status || draft) && (
+            <p class="cs-kicker">
+              {status && <span class="cs-status">{status}</span>}
+              {draft && <span class="entry-draft">Draft</span>}
+            </p>
+          )}
           <h1 class="cs-title">{title}</h1>
           <p class="cs-summary">{summary}</p>
 
-          <!-- Facts: label on the left, value on the right, hairlines between -->
-          <dl class="cs-facts">
-            <div class="cs-fact">
-              <dt>Role</dt>
-              <dd>{role}</dd>
-            </div>
-            <div class="cs-fact">
-              <dt>Year</dt>
-              <dd>{year}</dd>
-            </div>
+          <!-- One spec run instead of a stacked label/value form -->
+          <p class="cs-spec">
+            <span class="cs-spec__role">{role}</span>
+            <span class="cs-spec__sep" aria-hidden="true">·</span>
+            <span>{year}</span>
             {team.length > 0 && (
-              <div class="cs-fact">
-                <dt>Team</dt>
-                <dd>{team.join(' · ')}</dd>
-              </div>
+              <>
+                <span class="cs-spec__sep" aria-hidden="true">·</span>
+                <span>{team.join(', ')}</span>
+              </>
             )}
             {tools.length > 0 && (
-              <div class="cs-fact">
-                <dt>{toolsLabel}</dt>
-                <dd>{tools.join(' · ')}</dd>
-              </div>
+              <>
+                <span class="cs-spec__sep" aria-hidden="true">·</span>
+                <span>{tools.join(', ')}</span>
+              </>
             )}
-            {links.length > 0 && (
-              <div class="cs-fact">
-                <dt>Live</dt>
-                <dd class="cs-fact__links">
-                  {links.map((link) => (
-                    <a href={link.href} target="_blank" rel="noopener noreferrer">{link.label}<NavArrow direction="up-right" size={12} /></a>
-                  ))}
-                </dd>
-              </div>
-            )}
-          </dl>
+            {links.map((link) => (
+              <>
+                <span class="cs-spec__sep" aria-hidden="true">·</span>
+                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                  {link.label}<NavArrow direction="up-right" size={11} /><span class="sr-only"> (opens in a new tab)</span>
+                </a>
+              </>
+            ))}
+          </p>
 
           {gallery.length > 0 && <Gallery items={gallery} device={galleryDevice} />}
         </header>

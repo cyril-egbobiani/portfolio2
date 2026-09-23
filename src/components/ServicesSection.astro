@@ -95,7 +95,6 @@ const services: Service[] = [
           <h3 class="service-title">{service.title}</h3>
           <p class="service-summary">{service.summary}</p>
           <p class="service-proof">
-            <span>Seen in</span>
             {service.proof.map((item, index) => (
               <>
                 {index > 0 && <span aria-hidden="true">·</span>}
