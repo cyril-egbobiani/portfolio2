@@ -44,6 +44,9 @@
   --font-display: var(--font-sans);
   --font-mono: var(--font-sans);
   --font-script: "Caveat", cursive;
+  /* Page titles only — Shafarik ships a single 400 weight, so anything
+     heavier here would be a browser-synthesised faux bold. */
+  --font-title: "Shafarik", Georgia, serif;
   --font-note: "Patrick Hand", var(--font-script); /* journal & case-study footnotes */
 
   /* ── Motion tokens ───────────────────────────────────────────
@@ -89,7 +92,7 @@
        display — the page title, once per page
        base    — everything you actually read
        small   — the metadata around it */
-  --text-display: clamp(36px, 6.4vw, 56px);
+  --text-display: clamp(30px, 5vw, 42px);
   --text-base: 16px;
   --text-sm: 13px;
   --leading-body: 1.6;

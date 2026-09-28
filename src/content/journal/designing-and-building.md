@@ -2,7 +2,7 @@
 title: Living between the design file and the code
 date: 2026-09-16
 excerpt: Some notes on what it's actually like to design something in the morning and build it in the afternoon.
-tags: [design, engineering, life]
+tags: [Engineering, Life]
 images:
   - ../../assets/projects/forge-home.webp
   - ../../assets/projects/gdg-babcock-home.png
