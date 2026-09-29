@@ -1,14 +1,17 @@
 ---
 // ExperienceSection.astro — Where I've been.
-// A plain, always-visible timeline: each role says what was actually done there,
-// in a sentence or two, instead of a title-sized summary.
+// A plain, always-visible timeline. Each role gets one line: the title, what was
+// actually done there, and where. Nothing is hidden behind a control — this is
+// the section people skim before deciding to get in touch, so detail behind a
+// tap is detail most of them never read.
 import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
 import firstBankLogo from '../assets/images/first-bank-logo.png';
 import globeSvg from '../assets/images/globe.svg';
 
-// A point may name a project inline: `before` + linked label + `after`
-interface Point {
+// The summary is a run of segments so a project can be named inline mid-sentence:
+// plain `text`, or `before` + a linked label + `after`.
+interface Segment {
   text?: string;
   before?: string;
   link?: { label: string; href: string };
@@ -17,57 +20,46 @@ interface Point {
 
 interface ExperienceItem {
   company: string;
-  role: string;
   dates: string;
   current?: boolean;
-  location: string;
   logo: ImageMetadata;
   themeAdaptive?: boolean;
-  points: Point[];
+  summary: Segment[];
 }
 
 const experience: ExperienceItem[] = [
   {
     company: 'International Energy Services Limited',
-    role: 'Software Engineer & Product Designer',
-    dates: '2026 – Present · NYSC',
+    dates: '2026 – Present',
     current: true,
-    location: 'Lagos, Nigeria',
     logo: ieslLogo,
-    points: [
-      { text: 'Redesigned the admin panel for the compliance system.' },
-      { text: 'Now redesigning the Audit Pro system, with more internal systems planned to follow.' },
+    summary: [
+      { text: 'Software engineer and product designer — the compliance admin panel, now Audit Pro. Lagos, on NYSC.' },
     ],
   },
   {
     company: 'Freelance',
-    role: 'Designer & Developer',
     dates: '2025 – Present',
     current: true,
-    location: 'Remote',
     logo: globeSvg,
     themeAdaptive: true,
-    points: [
+    summary: [
       {
-        before: 'Designed and built ',
+        before: 'Designer and developer, remote. Built ',
         link: { label: 'Dubem', href: '/projects/model-portfolio' },
-        after: ', a portfolio site for a model, organised around her style sets.',
+        after: ', a model’s portfolio organised around her style sets; now a mobile app for GLP users.',
       },
-      { text: 'Currently building a mobile app for GLP users.' },
     ],
   },
   {
     company: 'First Bank Digital Innovation Lab',
-    role: 'Mobile Developer Intern',
     dates: '2024 · 6 months',
-    location: 'Lagos, Nigeria',
     logo: firstBankLogo,
-    points: [
-      { text: 'A six-month programme that set me on the path to Flutter.' },
+    summary: [
       {
-        before: 'Built an ',
+        before: 'Mobile developer intern — six months that put me on Flutter, and an ',
         link: { label: 'attendance system', href: '/projects/fbdil-attendance' },
-        after: ' with fellow developer and UX design interns.',
+        after: ' built with fellow interns. Lagos.',
       },
     ],
   },
@@ -101,24 +93,18 @@ const experience: ExperienceItem[] = [
             </span>
           </div>
 
-          <p class="xp__role">
-            {item.role}
-            <span aria-hidden="true">·</span>
-            {item.location}
-          </p>
-
-          <ul class="xp__points" role="list">
-            {item.points.map((point) => (
-              <li>
-                {point.text}
-                {point.before}
-                {point.link && (
-                  <a href={point.link.href} class="xp__link" data-astro-prefetch>{point.link.label}</a>
+          <p class="xp__summary">
+            {item.summary.map((segment) => (
+              <>
+                {segment.text}
+                {segment.before}
+                {segment.link && (
+                  <a href={segment.link.href} class="xp__link" data-astro-prefetch>{segment.link.label}</a>
                 )}
-                {point.after}
-              </li>
+                {segment.after}
+              </>
             ))}
-          </ul>
+          </p>
         </div>
       </li>
     ))}
@@ -220,41 +206,14 @@ const experience: ExperienceItem[] = [
     background: currentColor;
   }
 
-  .xp__role {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0 6px;
-    margin: 2px 0 0;
-    font-size: var(--text-base);
-    line-height: 1.5;
-    color: var(--text-muted);
-  }
-
-  .xp__points {
-    display: grid;
-    gap: 6px;
-    margin: 10px 0 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .xp__points li {
-    position: relative;
-    padding-left: 14px;
+  /* --text-muted, matching the supporting line under a title everywhere else
+     on the page. --text-secondary sits too close to the company name above it. */
+  .xp__summary {
+    margin: 3px 0 0;
     font-size: var(--text-base);
     line-height: 1.6;
-    color: var(--text-secondary);
-  }
-
-  .xp__points li::before {
-    content: '';
-    position: absolute;
-    top: 0.72em;
-    left: 1px;
-    width: 4px;
-    height: 1.5px;
-    border-radius: 1px;
-    background: var(--text-faint);
+    color: var(--text-muted);
+    text-wrap: pretty;
   }
 
   .xp__link {
@@ -283,7 +242,7 @@ const experience: ExperienceItem[] = [
       font-size: var(--text-base);
     }
 
-    .xp__points li {
+    .xp__summary {
       font-size: var(--text-base);
     }
   }
