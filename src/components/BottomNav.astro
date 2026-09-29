@@ -71,13 +71,12 @@ const EMAIL = 'egbobianicyril@gmail.com';
   </div>
 
   <button type="button" class="qm-button" aria-expanded="false" aria-controls="qmSheet" data-qm-toggle>
-    <span class="qm-button__dot" aria-hidden="true"></span>
-    <span class="qm-button__where" data-qm-where>Home</span>
-    <span class="qm-button__hint" data-qm-hint>Menu</span>
+    <span class="sr-only" data-qm-where>Home</span>
+    <span class="sr-only" data-qm-hint>Menu</span>
     <span class="qm-button__icon" aria-hidden="true">
-      <svg class="qm-icon-menu" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-        <path d="M5 9h14M5 15h14" />
-      </svg>
+      <span class="qm-icon-menu qm-dots">
+        <span></span><span></span><span></span><span></span>
+      </span>
       <svg class="qm-icon-close" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
         <path d="M7 7l10 10M17 7 7 17" />
       </svg>
@@ -86,15 +85,16 @@ const EMAIL = 'egbobianicyril@gmail.com';
 </nav>
 
 <style>
+  /* The orb lives in the corner, not across the bottom band, so the reading
+     column is never covered. The sheet opens upward from the same corner. */
   .qm {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: max(20px, calc(12px + env(safe-area-inset-bottom, 0px)));
+    right: max(16px, env(safe-area-inset-right, 0px));
+    bottom: max(16px, calc(10px + env(safe-area-inset-bottom, 0px)));
     z-index: 9999;
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     pointer-events: none;
     /* Menu-only hairline, quieter than --border-subtle so the pill doesn't outline itself */
     --qm-border: rgba(0, 0, 0, 0.04);
@@ -125,17 +125,21 @@ const EMAIL = 'egbobianicyril@gmail.com';
   /* ── The pill ── */
   .qm-button {
     position: relative;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
+    display: grid;
+    place-items: center;
+    width: 46px;
     height: 46px;
-    padding: 0 6px 0 18px;
-    border: 1px solid var(--qm-border);
+    padding: 0;
+    border: none;
     border-radius: 9999px;
-    background: var(--surface-raised);
-    color: var(--text-primary);
+    /* Inverse, not the card grey it inherited from the pill. As a wordless
+       circle the old --surface-raised sat at 1.09:1 against the page — findable
+       only by its shadow. Inverse is 21:1 in both themes, and leaves teal free
+       for the one job it has: marking state, not decorating a control. */
+    background: var(--surface-inverse);
+    color: var(--text-on-inverse);
     font-family: var(--font-sans);
-    box-shadow: 0 10px 28px -14px rgba(0, 0, 0, 0.28);
+    box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.35);
     cursor: pointer;
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
@@ -163,50 +167,55 @@ const EMAIL = 'egbobianicyril@gmail.com';
     outline-offset: 3px;
   }
 
-  /* The one spot of colour at rest: it marks the section you're on */
-  .qm-button__dot {
-    width: 6px;
-    height: 6px;
-    margin-right: -4px;
-    border-radius: 9999px;
-    background: var(--brand);
-    box-shadow: 0 0 0 3px var(--brand-soft);
-  }
-
-  .qm-button__where {
-    font-size: var(--text-sm);
-    font-weight: 500;
-    letter-spacing: -0.01em;
-    transition:
-      opacity 140ms ease,
-      transform 220ms var(--ease-smooth-out);
-  }
-
-  .qm-button__where.is-swapping {
-    opacity: 0;
-    transform: translateY(4px);
-  }
-
-  .qm-button__hint {
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-  }
-
   .qm-button__icon {
     position: relative;
     display: grid;
     place-items: center;
-    width: 34px;
-    height: 34px;
-    border-radius: 9999px;
-    background: var(--surface-interactive);
+    width: 22px;
+    height: 22px;
   }
 
-  .qm-button__icon svg {
+  .qm-button__icon > * {
     grid-area: 1 / 1;
     transition:
       opacity 180ms ease,
       transform 320ms var(--ease-bounce);
+  }
+
+  /* ── Four dots: one per destination in the sheet ──
+     If a fifth link is ever added to `links` above, this mark stops being
+     true and should change with it. On hover they push apart, as if the
+     menu has already started to open. */
+  .qm-dots {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4px;
+    width: 14px;
+  }
+
+  .qm-dots span {
+    width: 5px;
+    height: 5px;
+    border-radius: 9999px;
+    background: currentColor;
+    transition: transform 340ms var(--ease-bounce);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .qm-button:hover .qm-dots span:nth-child(1) { transform: translate(-1px, -1px); }
+    .qm-button:hover .qm-dots span:nth-child(2) { transform: translate(1px, -1px); }
+    .qm-button:hover .qm-dots span:nth-child(3) { transform: translate(-1px, 1px); }
+    .qm-button:hover .qm-dots span:nth-child(4) { transform: translate(1px, 1px); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .qm-dots span {
+      transition: none;
+    }
+
+    .qm-button:hover .qm-dots span {
+      transform: none;
+    }
   }
 
   .qm-icon-close,
@@ -223,7 +232,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
   /* ── The sheet ── */
   .qm-sheet {
     position: relative;
-    width: min(336px, calc(100vw - 28px));
+    width: min(308px, calc(100vw - 32px));
     margin-bottom: 10px;
     padding: 6px;
     border: 1px solid var(--qm-border);
@@ -232,7 +241,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
     box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.3);
     opacity: 0;
     transform: translateY(10px) scale(0.96);
-    transform-origin: bottom center;
+    transform-origin: bottom right;
     visibility: hidden;
     transition:
       opacity 200ms var(--ease-smooth-out),
@@ -493,7 +502,6 @@ const EMAIL = 'egbobianicyril@gmail.com';
       .filter((section): section is typeof section & { el: HTMLElement } => Boolean(section.el));
 
     let currentLabel = where.textContent ?? '';
-    let swapTimer: ReturnType<typeof setTimeout> | undefined;
 
     const update = () => {
       const line = window.innerHeight * 0.45;
@@ -512,16 +520,7 @@ const EMAIL = 'egbobianicyril@gmail.com';
       const label = current?.label ?? 'Home';
       if (label === currentLabel) return;
       currentLabel = label;
-      clearTimeout(swapTimer);
-      if (reduceMotion) {
-        where.textContent = label;
-        return;
-      }
-      where.classList.add('is-swapping');
-      swapTimer = setTimeout(() => {
-        where.textContent = label;
-        where.classList.remove('is-swapping');
-      }, 140);
+      where.textContent = label;
     };
 
     let ticking = false;
@@ -638,7 +637,6 @@ const EMAIL = 'egbobianicyril@gmail.com';
       () => {
         window.removeEventListener('scroll', onScroll);
         window.removeEventListener('keydown', onKeydown);
-        clearTimeout(swapTimer);
       },
       { once: true }
     );
