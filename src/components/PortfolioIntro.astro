@@ -2,31 +2,44 @@
 // PortfolioIntro.astro — Hero introduction on index.astro
 import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
-import profileIntroImg from '../assets/images/optimized/profile-intro.webp';
 
+// `labelled` decides whether the name is visible. X, GitHub and LinkedIn are
+// well-known marks and stand on their own. Email is a generic envelope and
+// Resume a generic document — and Resume is the link a recruiter is hunting
+// for — so those two keep their words.
 const socials = [
   {
     name: 'X (Twitter)',
+    key: 'x',
+    labelled: false,
     href: 'https://x.com/CyrilEgbobiani',
     icon: `<svg width="14" height="14" viewBox="-0.86 -0.91 25.92 25.92" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
   },
   {
     name: 'GitHub',
+    key: 'github',
+    labelled: false,
     href: 'https://github.com/cyril-egbobiani',
     icon: `<svg width="14" height="14" viewBox="-1.93 -2.18 27.36 27.36" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
   },
   {
     name: 'LinkedIn',
+    key: 'linkedin',
+    labelled: false,
     href: 'https://www.linkedin.com/in/cyril-egbobiani-6802002b8/',
     icon: `<svg width="14" height="14" viewBox="-1.08 -1.58 26.16 26.16" fill="none" stroke="currentColor" stroke-width="1.96" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="12" rx="1"/><circle cx="4" cy="4" r="2"/><path d="M10 9h4v2.5a4 4 0 0 1 4-2.5c2.5 0 4 1.5 4 4.5V21h-4v-6.5c0-1.2-.8-2-2-2s-2 .8-2 2V21h-4V9z"/></svg>`,
   },
   {
     name: 'Email',
+    key: 'email',
+    labelled: true,
     href: 'mailto:egbobianicyril@gmail.com',
     icon: `<svg width="14" height="14" viewBox="0.12 0.12 23.76 23.76" fill="none" stroke="currentColor" stroke-width="1.78" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="5" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg>`,
   },
   {
     name: 'Resume',
+    key: 'resume',
+    labelled: true,
     href: 'https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view',
     icon: `<svg width="14" height="14" viewBox="-1.08 -1.08 26.16 26.16" fill="none" stroke="currentColor" stroke-width="1.96" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
   },
@@ -36,41 +49,21 @@ const socials = [
 <section class="hero flex flex-col gap-6 pt-30">
   <!-- Text Content Block -->
   <div class="hero-text-block flex flex-col gap-4 sm:gap-5 w-full">
-    <!-- 1. Dual-Craft Identity Header Lockup -->
-    <!-- Avatar matches the name + title column: two lines of base text at leading-snug (1.375) = 2.75 × --text-base.
-         Top-aligned so it stays beside the name when the title wraps on narrow screens. -->
-    <div class="flex items-start gap-3 mb-1">
-      <!-- Lisse Squircle Avatar Frame -->
-      <a
-        href="/about"
-        class="avatar-squircle-wrap relative size-[calc(var(--text-base)*2.75)] rounded-full shrink-0 overflow-hidden bg-[var(--surface-subtle)] select-none block"
-        aria-label="About Cyril Egbobiani"
-        title="About Cyril"
-      >
-        <Image
-          src={profileIntroImg}
-          width={96}
-          fetchpriority="high"
-          alt="Cyril Egbobiani"
-          class="avatar-photo absolute inset-0 w-full h-full object-cover object-[50%_25%] filter  contrast-[1.06]"
-          loading="eager"
-          decoding="async"
-        />
-      </a>
-
-      <!-- Identity Text Stack -->
-      <div class="flex flex-col min-w-0 justify-center">
-        <h1 class="font-display text-[16px] font-semibold tracking-[-0.01em] text-[var(--text-primary)] leading-snug m-0">
-          Cyril Egbobiani
-        </h1>
-        <div class="text-[16px] text-[var(--text-muted)] font-normal leading-snug">
-          Software Engineer &amp; Product Designer
-        </div>
-      </div>
-    </div>
+    <!-- The name leads. The job title is the setting, not the headline, so it
+         waits until the second paragraph. -->
+    <h1
+      class="m-0 font-[family-name:var(--font-title)] text-[length:var(--text-display)] font-normal leading-[var(--leading-heading)] tracking-[-0.01em] text-[var(--text-primary)]"
+    >
+      Cyril Egbobiani
+    </h1>
 
     <p class="lede">
-      I'm a software engineer and product designer at <a
+      I have been drawing since I was small enough to draw on the walls. My mother eventually humbled
+      me about the walls. The drawing never stopped — it just moved to interfaces, and then into code.
+    </p>
+
+    <p class="lede">
+      These days I am a software engineer and product designer at <a
         href="https://ieslglobal.com/"
         target="_blank"
         rel="noopener noreferrer"
@@ -81,18 +74,19 @@ const socials = [
         alt=""
         class="inline-company-icon"
         style="display: inline-block !important; height: 14px !important; width: auto !important; vertical-align: -2px !important; margin-right: 5px !important; border-radius: 2px !important;"
-      />International Energy Services Limited<span class="sr-only"> (opens in a new tab)</span></a>, where I design and build internal systems.
+      />International Energy Services Limited<span class="sr-only"> (opens in a new tab)</span></a> in Lagos,
+      where those drawings turn into compliance dashboards and audit tools nobody outside the building
+      will ever see. I am also building <a href="/projects/forge" class="inline-company-link" data-astro-prefetch>Forge</a>,
+      a faith app for youth communities.
     </p>
 
-    <p class="lede">
-      I believe good software starts with good design, so most of my work sits where the two meet.
-    </p>
-
-    <p class="lede">
-      Currently, I'm building <a href="/projects/forge" class="inline-company-link" data-astro-prefetch>Forge</a>, a faith app for youth communities. Alongside my role, I take on a small number of <a
-        href="#contact"
-        class="inline-company-link"
-      ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" aria-hidden="true"></canvas></span>freelance projects</a>.
+    <!-- The facts the paragraphs no longer have to carry -->
+    <p class="hero-meta">
+      <span>Lagos, Nigeria</span>
+      <span class="hero-meta__dot" aria-hidden="true">·</span>
+      <a href="#contact" class="inline-company-link"
+        ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" aria-hidden="true"></canvas></span>Open to select freelance</a
+      >
     </p>
 
     <!-- Minimalist Social Links + Profile Page Link -->
@@ -103,10 +97,10 @@ const socials = [
             href={social.href}
             target={social.href.startsWith('mailto:') ? '_self' : '_blank'}
             rel={social.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-            class="social-link"
+            class={`social-link social-link--${social.key}${social.labelled ? '' : ' social-link--icon'}`}
           >
             <span class="social-link__icon" set:html={social.icon} />
-            <span>{social.name}</span>
+            <span class={social.labelled ? undefined : 'sr-only'}>{social.name}</span>
             {!social.href.startsWith('mailto:') && <span class="sr-only"> (opens in a new tab)</span>}
           </a>
         ))}
@@ -122,16 +116,27 @@ const socials = [
     align-items: flex-start;
   }
 
-  .statement {
-    margin: 0;
-  }
-
   .lede {
     margin: 0;
     font-size: var(--text-base);
     line-height: 1.7;
     color: var(--text-secondary);
     letter-spacing: -0.01em;
+  }
+
+  /* Place, posting, availability — the facts the paragraphs no longer carry */
+  .hero-meta {
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0 8px;
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+  }
+
+  .hero-meta__dot {
+    color: var(--text-faint);
   }
 
   /* Seamless Inline Company Link & Micro-Icon */
@@ -189,23 +194,6 @@ const socials = [
     transform: scale(0.96);
   }
 
-  /* Lisse Squircle Avatar */
-  .avatar-squircle-wrap {
-    transform-origin: center center;
-    box-shadow: inset 0 0 0 1px var(--border-subtle);
-    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .avatar-squircle-wrap:hover {
-      transform: scale(1.03);
-    }
-  }
-
-  .avatar-squircle-wrap:active {
-    transform: scale(0.96);
-  }
-
   /* Tactile Social Pills */
   .social-link {
     display: inline-flex;
@@ -230,7 +218,6 @@ const socials = [
     }
     .social-link:hover .social-link__icon {
       opacity: 1;
-      color: var(--text-primary);
     }
   }
 
@@ -238,11 +225,43 @@ const socials = [
     transform: scale(0.96);
   }
 
+  /* No label, so the padding has to carry the tap target on its own */
+  .social-link--icon {
+    padding: 7px;
+  }
+
+  @media (pointer: coarse) {
+    .social-link--icon {
+      padding: 10px;
+    }
+  }
+
+  /* ── Brand fills ──────────────────────────────────────────
+     Each icon takes the colour of the service it actually points to, so
+     Email follows the Gmail address it opens and Resume follows the Google
+     Drive file it fetches rather than a colour invented for them.
+     X and GitHub have black marks, which would vanish on the dark canvas,
+     so both flip to their own light-on-dark marks. LinkedIn, Gmail and Drive
+     lift to lighter tints in dark mode to stay legible on black. */
+  .social-link--x .social-link__icon { color: #000000; }
+  .social-link--github .social-link__icon { color: #181717; }
+  .social-link--linkedin .social-link__icon { color: #0a66c2; }
+  .social-link--email .social-link__icon { color: #c5221f; }
+  .social-link--resume .social-link__icon { color: #188038; }
+
+  :global([data-theme='dark']) .social-link--x .social-link__icon { color: #ffffff; }
+  :global([data-theme='dark']) .social-link--github .social-link__icon { color: #f0f6fc; }
+  :global([data-theme='dark']) .social-link--linkedin .social-link__icon { color: #70b5f9; }
+  :global([data-theme='dark']) .social-link--email .social-link__icon { color: #f28b82; }
+  :global([data-theme='dark']) .social-link--resume .social-link__icon { color: #5bb974; }
+
   .social-link__icon {
     display: flex;
     align-items: center;
     justify-content: center;
-    opacity: 0.75;
+    /* Held back at rest so the row reads as one quiet cluster; full strength
+       on hover, where the colour is a reward for reaching rather than noise. */
+    opacity: 0.82;
     transition: opacity 160ms var(--ease-smooth-out), color 160ms var(--ease-smooth-out);
   }
 </style>
