@@ -1,28 +1,29 @@
 ---
 // ProjectsSection.astro
-// Builds  → one full-width tile per project, linking to /projects/<slug>.
-// Designs → design case studies (src/content/designs) linking to /designs/<slug>,
-//           each card showing a "sketch → final" thumbnail.
+// One large card per project, linking to /projects/<slug>.
+// Only projects with a real screenshot appear: at this card size a generated
+// placeholder reads as a missing image rather than as design. Add a shot to
+// src/data/projects.ts and put the slug in `buildOrder` to bring one back.
+//
+// Design case studies (src/content/designs) are not shown here. Every entry in
+// that collection is still a draft, so the tab that used to sit beside "Work"
+// only ever opened an empty state. The /designs/<slug> route and DesignThumb
+// are untouched and the tab can return the day there is one to show.
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { projects } from '../data/projects';
-import DesignThumb from './DesignThumb.astro';
 import NavArrow from './NavArrow.astro';
 
-const tabs = ['Builds', 'Designs'];
+const buildOrder = ['forge', 'fbdil-attendance', 'gdg-babcock'];
 
-// Builds: one full-width tile per project, strongest screenshots first.
-// Screens sit whole on each tile, phones and browsers alike.
-const buildOrder = ['forge', 'gdg-babcock', 'fbdil-attendance', 'token-extractor', 'model-portfolio', '9to5er'];
-
-// The case studies are the source of truth for year and stack, so a tile's
+// The case studies are the source of truth for year and stack, so a card's
 // meta line never drifts from the page it opens. Reordering `stack:` in the
-// frontmatter changes which two technologies a tile advertises.
+// frontmatter changes which two technologies a card advertises.
 const studies = await getCollection('projects', ({ data }) => import.meta.env.DEV || !data.draft);
 
 const builds = buildOrder.flatMap((slug) => {
   const project = projects.find((p) => p.slug === slug);
-  if (!project) return [];
+  if (!project?.thumbnailImage) return [];
   const study = studies.find((s) => s.id === slug);
   const stack = (study?.data.stack ?? [])
     .map((item) => item.replace(/\s*\([^)]*\)/g, '').trim()) // "Flutter (Dart)" → "Flutter"
@@ -36,285 +37,62 @@ const builds = buildOrder.flatMap((slug) => {
     meta: [study?.data.year, stack.join(', ')].filter(Boolean).join(' · '),
   }];
 });
-
-// Drafts show while developing only. Lower `order` comes first, then newest year.
-const designs = (await getCollection('designs', ({ data }) => import.meta.env.DEV || !data.draft)).sort(
-  (a, b) => a.data.order - b.data.order || b.data.year.localeCompare(a.data.year)
-);
 ---
 
 <section class="flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="projects">
 
-  <div class="section-head reveal-item flex items-center justify-between w-full">
-    <div class="section-head__text flex items-center">
+  <div class="section-head reveal-item">
+    <div class="section-head__text">
       <h2 class="section-title">Work</h2>
     </div>
-
-    <div class="tabs-bar w-fit" role="tablist" aria-label="Project categories">
-      <span class="tabs-pill" aria-hidden="true"></span>
-      {tabs.map((tab, index) => (
-        <button
-          class={`tab font-sans text-xs font-medium ${index === 0 ? 'tab-active' : ''}`}
-          type="button"
-          role="tab"
-          id={`tab-${tab.toLowerCase()}`}
-          aria-selected={index === 0 ? 'true' : 'false'}
-          aria-controls={`panel-${tab.toLowerCase()}`}
-          tabindex={index === 0 ? 0 : -1}
-          data-tab-trigger
-          data-tab-id={tab}
-        >
-          {tab}
-        </button>
-      ))}
-    </div>
+    <span class="section-aside">tap a project for the details</span>
   </div>
 
-  <div class="relative">
-
-    <!-- ── BUILDS: one column of full-width tiles ─────────────── -->
-    <div class="tab-panel bento is-active" id="panel-builds" role="tabpanel" aria-labelledby="tab-builds" data-tab-panel data-tab-id="Builds">
-      {builds.map((tile, index) => (
-        <a
-          href={`/projects/${tile.slug}`}
-          data-astro-prefetch
-          class={`bento-item reveal-item reveal-delay-${(index % 4) + 1}`}
-        >
-          <div class="bento-tile">
-            <div class="bento-art">
-              {tile.image ? (
-                <Image
-                  src={tile.image}
-                  alt={`${tile.title} preview`}
-                  widths={tile.device === 'phone' ? [240, 480] : [640, 1280]}
-                  sizes={tile.device === 'phone' ? '(min-width: 640px) 200px, 45vw' : '(min-width: 640px) 580px, 86vw'}
-                  class={`bento-shot bento-shot--${tile.device}`}
-                  loading={index === 0 ? 'eager' : 'lazy'}
-                  decoding="async"
-                />
-              ) : tile.slug === 'token-extractor' ? (
-                <div class="art-tokens" aria-hidden="true">
-                  <span class="art-tokens__file">tokens.json</span>
-                  <span>{'{'}</span>
-                  <span class="art-tokens__line"><b>"radius.md"</b>: <i>"12px"</i>,</span>
-                  <span class="art-tokens__line"><b>"surface"</b>: <i>"#f5f5f5"</i>,</span>
-                  <span class="art-tokens__line"><b>"font.sans"</b>: <i>"Geist"</i></span>
-                  <span>{'}'}</span>
-                </div>
-              ) : tile.slug === 'model-portfolio' ? (
-                <div class="art-editorial" aria-hidden="true">
-                  <span class="art-editorial__a"></span>
-                  <span class="art-editorial__stack"><span></span><span></span></span>
-                  <span class="art-editorial__c"></span>
-                </div>
-              ) : (
-                <div class="art-type" aria-hidden="true">
-                  <span class="art-type__name">{tile.title}</span>
-                  <span class="art-type__line"></span>
-                  <span class="art-type__line art-type__line--short"></span>
-                </div>
-              )}
-            </div>
+  <div class="bento">
+    {builds.map((tile, index) => (
+      <a
+        href={`/projects/${tile.slug}`}
+        data-astro-prefetch
+        class={`bento-item reveal-item reveal-delay-${(index % 4) + 1}`}
+      >
+        <div class="bento-tile">
+          <div class="bento-art">
+            <Image
+              src={tile.image}
+              alt={`${tile.title} preview`}
+              widths={tile.device === 'phone' ? [240, 480] : [640, 1280]}
+              sizes={tile.device === 'phone' ? '(min-width: 640px) 200px, 45vw' : '(min-width: 640px) 580px, 86vw'}
+              class={`bento-shot bento-shot--${tile.device}`}
+              loading={index === 0 ? 'eager' : 'lazy'}
+              decoding="async"
+            />
           </div>
+        </div>
+
+        <!-- The whole card is the link and the section head already says so,
+             so the name carries a bare arrow instead of a worded label. -->
+        <div class="bento-head">
           <h3 class="bento-title">{tile.title}</h3>
-          <p class="bento-blurb">{tile.blurb}</p>
-          <!-- Facts, not an instruction: the whole tile is already the link -->
-          <span class="bento-meta">
-            {tile.meta}
+          <span class="bento-cta" aria-hidden="true">
             <NavArrow direction="right" size={12} />
           </span>
-        </a>
-      ))}
-    </div>
+        </div>
 
-    <!-- ── DESIGNS: case studies, sketch → final ─────────────── -->
-    <div class="tab-panel builds-grid" id="panel-designs" role="tabpanel" aria-labelledby="tab-designs" data-tab-panel data-tab-id="Designs" hidden>
-      {designs.length > 0 ? (
-        designs.map((study, index) => (
-          <a
-            href={`/designs/${study.id}`}
-            data-astro-prefetch
-            class={`project-card group reveal-item reveal-delay-${(index % 4) + 1}`}
-          >
-            <div class="frame">
-              <div class="frame__stage">
-                <DesignThumb
-                  title={study.data.title}
-                  sketch={study.data.sketch}
-                  final={study.data.final}
-                  device={study.data.device}
-                />
-              </div>
-            </div>
+        <p class="bento-blurb">{tile.blurb}</p>
 
-            <h3 class="card-title">
-              {study.data.title}
-              {study.data.draft && <span class="card-draft">Draft</span>}
-            </h3>
-            <p class="card-blurb">{study.data.summary}</p>
-            <span class="bento-meta">
-              {[study.data.year, study.data.tools.slice(0, 2).join(', ')].filter(Boolean).join(' · ')}
-              <NavArrow direction="right" size={12} />
-            </span>
-          </a>
-        ))
-      ) : (
-        <p class="designs-empty">
-          <span class="designs-empty__hand">case studies on the way</span>
-          <span>Sketches, wireframes, and the thinking behind the final screens.</span>
-        </p>
-      )}
-    </div>
-
+        <!-- Year and stack, on a hairline -->
+        <span class="bento-meta">{tile.meta}</span>
+      </a>
+    ))}
   </div>
 </section>
 
 <style>
-  .section-head {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-
-  /* ── Segmented Sliding Pill Tab Bar ── */
-  .tabs-bar {
-    position: relative;
-    display: inline-flex;
-    align-items: center;
-    background: var(--surface-subtle);
-    padding: 3px;
-    border-radius: 9999px;
-    border: none;
-    box-sizing: border-box;
-  }
-
-  .tabs-pill {
-    position: absolute;
-    top: 3px;
-    left: 0;
-    height: calc(100% - 6px);
-    background: var(--surface);
-    border-radius: 9999px;
-    will-change: transform, width;
-    pointer-events: none;
-    box-sizing: border-box;
-  }
-
-  .tab {
-    position: relative;
-    z-index: 1;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 6px 18px;
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    line-height: 1.2;
-    color: var(--text-muted);
-    background: none;
-    border: none;
-    cursor: pointer;
-    border-radius: 9999px;
-    transition: color 160ms var(--ease-smooth-out), transform 120ms var(--ease-smooth-out);
-    user-select: none;
-  }
-
-  @media (pointer: coarse) {
-    .tab {
-      min-height: 40px;
-      padding: 0 18px;
-    }
-  }
-
-  .tab:active {
-    transform: scale(0.96);
-  }
-
-  .tab.tab-active,
-  .tab[aria-selected="true"] {
-    color: var(--text-primary);
-  }
-
-  .tab:hover {
-    color: var(--text-primary);
-  }
-
-  /* ── Tab Panels Switching Animation ── */
-  .tab-panel[hidden] {
-    display: none !important;
-  }
-
-  .tab-panel:not([hidden]),
-  .tab-panel.is-active {
-    display: block !important;
-  }
-
-  /* Animate only when switching tabs, never on first load */
-  .tab-panel.is-entering {
-    animation: tabFadeIn 320ms cubic-bezier(0.23, 1, 0.32, 1) both;
-  }
-
-  .builds-grid:not([hidden]),
-  .builds-grid.is-active {
-    display: grid !important;
-  }
-
-  @keyframes tabFadeIn {
-    0% {
-      opacity: 0;
-      transform: translateY(12px) scale(0.988);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-  }
-
-  /* Stagger child cards/tiles as the active panel slides into view */
-  .tab-panel.is-entering .project-card {
-    animation: tabItemCascade 340ms cubic-bezier(0.23, 1, 0.32, 1) both;
-  }
-
-  .tab-panel.is-entering .project-card:nth-child(1) { animation-delay: 0ms; }
-
-  .tab-panel.is-entering .project-card:nth-child(2) { animation-delay: 45ms; }
-
-  .tab-panel.is-entering .project-card:nth-child(3) { animation-delay: 90ms; }
-
-  .tab-panel.is-entering .project-card:nth-child(4) { animation-delay: 135ms; }
-
-  @keyframes tabItemCascade {
-    0% {
-      opacity: 0;
-      transform: translateY(14px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tab-panel,
-    .tab-panel.is-entering .project-card {
-      animation: none !important;
-      opacity: 1 !important;
-      transform: none !important;
-      filter: none !important;
-    }
-  }
-
-  /* ── Builds: one column of full-width tiles ───────────── */
+  /* ── One column of large cards ────────────────────────── */
   .bento {
+    display: grid;
     grid-template-columns: minmax(0, 1fr);
     gap: 40px;
-  }
-
-  .bento:not([hidden]),
-  .bento.is-active {
-    display: grid !important;
   }
 
   @media (min-width: 640px) {
@@ -377,8 +155,17 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     max-height: 78%;
   }
 
+  /* ── Card text ────────────────────────────────────────── */
+  .bento-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 12px;
+    margin-top: 12px;
+  }
+
   .bento-title {
-    margin: 12px 0 0;
+    margin: 0;
     font-size: var(--text-base);
     font-weight: 500;
     line-height: 1.35;
@@ -386,158 +173,39 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
     color: var(--text-primary);
   }
 
-  /* Year and stack sit on a hairline; the arrow waits for intent */
-  .bento-meta {
-    display: flex;
+  .bento-cta {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-subtle);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    letter-spacing: 0.005em;
+    flex-shrink: 0;
+    color: var(--text-faint);
     transition: color 200ms var(--ease-smooth-out);
   }
 
-  .bento-meta :global(svg) {
-    margin-left: auto;
-    opacity: 0;
-    transform: translateX(-4px);
-    transition:
-      opacity 200ms var(--ease-smooth-out),
-      transform 200ms var(--ease-smooth-out);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .bento-item:hover .bento-meta,
-    .project-card:hover .bento-meta {
-      color: var(--text-secondary);
-    }
-
-    .bento-item:hover .bento-meta :global(svg),
-    .project-card:hover .bento-meta :global(svg) {
-      opacity: 1;
-      transform: translateX(0);
-      color: var(--text-primary);
-    }
-  }
-
-  /* Without hover there's no way to reveal it, so it simply stays put */
-  @media (hover: none) {
-    .bento-meta :global(svg) {
-      opacity: 1;
-      transform: none;
-    }
+  .bento-cta :global(svg) {
+    transform: translateX(-2px);
+    transition: transform 200ms var(--ease-smooth-out);
   }
 
   .bento-blurb {
     margin: 3px 0 0;
     font-size: var(--text-base);
     line-height: 1.55;
+    letter-spacing: -0.01em;
     color: var(--text-muted);
     text-wrap: pretty;
   }
 
-  /* ── Drawn art for projects without screenshots ── */
-  .art-tokens {
-    display: flex;
-    flex-direction: column;
-    gap: 2px;
-    width: min(78%, 260px);
-    padding: 14px 16px;
-    border-radius: 12px;
-    background: var(--surface);
-    font-family: ui-monospace, 'SFMono-Regular', Menlo, monospace;
-    font-size: 12px;
-    line-height: 1.5;
-    color: var(--text-muted);
-    white-space: nowrap;
-  }
-
-  .art-tokens__file {
-    margin-bottom: 4px;
-    font-size: 11px;
-    color: var(--text-faint);
-  }
-
-  .art-tokens__line {
-    padding-left: 14px;
-  }
-
-  .art-tokens b {
-    font-weight: 500;
-    color: var(--text-primary);
-  }
-
-  .art-tokens i {
-    font-style: normal;
-    color: var(--text-secondary);
-  }
-
-  .art-editorial {
-    display: grid;
-    grid-template-columns: 1.25fr 1fr 1fr;
-    gap: 6px;
-    width: min(74%, 250px);
-    height: 70%;
-  }
-
-  .art-editorial span {
-    border-radius: 6px;
-  }
-
-  .art-editorial__a {
-    background: var(--text-muted);
-  }
-
-  .art-editorial__stack {
-    display: grid;
-    gap: 6px;
-  }
-
-  .art-editorial__stack span:first-child {
-    background: var(--surface-interactive);
-  }
-
-  .art-editorial__stack span:last-child {
-    background: var(--text-secondary);
-  }
-
-  .art-editorial__c {
-    margin-top: 22%;
-    background: var(--text-faint);
-  }
-
-  .art-type {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-    width: 76%;
-  }
-
-  .art-type__name {
-    margin-bottom: 4px;
-    font-size: 44px;
-    font-weight: 600;
-    line-height: 1;
-    letter-spacing: -0.05em;
-    color: var(--text-primary);
-  }
-
-  .art-type__line {
+  .bento-meta {
     display: block;
-    width: 82%;
-    height: 5px;
-    border-radius: 3px;
-    background: var(--surface-interactive);
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border-subtle);
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    letter-spacing: 0.005em;
   }
 
-  .art-type__line--short {
-    width: 56%;
-  }
-
-  /* ── Hover: the tile lifts, its art zooms in slightly ── */
+  /* ── Hover: the tile lifts, its art zooms, the arrow leans in ── */
   @media (hover: hover) and (pointer: fine) {
     .bento-item:hover .bento-tile {
       transform: translateY(-3px);
@@ -545,6 +213,14 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
 
     .bento-item:hover .bento-art {
       transform: scale(1.04);
+    }
+
+    .bento-item:hover .bento-cta {
+      color: var(--text-primary);
+    }
+
+    .bento-item:hover .bento-cta :global(svg) {
+      transform: translateX(1px);
     }
   }
 
@@ -563,315 +239,10 @@ const designs = (await getCollection('designs', ({ data }) => import.meta.env.DE
 
   @media (prefers-reduced-motion: reduce) {
     .bento-tile,
-    .bento-art {
+    .bento-art,
+    .bento-cta,
+    .bento-cta :global(svg) {
       transition: none;
-    }
-  }
-
-  /* ── Designs: case study cards ───────────────────────── */
-  .builds-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 40px;
-    align-items: start;
-  }
-
-  @media (min-width: 640px) {
-    .builds-grid {
-      grid-template-columns: repeat(2, 1fr);
-      column-gap: 28px;
-      row-gap: 48px;
-    }
-  }
-
-  .project-card {
-    display: flex;
-    flex-direction: column;
-    text-decoration: none;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .frame {
-    border-radius: 16px;
-  }
-
-  .frame__stage {
-    position: relative;
-    aspect-ratio: 1 / 1.02;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    border-radius: 16px;
-    background: var(--surface-subtle);
-  }
-
-  /* ── Card text ── */
-  /* Matches the list-item scale used in Experience & Services */
-  .card-title {
-    margin: 14px 0 0;
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
-
-  .card-blurb {
-    margin: 3px 0 0;
-    font-size: var(--text-base);
-    line-height: 1.55;
-    letter-spacing: -0.01em;
-    color: var(--text-muted);
-    text-wrap: pretty;
-  }
-
-  @media (min-width: 640px) {
-    .card-title { font-size: var(--text-base); }
-    .card-blurb { font-size: var(--text-base); }
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .project-card:hover .frame {
-      border-color: var(--border-default);
-    }
-    .project-card:hover .frame__stage > * {
-      transform: translateY(-4px) scale(1.015);
-    }
-  }
-
-  .project-card:active {
-    transform: scale(0.985);
-  }
-
-  .project-card:focus-visible {
-    outline: none;
-  }
-
-  .project-card:focus-visible .frame {
-    outline: 2px solid var(--text-primary);
-    outline-offset: 3px;
-  }
-
-  /* ── Designs: case study cards reuse the Builds card styles ── */
-  .card-draft {
-    margin-left: 8px;
-    padding: 1px 7px;
-    border-radius: 9999px;
-    background: var(--surface-interactive);
-    font-size: 11px;
-    font-weight: 500;
-    letter-spacing: 0;
-    color: var(--text-muted);
-    vertical-align: 2px;
-  }
-
-  .designs-empty {
-    grid-column: 1 / -1;
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    margin: 0;
-    padding: 28px 0;
-    border-top: 1px solid var(--border-subtle);
-    font-size: var(--text-base);
-    color: var(--text-muted);
-  }
-
-  .designs-empty__hand {
-    font-family: var(--font-script);
-    font-size: 24px;
-    color: var(--text-secondary);
-  }
-
-  /* Staggered entry on tab activation */
-  .tab-panel.is-entering > * {
-    animation: cardCascade 280ms cubic-bezier(0.16, 1, 0.3, 1) both;
-  }
-  .tab-panel.is-entering > *:nth-child(1) { animation-delay: 0ms; }
-  .tab-panel.is-entering > *:nth-child(2) { animation-delay: 40ms; }
-  .tab-panel.is-entering > *:nth-child(3) { animation-delay: 80ms; }
-  .tab-panel.is-entering > *:nth-child(4) { animation-delay: 120ms; }
-  .tab-panel.is-entering > *:nth-child(5) { animation-delay: 160ms; }
-  .tab-panel.is-entering > *:nth-child(6) { animation-delay: 200ms; }
-
-  @keyframes cardCascade {
-    from { opacity: 0; transform: translateY(6px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .project-card {
-      transition: none;
-    }
-
-    .project-card:hover {
-      transform: none;
-    }
-
-    .tab-panel.is-entering > * {
-      animation: none;
     }
   }
 </style>
-
-<script>
-  function initProjectTabs() {
-    const bar = document.querySelector<HTMLElement>('.tabs-bar');
-    if (!bar) return;
-
-    const pill = bar.querySelector<HTMLElement>('.tabs-pill');
-    const triggers = bar.querySelectorAll<HTMLButtonElement>('[data-tab-trigger]');
-    const panels = document.querySelectorAll<HTMLElement>('[data-tab-panel]');
-
-    const movePill = (tab: HTMLElement, animate: boolean) => {
-      if (!pill || !bar) return;
-      const left = tab.offsetLeft;
-      const width = tab.offsetWidth;
-      if (width <= 0) return;
-
-      if (!animate) {
-        const prev = pill.style.transition;
-        pill.style.transition = 'none';
-        pill.style.transform = `translateX(${left}px)`;
-        pill.style.width = `${width}px`;
-        void pill.offsetWidth;
-        pill.style.transition = prev;
-      } else {
-        pill.style.transition =
-          'transform 220ms cubic-bezier(0.16, 1, 0.3, 1), width 220ms cubic-bezier(0.16, 1, 0.3, 1)';
-        pill.style.transform = `translateX(${left}px)`;
-        pill.style.width = `${width}px`;
-      }
-    };
-
-    // The open tab lives in the URL, so it survives a reload, a share and Back
-    const hashFor = (id: string) => (id === 'Designs' ? '#designs' : '#projects');
-
-    const activateTab = (id: string, { push = false } = {}) => {
-      const nextTrigger = bar.querySelector<HTMLButtonElement>(`[data-tab-trigger][data-tab-id="${id}"]`);
-      if (push && window.location.hash !== hashFor(id)) {
-        history.pushState({ tab: id }, '', hashFor(id));
-      }
-
-      triggers.forEach((trigger) => {
-        const isActive = trigger.dataset.tabId === id;
-        trigger.classList.toggle('tab-active', isActive);
-        trigger.setAttribute('aria-selected', String(isActive));
-        trigger.tabIndex = isActive ? 0 : -1;
-      });
-
-      if (nextTrigger) {
-        movePill(nextTrigger, true);
-      }
-
-      panels.forEach((panel) => {
-        const isTarget = panel.dataset.tabId === id;
-        if (isTarget) {
-          panel.removeAttribute('hidden');
-          panel.hidden = false;
-          panel.classList.add('is-active');
-          panel.classList.remove('is-entering');
-          void panel.offsetWidth;
-          panel.classList.add('is-entering');
-          setTimeout(() => {
-            panel.classList.remove('is-entering');
-          }, 380);
-        } else {
-          panel.setAttribute('hidden', '');
-          panel.hidden = true;
-          panel.classList.remove('is-active');
-          panel.classList.remove('is-entering');
-        }
-      });
-    };
-
-    // Wire delegated click handler on bar (ensures clicks never miss)
-    if (!bar.hasAttribute('data-tabs-bound')) {
-      bar.setAttribute('data-tabs-bound', 'true');
-      bar.addEventListener('click', (e) => {
-        const targetBtn = (e.target as HTMLElement).closest<HTMLButtonElement>('[data-tab-trigger]');
-        if (!targetBtn) return;
-        e.preventDefault();
-        const id = targetBtn.dataset.tabId;
-        if (id) activateTab(id, { push: true });
-      });
-
-      // Left and Right arrows move between tabs
-      bar.addEventListener('keydown', (event) => {
-        if (event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') return;
-        event.preventDefault();
-        const list = [...triggers];
-        const current = list.findIndex((t) => t.getAttribute('aria-selected') === 'true');
-        const step = event.key === 'ArrowRight' ? 1 : -1;
-        const next = list[(current + step + list.length) % list.length];
-        const id = next.dataset.tabId;
-        if (id) {
-          activateTab(id, { push: true });
-          next.focus();
-        }
-      });
-
-      // Back and Forward step between the two tabs
-      window.addEventListener('popstate', () => {
-        activateTab(window.location.hash === '#designs' ? 'Designs' : 'Builds');
-      });
-    }
-
-    // Deep link: /#designs opens the Designs tab (case study back links, "What I do")
-    if (window.location.hash === '#designs') {
-      activateTab('Designs');
-      document.getElementById('projects')?.scrollIntoView({ block: 'start' });
-    }
-
-    // Same-page links to /#designs: the page router swallows the hash change,
-    // so catch the click first and switch tabs directly
-    if (!(window as any).__designsLinkBound) {
-      (window as any).__designsLinkBound = true;
-      document.addEventListener(
-        'click',
-        (event) => {
-          const link = (event.target as HTMLElement).closest<HTMLAnchorElement>('a[href="/#designs"]');
-          const designsTab = document.querySelector<HTMLButtonElement>('[data-tab-trigger][data-tab-id="Designs"]');
-          if (!link || !designsTab || window.location.pathname !== '/') return;
-          event.preventDefault();
-          designsTab.click();
-          document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          history.replaceState(null, '', '/#designs');
-        },
-        { capture: true }
-      );
-    }
-
-    // Initial pill placement
-    const active = bar.querySelector<HTMLButtonElement>('.tab.tab-active') || triggers[0];
-    if (active) {
-      requestAnimationFrame(() => movePill(active, false));
-      setTimeout(() => movePill(active, false), 80);
-    }
-  }
-
-  function initProjects() {
-    initProjectTabs();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initProjects);
-  } else {
-    initProjects();
-  }
-  document.addEventListener('astro:page-load', initProjects);
-
-  window.addEventListener('resize', () => {
-    const bar = document.querySelector<HTMLElement>('.tabs-bar');
-    const active = bar?.querySelector<HTMLButtonElement>('.tab.tab-active, [aria-selected="true"]');
-    const pill = bar?.querySelector<HTMLElement>('.tabs-pill');
-    if (bar && active && pill) {
-      pill.style.transition = 'none';
-      pill.style.transform = `translateX(${active.offsetLeft}px)`;
-      pill.style.width = `${active.offsetWidth}px`;
-    }
-  });
-</script>

@@ -18,7 +18,7 @@ export const projects: ProjectCard[] = [
   {
     slug: 'forge',
     title: 'Forge',
-    shortBlurb: 'Cross-platform spiritual app & React admin portal for youth communities.',
+    shortBlurb: 'A faith app for youth communities, and the portal churches run it with.',
     thumbnailImage: forgeHome,
     deviceType: 'phone',
   },
