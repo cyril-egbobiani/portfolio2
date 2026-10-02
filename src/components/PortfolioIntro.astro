@@ -1,121 +1,217 @@
 ---
-// PortfolioIntro.astro — Hero introduction on index.astro
+// PortfolioIntro.astro — Hero A from the design system.
+// A small 3D box turns beside the name (four faces, 90° every 2.5s), then the
+// two paragraphs, then the two pill buttons with the socials on the right.
 import { Image } from 'astro:assets';
+import avatar from '../assets/images/optimized/profile-avatar.webp';
 import ieslLogo from '../assets/images/iesl-logo.png';
 
-// `labelled` decides whether the name is visible. X, GitHub and LinkedIn are
-// well-known marks and stand on their own. Email is a generic envelope and
-// Resume a generic document — and Resume is the link a recruiter is hunting
-// for — so those two keep their words.
+const RESUME = 'https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view';
+
 const socials = [
   {
     name: 'X (Twitter)',
-    key: 'x',
-    labelled: false,
     href: 'https://x.com/CyrilEgbobiani',
-    icon: `<svg width="14" height="14" viewBox="-0.86 -0.91 25.92 25.92" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
+    icon: `<svg width="15" height="15" viewBox="-0.86 -0.91 25.92 25.92" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>`,
   },
   {
     name: 'GitHub',
-    key: 'github',
-    labelled: false,
     href: 'https://github.com/cyril-egbobiani',
-    icon: `<svg width="14" height="14" viewBox="-1.93 -2.18 27.36 27.36" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
+    icon: `<svg width="15" height="15" viewBox="-1.93 -2.18 27.36 27.36" fill="none" stroke="currentColor" stroke-width="2.05" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>`,
   },
   {
     name: 'LinkedIn',
-    key: 'linkedin',
-    labelled: false,
     href: 'https://www.linkedin.com/in/cyril-egbobiani-6802002b8/',
-    icon: `<svg width="14" height="14" viewBox="-1.08 -1.58 26.16 26.16" fill="none" stroke="currentColor" stroke-width="1.96" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="12" rx="1"/><circle cx="4" cy="4" r="2"/><path d="M10 9h4v2.5a4 4 0 0 1 4-2.5c2.5 0 4 1.5 4 4.5V21h-4v-6.5c0-1.2-.8-2-2-2s-2 .8-2 2V21h-4V9z"/></svg>`,
-  },
-  {
-    name: 'Email',
-    key: 'email',
-    labelled: true,
-    href: 'mailto:egbobianicyril@gmail.com',
-    icon: `<svg width="14" height="14" viewBox="0.12 0.12 23.76 23.76" fill="none" stroke="currentColor" stroke-width="1.78" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="14" x="3" y="5" rx="2.5"/><path d="m3 7 9 6 9-6"/></svg>`,
-  },
-  {
-    name: 'Resume',
-    key: 'resume',
-    labelled: true,
-    href: 'https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view',
-    icon: `<svg width="14" height="14" viewBox="-1.08 -1.08 26.16 26.16" fill="none" stroke="currentColor" stroke-width="1.96" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+    icon: `<svg width="15" height="15" viewBox="-1.08 -1.58 26.16 26.16" fill="none" stroke="currentColor" stroke-width="1.96" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="9" width="4" height="12" rx="1"/><circle cx="4" cy="4" r="2"/><path d="M10 9h4v2.5a4 4 0 0 1 4-2.5c2.5 0 4 1.5 4 4.5V21h-4v-6.5c0-1.2-.8-2-2-2s-2 .8-2 2V21h-4V9z"/></svg>`,
   },
 ];
 ---
 
-<section class="hero flex flex-col gap-6 pt-30">
-  <!-- Text Content Block -->
-  <div class="hero-text-block flex flex-col gap-4 sm:gap-5 w-full">
-    <!-- The name leads. The job title is the setting, not the headline, so it
-         waits until the second paragraph. -->
-    <h1
-      class="m-0 font-[family-name:var(--font-title)] text-[length:var(--text-display)] font-normal leading-[var(--leading-heading)] tracking-[-0.01em] text-[var(--text-primary)]"
-    >
-      Cyril Egbobiani
-    </h1>
-
-    <p class="lede">
-      I have been drawing since I was small enough to draw on the walls. My mother eventually humbled
-      me about the walls. The drawing never stopped — it just moved to interfaces, and then into code.
-    </p>
-
-    <p class="lede">
-      These days I am a software engineer and product designer at <a
-        href="https://ieslglobal.com/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-company-link"
-      ><Image
-        src={ieslLogo}
-        height={28}
-        alt=""
-        class="inline-company-icon"
-        style="display: inline-block !important; height: 14px !important; width: auto !important; vertical-align: -2px !important; margin-right: 5px !important; border-radius: 2px !important;"
-      />International Energy Services Limited<span class="sr-only"> (opens in a new tab)</span></a> in Lagos,
-      where those drawings turn into compliance dashboards and audit tools nobody outside the building
-      will ever see. I am also building <a href="/projects/forge" class="inline-company-link" data-astro-prefetch>Forge</a>,
-      a faith app for youth communities.
-    </p>
-
-    <!-- The facts the paragraphs no longer have to carry -->
-    <p class="hero-meta">
-      <span>Lagos, Nigeria</span>
-      <span class="hero-meta__dot" aria-hidden="true">·</span>
-      <a href="#contact" class="inline-company-link"
-        ><span class="inline-globe-wrap"><canvas class="mini-3d-globe" width="32" height="32" aria-hidden="true"></canvas></span>Open to select freelance</a
-      >
-    </p>
-
-    <!-- Minimalist Social Links + Profile Page Link -->
-    <div class="flex flex-wrap items-center justify-between gap-y-3 pt-2 sm:pt-3 border-t border-[var(--border-subtle)]">
-      <div class="flex flex-wrap items-center gap-1 sm:gap-1.5">
-        {socials.map((social) => (
-          <a
-            href={social.href}
-            target={social.href.startsWith('mailto:') ? '_self' : '_blank'}
-            rel={social.href.startsWith('mailto:') ? undefined : 'noopener noreferrer'}
-            class={`social-link social-link--${social.key}${social.labelled ? '' : ' social-link--icon'}`}
-          >
-            <span class="social-link__icon" set:html={social.icon} />
-            <span class={social.labelled ? undefined : 'sr-only'}>{social.name}</span>
-            {!social.href.startsWith('mailto:') && <span class="sr-only"> (opens in a new tab)</span>}
-          </a>
-        ))}
+<section class="intro">
+  <div class="hero-id">
+    <!-- The box: photo, monogram, home, and the pencil it all started with. Tap it for About. -->
+    <a href="/about" class="box" aria-label="About me" title="About me" data-astro-prefetch>
+      <div class="box__spin" aria-hidden="true">
+        <div class="box__face box__face--1">
+          <Image src={avatar} alt="" width={56} height={56} densities={[1, 2]} class="box__photo" loading="eager" />
+        </div>
+        <div class="box__face box__face--2"><span class="box__mono">CE</span></div>
+        <div class="box__face box__face--3"><span class="meta-mono box__lag">LAG</span></div>
+        <div class="box__face box__face--4">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.2-4.2L16.6 4.4a2 2 0 0 1 2.9 2.9L8.1 18.8z"/><path d="M14.8 6.2l3 3"/></svg>
+        </div>
       </div>
+    </a>
+
+    <div class="hero-id__text">
+      <h1 class="hero-name">Cyril Egbobiani</h1>
+      <span class="hero-role">Software engineer &amp; product designer</span>
+    </div>
+  </div>
+
+  <p class="lede">
+    I have been drawing since I was small enough to draw on the walls. My mother eventually humbled
+    me about the walls. The drawing never stopped — it just moved to interfaces, and then into code.
+  </p>
+
+  <p class="lede">
+    These days I am a software engineer and product designer at <a
+      href="https://ieslglobal.com/"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="inline-link"
+    ><Image src={ieslLogo} height={28} alt="" class="inline-link__icon" />International Energy Services Limited<span class="sr-only"> (opens in a new tab)</span></a> in Lagos,
+    where those drawings turn into compliance dashboards and audit tools nobody outside the building
+    will ever see. I am also building <a href="/projects/forge" class="inline-link" data-astro-prefetch>Forge</a>,
+    a faith app for youth communities.
+  </p>
+
+  <div class="hero-actions">
+    <div class="hero-actions__main">
+      <a href="#contact" class="btn btn-primary">Get in touch</a>
+      <a href={RESUME} target="_blank" rel="noopener noreferrer" class="btn btn-secondary">Résumé<span class="sr-only"> (opens in a new tab)</span></a>
+    </div>
+    <div class="hero-actions__social">
+      {socials.map((social) => (
+        <a href={social.href} target="_blank" rel="noopener noreferrer" class="social-dot" aria-label={`${social.name} (opens in a new tab)`}>
+          <span set:html={social.icon} />
+        </a>
+      ))}
     </div>
   </div>
 </section>
 
 <style>
-  .hero {
+  .intro {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+    padding-top: 88px;
+  }
+
+  @media (min-width: 640px) {
+    .intro { padding-top: 120px; }
+  }
+
+  /* ── Name row ─────────────────────────────────────────── */
+  /* The cube sits above the name */
+  .hero-id {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    gap: 20px;
   }
 
+  .hero-id__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  .hero-name {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
+    color: var(--text-primary);
+  }
+
+  .hero-role {
+    font-size: var(--text-base);
+    color: var(--text-muted);
+  }
+
+  /* ── The box ──────────────────────────────────────────── */
+  .box {
+    --cube: 56px;
+    display: block;
+    flex-shrink: 0;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+    transition: transform 160ms var(--ease-smooth-out);
+    width: var(--cube);
+    height: var(--cube);
+    perspective: 600px;
+  }
+
+  .box:active { transform: scale(0.95); }
+
+  .box:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 4px;
+  }
+
+  /* Pause on hover so the face you're about to tap holds still */
+  @media (hover: hover) and (pointer: fine) {
+    .box:hover .box__spin { animation-play-state: paused; }
+  }
+
+  .box__spin {
+    position: relative;
+    width: var(--cube);
+    height: var(--cube);
+    transform-style: preserve-3d;
+    transform: translateZ(calc(var(--cube) / -2)) rotateY(0deg);
+    animation: box-turn 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+  }
+
+  .box__face {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid var(--border-default);
+    background: var(--surface-card);
+    color: var(--text-primary);
+    backface-visibility: hidden;
+  }
+
+  .box__face--1 { transform: rotateY(0deg) translateZ(calc(var(--cube) / 2)); }
+  .box__face--2 { transform: rotateY(90deg) translateZ(calc(var(--cube) / 2)); }
+  .box__face--3 {
+    transform: rotateY(180deg) translateZ(calc(var(--cube) / 2));
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+  }
+  .box__face--4 {
+    transform: rotateY(270deg) translateZ(calc(var(--cube) / 2));
+    background: var(--brand-soft);
+    color: var(--brand);
+  }
+
+  .box__photo {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .box__mono {
+    font-family: var(--font-title);
+    font-size: 20px;
+    line-height: 1;
+  }
+
+  .box__lag { color: inherit; font-size: 11px; }
+
+  @keyframes box-turn {
+    0%, 20%   { transform: translateZ(calc(var(--cube) / -2)) rotateY(0deg); }
+    25%, 45%  { transform: translateZ(calc(var(--cube) / -2)) rotateY(-90deg); }
+    50%, 70%  { transform: translateZ(calc(var(--cube) / -2)) rotateY(-180deg); }
+    75%, 95%  { transform: translateZ(calc(var(--cube) / -2)) rotateY(-270deg); }
+    100%      { transform: translateZ(calc(var(--cube) / -2)) rotateY(-360deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .box__spin { animation: none; }
+  }
+
+  /* ── Copy ─────────────────────────────────────────────── */
   .lede {
     margin: 0;
     font-size: var(--text-base);
@@ -124,301 +220,67 @@ const socials = [
     letter-spacing: -0.01em;
   }
 
-  /* Place, posting, availability — the facts the paragraphs no longer carry */
-  .hero-meta {
-    margin: 0;
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0 8px;
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-  }
-
-  .hero-meta__dot {
-    color: var(--text-faint);
-  }
-
-  /* Seamless Inline Company Link & Micro-Icon */
-  .inline-company-link {
-    display: inline;
+  .inline-link {
     color: var(--text-primary);
-    text-decoration: underline;
-    text-decoration-color: var(--border-subtle);
-    text-underline-offset: 3px;
     font-weight: 500;
-    transition: color 160ms var(--ease-smooth-out),
-                text-decoration-color 160ms var(--ease-smooth-out);
+    text-decoration: underline;
+    text-decoration-color: var(--border-default);
+    text-underline-offset: 3px;
+    transition: text-decoration-color 160ms var(--ease-smooth-out);
   }
 
-  .inline-company-link:hover {
-    color: var(--text-muted);
-    text-decoration-color: var(--text-muted);
-  }
+  .inline-link:hover { text-decoration-color: var(--brand); }
 
-  .inline-company-icon {
+  .inline-link :global(.inline-link__icon) {
     display: inline-block;
     height: 14px;
     width: auto;
-    vertical-align: -1.5px;
     margin-right: 5px;
-    border-radius: 2px;
-    object-fit: contain;
-  }
-
-  /* Inline Rotating 3D Dotted Globe */
-  .inline-globe-wrap {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
     vertical-align: -2px;
-    margin: 0 4px 0 2px;
-    user-select: none;
+    border-radius: 2px;
   }
 
-  .mini-3d-globe {
-    display: inline-block !important;
-    width: 15px !important;
-    height: 15px !important;
-    cursor: pointer;
-    transition: transform 180ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .mini-3d-globe:hover {
-      transform: scale(1.18);
-    }
-  }
-
-  .mini-3d-globe:active {
-    transform: scale(0.96);
-  }
-
-  /* Tactile Social Pills */
-  .social-link {
-    display: inline-flex;
+  /* ── Actions ──────────────────────────────────────────── */
+  .hero-actions {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 6px;
-    padding: 5px 8px;
-    border-radius: 7px;
-    font-size: var(--text-sm);
-    font-weight: 500;
-    color: var(--text-secondary);
-    text-decoration: none;
-    transition: background-color 160ms var(--ease-smooth-out),
-                color 160ms var(--ease-smooth-out),
-                transform 140ms var(--ease-smooth-out);
-    user-select: none;
+    justify-content: space-between;
+    gap: 16px;
+    padding-top: 4px;
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .social-link:hover {
-      background: var(--surface-subtle);
-      color: var(--text-primary);
-    }
-    .social-link:hover .social-link__icon {
-      opacity: 1;
-    }
-  }
-
-  .social-link:active {
-    transform: scale(0.96);
-  }
-
-  /* No label, so the padding has to carry the tap target on its own */
-  .social-link--icon {
-    padding: 7px;
-  }
-
-  @media (pointer: coarse) {
-    .social-link--icon {
-      padding: 10px;
-    }
-  }
-
-  /* ── Brand fills ──────────────────────────────────────────
-     Each icon takes the colour of the service it actually points to, so
-     Email follows the Gmail address it opens and Resume follows the Google
-     Drive file it fetches rather than a colour invented for them.
-     X and GitHub have black marks, which would vanish on the dark canvas,
-     so both flip to their own light-on-dark marks. LinkedIn, Gmail and Drive
-     lift to lighter tints in dark mode to stay legible on black. */
-  .social-link--x .social-link__icon { color: #000000; }
-  .social-link--github .social-link__icon { color: #181717; }
-  .social-link--linkedin .social-link__icon { color: #0a66c2; }
-  .social-link--email .social-link__icon { color: #c5221f; }
-  .social-link--resume .social-link__icon { color: #188038; }
-
-  :global([data-theme='dark']) .social-link--x .social-link__icon { color: #ffffff; }
-  :global([data-theme='dark']) .social-link--github .social-link__icon { color: #f0f6fc; }
-  :global([data-theme='dark']) .social-link--linkedin .social-link__icon { color: #70b5f9; }
-  :global([data-theme='dark']) .social-link--email .social-link__icon { color: #f28b82; }
-  :global([data-theme='dark']) .social-link--resume .social-link__icon { color: #5bb974; }
-
-  .social-link__icon {
+  .hero-actions__main,
+  .hero-actions__social {
     display: flex;
     align-items: center;
+    gap: 12px;
+  }
+
+  .hero-actions__social { gap: 8px; }
+
+  .social-dot {
+    display: inline-flex;
+    align-items: center;
     justify-content: center;
-    /* Held back at rest so the row reads as one quiet cluster; full strength
-       on hover, where the colour is a reward for reaching rather than noise. */
-    opacity: 0.82;
-    transition: opacity 160ms var(--ease-smooth-out), color 160ms var(--ease-smooth-out);
+    width: 36px;
+    height: 36px;
+    border-radius: 9999px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    color: var(--text-secondary);
+    transition: color 160ms var(--ease-smooth-out), transform 140ms var(--ease-smooth-out);
+  }
+
+  .social-dot span { display: flex; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .social-dot:hover { color: var(--text-primary); }
+  }
+
+  .social-dot:active { transform: scale(0.94); }
+
+  @media (pointer: coarse) {
+    .social-dot { width: 44px; height: 44px; }
   }
 </style>
-
-<script>
-  // ── Inline globe: prism wireframe ──
-  // Eight meridian rings, each in its own spectrum colour, like light split by a
-  // prism. Front arcs are bright, back arcs faint. On hover or focus the rings
-  // fan out and the globe spins faster; everything eases back on leave.
-  function initMini3DGlobe() {
-    const canvas = document.querySelector<HTMLCanvasElement>('.mini-3d-globe');
-    if (!canvas || canvas.dataset.bound) return;
-    canvas.dataset.bound = 'true';
-
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-
-    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const TAU = Math.PI * 2;
-    const RINGS = 8;
-    const SEGMENTS = 48;
-    const TILT = 0.31;
-    const cosT = Math.cos(TILT);
-    const sinT = Math.sin(TILT);
-
-    // Draw in CSS pixels on a buffer sized for the screen density
-    const cssSize = canvas.getBoundingClientRect().width || 15;
-    const dpr = Math.min(3, window.devicePixelRatio || 1);
-    canvas.width = Math.round(cssSize * dpr);
-    canvas.height = Math.round(cssSize * dpr);
-    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-
-    const c = cssSize / 2;
-    const R = cssSize * 0.42;
-
-    let angle = 0;
-    let speed = 0.007;
-    let spread = 0;
-    let focused = false;
-    let visible = true;
-    let rafId: number | null = null;
-    let last = 0;
-
-    const project = (x: number, y: number, z: number, rotation: number) => {
-      const cosY = Math.cos(rotation);
-      const sinY = Math.sin(rotation);
-      const x1 = x * cosY - z * sinY;
-      const z1 = x * sinY + z * cosY;
-      const y2 = y * cosT - z1 * sinT;
-      const z2 = y * sinT + z1 * cosT;
-      const k = 3.2 / (3.2 - z2);
-      return { x: c + x1 * R * k, y: c + y2 * R * k, z: z2 };
-    };
-
-    const draw = (time: number) => {
-      const dark = document.documentElement.dataset.theme !== 'light';
-      const ink = dark ? '255, 255, 255' : '0, 0, 0';
-      const lightness = dark ? 60 : 50;
-      ctx.clearRect(0, 0, cssSize, cssSize);
-
-      ctx.beginPath();
-      ctx.arc(c, c, R + 0.4, 0, TAU);
-      ctx.strokeStyle = `rgba(${ink}, 0.1)`;
-      ctx.lineWidth = 0.5;
-      ctx.stroke();
-
-      for (let k = 0; k < RINGS; k++) {
-        const meridian = (k * Math.PI) / RINGS + spread * Math.sin(time * 0.002 + k);
-        const hue = (k * 360) / RINGS;
-        const cosM = Math.cos(meridian);
-        const sinM = Math.sin(meridian);
-        let prev = project(cosM, 0, sinM, angle);
-
-        for (let i = 1; i <= SEGMENTS; i++) {
-          const u = (i / SEGMENTS) * TAU;
-          const next = project(Math.cos(u) * cosM, Math.sin(u), Math.cos(u) * sinM, angle);
-          const front = (prev.z + next.z) / 2 > 0;
-          ctx.beginPath();
-          ctx.moveTo(prev.x, prev.y);
-          ctx.lineTo(next.x, next.y);
-          ctx.strokeStyle = `hsla(${hue}, 90%, ${lightness}%, ${front ? 0.95 : 0.18})`;
-          ctx.lineWidth = front ? 0.85 : 0.5;
-          ctx.stroke();
-          prev = next;
-        }
-      }
-    };
-
-    const frame = (time: number) => {
-      const dt = Math.min(50, time - (last || time));
-      last = time;
-      speed += ((focused ? 0.02 : 0.007) - speed) * 0.08;
-      spread += ((focused ? 0.5 : 0) - spread) * 0.08;
-      angle += (speed * dt) / 16;
-      draw(time);
-      rafId = visible ? requestAnimationFrame(frame) : null;
-    };
-
-    const start = () => {
-      if (reduceMotion || rafId !== null) return;
-      last = 0;
-      rafId = requestAnimationFrame(frame);
-    };
-
-    const link = canvas.closest('a') ?? canvas;
-    const enter = () => {
-      focused = true;
-      if (reduceMotion) {
-        spread = 0.5;
-        draw(0);
-      }
-    };
-    const leave = () => {
-      focused = false;
-      if (reduceMotion) {
-        spread = 0;
-        draw(0);
-      }
-    };
-    link.addEventListener('pointerenter', enter);
-    link.addEventListener('pointerleave', leave);
-    link.addEventListener('focus', enter);
-    link.addEventListener('blur', leave);
-
-    // Only animate while the globe is on screen
-    const io = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
-      if (visible) start();
-    });
-    io.observe(canvas);
-
-    // Redraw the outline colour on theme change (matters when not animating)
-    const themeObserver = new MutationObserver(() => draw(performance.now()));
-    themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
-
-    draw(0);
-    start();
-
-    document.addEventListener(
-      'astro:before-swap',
-      () => {
-        if (rafId !== null) cancelAnimationFrame(rafId);
-        io.disconnect();
-        themeObserver.disconnect();
-      },
-      { once: true }
-    );
-  }
-
-  function initIntro() {
-    initMini3DGlobe();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initIntro);
-  } else {
-    initIntro();
-  }
-  document.addEventListener('astro:page-load', initIntro);
-</script>

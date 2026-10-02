@@ -4,6 +4,7 @@ import { getCollection, render } from 'astro:content';
 import Layout from '../../components/Layout.astro';
 import PageTopNav from '../../components/PageTopNav.astro';
 import NavArrow from '../../components/NavArrow.astro';
+import PortfolioFooter from '../../components/PortfolioFooter.astro';
 import { formatJournalDate, readingMinutes } from '../../data/journal';
 import '../../styles/article.css';
 
@@ -27,7 +28,7 @@ const minutes = readingMinutes(entry.body);
   <PageTopNav backHref="/journal" backLabel="Back to journal" />
 
   <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
-    <div class="mx-auto flex w-full max-w-[680px] flex-col">
+    <div class="mx-auto flex w-full max-w-[640px] flex-col">
       <article class="entry" data-entry>
         <header class="entry-header">
           <p class="entry-meta">
@@ -37,6 +38,7 @@ const minutes = readingMinutes(entry.body);
             {draft && <span class="entry-draft">Draft</span>}
           </p>
           <h1 class="entry-title">{title}</h1>
+          {excerpt && <p class="entry-lede">{excerpt}</p>}
           {tags.length > 0 && (
             <ul class="entry-tags" role="list">
               {tags.map((tag) => <li>{tag}</li>)}
@@ -57,7 +59,9 @@ const minutes = readingMinutes(entry.body);
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7" /></svg>
         </button>
       </nav>
-      <p class="entry-end__time"><span data-entry-time></span>in Lagos</p>
+      <div class="mt-14">
+        <PortfolioFooter compact />
+      </div>
     </div>
   </main>
 </Layout>
@@ -65,18 +69,8 @@ const minutes = readingMinutes(entry.body);
 <script>
   import { initArticlePage } from '../../utils/article';
 
-  // The entry ends with its own links and the time in Lagos instead of the site footer
+  // The entry ends with its own links, then the shared site footer
   function initEntryEnd() {
-    const time = document.querySelector<HTMLElement>('[data-entry-time]');
-    if (time) {
-      try {
-        const now = new Intl.DateTimeFormat('en-US', { timeZone: 'Africa/Lagos', hour: 'numeric', minute: '2-digit', hour12: true }).format(new Date());
-        time.textContent = `${now} `;
-      } catch {
-        time.parentElement?.remove();
-      }
-    }
-
     document.querySelector('[data-entry-top]')?.addEventListener('click', () => {
       window.scrollTo({ top: 0, behavior: 'smooth' });
     });

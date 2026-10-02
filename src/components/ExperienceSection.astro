@@ -1,9 +1,12 @@
 ---
 // ExperienceSection.astro — Where I've been.
+// Hairline rows: the dates in mono on the left, the company and one line on
+// the right. No arrows; these rows are not links.
 // A plain, always-visible timeline. Each role gets one line: the title, what was
 // actually done there, and where. Nothing is hidden behind a control — this is
 // the section people skim before deciding to get in touch, so detail behind a
 // tap is detail most of them never read.
+
 import { Image } from 'astro:assets';
 import ieslLogo from '../assets/images/iesl-logo.png';
 import firstBankLogo from '../assets/images/first-bank-logo.png';
@@ -30,7 +33,7 @@ interface ExperienceItem {
 const experience: ExperienceItem[] = [
   {
     company: 'International Energy Services Limited',
-    dates: '2026 – Present',
+    dates: '2026 — Now',
     current: true,
     logo: ieslLogo,
     summary: [
@@ -39,7 +42,7 @@ const experience: ExperienceItem[] = [
   },
   {
     company: 'Freelance',
-    dates: '2025 – Present',
+    dates: '2025 — Now',
     current: true,
     logo: globeSvg,
     themeAdaptive: true,
@@ -53,7 +56,7 @@ const experience: ExperienceItem[] = [
   },
   {
     company: 'First Bank Digital Innovation Lab',
-    dates: '2024 · 6 months',
+    dates: '2024 · 6 mo',
     logo: firstBankLogo,
     summary: [
       {
@@ -66,33 +69,26 @@ const experience: ExperienceItem[] = [
 ];
 ---
 
-<section class="relative flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="experience">
+<section class="flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="experience">
   <div class="section-head reveal-item">
-    <div class="section-head__text flex items-baseline justify-between w-full">
-      <h2 class="section-title">Where I've been</h2>
+    <div class="section-head__text">
+      <h2 class="section-title">Experience</h2>
     </div>
   </div>
 
   <ol class="xp-list" role="list">
     {experience.map((item) => (
       <li class="xp">
-        <div class={`xp__badge ${item.themeAdaptive ? 'xp__badge--adaptive' : ''}`} aria-hidden="true">
-          <Image
-            src={item.logo}
-            alt=""
-            class={`xp__logo ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`}
-          />
-        </div>
-
-        <div class="xp__body">
-          <div class="xp__head">
-            <h3 class="xp__company">{item.company}</h3>
-            <span class="xp__dates">
-              {item.current && <span class="xp__now">Now</span>}
-              {item.dates}
-            </span>
-          </div>
-
+        <span class="xp__dates meta-mono">
+          {item.current && <><span class="xp__now" aria-hidden="true" /><span class="sr-only">Current, </span></>}
+          {item.dates.toUpperCase()}
+        </span>
+        <div class="xp__main">
+          <span class={`xp__badge ${item.themeAdaptive ? 'xp__badge--adaptive' : ''}`} aria-hidden="true">
+            <Image src={item.logo} alt="" class={`xp__logo ${item.themeAdaptive ? 'theme-adaptive-svg' : ''}`} />
+          </span>
+          <div class="xp__body">
+          <h3 class="xp__company">{item.company}</h3>
           <p class="xp__summary">
             {item.summary.map((segment) => (
               <>
@@ -105,6 +101,7 @@ const experience: ExperienceItem[] = [
               </>
             ))}
           </p>
+          </div>
         </div>
       </li>
     ))}
@@ -118,39 +115,68 @@ const experience: ExperienceItem[] = [
     margin: 0;
     padding: 0;
     list-style: none;
+    border-top: 1px solid var(--border-subtle);
   }
 
   .xp {
     display: flex;
-    gap: 16px;
-    padding: 20px 0;
+    flex-direction: column;
+    gap: 6px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-subtle);
   }
 
-  .xp:first-child {
-    padding-top: 4px;
+  @media (min-width: 560px) {
+    .xp {
+      flex-direction: row;
+      align-items: flex-start;
+      gap: 24px;
+    }
   }
 
-  .xp + .xp {
-    border-top: 1px solid var(--border-subtle);
+  .xp__dates {
+    display: inline-flex;
+    min-height: 36px;
+    align-items: center;
+    gap: 6px;
+    width: 112px;
+    flex-shrink: 0;
+    white-space: nowrap;
   }
 
+  .xp__now {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--brand);
+  }
+
+  .xp__main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+
+  /* Logo on a small ring tile: 36 = 4 + 28 + 4 */
   .xp__badge {
+    flex-shrink: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    flex-shrink: 0;
-    width: 44px;
-    height: 44px;
-    padding: 8px;
-    border-radius: 10px;
-    background: var(--surface-subtle);
+    width: 36px;
+    height: 36px;
+    padding: 6px;
+    box-sizing: border-box;
+    border-radius: var(--radius-tile);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
   }
 
-  .xp__badge--adaptive {
-    color: var(--text-primary);
-  }
+  .xp__badge--adaptive { color: var(--text-primary); }
 
-  .xp__logo {
+  .xp__badge :global(.xp__logo) {
     max-width: 100%;
     max-height: 100%;
     width: auto;
@@ -161,58 +187,25 @@ const experience: ExperienceItem[] = [
   .xp__body {
     flex: 1;
     min-width: 0;
-  }
-
-  .xp__head {
     display: flex;
-    flex-wrap: wrap;
-    align-items: baseline;
-    justify-content: space-between;
-    gap: 4px 12px;
+    flex-direction: column;
+    gap: 2px;
   }
 
   .xp__company {
     margin: 0;
-    font-size: var(--text-base);
+    font-size: 15px;
     font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
-  .xp__dates {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    font-variant-numeric: tabular-nums;
-    white-space: nowrap;
-  }
-
-  .xp__now {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    color: var(--text-primary);
-    font-weight: 500;
-  }
-
-  .xp__now::before {
-    content: '';
-    width: 5px;
-    height: 5px;
-    border-radius: 9999px;
-    background: currentColor;
-  }
-
-  /* --text-muted, matching the supporting line under a title everywhere else
-     on the page. --text-secondary sits too close to the company name above it. */
   .xp__summary {
-    margin: 3px 0 0;
-    font-size: var(--text-base);
-    line-height: 1.6;
-    color: var(--text-muted);
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.55;
+    color: var(--text-secondary);
     text-wrap: pretty;
   }
 
@@ -224,26 +217,5 @@ const experience: ExperienceItem[] = [
     transition: text-decoration-color 160ms var(--ease-smooth-out);
   }
 
-  .xp__link:hover {
-    text-decoration-color: var(--text-primary);
-  }
-
-  @media (min-width: 640px) {
-    .xp {
-      gap: 18px;
-    }
-
-    .xp__badge {
-      width: 48px;
-      height: 48px;
-    }
-
-    .xp__company {
-      font-size: var(--text-base);
-    }
-
-    .xp__summary {
-      font-size: var(--text-base);
-    }
-  }
+  .xp__link:hover { text-decoration-color: var(--brand); }
 </style>

@@ -1,0 +1,104 @@
+---
+// JournalSection.astro — The latest three journal entries as hairline rows,
+// with a link through to the full journal.
+import { getJournalEntries, formatJournalDate } from '../data/journal';
+
+const entries = (await getJournalEntries()).slice(0, 3);
+---
+
+{entries.length > 0 && (
+<section class="flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="journal">
+  <div class="section-head reveal-item">
+    <div class="section-head__text">
+      <h2 class="section-title">Journal</h2>
+    </div>
+    <a href="/journal" class="section-link" data-astro-prefetch>All entries</a>
+  </div>
+
+  <ul class="j-list" role="list">
+    {entries.map((entry) => (
+      <li>
+        <a
+          href={entry.href}
+          class="j-row"
+          {...(entry.external ? { target: '_blank', rel: 'noopener noreferrer' } : { 'data-astro-prefetch': '' })}
+        >
+          <span class="j-row__text">
+            <span class="j-row__title">{entry.title}</span>
+            <span class="j-row__meta">{entry.excerpt}</span>
+          </span>
+          <span class="j-row__date meta-mono">{formatJournalDate(entry.date).toUpperCase()}</span>
+          {entry.external && <span class="sr-only"> (opens in a new tab)</span>}
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+)}
+
+<style>
+  .section-link {
+    font-size: var(--text-sm);
+    color: var(--text-muted);
+    text-decoration: none;
+  }
+
+  .section-link:hover { color: var(--text-primary); }
+
+  .j-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--border-subtle);
+  }
+
+  .j-row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    min-height: 44px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .j-row__text {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .j-row__title {
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    transition: color 160ms var(--ease-smooth-out);
+  }
+
+  .j-row__meta {
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .j-row__date {
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 479px) {
+    .j-row__date { display: none; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .j-row:hover .j-row__title { color: var(--brand); }
+  }
+</style>

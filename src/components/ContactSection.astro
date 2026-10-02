@@ -1,281 +1,178 @@
 ---
-// ContactSection.astro — Interactive Contact Section
+// ContactSection.astro — "Say hello": the email as a ring pill with a copy
+// button inside it, then the socials on a hairline.
 const EMAIL = 'egbobianicyril@gmail.com';
+
+const socials = [
+  { name: 'X', href: 'https://x.com/CyrilEgbobiani' },
+  { name: 'GitHub', href: 'https://github.com/cyril-egbobiani' },
+  { name: 'LinkedIn', href: 'https://www.linkedin.com/in/cyril-egbobiani-6802002b8/' },
+];
 ---
 
-<section class="relative flex flex-col gap-5" id="contact">
-  <!-- Section Header -->
-  <div class="section-head reveal-item">
-    <div class="section-head__text">
-      <h2 class="section-title">Let's talk.</h2>
-      <span class="section-aside">Open for select freelance projects & collaborations</span>
-    </div>
+<section class="contact flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="contact">
+  <h2 class="contact__title reveal-item">Say hello</h2>
+
+  <p class="contact__lede">
+    If you're building something thoughtful in consumer tech or creative software, I'd love to chat.
+    Open to select freelance projects and collaborations.
+  </p>
+
+  <div class="email-pill">
+    <a href={`mailto:${EMAIL}`} class="email-pill__address">{EMAIL}</a>
+    <button type="button" class="email-pill__copy" data-copy-email={EMAIL} aria-live="polite">
+      <svg class="email-pill__icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect width="13" height="13" x="8" y="8" rx="2" />
+        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
+      </svg>
+      <span data-copy-label>Copy</span>
+    </button>
   </div>
 
-  <!-- Contact Section Container -->
-  <div class="contact-card reveal-item reveal-delay-1 flex flex-col gap-4 py-1">
-    <p class="m-0 font-sans text-[16px] leading-[1.7] text-[var(--text-secondary)] font-normal">
-      If you're building something thoughtful in consumer tech or creative software, I'd love to chat. Drop a line or copy my email below.
-    </p>
-
-    <!-- Email & Social Actions -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
-      
-      <!-- Interactive Email Copy Pill -->
-      <div
-        class="email-box group relative flex items-center justify-between gap-3 rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 cursor-pointer select-none transition-[background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
-        data-copy-box
-        role="button"
-        tabindex="0"
-        aria-label={`Copy email address ${EMAIL}`}
-      >
-        <div class="flex items-center gap-2 min-w-0 flex-1">
-          <span class="truncate font-sans text-[16px] text-[var(--text-primary)]">
-            egbobianicyril@gmail.com
-          </span>
-        </div>
-
-        <div class="copy-btn shrink-0 relative flex items-center gap-1.5 rounded-[5px] border border-[var(--border-subtle)] bg-[var(--surface)] px-2.5 py-1 text-xs text-[var(--text-muted)] transition-[color,background-color,border-color,box-shadow,transform] duration-200 ease-[var(--ease-smooth-out)] group-hover:text-[var(--text-primary)] group-hover:border-[var(--border-default)]">
-          <span class="copy-btn__stage relative flex size-3.5 items-center justify-center shrink-0" aria-hidden="true">
-            <!-- Copy icon -->
-            <svg class="copy-btn__icon copy-btn__icon--copy size-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect width="13" height="13" x="8" y="8" rx="2" />
-              <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2" />
-            </svg>
-            <!-- Check icon (draws on success) -->
-            <svg class="copy-btn__icon copy-btn__icon--check size-3.5 text-[var(--text-primary)]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-              <polyline points="20 6 9 17 4 12" />
-            </svg>
-          </span>
-          <!-- Morphing Text Slot -->
-          <span class="copy-btn__text-slot relative inline-grid overflow-hidden">
-            <span class="copy-btn__text copy-btn__text--default font-sans text-xs font-medium">Copy</span>
-            <span class="copy-btn__text copy-btn__text--copied font-sans text-xs font-semibold text-[var(--text-primary)]">Copied!</span>
-          </span>
-        </div>
-      </div>
-
-      <!-- Social Action Buttons -->
-      <div class="flex items-center gap-2">
-        <a
-          href="https://x.com/CyrilEgbobiani"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-sm font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
-        >
-          X<span class="sr-only"> (opens in a new tab)</span>
-        </a>
-        <a
-          href="https://www.linkedin.com/in/cyril-egbobiani-6802002b8/"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-sm font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
-        >
-          LinkedIn<span class="sr-only"> (opens in a new tab)</span>
-        </a>
-        <a
-          href="https://github.com/cyril-egbobiani"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill flex items-center justify-center rounded-[6px] bg-[var(--surface-subtle)] px-3 py-2 font-sans text-sm font-medium text-[var(--text-muted)] no-underline transition-[color,background-color,transform] duration-160 ease-[var(--ease-smooth-out)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-interactive)] active:scale-[0.96]"
-        >
-          GitHub<span class="sr-only"> (opens in a new tab)</span>
-        </a>
-      </div>
-
+  <div class="contact__foot">
+    <div class="contact__socials">
+      {socials.map((social) => (
+        <a href={social.href} target="_blank" rel="noopener noreferrer">{social.name}<span class="sr-only"> (opens in a new tab)</span></a>
+      ))}
     </div>
+    <span class="meta-mono">© {new Date().getFullYear()} CYRIL EGBOBIANI</span>
   </div>
 </section>
 
 <style>
-  .email-box:active,
-  .social-pill:active {
-    transform: scale(0.96);
+  .contact__title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: 32px;
+    font-weight: 400;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text-primary);
   }
 
-  /* ── Morph & Elastic Stretch Badge ── */
-  .copy-btn {
-    will-change: transform, border-color, background-color;
+  .contact__lede {
+    margin: 0;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--text-secondary);
   }
 
-  .email-box.is-copied .copy-btn {
-    animation: copyBadgeMorph 460ms cubic-bezier(0.23, 1, 0.32, 1) both;
-    background-color: var(--surface);
-    border-color: var(--text-primary);
+  /* Ring pill: the address on the left, an inset copy chip on the right */
+  .email-pill {
+    align-self: flex-start;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    max-width: 100%;
+    height: 44px;
+    padding: 4px 4px 4px 18px;
+    box-sizing: border-box;
+    border-radius: 9999px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
   }
 
-  @keyframes copyBadgeMorph {
-    0% {
-      transform: scale(0.92, 0.92);
-    }
-    35% {
-      transform: scale(1.10, 0.92); /* Horizontal stretch & squash */
-    }
-    68% {
-      transform: scale(0.97, 1.03); /* Elastic rebound */
-    }
-    100% {
-      transform: scale(1, 1);
-    }
+  .email-pill__address {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-size: 15px;
+    color: var(--text-primary);
+    text-decoration: none;
   }
 
-  /* ── Icon Cross-Swap + Path Stroke Draw ── */
-  .copy-btn__stage {
-    position: relative;
+  .email-pill__address:hover { color: var(--brand); }
+
+  .email-pill__copy {
+    flex-shrink: 0;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 6px;
+    height: 36px;
+    padding: 0 14px;
+    border: none;
+    border-radius: 9999px;
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
+    box-shadow: var(--shadow-btn);
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: transform 140ms var(--ease-smooth-out);
   }
 
-  .copy-btn__icon {
-    position: absolute;
-    transition:
-      transform 260ms cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
-      filter 240ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, filter;
+  .email-pill__copy:active { transform: scale(0.96); }
+
+  .email-pill__copy:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
   }
 
-  .copy-btn__icon--copy {
-    transform: rotate(0deg) scale(1);
-    opacity: 1;
-    filter: blur(0);
+  .email-pill__copy.is-copied {
+    background: var(--brand);
+    color: var(--brand-contrast);
   }
 
-  .copy-btn__icon--check {
-    transform: rotate(-35deg) scale(0.35);
-    opacity: 0;
-    filter: blur(2px);
-  }
-
-  /* SVG stroke draw for checkmark */
-  .copy-btn__icon--check polyline {
-    stroke-dasharray: 24;
-    stroke-dashoffset: 24;
-    transition: stroke-dashoffset 280ms cubic-bezier(0.23, 1, 0.32, 1) 50ms;
-  }
-
-  .email-box.is-copied .copy-btn__icon--copy {
-    transform: rotate(45deg) scale(0.35);
-    opacity: 0;
-    filter: blur(2px);
-  }
-
-  .email-box.is-copied .copy-btn__icon--check {
-    transform: rotate(0deg) scale(1);
-    opacity: 1;
-    filter: blur(0);
-  }
-
-  .email-box.is-copied .copy-btn__icon--check polyline {
-    stroke-dashoffset: 0;
-  }
-
-  /* ── Text Swap Slot ── */
-  .copy-btn__text-slot {
-    display: inline-grid;
-    grid-template-areas: "label";
+  .contact__foot {
+    display: flex;
+    flex-wrap: wrap;
     align-items: center;
-    line-height: 1.2;
+    justify-content: space-between;
+    gap: 12px 16px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-subtle);
   }
 
-  .copy-btn__text {
-    grid-area: label;
-    white-space: nowrap;
-    transition:
-      transform 240ms cubic-bezier(0.23, 1, 0.32, 1),
-      opacity 200ms cubic-bezier(0.23, 1, 0.32, 1),
-      filter 240ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform, opacity, filter;
+  .contact__socials {
+    display: flex;
+    gap: 20px;
+    font-size: var(--text-sm);
   }
 
-  .copy-btn__text--default {
-    transform: translateY(0);
-    opacity: 1;
-    filter: blur(0);
+  .contact__socials a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 32px;
+    color: var(--text-secondary);
+    text-decoration: none;
   }
 
-  .copy-btn__text--copied {
-    transform: translateY(8px);
-    opacity: 0;
-    filter: blur(2px);
-    pointer-events: none;
-  }
-
-  .email-box.is-copied .copy-btn__text--default {
-    transform: translateY(-8px);
-    opacity: 0;
-    filter: blur(2px);
-  }
-
-  .email-box.is-copied .copy-btn__text--copied {
-    transform: translateY(0);
-    opacity: 1;
-    filter: blur(0);
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .social-pill:hover,
-    .email-box:hover {
-      transform: translateY(-1px);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .copy-btn,
-    .copy-btn__icon,
-    .copy-btn__icon--check polyline,
-    .copy-btn__text {
-      animation: none !important;
-      transition: none !important;
-    }
-  }
+  .contact__socials a:hover { color: var(--text-primary); }
 </style>
 
 <script>
-  function initEmailCopy() {
-    const box = document.querySelector<HTMLElement>('[data-copy-box]');
-    const email = 'egbobianicyril@gmail.com';
+  function initCopyEmail() {
+    document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach((button) => {
+      if (button.dataset.bound) return;
+      button.dataset.bound = 'true';
+      const label = button.querySelector<HTMLElement>('[data-copy-label]');
+      let timer: number | undefined;
 
-    if (!box) return;
-
-    let copyTimer: number | undefined;
-
-    const handleCopy = async () => {
-      if (box.classList.contains('is-copied')) return;
-
-      try {
-        await navigator.clipboard.writeText(email);
-      } catch {
-        const ta = document.createElement('textarea');
-        ta.value = email;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand('copy');
-        document.body.removeChild(ta);
-      }
-
-      box.classList.add('is-copied');
-
-      window.clearTimeout(copyTimer);
-      copyTimer = window.setTimeout(() => {
-        box.classList.remove('is-copied');
-      }, 1900);
-    };
-
-    box.addEventListener('click', handleCopy);
-    box.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleCopy();
-      }
+      button.addEventListener('click', async () => {
+        const email = button.dataset.copyEmail ?? '';
+        try {
+          await navigator.clipboard.writeText(email);
+        } catch {
+          const field = document.createElement('textarea');
+          field.value = email;
+          document.body.appendChild(field);
+          field.select();
+          document.execCommand('copy');
+          field.remove();
+        }
+        button.classList.add('is-copied');
+        if (label) label.textContent = 'Copied';
+        window.clearTimeout(timer);
+        timer = window.setTimeout(() => {
+          button.classList.remove('is-copied');
+          if (label) label.textContent = 'Copy';
+        }, 1800);
+      });
     });
   }
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initEmailCopy);
-  } else {
-    initEmailCopy();
-  }
-  document.addEventListener('astro:page-load', initEmailCopy);
+  initCopyEmail();
+  document.addEventListener('astro:page-load', initCopyEmail);
 </script>

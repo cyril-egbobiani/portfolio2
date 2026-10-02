@@ -4,7 +4,6 @@ import Layout from '../../components/Layout.astro';
 import PageTopNav from '../../components/PageTopNav.astro';
 import JournalRow from '../../components/JournalRow.astro';
 import PortfolioFooter from '../../components/PortfolioFooter.astro';
-import NavArrow from '../../components/NavArrow.astro';
 import { getJournalEntries, type JournalEntry } from '../../data/journal';
 
 const SUBSTACK_URL = 'https://cyriljnr.substack.com';
@@ -40,13 +39,17 @@ const filters = [
   <PageTopNav />
 
   <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
-    <div class="mx-auto flex w-full max-w-[680px] flex-col">
+    <div class="mx-auto flex w-full max-w-[640px] flex-col">
       <header class="journal-header">
         <h1 class="journal-heading">Journal</h1>
         <p class="journal-lede">
           Writing, mostly kept here with the occasional post on{' '}
           <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack<span class="sr-only"> (opens in a new tab)</span></a>.
         </p>
+        <div class="journal-pills">
+          <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer" class="journal-pill">Substack <span aria-hidden="true">↗</span><span class="sr-only"> (opens in a new tab)</span></a>
+          <a href="/journal/rss.xml" class="journal-pill">RSS</a>
+        </div>
       </header>
 
       {showFilters && (
@@ -73,11 +76,8 @@ const filters = [
           {[...months.values()].map((group) => (
             <section class="journal-month" data-journal-group>
               <h2 class="journal-month__label">
-                {group.month}
-                <span>
-                  {group.year !== currentYear && <>{group.year} · </>}
-                  <span data-journal-count>{group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}</span>
-                </span>
+                <span>{group.month}{group.year !== currentYear && <> {group.year}</>}</span>
+                <span data-journal-count>{group.entries.length} {group.entries.length === 1 ? 'entry' : 'entries'}</span>
               </h2>
               <ul class="journal-month__list" role="list">
                 {group.entries.map((entry) => <JournalRow entry={entry} />)}
@@ -92,11 +92,6 @@ const filters = [
         </div>
       )}
 
-      <div class="journal-links">
-        <a href={SUBSTACK_URL} target="_blank" rel="noopener noreferrer">Substack<NavArrow direction="up-right" size={12} /><span class="sr-only"> (opens in a new tab)</span></a>
-        <a href="/journal/rss.xml">RSS</a>
-      </div>
-
       <div class="mt-24 sm:mt-28">
         <PortfolioFooter />
       </div>
@@ -108,16 +103,39 @@ const filters = [
   .journal-header {
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    margin-bottom: 36px;
+    gap: 16px;
+    margin-bottom: 40px;
   }
+
+  .journal-pills {
+    display: flex;
+    gap: 8px;
+  }
+
+  .journal-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 36px;
+    padding: 0 14px;
+    border-radius: 9999px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    color: var(--text-primary);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    transition: transform 140ms var(--ease-smooth-out);
+  }
+
+  .journal-pill:active { transform: scale(0.97); }
 
   .journal-heading {
     margin: 0;
     font-family: var(--font-title);
-    font-size: var(--text-display);
+    font-size: 28px;
     font-weight: 400;
-    line-height: var(--leading-heading);
+    line-height: 1.15;
     letter-spacing: -0.01em;
     color: var(--text-primary);
   }
@@ -144,9 +162,9 @@ const filters = [
     align-self: flex-start;
     gap: 2px;
     padding: 3px;
-    margin-bottom: 24px;
+    margin-bottom: 32px;
     border-radius: 9999px;
-    background: var(--surface-subtle);
+    background: var(--surface-inset);
   }
 
   /* One pill slides under the pressed filter (same motion as Builds / Designs) */
@@ -157,7 +175,8 @@ const filters = [
     left: 0;
     width: 0;
     border-radius: 9999px;
-    background: var(--surface);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
     pointer-events: none;
     transition:
       transform 300ms var(--ease-smooth-out),
@@ -166,7 +185,7 @@ const filters = [
 
   /* Until the script places the pill, the pressed button paints its own */
   .journal-filters:not(.has-pill) .journal-filter[aria-pressed='true'] {
-    background: var(--surface);
+    background: var(--surface-card);
   }
 
   .journal-filter {
@@ -210,7 +229,7 @@ const filters = [
   }
 
   .journal-filter:focus-visible {
-    outline: 2px solid var(--text-primary);
+    outline: 2px solid var(--brand);
     outline-offset: 1px;
   }
 
@@ -250,32 +269,29 @@ const filters = [
   .journal-months {
     display: flex;
     flex-direction: column;
-    gap: 36px;
+    gap: 40px;
   }
 
+  /* Month in mono on a hairline, the count on the right */
   .journal-month__label {
     display: flex;
     align-items: baseline;
-    gap: 10px;
-    margin: 0 0 12px 4px;
-    font-size: 19.5px;
-    font-weight: 500;
-    line-height: 1.25;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
-
-  .journal-month__label span {
-    font-size: var(--text-sm);
+    justify-content: space-between;
+    gap: 12px;
+    margin: 0;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border-subtle);
+    font-family: var(--font-mono);
+    font-size: 12px;
     font-weight: 400;
-    letter-spacing: 0;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
     color: var(--text-muted);
   }
 
   .journal-month__list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
     margin: 0;
     padding: 0;
   }
@@ -293,7 +309,7 @@ const filters = [
 
   .journal-empty__hand {
     font-family: var(--font-script);
-    font-size: 24px;
+    font-size: 20px;
     color: var(--text-secondary);
   }
 

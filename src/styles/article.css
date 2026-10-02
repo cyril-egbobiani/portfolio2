@@ -9,7 +9,7 @@
   right: 0;
   z-index: 50;
   height: 2px;
-  background: var(--text-faint);
+  background: var(--brand);
   transform: scaleX(0);
   transform-origin: left center;
   pointer-events: none;
@@ -19,8 +19,16 @@
 .entry-header {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 36px;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.entry-lede {
+  margin: 0;
+  font-size: 18px;
+  line-height: 1.6;
+  color: var(--text-secondary);
+  text-wrap: pretty;
 }
 
 .entry-meta {
@@ -29,7 +37,10 @@
   align-items: center;
   gap: 6px;
   margin: 0;
-  font-size: var(--text-sm);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
   color: var(--text-muted);
   font-variant-numeric: tabular-nums;
 }
@@ -38,7 +49,10 @@
   margin-left: 4px;
   padding: 1px 7px;
   border-radius: 9999px;
-  background: var(--surface-interactive);
+  background: var(--brand-soft);
+  color: var(--brand);
+  font-family: var(--font-sans);
+  text-transform: none;
   font-size: 11px;
   font-weight: 500;
 }
@@ -46,10 +60,10 @@
 .entry-title {
   margin: 0;
   font-family: var(--font-title);
-  font-size: var(--text-display);
+  font-size: clamp(28px, 6vw, 36px);
   font-weight: 400;
-  line-height: var(--leading-heading);
-  letter-spacing: -0.01em;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
   color: var(--text-primary);
   text-wrap: balance;
 }
@@ -68,10 +82,10 @@
 /* ── Body copy ── */
 .entry-body {
   position: relative;
-  font-size: var(--text-base);
+  font-size: 17px;
   line-height: 1.75;
   letter-spacing: -0.01em;
-  color: var(--text-secondary);
+  color: color-mix(in srgb, var(--text-primary) 85%, var(--text-secondary));
 }
 
 .entry-body > :first-child {
@@ -84,7 +98,7 @@
 .entry-body blockquote,
 .entry-body pre,
 .entry-body figure {
-  margin: 0 0 1.15em;
+  margin: 0 0 1.4em;
 }
 
 .entry-body h2,
@@ -104,9 +118,9 @@
 /* Both on the base step, like .cs-heading. Weight separates the two levels
    and the space above carries the break, so no third size is needed. */
 .entry-body h2 {
-  margin-top: 2.6em;
-  font-size: var(--text-base);
-  font-weight: 600;
+  margin-top: 2.2em;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .entry-body h3 {
@@ -128,7 +142,7 @@
 }
 
 .entry-body a:hover {
-  text-decoration-color: var(--text-muted);
+  text-decoration-color: var(--brand);
 }
 
 .entry-body ul,
@@ -148,11 +162,18 @@
   color: var(--text-faint);
 }
 
+/* Pull quote in Young Serif on a hairline */
 .entry-body blockquote {
-  padding-left: 16px;
-  border-left: 2px solid var(--border-default);
-  color: var(--text-muted);
+  padding: 4px 0 4px 20px;
+  border-left: 1px solid var(--border-default);
+  font-family: var(--font-title);
+  font-size: 22px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: var(--text-primary);
 }
+
+.entry-body blockquote p:last-child { margin-bottom: 0; }
 
 .entry-body hr {
   margin: 2.4em 0;
@@ -169,17 +190,35 @@
   height: auto;
 }
 
+/* Images written straight into the text sit in a ring frame: 10 = 6 + 4 */
+.entry-body > p > img {
+  padding: 4px;
+  box-sizing: border-box;
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-ring);
+}
+
+.entry-body figcaption {
+  margin-top: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 .entry-body :not(pre) > code {
   padding: 0.1em 0.35em;
   border-radius: 5px;
-  background: var(--surface-subtle);
-  font-size: 0.88em;
+  background: var(--surface-inset);
+  font-family: var(--font-mono);
+  font-size: 0.85em;
   color: var(--text-primary);
 }
 
 .entry-body pre {
   padding: 14px 16px;
-  border-radius: 12px;
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-ring);
   overflow-x: auto;
   font-size: var(--text-sm);
   line-height: 1.6;
@@ -188,7 +227,7 @@
 /* Code stays black and white: override the syntax theme's colours */
 .entry-body pre.astro-code,
 .entry-body pre.astro-code span {
-  background-color: var(--surface-subtle) !important;
+  background-color: var(--surface-card) !important;
   color: var(--text-secondary) !important;
 }
 
@@ -235,8 +274,8 @@
   margin: -0.35em 0 1.3em;
   padding-left: 30px;
   font-family: var(--font-note);
-  font-size: 17.5px;
-  line-height: 1.4;
+  font-size: 16px;
+  line-height: 1.45;
   letter-spacing: 0;
   color: var(--ink);
 }
@@ -300,25 +339,21 @@
     padding-left: 8px;
   }
 
+  .entry-end a:hover,
+  .entry-end button:hover,
   .entry-end a:hover svg,
   .entry-end button:hover svg {
-    color: var(--text-primary);
+    color: var(--brand);
   }
 }
 
 .entry-end a:focus-visible,
 .entry-end button:focus-visible {
-  outline: 2px solid var(--text-primary);
+  outline: 2px solid var(--brand);
   outline-offset: -2px;
   border-radius: 4px;
 }
 
-.entry-end__time {
-  margin: 16px 0 0;
-  font-size: var(--text-sm);
-  color: var(--text-faint);
-  font-variant-numeric: tabular-nums;
-}
 
 @media (prefers-reduced-motion: reduce) {
   .entry-end a,
