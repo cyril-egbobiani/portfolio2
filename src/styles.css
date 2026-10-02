@@ -42,12 +42,12 @@
   /* Typography Font Families — Unified Geist Architecture */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: var(--font-sans);
-  --font-mono: var(--font-sans);
-  --font-script: "Caveat", cursive;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-script: var(--font-title); /* was Caveat: notes now use Young Serif */
   /* Page titles only — Shafarik ships a single 400 weight, so anything
      heavier here would be a browser-synthesised faux bold. */
-  --font-title: "Shafarik", Georgia, serif;
-  --font-note: "Patrick Hand", var(--font-script); /* journal & case-study footnotes */
+  --font-title: "Young Serif", Georgia, serif;
+  --font-note: var(--font-title); /* journal & case-study notes, in Young Serif */
 
   /* ── Motion tokens ───────────────────────────────────────────
      Premium easing: cubic-bezier(0.16, 1, 0.3, 1) — the benji.org
@@ -103,16 +103,17 @@
      Greys carry no tint; feedback and accents stay monochrome too. */
 
   /* Surfaces – light */
-  --surface: #ffffff;
+  --surface: #fcfcfc; /* off-white page so white cards lift */
+  --surface-card: #ffffff;
   --surface-subtle: #f5f5f5;
   --surface-interactive: #ebebeb;
-  /* Raised elements (dock, popovers, tooltips) share the card grey */
-  --surface-raised: #f5f5f5;
-  --surface-inverse: #000000;
+  /* Raised elements (dock, popovers, tooltips) are white with the ring */
+  --surface-raised: #ffffff;
+  --surface-inverse: #0a0a0a;
 
   /* Text hierarchy – light */
-  --text-primary: #000000;
-  --text-secondary: #404040;
+  --text-primary: #0a0a0a;
+  --text-secondary: #525252;
   --text-muted: #6e6e6e; /* 4.5:1 on --surface-subtle, the tightest pair it renders on */
   --text-faint: #a3a3a3; /* non-text only: borders, placeholders, disabled marks */
   --text-on-accent: #ffffff;
@@ -135,10 +136,33 @@
      you are and confirms what just happened — never decoration.
      Light mode uses teal-600 (4.7:1 on white); dark mode lifts to
      teal-400 so it stays legible on the black canvas. */
-  --brand: #0d9488;
-  --brand-hover: #0f766e;
-  --brand-soft: rgba(13, 148, 136, 0.12);
+  --brand: #cc2e62; /* rose — 4.95:1 on the page */
+  --brand-hover: #a8204c;
+  --brand-soft: #ffeef2;
   --brand-contrast: #ffffff;
+
+  /* ── Shape & depth (design system v0) ────────────────────────
+     Concentric corners: card 10 = inset 6 + padding 4.
+     One hairline ring instead of borders; the primary button's
+     soft inset; a deeper float only for the dock menu. */
+  --radius-inset: 6px;
+  --radius-tile: 8px;
+  --radius-card: 10px;
+  --radius-menu: 14px;
+  --shadow-ring: 0 0 0 1px rgba(0, 0, 0, 0.06), 0 1px 2px -1px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-float: var(--shadow-ring), 0 12px 32px -8px rgba(0, 0, 0, 0.18);
+  --btn-primary-bg: #1f1f1f;
+  --btn-primary-text: #fcfcfc;
+  --shadow-btn: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 -2px 3px rgba(0, 0, 0, 0.35), 0 1px 2px rgba(0, 0, 0, 0.18), 0 2px 6px -2px rgba(0, 0, 0, 0.18);
+  --surface-inset: #f5f5f5; /* the well inside a ring card */
+
+  /* Service tile tints (bg / ink) */
+  --tint-mobile-bg: var(--brand-soft);
+  --tint-mobile-ink: var(--brand);
+  --tint-web-bg: #fdeee4;
+  --tint-web-ink: #c2410c;
+  --tint-design-bg: #eeeafb;
+  --tint-design-ink: #6d28d9;
 
   /* Handwriting ink & annotations */
   --ink: var(--text-secondary);
@@ -159,7 +183,7 @@
   /* Typography — Unified Geist System */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: var(--font-sans);
-  --font-mono: var(--font-sans);
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* ═══════════════════════════════════════════════════════════════
@@ -169,16 +193,17 @@
   color-scheme: dark;
 
   /* Surfaces – dark: pure black canvas */
-  --surface: #000000;
-  --surface-subtle: #0f0f0f;
-  --surface-interactive: #1a1a1a;
-  --surface-raised: #0f0f0f;
-  --surface-inverse: #ffffff;
+  --surface: #0a0a0a;
+  --surface-card: #141414;
+  --surface-subtle: #141414;
+  --surface-interactive: #1c1c1c;
+  --surface-raised: #141414;
+  --surface-inverse: #ededed;
 
   /* Text hierarchy – dark */
-  --text-primary: #ffffff;
+  --text-primary: #ededed;
   --text-secondary: #a3a3a3;
-  --text-muted: #7c7c7c; /* 4.5:1 on --surface-subtle in dark */
+  --text-muted: #8a8a8a; /* 5.3:1 on --surface-subtle in dark */
   --text-faint: #404040; /* non-text only */
   --text-on-accent: #000000;
   --text-on-inverse: #000000;
@@ -195,11 +220,22 @@
   --rose: #ffffff;
   --rose-hover: #e5e5e5;
 
-  /* Brand – dark: teal-400, lifted so it clears pure black */
-  --brand: #2dd4bf;
-  --brand-hover: #5eead4;
-  --brand-soft: rgba(45, 212, 191, 0.16);
-  --brand-contrast: #000000;
+  /* Brand – dark: rose, lifted so it clears near-black */
+  --brand: #fb9db6;
+  --brand-hover: #fdb8ca;
+  --brand-soft: #3a1622;
+  --brand-contrast: #0a0a0a;
+
+  --shadow-ring: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 1px 2px -1px rgba(0, 0, 0, 0.5), 0 2px 4px rgba(0, 0, 0, 0.35);
+  --shadow-float: var(--shadow-ring), 0 12px 32px -8px rgba(0, 0, 0, 0.6);
+  --btn-primary-bg: #ededed;
+  --btn-primary-text: #0a0a0a;
+  --shadow-btn: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -2px 3px rgba(0, 0, 0, 0.14), 0 1px 2px rgba(0, 0, 0, 0.5);
+  --surface-inset: #1c1c1c;
+  --tint-web-bg: #3a1f12;
+  --tint-web-ink: #fdba8c;
+  --tint-design-bg: #261c3f;
+  --tint-design-ink: #c4b5fd;
 
   /* Handwriting ink */
   --ink: var(--text-secondary);
@@ -220,7 +256,7 @@
   /* Typography */
   --font-sans: "Geist", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --font-display: var(--font-sans);
-  --font-mono: var(--font-sans);
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
 /* ---------------------------------------------------------------------------
@@ -526,12 +562,13 @@
   }
 
   /* Section Typography Hierarchy */
+  /* Section headers set in Young Serif, like the name and "Say hello" */
   .section-title {
     margin: 0;
-    font-family: var(--font-sans);
-    font-size: var(--text-base);
-    font-weight: 500;
-    letter-spacing: -0.015em;
+    font-family: var(--font-title);
+    font-size: 20px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
     line-height: 1.35;
   }
@@ -555,8 +592,8 @@
   /* Margin notes — outside the column on wide screens, inline below on narrow */
   .note {
     font-family: var(--font-script);
-    font-size: 20px;
-    line-height: 1.2;
+    font-size: 16px;
+    line-height: 1.35;
     color: var(--ink);
   }
 
@@ -805,4 +842,72 @@
   transform: none;
   outline: 2px solid var(--text-primary);
   outline-offset: 2px;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   BUTTONS (design system v0) — pills only.
+   Primary: soft dark in light mode, soft light in dark mode.
+   Secondary: card-white pill on the hairline ring.
+   ═══════════════════════════════════════════════════════════════ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  height: 44px;
+  padding: 0 20px;
+  border: none;
+  border-radius: 9999px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 140ms var(--ease-smooth-out), filter 160ms var(--ease-smooth-out);
+}
+
+.btn-primary {
+  background: var(--btn-primary-bg);
+  color: var(--btn-primary-text);
+  box-shadow: var(--shadow-btn);
+}
+
+.btn-secondary {
+  background: var(--surface-card);
+  color: var(--text-primary);
+  box-shadow: var(--shadow-ring);
+}
+
+.btn-icon {
+  width: 44px;
+  padding: 0;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-primary:hover { filter: brightness(1.12); }
+  [data-theme="dark"] .btn-primary:hover { filter: brightness(0.94); }
+  .btn-secondary:hover { filter: brightness(0.98); }
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn:focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition: none; }
+}
+
+/* Small mono label used for years, dates and metadata */
+.meta-mono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
 }

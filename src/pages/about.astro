@@ -1,16 +1,37 @@
 ---
-// src/pages/about.astro — Dedicated Profile & Human Half Page
+// src/pages/about.astro — The human half.
+// Design system: a ring-framed photo beside "Of me", the story with one line
+// pulled out as a quote, then the Off the clock gallery (Gallery A: two
+// masonry columns of ring cards with varied heights) and the contact block.
 import Layout from '../components/Layout.astro';
 import PageTopNav from '../components/PageTopNav.astro';
 import { Image } from 'astro:assets';
 import profileIntroImg from '../assets/images/optimized/profile-intro.webp';
-import photographyImg from '../assets/images/optimized/photography.webp?url';
-import footballImg from '../assets/images/optimized/football.webp?url';
-import cookingImg from '../assets/images/optimized/cooking.webp?url';
-import carsImg from '../assets/images/optimized/cars.webp?url';
-import longWalksImg from '../assets/images/optimized/long-walks.jpg?url';
+import photographyImg from '../assets/images/optimized/photography.webp';
+import footballImg from '../assets/images/optimized/football.webp';
+import cookingImg from '../assets/images/optimized/cooking.webp';
+import carsImg from '../assets/images/optimized/cars.webp';
+import longWalksImg from '../assets/images/optimized/long-walks.jpg';
+import musicImg from '../assets/images/optimized/soundscapes.webp';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
+
+// Two columns, each a stack; the heights vary so the gallery reads as a wall
+// of photos rather than a grid of thumbnails.
+const columns = [
+  [
+    { img: photographyImg, alt: 'Photograph of Lagos', title: 'Photography', note: 'Lagos can be a literal cinema at times.', h: 300 },
+    { img: cookingImg, alt: 'Cooking', title: 'Cooking', note: "Mum's influence here, and I'm not mad.", h: 170 },
+    { img: musicImg, alt: 'Record player and headphones', title: 'Singing', note: 'Just started.', h: 210 },
+  ],
+  [
+    { img: footballImg, alt: 'Football', title: 'Football', note: 'Come on you Gunners!', h: 170 },
+    { img: carsImg, alt: 'Cars', title: 'Cars', note: 'Dream car: the GT 63 S 4-door coupé E Performance. Yes, that one.', h: 280 },
+    { img: longWalksImg, alt: 'A long walk', title: 'Long walks', note: 'How I decompress, watch the city and think.', h: 230 },
+  ],
+];
+
+const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
 ---
 
 <Layout
@@ -19,470 +40,236 @@ import PortfolioFooter from '../components/PortfolioFooter.astro';
 >
   <PageTopNav />
 
-  <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[124px] sm:pt-[156px] pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
-    <div class="mx-auto flex w-full max-w-[680px] flex-col">
+  <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[112px] sm:pt-[140px] pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
+    <div class="mx-auto flex w-full max-w-[640px] flex-col gap-20 sm:gap-[88px]">
 
-      <!-- ── Main Sections (Matching Homepage gap-24 sm:gap-28 rhythm) ── -->
-      <div class="flex flex-col gap-24 sm:gap-28">
+      <!-- Photo, title and story are one group: the heading sits just above
+           the paragraphs it introduces instead of floating on its own -->
+      <div class="about-intro">
+      <section class="about-hero">
+        <div class="about-photo">
+          <Image src={profileIntroImg} alt="Cyril Egbobiani" width={192} height={192} class="about-photo__img" loading="eager" />
+        </div>
+        <h1 class="about-title">Of me</h1>
+      </section>
 
-        <!-- ── 2. Hero Identity Showcase: Profile Card (Own Row) + Introduction ── -->
-        <section class="flex flex-col gap-6">
-        <!-- Row 1: Tactile Physical Ticket Pass Profile Card -->
-        <div class="tkt-wrapper w-full max-w-[185px] sm:max-w-[195px] select-none" aria-label="Cyril Egbobiani — CE Archive verified pass" id="tktWrapper" data-tilt-card>
-          <div class="tkt-card relative w-full bg-[var(--surface-subtle)] rounded-[4px] overflow-visible border border-[var(--border-subtle)]" id="tktCard" data-tilt-target>
+      <section class="about-story">
+        <p>
+          Drawing became a coping tool for me at a very young age. It was just me and my notebook… then it
+          finished. I drew on almost anything in sight, but my mum's beating finally humbled me.
+        </p>
+        <p>Then I came across tech, coding in particular.</p>
+        <blockquote class="about-quote">
+          “It was so weird seeing someone write some combination of letters just to create a rectangle.”
+        </blockquote>
+        <p>
+          I didn't really like the process, but I was a big fan of the result. As time passed, I knew I had to
+          learn how to code, and it's been an awesome rollercoaster ever since.
+        </p>
+      </section>
+      </div>
 
-            <!-- Tactile Cardstock Grain Overlay -->
-            <div class="tkt-paper-texture pointer-events-none" aria-hidden="true"></div>
-
-            <!-- Specular Light Glare Sheen -->
-            <div class="tkt-glare" id="tktGlare" aria-hidden="true"></div>
-
-            <!-- 4 Corner Concave Notches -->
-            <div class="absolute -top-2.5 -left-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-            <div class="absolute -top-2.5 -right-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-            <div class="absolute -bottom-2.5 -left-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-            <div class="absolute -bottom-2.5 -right-2.5 size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10" aria-hidden="true"></div>
-
-            <!-- Column Layout Inside Card -->
-            <div class="tkt-inner-content flex flex-col p-3 gap-2.5">
-              <!-- Top Framed B&W Photo -->
-              <div class="tkt-photo-layer w-full aspect-[4/3.8] overflow-hidden bg-[var(--surface-interactive)]">
-                <Image
-                  src={profileIntroImg}
-                  alt="Cyril Egbobiani"
-                  width={400}
-                  class="w-full h-full object-cover object-[50%_25%] filter grayscale contrast-[1.08] brightness-[0.98]"
-                  loading="eager"
-                  decoding="async"
-                />
-              </div>
-
-              <!-- Dashed Perforation Line with Side Notches -->
-              <div class="relative w-full my-0.5 flex items-center" aria-hidden="true">
-                <div class="absolute -left-[22px] size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
-                <div class="w-full border-t border-dashed border-[var(--border-default)]"></div>
-                <div class="absolute -right-[22px] size-5 rounded-full bg-[var(--surface)] pointer-events-none z-10"></div>
-              </div>
-
-              <!-- Bottom Stub: Verified Pass + Barcode -->
-              <div class="tkt-stub-layer flex items-center justify-between gap-2 px-0.5">
-               
-                
-              </div>
-            </div>
+      <section class="flex flex-col gap-6" aria-labelledby="offClock">
+        <div class="section-head">
+          <div class="section-head__text">
+            <h2 id="offClock" class="section-title">Off the clock</h2>
           </div>
         </div>
 
-        <!-- Row 2: Narrative & Biography -->
-        <div class="flex flex-col gap-4 w-full">
-          <h1 class="m-0 font-[family-name:var(--font-title)] text-[length:var(--text-display)] font-normal leading-[var(--leading-heading)] tracking-[-0.01em] text-[var(--text-primary)]">
-            Of Me
-          </h1>
-          <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
-            Drawing became a coping tool for me at a very young age, It was just me and my notebook... then it finished. I drew almost on anything in sight but my mum's beating finally humbled me.
-          </p>
-          <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
-            Then I came across tech, coding in particular. It was so weird seeing someone write some combination of letters just to create a rectangle, I didn't really like the process but was a big fan of the result.
-          </p>
-          <p class="text-[16px] leading-[1.7] text-[var(--text-secondary)]">
-            As time passed, I knew I had to learn how to code and it's been an awesome rollercoaster ever since.
-          </p>
+        <div class="gallery">
+          {columns.map((column) => (
+            <div class="gallery__col">
+              {column.map((item) => (
+                <figure class="shot">
+                  <div class="shot__frame">
+                    <div class="shot__well" style={`height: ${item.h}px`}>
+                      <Image src={item.img} alt={item.alt} widths={[320, 640]} sizes="(min-width: 640px) 312px, 45vw" class="shot__img" loading="lazy" decoding="async" />
+                    </div>
+                  </div>
+                  <figcaption class="shot__cap">
+                    <span class="shot__title">{item.title}</span>
+                    <span class="shot__note">{item.note}</span>
+                  </figcaption>
+                </figure>
+              ))}
+            </div>
+          ))}
+        </div>
+
+        <div class="rewatch">
+          <span class="rewatch__label">Rewatching for the humour:</span>
+          {rewatching.map((show) => <span class="rewatch__pill">{show}</span>)}
         </div>
       </section>
 
-      <!-- ── 3. Dynamic Visual Moodboard / Hobbies Section (Space10 Editorial Direction) ── -->
-      <section class="flex flex-col gap-6 pt-2" aria-labelledby="hobbiesHeading">
-        <div class="flex items-center justify-between">
-          <h2 id="hobbiesHeading" class="section-title">
-            My other domains
-          </h2>
-        </div>
-
-        <!-- Space10 Asymmetric Editorial Gallery Grid (Dynamic Widths & Heights) -->
-        <div class="space10-domain-grid grid grid-cols-1 sm:grid-cols-12 gap-x-5 gap-y-7 sm:gap-x-6 sm:gap-y-9 w-full select-none" id="domainGallery">
-          
-          <!-- Frame 1: Street Photography (Wide Landscape, Col 1-7) -->
-          <div class="sm:col-span-7 flex flex-col group">
-            <div
-              class="domain-frame relative w-full aspect-[16/10] overflow-hidden bg-[var(--surface-subtle)]"
-              
-            >
-              <img
-                src={photographyImg}
-                alt="Photography"
-                class="domain-img w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
-                Photography
-              </span>
-              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
-                Lagos can be a literal cinema atimes
-              </span>
-            </div>
-          </div>
-
-          <!-- Frame 2: Automotive Design (Tall Vertical Portrait, Col 8-12) -->
-          <div class="sm:col-span-5 flex flex-col group">
-            <div
-              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)]"
-              
-            >
-              <img
-                src={carsImg}
-                alt="Cars"
-                class="domain-img w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
-                Cars
-              </span>
-              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
-                Big fan of automotive design, my dream car is a gt63s 4 door coupe e-performance... yes, that one!
-              </span>
-            </div>
-          </div>
-
-          <!-- Frame 3: Tactical Football (Medium Landscape, Col 1-4) -->
-          <div class="sm:col-span-4 flex flex-col group">
-            <div
-              class="domain-frame relative w-full aspect-[4/3] overflow-hidden bg-[var(--surface-subtle)]"
-              
-            >
-              <img
-                src={footballImg}
-                alt="Football"
-                class="domain-img w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
-              football
-              </span>
-              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
-                Come on you Gunners!!!
-              </span>
-            </div>
-          </div>
-
-        
-
-          <!-- Frame 4: Culinary Craft (Wide Horizon, Col 9-12) -->
-          <div class="sm:col-span-4 flex flex-col group">
-            <div
-              class="domain-frame relative w-full aspect-[16/11] overflow-hidden bg-[var(--surface-subtle)]"
-              
-            >
-              <img
-                src={cookingImg}
-                alt="Culinary cooking experiments and family recipes"
-                class="domain-img w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
-                Cooking
-              </span>
-              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
-               Mum really influence here and I'm not mad
-              </span>
-            </div>
-          </div>
-
-          <!-- Frame 5: Long Walks (Col 9-12) -->
-          <div class="sm:col-span-4 flex flex-col group">
-            <div
-              class="domain-frame relative w-full aspect-[4/5] overflow-hidden bg-[var(--surface-subtle)]"
-            >
-              <img
-                src={longWalksImg}
-                alt="Long walks"
-                class="domain-img w-full h-full object-cover"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
-            <div class="domain-caption mt-2.5 sm:mt-3 flex flex-col">
-              <span class="domain-title font-sans text-[16px] font-medium text-[var(--text-primary)] leading-snug">
-                long walks
-              </span>
-              <span class="domain-desc font-sans text-[14px] leading-[1.5] text-[var(--text-secondary)] mt-0.5">
-                My favorite way to decompress, observe the city, and think
-              </span>
-            </div>
-          </div>
-
-        </div>
-
-      
-      </section>
-
-      <!-- ── 4. Contact & Footer matching home page ── -->
       <ContactSection />
       <PortfolioFooter />
-
-      </div>
     </div>
   </main>
 </Layout>
 
 <style>
-  /* ─────────────────────────────────────────────────────────
-     AUTHENTIC CARDSTOCK TICKET PASS (3D SPRING PARALLAX)
-     ───────────────────────────────────────────────────────── */
-  .tkt-wrapper {
-    position: relative;
-    perspective: 900px;
-    cursor: pointer;
-    animation: ticketEntrance 550ms cubic-bezier(0.23, 1, 0.32, 1) both;
+  /* ── Hero + story, one group ──────────────────────────── */
+  .about-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
   }
 
-  @keyframes ticketEntrance {
-    0% {
-      opacity: 0;
-      transform: perspective(800px) translateY(14px) scale(0.96);
-      filter: blur(4px);
-    }
-    100% {
-      opacity: 1;
-      transform: perspective(800px) translateY(0) scale(1);
-      filter: blur(0);
-    }
+  .about-hero {
+    display: flex;
+    align-items: flex-end;
+    gap: 20px;
   }
 
-  .tkt-card {
-    position: relative;
+  /* Ring frame: 10 = 6 + 4 */
+  .about-photo {
+    flex-shrink: 0;
+    width: 96px;
+    height: 96px;
+    padding: 4px;
+    box-sizing: border-box;
+    border-radius: var(--radius-card);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+  }
+
+  .about-photo :global(.about-photo__img) {
+    display: block;
     width: 100%;
-    background-color: var(--surface-subtle);
-    border-radius: 4px;
-    box-shadow: none;
-    transform-style: preserve-3d;
-    will-change: transform;
-    animation: calmLevitate 6.8s ease-in-out infinite alternate;
+    height: 100%;
+    border-radius: var(--radius-inset);
+    object-fit: cover;
+    object-position: 50% 25%;
   }
 
-  .tkt-paper-texture {
-    position: absolute;
-    inset: 0;
-    border-radius: 4px;
-    opacity: 0.25;
-    background-image: radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 0);
-    background-size: 4px 4px;
-    mix-blend-mode: multiply;
-    z-index: 2;
-  }
-
-  .tkt-card.is-interacting {
-    animation-play-state: paused;
-  }
-
-  @keyframes calmLevitate {
-    0% {
-      transform: perspective(800px) translateY(0px) rotateX(1.4deg) rotateY(-1.8deg);
-    }
-    50% {
-      transform: perspective(800px) translateY(-5px) rotateX(-1deg) rotateY(1.5deg);
-    }
-    100% {
-      transform: perspective(800px) translateY(2px) rotateX(1.8deg) rotateY(-1.2deg);
-    }
-  }
-
-  .tkt-inner-content {
-    transform-style: preserve-3d;
-    position: relative;
-    z-index: 5;
-  }
-
-  .tkt-photo-layer {
-    transform: translateZ(6px);
-    transition: transform 300ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  .tkt-stub-layer {
-    transform: translateZ(4px);
-  }
-
-  .tkt-glare {
-    position: absolute;
-    inset: 0;
-    border-radius: 4px;
-    pointer-events: none;
-    z-index: 8;
-    opacity: 0;
-    background: radial-gradient(
-      circle 180px at var(--glare-x, 50%) var(--glare-y, 50%),
-      rgba(255, 255, 255, 0.45) 0%,
-      rgba(255, 255, 255, 0.12) 45%,
-      transparent 75%
-    );
-    mix-blend-mode: overlay;
-    transition: opacity 280ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .tkt-card {
-      animation: none !important;
-      transform: none !important;
-    }
-    .tkt-photo-layer,
-    .tkt-stub-layer {
-      transform: none !important;
-    }
-  }
-
-  /* ─────────────────────────────────────────────────────────
-     SPACE10 DYNAMIC ASYMMETRIC DOMAIN FRAMES
-     ───────────────────────────────────────────────────────── */
-  .domain-frame {
-    position: relative;
-    overflow: hidden;
-    background-color: var(--surface-subtle);
-  }
-
-  .domain-img {
-    transition: transform 480ms cubic-bezier(0.23, 1, 0.32, 1);
-    will-change: transform;
-  }
-
-  @media (hover: hover) and (pointer: fine) {
-    .group:hover .domain-img {
-      transform: scale(1.03);
-    }
-  }
-
-  .domain-title {
-    transition: color 180ms ease;
-  }
-
-  .group:hover .domain-title {
+  .about-title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: 28px;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.01em;
     color: var(--text-primary);
   }
 
+  /* ── Story ────────────────────────────────────────────── */
+  .about-story {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .about-story p {
+    margin: 0;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--text-secondary);
+  }
+
+  .about-quote {
+    margin: 0;
+    padding: 4px 0 4px 20px;
+    border-left: 1px solid var(--border-default);
+    font-family: var(--font-title);
+    font-size: 22px;
+    line-height: 1.4;
+    color: var(--text-primary);
+  }
+
+  /* ── Gallery A: two masonry columns ───────────────────── */
+  .gallery {
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+  }
+
+  .gallery__col {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .shot {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .shot__frame {
+    padding: 4px;
+    border-radius: var(--radius-card);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+  }
+
+  .shot__well {
+    overflow: hidden;
+    border-radius: var(--radius-inset);
+    background: var(--surface-inset);
+  }
+
+  .shot :global(.shot__img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 480ms cubic-bezier(0.23, 1, 0.32, 1);
+  }
+
+  @media (max-width: 479px) {
+    .shot__well { height: auto !important; aspect-ratio: 4 / 5; }
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .shot:hover :global(.shot__img) { transform: scale(1.03); }
+  }
+
+  .shot__cap {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 0 2px;
+  }
+
+  .shot__title {
+    font-size: var(--text-sm);
+    font-weight: 500;
+    color: var(--text-primary);
+  }
+
+  .shot__note {
+    font-size: 13px;
+    line-height: 1.5;
+    color: var(--text-secondary);
+  }
+
+  .rewatch {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .rewatch__label {
+    font-size: var(--text-sm);
+    color: var(--text-secondary);
+  }
+
+  .rewatch__pill {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
   @media (prefers-reduced-motion: reduce) {
-    .domain-img {
-      transform: none !important;
-      transition: none !important;
-    }
+    .shot :global(.shot__img) { transition: none; }
   }
 </style>
-
-<script>
-  // ── Unified Physics-based 3D Card Tilt Controller (Profile Card) ──
-  function setup3DCardTilt() {
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    const cards = document.querySelectorAll<HTMLElement>('[data-tilt-card]');
-
-    cards.forEach((wrapper) => {
-      const target = wrapper.querySelector<HTMLElement>('[data-tilt-target]') || wrapper;
-      const glare = wrapper.querySelector<HTMLElement>('.tkt-glare');
-
-      let isHovering = false;
-      let isPressed = false;
-      let rafId: number | null = null;
-      let targetRotateX = 0;
-      let targetRotateY = 0;
-      let currentRotateX = 0;
-      let currentRotateY = 0;
-      let currentTranslateZ = 0;
-      let targetTranslateZ = 0;
-
-      const maxTilt = 9;
-
-      const updateSpring = () => {
-        if (isHovering) {
-          currentRotateX += (targetRotateX - currentRotateX) * 0.14;
-          currentRotateY += (targetRotateY - currentRotateY) * 0.14;
-          currentTranslateZ += (targetTranslateZ - currentTranslateZ) * 0.14;
-
-          target.style.transform = `perspective(900px) rotateX(${currentRotateX.toFixed(2)}deg) rotateY(${currentRotateY.toFixed(2)}deg) translateZ(${currentTranslateZ.toFixed(1)}px)`;
-
-          rafId = requestAnimationFrame(updateSpring);
-        }
-      };
-
-      const onPointerMove = (e: PointerEvent) => {
-        const rect = wrapper.getBoundingClientRect();
-        if (rect.width === 0 || rect.height === 0) return;
-
-        const x = e.clientX - rect.left;
-        const y = e.clientY - rect.top;
-
-        const centerX = rect.width / 2;
-        const centerY = rect.height / 2;
-
-        const normX = Math.max(-1, Math.min(1, (x - centerX) / centerX));
-        const normY = Math.max(-1, Math.min(1, (y - centerY) / centerY));
-
-        targetRotateY = normX * maxTilt;
-        targetRotateX = -normY * maxTilt;
-        targetTranslateZ = isPressed ? -2 : 4;
-
-        if (glare) {
-          const glareX = (x / rect.width) * 100;
-          const glareY = (y / rect.height) * 100;
-          glare.style.setProperty('--glare-x', `${glareX.toFixed(1)}%`);
-          glare.style.setProperty('--glare-y', `${glareY.toFixed(1)}%`);
-          glare.style.opacity = '0.35';
-        }
-      };
-
-      wrapper.addEventListener('pointerenter', () => {
-        isHovering = true;
-        isPressed = false;
-        target.style.transition = 'none';
-        if (rafId) cancelAnimationFrame(rafId);
-        rafId = requestAnimationFrame(updateSpring);
-      });
-
-      wrapper.addEventListener('pointermove', onPointerMove);
-
-      wrapper.addEventListener('pointerdown', (e: PointerEvent) => {
-        if (e.button !== 0) return;
-        isPressed = true;
-      });
-
-      wrapper.addEventListener('pointerup', () => {
-        isPressed = false;
-      });
-
-      wrapper.addEventListener('pointerleave', () => {
-        isHovering = false;
-        isPressed = false;
-        targetRotateX = 0;
-        targetRotateY = 0;
-        targetTranslateZ = 0;
-
-        if (glare) {
-          glare.style.opacity = '0';
-        }
-
-        target.style.transition = 'transform 380ms cubic-bezier(0.23, 1, 0.32, 1)';
-        target.style.transform = 'perspective(900px) rotateX(0deg) rotateY(0deg) translateZ(0px)';
-      });
-    });
-  }
-
-  function initAboutPage() {
-    setup3DCardTilt();
-  }
-
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAboutPage);
-  } else {
-    initAboutPage();
-  }
-  document.addEventListener('astro:page-load', initAboutPage);
-</script>

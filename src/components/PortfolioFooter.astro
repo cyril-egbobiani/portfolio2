@@ -1,5 +1,5 @@
 ---
-// PortfolioFooter.astro — One quiet line: local time and back to top.
+// PortfolioFooter.astro — The one footer used on every page: Lagos time and back to top.
 // `compact` is the tighter spacing used on reading pages, where the page has
 // already ended on its own "Next" link.
 interface Props {
@@ -9,102 +9,75 @@ interface Props {
 const { compact = false } = Astro.props;
 ---
 
-{compact ? (
-<footer class="footer-compact" id="footer">
-  <span class="font-sans text-[14px] text-[var(--text-secondary)] tabular-nums">
-    <span data-lagos-time></span>WAT (UTC+1)
-  </span>
-  <button type="button" class="back-top-text" data-back-top aria-label="Scroll back to top" title="Back to top">
-    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-      <path d="M12 19V5M5 12l7-7 7 7" />
-    </svg>
+<!-- One footer for every page: Lagos time in mono, and back to top.
+     The time is filled in by the script below, so every page shows it the same way. -->
+<footer class:list={['site-footer', { 'site-footer--compact': compact }]} id="footer">
+  <span class="site-footer__time"><span data-lagos-time></span>WAT (UTC+1)</span>
+  <button type="button" class="site-footer__top" data-back-top aria-label="Scroll back to top" title="Back to top">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 13V3M4 7l4-4 4 4"/></svg>
   </button>
 </footer>
-) : (
-<footer class="flex flex-col gap-6 pb-12 reveal-item" id="footer">
-  <div class="flex items-center justify-between gap-6">
-    <!-- Brand Stamp & Time Zone -->
-    <div class="flex items-center">
-      <p class="m-0 font-sans text-[14px] text-[var(--text-muted)] tracking-tight flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
-        <span class="font-mono text-[14px] text-[var(--text-secondary)] tracking-normal">
-          <span data-lagos-time></span>WAT (UTC+1)
-        </span>
-      </p>
-    </div>
-
-    <!-- Right: MingCute Circular Back-to-Top Icon Button -->
-    <div class="flex items-center">
-      <button
-        type="button"
-        class="back-top-btn group inline-flex items-center justify-center w-8 h-8 rounded-full bg-[var(--bg-surface)] hover:bg-[var(--bg-surface)] hover:bg-black/10 dark:hover:bg-white/15 text-[var(--text-primary)] transition-all duration-200 active:scale-[0.96] border-none cursor-pointer"
-        data-back-top
-        aria-label="Scroll back to top"
-        title="Back to top"
-      >
-        <svg class="size-4 transition-transform duration-200 group-hover:-translate-y-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 19V5M5 12l7-7 7 7" />
-        </svg>
-      </button>
-    </div>
-  </div>
-</footer>
-)}
 
 <style>
-  .footer-compact {
+  .site-footer {
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 16px;
-    /* No divider of its own: case studies already end on the Next card */
-    padding: 0 0 40px;
+    padding-bottom: 48px;
   }
 
-  .back-top-text {
+  /* Reading pages already end on their own links, so less space below */
+  .site-footer--compact {
+    padding-bottom: 40px;
+  }
+
+  .site-footer__time {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .site-footer__top {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 32px;
-    height: 32px;
-    margin-right: -8px;
+    width: 36px;
+    height: 36px;
     padding: 0;
     border: 0;
     border-radius: 9999px;
-    background: transparent;
-    color: var(--text-muted);
-    font: 400 var(--text-sm) / 1 var(--font-sans);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    color: var(--text-secondary);
     cursor: pointer;
     -webkit-tap-highlight-color: transparent;
-    transition:
-      color 160ms ease,
-      background-color 160ms ease,
-      transform 140ms var(--ease-smooth-out);
+    transition: color 160ms var(--ease-smooth-out), transform 140ms var(--ease-smooth-out);
   }
 
-  .back-top-text svg {
+  .site-footer__top svg {
     transition: transform 200ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .back-top-text:hover {
-      color: var(--text-primary);
-      background: var(--surface-subtle);
-    }
-
-    .back-top-text:hover svg {
-      transform: translateY(-2px);
-    }
+    .site-footer__top:hover { color: var(--text-primary); }
+    .site-footer__top:hover svg { transform: translateY(-2px); }
   }
 
-  .back-top-text:active {
-    transform: scale(0.96);
-  }
+  .site-footer__top:active { transform: scale(0.94); }
 
-  .back-top-text:focus-visible {
-    outline: 2px solid var(--text-primary);
+  .site-footer__top:focus-visible {
+    outline: 2px solid var(--brand);
     outline-offset: 2px;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .site-footer__top,
+    .site-footer__top svg { transition: none; }
+  }
 </style>
 
 <script>

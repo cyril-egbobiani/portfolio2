@@ -1,248 +1,168 @@
 ---
-// ProjectsSection.astro
-// One large card per project, linking to /projects/<slug>.
-// Only projects with a real screenshot appear: at this card size a generated
-// placeholder reads as a missing image rather than as design. Add a shot to
-// src/data/projects.ts and put the slug in `buildOrder` to bring one back.
-//
-// Design case studies (src/content/designs) are not shown here. Every entry in
-// that collection is still a draft, so the tab that used to sit beside "Work"
-// only ever opened an empty state. The /designs/<slug> route and DesignThumb
-// are untouched and the tab can return the day there is one to show.
+// ProjectsSection.astro — Work, as a 2-column grid of ring cards.
+// Each card: a 4px frame, a grey well holding the screenshot (or the project's
+// name in mono while it has none), then title, year and one line.
+// Year comes from the case study frontmatter so it never drifts from the page.
 import { Image } from 'astro:assets';
 import { getCollection } from 'astro:content';
 import { projects } from '../data/projects';
-import NavArrow from './NavArrow.astro';
 
-const buildOrder = ['forge', 'fbdil-attendance', 'gdg-babcock'];
+const order = ['forge', 'gdg-babcock', 'fbdil-attendance', '9to5er', 'model-portfolio', 'token-extractor'];
 
-// The case studies are the source of truth for year and stack, so a card's
-// meta line never drifts from the page it opens. Reordering `stack:` in the
-// frontmatter changes which two technologies a card advertises.
 const studies = await getCollection('projects', ({ data }) => import.meta.env.DEV || !data.draft);
 
-const builds = buildOrder.flatMap((slug) => {
+const cards = order.flatMap((slug) => {
   const project = projects.find((p) => p.slug === slug);
-  if (!project?.thumbnailImage) return [];
+  if (!project) return [];
   const study = studies.find((s) => s.id === slug);
-  const stack = (study?.data.stack ?? [])
-    .map((item) => item.replace(/\s*\([^)]*\)/g, '').trim()) // "Flutter (Dart)" → "Flutter"
-    .slice(0, 2);
   return [{
     slug,
     title: project.title,
     blurb: project.shortBlurb,
     image: project.thumbnailImage,
     device: project.deviceType,
-    meta: [study?.data.year, stack.join(', ')].filter(Boolean).join(' · '),
+    year: study?.data.year,
+    hasPage: Boolean(study),
   }];
 });
 ---
 
 <section class="flex flex-col gap-6 scroll-mt-20 sm:scroll-mt-24" id="projects">
-
   <div class="section-head reveal-item">
     <div class="section-head__text">
       <h2 class="section-title">Work</h2>
     </div>
-    <span class="section-aside">tap a project for the details</span>
   </div>
 
-  <div class="bento">
-    {builds.map((tile, index) => (
+  <div class="work-grid">
+    {cards.map((card, index) => (
       <a
-        href={`/projects/${tile.slug}`}
-        data-astro-prefetch
-        class={`bento-item reveal-item reveal-delay-${(index % 4) + 1}`}
+        href={card.hasPage ? `/projects/${card.slug}` : undefined}
+        data-astro-prefetch={card.hasPage ? '' : undefined}
+        class={`work-card reveal-item reveal-delay-${(index % 4) + 1}`}
       >
-        <div class="bento-tile">
-          <div class="bento-art">
+        <div class="work-card__well">
+          {card.image ? (
             <Image
-              src={tile.image}
-              alt={`${tile.title} preview`}
-              widths={tile.device === 'phone' ? [240, 480] : [640, 1280]}
-              sizes={tile.device === 'phone' ? '(min-width: 640px) 200px, 45vw' : '(min-width: 640px) 580px, 86vw'}
-              class={`bento-shot bento-shot--${tile.device}`}
-              loading={index === 0 ? 'eager' : 'lazy'}
+              src={card.image}
+              alt={`${card.title} preview`}
+              widths={card.device === 'phone' ? [160, 320] : [320, 640]}
+              sizes="(min-width: 640px) 300px, 90vw"
+              class={`work-card__shot work-card__shot--${card.device}`}
+              loading={index < 2 ? 'eager' : 'lazy'}
               decoding="async"
             />
+          ) : (
+            <span class="meta-mono">[ {card.title.toUpperCase()} ]</span>
+          )}
+        </div>
+
+        <div class="work-card__text">
+          <div class="work-card__head">
+            <h3 class="work-card__title">{card.title}</h3>
+            {card.year && <span class="meta-mono">{card.year}</span>}
           </div>
+          <p class="work-card__blurb">{card.blurb}</p>
         </div>
-
-        <!-- The whole card is the link and the section head already says so,
-             so the name carries a bare arrow instead of a worded label. -->
-        <div class="bento-head">
-          <h3 class="bento-title">{tile.title}</h3>
-          <span class="bento-cta" aria-hidden="true">
-            <NavArrow direction="right" size={12} />
-          </span>
-        </div>
-
-        <p class="bento-blurb">{tile.blurb}</p>
-
-        <!-- Year and stack, on a hairline -->
-        <span class="bento-meta">{tile.meta}</span>
       </a>
     ))}
   </div>
 </section>
 
 <style>
-  /* ── One column of large cards ────────────────────────── */
-  .bento {
+  .work-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    gap: 16px;
   }
 
-  @media (min-width: 640px) {
-    .bento {
-      gap: 48px;
-    }
+  @media (min-width: 560px) {
+    .work-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   }
 
-  .bento-item {
+  /* Ring card: 10 = 6 + 4 */
+  .work-card {
     display: flex;
     flex-direction: column;
-    min-width: 0;
+    gap: 8px;
+    padding: 4px;
+    border-radius: var(--radius-card);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    color: var(--text-primary);
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
+    transition: transform 320ms var(--ease-bounce);
   }
 
-  .bento-tile {
+  .work-card__well {
     position: relative;
-    aspect-ratio: 4 / 3.4;
-    overflow: hidden;
-    border-radius: 18px;
-    background: var(--surface-subtle);
-    transition: transform 360ms var(--ease-bounce);
-  }
-
-  @media (min-width: 640px) {
-    .bento-tile {
-      aspect-ratio: 16 / 10;
-      border-radius: 20px;
-    }
-  }
-
-  .bento-art {
-    position: absolute;
-    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: transform 520ms cubic-bezier(0.23, 1, 0.32, 1);
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    box-sizing: border-box;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-inset);
+    background: var(--surface-inset);
   }
 
-  /* Screenshots sit straight on the tile, whole and uncropped */
-  .bento-shot {
+  .work-card__shot {
     display: block;
     width: auto;
     height: auto;
-    max-width: 84%;
-    max-height: 84%;
     object-fit: contain;
+    transition: transform 520ms cubic-bezier(0.23, 1, 0.32, 1);
   }
 
-  /* Phone screens fill more of their narrow tile */
-  .bento-shot--phone {
-    max-width: 88%;
-    max-height: 86%;
+  .work-card__shot--phone { max-height: 90%; max-width: 70%; }
+  .work-card__shot--desktop { max-height: 82%; max-width: 88%; }
+
+  .work-card__text {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 4px 6px 6px;
   }
 
-  .bento-shot--desktop {
-    max-width: 86%;
-    max-height: 78%;
-  }
-
-  /* ── Card text ────────────────────────────────────────── */
-  .bento-head {
+  .work-card__head {
     display: flex;
     align-items: baseline;
     justify-content: space-between;
     gap: 12px;
-    margin-top: 12px;
   }
 
-  .bento-title {
+  .work-card__title {
     margin: 0;
-    font-size: var(--text-base);
+    font-size: 15px;
     font-weight: 500;
     line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
-
-  .bento-cta {
-    display: inline-flex;
-    align-items: center;
-    flex-shrink: 0;
-    color: var(--text-faint);
-    transition: color 200ms var(--ease-smooth-out);
-  }
-
-  .bento-cta :global(svg) {
-    transform: translateX(-2px);
-    transition: transform 200ms var(--ease-smooth-out);
-  }
-
-  .bento-blurb {
-    margin: 3px 0 0;
-    font-size: var(--text-base);
-    line-height: 1.55;
     letter-spacing: -0.01em;
-    color: var(--text-muted);
+  }
+
+  .work-card__blurb {
+    margin: 0;
+    font-size: var(--text-sm);
+    line-height: 1.5;
+    color: var(--text-secondary);
     text-wrap: pretty;
   }
 
-  .bento-meta {
-    display: block;
-    margin-top: 12px;
-    padding-top: 10px;
-    border-top: 1px solid var(--border-subtle);
-    font-size: var(--text-sm);
-    color: var(--text-muted);
-    letter-spacing: 0.005em;
-  }
-
-  /* ── Hover: the tile lifts, its art zooms, the arrow leans in ── */
   @media (hover: hover) and (pointer: fine) {
-    .bento-item:hover .bento-tile {
-      transform: translateY(-3px);
-    }
-
-    .bento-item:hover .bento-art {
-      transform: scale(1.04);
-    }
-
-    .bento-item:hover .bento-cta {
-      color: var(--text-primary);
-    }
-
-    .bento-item:hover .bento-cta :global(svg) {
-      transform: translateX(1px);
-    }
+    .work-card[href]:hover { transform: translateY(-2px); }
+    .work-card[href]:hover .work-card__shot { transform: scale(1.04); }
   }
 
-  .bento-item:active .bento-tile {
-    transform: scale(0.985);
-  }
+  .work-card[href]:active { transform: scale(0.985); }
 
-  .bento-item:focus-visible {
-    outline: none;
-  }
-
-  .bento-item:focus-visible .bento-tile {
-    outline: 2px solid var(--text-primary);
+  .work-card:focus-visible {
+    outline: 2px solid var(--brand);
     outline-offset: 3px;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .bento-tile,
-    .bento-art,
-    .bento-cta,
-    .bento-cta :global(svg) {
-      transition: none;
-    }
+    .work-card,
+    .work-card__shot { transition: none; }
   }
 </style>

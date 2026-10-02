@@ -1,82 +1,71 @@
 ---
+// 404 — on the design system: top bar, mono status, serif heading, pills.
 import Layout from '../components/Layout.astro';
-import ThemeToggle from '../components/ThemeToggle.astro';
-import NavArrow from '../components/NavArrow.astro';
+import PageTopNav from '../components/PageTopNav.astro';
+
+const places = [
+  { href: '/#projects', label: 'Work' },
+  { href: '/journal', label: 'Journal' },
+  { href: '/about', label: 'About' },
+  { href: '/#contact', label: 'Contact' },
+];
 ---
 
 <Layout title="404: Page Not Found | Cyril Egbobiani">
-  <main id="content" tabindex="-1" class="flex min-h-screen flex-col justify-center bg-[var(--surface)] px-6 py-8 sm:px-8 sm:py-12 font-[var(--font-sans)] text-[var(--text-primary)]">
-    
-    <div class="mx-auto flex w-full max-w-[660px] flex-col gap-12">
-      
-      <!-- Top Nav Header -->
-      <header class="flex w-full items-center justify-between">
-        <a
-          href="/"
-          class="inline-flex size-9 items-center justify-center rounded-full bg-[var(--surface-subtle)] text-[var(--text-secondary)] no-underline transition-[background-color,color] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] hover:text-[var(--text-primary)] active:scale-[0.95]"
-          aria-label="Back to home"
-        >
-          <NavArrow direction="left" size={16} />
-        </a>
+  <PageTopNav />
 
-        <ThemeToggle />
-      </header>
+  <main id="content" tabindex="-1" class="flex min-h-screen flex-col justify-center bg-[var(--surface)] px-6 py-24 sm:px-8 font-[var(--font-sans)] text-[var(--text-primary)]">
+    <div class="mx-auto flex w-full max-w-[640px] flex-col items-start gap-6">
+      <span class="nf-status"><span class="nf-dot" aria-hidden="true"></span>404 · PAGE NOT FOUND</span>
 
-      <!-- Main 404 Hero Content -->
-      <div class="flex flex-col items-start gap-6 py-12">
-        
-        <!-- Status Badge Pill -->
-        <div class="flex items-center gap-2 rounded-[4px] bg-[var(--surface-subtle)] px-2.5 py-1">
-          <span class="relative flex size-2 items-center justify-center">
-            <span class="relative inline-flex size-1.5 rounded-full bg-[var(--text-primary)]"></span>
-          </span>
-          <span class="font-sans text-xs text-[var(--text-muted)] tracking-tight">404 · Page Not Found</span>
-        </div>
-
-        <!-- Heading & Copy -->
-        <div class="flex flex-col gap-3">
-          <h1 class="m-0 font-[family-name:var(--font-title)] text-[length:var(--text-display)] font-normal leading-[var(--leading-heading)] tracking-[-0.01em] text-[var(--text-primary)]">
-            How did you get here?
-          </h1>
-          <p class="m-0 max-w-md font-sans text-[16px] leading-[1.62] text-[var(--text-secondary)] font-normal">
-            The page you requested doesn't exist, has been removed, or moved to the main showcase.
-          </p>
-        </div>
-
-        <!-- Somewhere to go: home, or straight to what people usually came for -->
-        <div class="flex flex-wrap items-center gap-2 pt-2">
-          <a
-            href="/"
-            class="inline-flex items-center gap-2 rounded-[6px] bg-[var(--surface-subtle)] px-4 py-2.5 font-sans text-[14px] font-medium text-[var(--text-primary)] no-underline transition-[background-color,transform] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-interactive)] active:scale-[0.97]"
-          >
-            <NavArrow direction="left" size={15} />
-            <span>Return to Homepage</span>
-          </a>
-
-          {[
-            { href: '/#projects', label: 'Work' },
-            { href: '/journal', label: 'Journal' },
-            { href: '/about', label: 'About' },
-            { href: '/#contact', label: 'Contact' },
-          ].map((link) => (
-            <a
-              href={link.href}
-              class="inline-flex items-center rounded-[6px] px-3 py-2.5 font-sans text-[14px] font-medium text-[var(--text-secondary)] no-underline transition-[background-color,color] duration-200 ease-[var(--ease-smooth-out)] hover:bg-[var(--surface-subtle)] hover:text-[var(--text-primary)]"
-            >
-              {link.label}
-            </a>
-          ))}
-        </div>
-
+      <div class="flex flex-col gap-3">
+        <h1 class="nf-title">How did you get here?</h1>
+        <p class="nf-copy">The page you requested doesn't exist, has been removed, or moved to the main showcase.</p>
       </div>
 
+      <div class="flex flex-wrap items-center gap-2 pt-2">
+        <a href="/" class="btn btn-primary">Back home</a>
+        {places.map((place) => <a href={place.href} class="btn btn-secondary">{place.label}</a>)}
+      </div>
     </div>
-
   </main>
 </Layout>
 
 <style>
-  a:active {
-    transform: scale(0.97);
+  .nf-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .nf-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 9999px;
+    background: var(--brand);
+  }
+
+  .nf-title {
+    margin: 0;
+    font-family: var(--font-title);
+    font-size: clamp(28px, 6vw, 36px);
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.015em;
+  }
+
+  .nf-copy {
+    margin: 0;
+    max-width: 46ch;
+    font-size: var(--text-base);
+    line-height: 1.7;
+    color: var(--text-secondary);
   }
 </style>

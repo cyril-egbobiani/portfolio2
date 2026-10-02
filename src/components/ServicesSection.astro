@@ -1,49 +1,18 @@
 ---
 // ServicesSection.astro — What I do.
-// Three always-visible rows. Each one names the tools actually used and links to
-// the work that proves it, so the claim and the evidence sit side by side.
-// Each row keeps its hand-drawn line mark: no fill, round caps, a small motion on hover.
-interface Proof {
-  label: string;
+// One row per service: a framed tile with a tinted well and a line icon, the
+// title, and the tools in grey on the right (under the title on small screens).
+interface Service {
+  id: 'mobile' | 'web' | 'design';
+  title: string;
+  stack: string;
   href: string;
 }
 
-interface Service {
-  id: string;
-  mark: 'mobile' | 'web' | 'product';
-  title: string;
-  summary: string;
-  proof: Proof[];
-}
-
 const services: Service[] = [
-  {
-    id: 'mobile',
-    mark: 'mobile',
-    title: 'Mobile apps',
-    summary: 'Cross-platform apps in Flutter, from design tokens through to real-time features.',
-    proof: [{ label: 'Forge', href: '/projects/forge' }],
-  },
-  {
-    id: 'web',
-    mark: 'web',
-    title: 'Web products',
-    summary: 'Sites and web apps in React, TypeScript, and Astro that load quickly and are easy to find your way around.',
-    proof: [
-      { label: '9to5er', href: '/projects/9to5er' },
-      { label: 'Dubem', href: '/projects/model-portfolio' },
-    ],
-  },
-  {
-    id: 'design',
-    mark: 'product',
-    title: 'Product design & design engineering',
-    summary: 'Research, flows, and interfaces in Figma and Jitter, carried through to motion and detail in code.',
-    proof: [
-      { label: 'Token Extractor', href: '/projects/token-extractor' },
-      { label: 'Design work', href: '/#designs' },
-    ],
-  },
+  { id: 'mobile', title: 'Mobile apps', stack: 'Flutter, cross-platform, real-time', href: '/projects/forge' },
+  { id: 'web', title: 'Web products', stack: 'React, TypeScript, Astro', href: '/projects/9to5er' },
+  { id: 'design', title: 'Product design', stack: 'Figma, Jitter, design engineering', href: '/projects/token-extractor' },
 ];
 ---
 
@@ -56,52 +25,46 @@ const services: Service[] = [
 
   <ul class="service-list" role="list">
     {services.map((service) => (
-      <li class="service-item">
-        <span class="service-mark" aria-hidden="true">
-          {service.mark === 'mobile' && (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="5" y="2" width="14" height="20" rx="3" />
-              <path d="M12 18h.01" stroke-width="2" />
-              <circle class="mark-anim-element mark-anim-element--touch-tap" cx="12" cy="10" r="3.5" fill="var(--surface-interactive)" opacity="0.4" stroke-width="1.2" />
-              <circle cx="12" cy="10" r="1.2" fill="currentColor" />
-            </svg>
-          )}
-          {service.mark === 'web' && (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="3" width="18" height="18" rx="3" />
-              <path d="M3 8h18" stroke-width="1.4" />
-              <circle cx="6" cy="5.5" r="0.75" fill="currentColor" />
-              <circle cx="8.5" cy="5.5" r="0.75" fill="currentColor" opacity="0.6" />
-              <g class="mark-anim-element mark-anim-element--url-sweep">
-                <path d="M11 5.5h4" stroke-width="1.4" stroke-linecap="round" />
-              </g>
-              <rect x="6" y="11" width="12" height="7" rx="1.5" fill="var(--surface-interactive)" opacity="0.5" stroke-width="1.2" />
-            </svg>
-          )}
-          {service.mark === 'product' && (
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
-              <rect x="3" y="4" width="18" height="16" rx="2.5" />
-              <path d="M7 8h10M7 12h6" stroke-width="1.4" opacity="0.6" />
-              <path d="M6 16c4 0 6-3 10-3" stroke-width="1.4" stroke-dasharray="3 2" />
-              <circle cx="16" cy="13" r="1.2" fill="currentColor" />
-              <g class="mark-anim-element mark-anim-element--vector-draw" style="transform-origin: 16px 13px;">
-                <path d="M14 8l5.5-5.5a1.5 1.5 0 0 1 2 2L16 10l-2 1 1-3Z" fill="var(--surface-interactive)" opacity="0.9" stroke-width="1.4" />
-              </g>
-            </svg>
-          )}
+      <li class={`service service--${service.id}`}>
+        <span class="service__tile" aria-hidden="true">
+          <span class="service__well">
+            {service.id === 'mobile' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="5" y="2" width="14" height="20" rx="3" />
+                <path d="M12 18h.01" stroke-width="2" />
+                <circle class="anim anim--tap" cx="12" cy="10" r="3.5" fill="currentColor" fill-opacity="0.18" stroke-width="1.2" />
+                <circle cx="12" cy="10" r="1.2" fill="currentColor" />
+              </svg>
+            )}
+            {service.id === 'web' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="3" width="18" height="18" rx="3" />
+                <path d="M3 8h18" stroke-width="1.4" />
+                <circle cx="6" cy="5.5" r="0.75" fill="currentColor" />
+                <circle cx="8.5" cy="5.5" r="0.75" fill="currentColor" opacity="0.6" />
+                <g class="anim anim--sweep">
+                  <path d="M11 5.5h4" stroke-width="1.4" />
+                </g>
+                <rect x="6" y="11" width="12" height="7" rx="1.5" fill="currentColor" fill-opacity="0.18" stroke-width="1.2" />
+              </svg>
+            )}
+            {service.id === 'design' && (
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="3" y="4" width="18" height="16" rx="2.5" />
+                <path d="M7 8h10M7 12h6" stroke-width="1.4" opacity="0.6" />
+                <path d="M6 16c4 0 6-3 10-3" stroke-width="1.4" stroke-dasharray="3 2" />
+                <circle cx="16" cy="13" r="1.2" fill="currentColor" />
+                <g class="anim anim--pen" style="transform-origin: 16px 13px;">
+                  <path d="M14 8l5.5-5.5a1.5 1.5 0 0 1 2 2L16 10l-2 1 1-3Z" fill="var(--tint-bg)" stroke-width="1.4" />
+                </g>
+              </svg>
+            )}
+          </span>
         </span>
 
-        <div class="service-body">
-          <h3 class="service-title">{service.title}</h3>
-          <p class="service-summary">{service.summary}</p>
-          <p class="service-proof">
-            {service.proof.map((item, index) => (
-              <>
-                {index > 0 && <span aria-hidden="true">·</span>}
-                <a href={item.href} data-astro-prefetch>{item.label}</a>
-              </>
-            ))}
-          </p>
+        <div class="service__body">
+          <h3 class="service__title"><a href={service.href} data-astro-prefetch>{service.title}</a></h3>
+          <span class="service__stack">{service.stack}</span>
         </div>
       </li>
     ))}
@@ -112,138 +75,112 @@ const services: Service[] = [
   .service-list {
     display: flex;
     flex-direction: column;
+    gap: 8px;
     margin: 0;
     padding: 0;
     list-style: none;
   }
 
-  .service-item {
+  .service {
     display: flex;
+    align-items: center;
     gap: 14px;
-    padding: 18px 0;
+    min-height: 44px;
+    padding: 4px 0;
   }
 
-  .service-item:first-child {
-    padding-top: 4px;
-  }
+  .service--mobile { --tint-bg: var(--tint-mobile-bg); --tint-ink: var(--tint-mobile-ink); }
+  .service--web { --tint-bg: var(--tint-web-bg); --tint-ink: var(--tint-web-ink); }
+  .service--design { --tint-bg: var(--tint-design-bg); --tint-ink: var(--tint-design-ink); }
 
-  .service-item + .service-item {
-    border-top: 1px solid var(--border-subtle);
-  }
-
-  /* The hand-drawn mark */
-  .service-mark {
-    display: flex;
+  /* Framed tile: 44 = 4 + 36 + 4, corners 10 = 6 + 4 */
+  .service__tile {
     flex-shrink: 0;
-    width: 28px;
-    height: 28px;
-    margin-top: 1px;
-    color: var(--text-faint);
-    transition: color var(--duration-fast) var(--ease-smooth-out);
+    width: 44px;
+    height: 44px;
+    padding: 4px;
+    box-sizing: border-box;
+    border-radius: var(--radius-card);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
   }
 
-  .service-mark svg {
+  .service__well {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
+    box-sizing: border-box;
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-inset);
+    background: var(--tint-bg);
+    color: var(--tint-ink);
   }
 
-  .service-body {
+  .service__body {
     flex: 1;
     min-width: 0;
-  }
-
-  .service-title {
-    margin: 0;
-    font-size: var(--text-base);
-    font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
-  }
-
-  .service-summary {
-    max-width: 54ch;
-    margin: 4px 0 0;
-    font-size: var(--text-base);
-    line-height: 1.65;
-    color: var(--text-secondary);
-  }
-
-  .service-proof {
     display: flex;
     flex-wrap: wrap;
     align-items: baseline;
-    gap: 0 8px;
-    margin: 8px 0 0;
+    justify-content: space-between;
+    gap: 2px 16px;
+  }
+
+  .service__title {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 500;
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+  }
+
+  .service__title a {
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .service__title a:hover {
+    text-decoration: underline;
+    text-decoration-color: var(--tint-ink);
+    text-underline-offset: 3px;
+  }
+
+  .service__stack {
     font-size: var(--text-sm);
     color: var(--text-muted);
   }
 
-  .service-proof a {
-    color: var(--text-primary);
-    text-decoration: underline;
-    text-decoration-color: var(--border-default);
-    text-underline-offset: 3px;
-    transition: text-decoration-color 160ms var(--ease-smooth-out);
-  }
-
-  .service-proof a:hover {
-    text-decoration-color: var(--text-primary);
-  }
-
-  @media (min-width: 640px) {
-    .service-item {
-      gap: 18px;
-    }
-
-    .service-mark {
-      width: 32px;
-      height: 32px;
-    }
-
-    .service-title {
-      font-size: var(--text-base);
-    }
-
-    .service-summary {
-      font-size: var(--text-base);
-    }
-  }
-
-  /* Small motion in each mark when its row is hovered */
-  .mark-anim-element {
+  /* The original hover motions: a tap pulse, the URL bar sweeping, the pen lifting */
+  .anim {
     transition:
       transform var(--duration-medium) var(--ease-smooth-out),
       opacity var(--duration-medium) var(--ease-smooth-out);
   }
 
-  @media (hover: hover) and (pointer: fine) {
-    .service-item:hover .service-mark {
-      color: var(--text-muted);
-    }
+  .anim--tap { transform-box: fill-box; transform-origin: center; }
 
-    .service-item:hover .mark-anim-element--touch-tap {
-      animation: touchPulse 2s cubic-bezier(0.23, 1, 0.32, 1) infinite;
-    }
-
-    .service-item:hover .mark-anim-element--url-sweep {
-      transform: translateX(3.5px);
-    }
-
-    .service-item:hover .mark-anim-element--vector-draw {
-      transform: rotate(-18deg) translateY(-1px);
-    }
+  .service__tile {
+    transition: transform 200ms var(--ease-smooth-out);
   }
 
-  @keyframes touchPulse {
+  @media (hover: hover) and (pointer: fine) {
+    .service:hover .service__tile { transform: translateY(-1px); }
+    .service:hover .anim--tap { animation: touch-pulse 2s cubic-bezier(0.23, 1, 0.32, 1) infinite; }
+    .service:hover .anim--sweep { transform: translateX(3.5px); }
+    .service:hover .anim--pen { transform: rotate(-18deg) translateY(-1px); }
+  }
+
+  @keyframes touch-pulse {
     0% { transform: scale(0.85); opacity: 0.9; }
     50% { transform: scale(1.18); opacity: 0.35; }
     100% { transform: scale(0.85); opacity: 0.9; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .service-mark,
-    .mark-anim-element {
+    .anim,
+    .service__tile {
       transition: none;
       animation: none !important;
     }

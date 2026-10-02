@@ -1,14 +1,15 @@
 ---
 // BottomNav.astro — One menu button with a quick sheet (homepage)
 // Closed: a small pill that names the section you're reading.
-// Open: a short sheet with every destination (keys 1–4 jump straight there)
-// and quick actions: copy email, résumé, LinkedIn, theme.
+// Open: a 300px menu card with every destination (keys 1–4 jump straight
+// there), then the email with a copy button, and the theme switch.
 
+// Line icons from the design system: 16px, 1.4 stroke, round caps
 const icons = {
-  projects: `<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" fill-rule="evenodd" clip-rule="evenodd" d="M2.069 5.258C2 5.626 2 6.067 2 6.95V14c0 3.771 0 5.657 1.172 6.828C4.343 22 6.229 22 10 22h4c3.771 0 5.657 0 6.828-1.172C22 19.657 22 17.771 22 14v-2.202c0-2.632 0-3.949-.77-4.804a3 3 0 0 0-.224-.225C20.151 6 18.835 6 16.202 6h-.374c-1.153 0-1.73 0-2.268-.153a4 4 0 0 1-.848-.352C12.224 5.224 11.816 4.816 11 4l-.55-.55c-.274-.274-.41-.41-.554-.53a4 4 0 0 0-2.18-.903C7.53 2 7.336 2 6.95 2c-.883 0-1.324 0-1.692.07A4 4 0 0 0 2.07 5.257M12.25 10a.75.75 0 0 1 .75-.75h5a.75.75 0 0 1 0 1.5h-5a.75.75 0 0 1-.75-.75"/></svg>`,
-  services: `<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M7 3.34c1.026-.592 2.209-.55 3.24-.13a5.35 5.35 0 0 1 1.82 1.254a5.9 5.9 0 0 1 1.804-1.21c.997-.413 2.142-.488 3.136.086s1.502 1.602 1.644 2.672a5.9 5.9 0 0 1-.147 2.169c.75.186 1.433.51 1.996.948c.88.684 1.507 1.688 1.507 2.872c0 1.178-.62 2.177-1.492 2.86a5.3 5.3 0 0 1-1.929.938c.197.722.25 1.453.152 2.139c-.155 1.096-.71 2.134-1.731 2.723c-1.026.592-2.209.55-3.24.131a5.35 5.35 0 0 1-1.819-1.255c-.55.53-1.165.946-1.805 1.211c-.997.413-2.142.487-3.136-.087S5.498 19.06 5.356 17.99a5.9 5.9 0 0 1 .147-2.169a5.35 5.35 0 0 1-1.996-.948C2.627 14.19 2 13.185 2 12.002c0-1.179.621-2.179 1.493-2.862a5.3 5.3 0 0 1 1.928-.938a5.3 5.3 0 0 1-.152-2.138C5.424 4.967 5.979 3.929 7 3.34m5 4.661a4 4 0 1 0 0 8a4 4 0 0 0 0-8m0 2a2 2 0 1 1 0 4a2 2 0 0 1 0-4"/></svg>`,
-  about: `<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 13c2.396 0 4.575.694 6.178 1.672c.8.489 1.484 1.064 1.978 1.69c.486.615.844 1.351.844 2.138c0 .845-.411 1.512-1.003 1.986c-.56.45-1.299.747-2.084.955C16.336 21.86 14.23 22 12 22s-4.336-.14-5.913-.559c-.785-.207-1.524-.505-2.084-.955C3.41 20.012 3 19.345 3 18.5c0-.787.358-1.523.844-2.139c.494-.625 1.178-1.2 1.978-1.69C7.425 13.695 9.605 13 12 13m0-11a5 5 0 1 1 0 10a5 5 0 0 1 0-10"/></svg>`,
-  journal: `<svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true"><g fill="currentColor"><path d="M5.655 2.227c-.432.113-.711.273-.928.486c-.305.299-.504.719-.613 1.512C4.002 5.042 4 6.124 4 7.676v8.568a4.7 4.7 0 0 1 1.299-.592q.17-.045.356-.072z"/><path d="M7.31 15.514h12.69V7.676c0-1.552-.002-2.634-.114-3.451c-.109-.793-.308-1.213-.613-1.512c-.306-.3-.735-.495-1.544-.601C16.896 2.002 15.79 2 14.207 2H9.793c-1.002 0-1.812 0-2.483.029z"/><path d="M7.473 17.135c-1.079 0-1.456.007-1.746.083a2.44 2.44 0 0 0-1.697 1.538q.024.574.084 1.019c.109.793.308 1.213.613 1.512c.306.3.735.495 1.544.601c.834.11 1.939.112 3.522.112h4.414c1.584 0 2.689-.002 3.522-.112c.81-.106 1.238-.301 1.544-.601c.305-.299.504-.719.613-1.512c.091-.666.11-1.51.113-2.64z"/></g></svg>`,
+  projects: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 4.5A1.5 1.5 0 0 1 3.5 3h3l1.5 1.5h4.5A1.5 1.5 0 0 1 14 6v5.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 11.5z"/></svg>`,
+  services: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M8 2l1.4 3.6L13 7l-3.6 1.4L8 12l-1.4-3.6L3 7l3.6-1.4z"/></svg>`,
+  about: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="5.5" r="2.5"/><path d="M3 13.5c.8-2.4 2.7-3.5 5-3.5s4.2 1.1 5 3.5"/></svg>`,
+  journal: `<svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 2.5h7a1.5 1.5 0 0 1 1.5 1.5v9.5H5A1.5 1.5 0 0 1 3.5 12V3A.5.5 0 0 1 4 2.5z"/><path d="M6 6h4M6 8.5h3"/></svg>`,
 };
 
 const links = [
@@ -37,35 +38,19 @@ const EMAIL = 'egbobianicyril@gmail.com';
       ))}
     </ul>
 
+    <div class="qm-divider" aria-hidden="true"></div>
+
     <div class="qm-actions" style="--i: 4">
-      <button type="button" class="qm-action qm-action--wide" data-qm-copy aria-label={`Copy email address ${EMAIL}`}>
-        <svg class="qm-copy-idle" width="16" height="16" viewBox="0.4 0.9 19.2 19.2" aria-hidden="true">
-          <path fill="currentColor" d="M18 7.373V14.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 2 14.5V7.373l7.746 4.558a.5.5 0 0 0 .508 0zM15.5 4a2.5 2.5 0 0 1 2.485 2.223L10 10.92L2.015 6.223A2.5 2.5 0 0 1 4.5 4z" />
-        </svg>
-        <svg class="qm-copy-done" width="16" height="16" viewBox="0.96 0.46 22.08 22.08" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <polyline points="20 6 9 17 4 12" />
-        </svg>
-        <span data-qm-copy-text>Copy email</span>
-      </button>
-      <a href="https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view" target="_blank" rel="noopener noreferrer" class="qm-action qm-action--wide">
-        <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="currentColor" d="M4 4a2 2 0 0 1 2-2h8.586a2 2 0 0 1 1.414.586l3.414 3.414A2 2 0 0 1 20 7.414V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2zm10 0v3a1 1 0 0 0 1 1h3zM8 12a1 1 0 0 0 0 2h8a1 1 0 1 0 0-2zm0 4a1 1 0 1 0 0 2h5a1 1 0 1 0 0-2z" />
-        </svg>
-        Résumé<span class="sr-only"> (opens in a new tab)</span>
-      </a>
-      <a href="https://www.linkedin.com/in/cyril-egbobiani-6802002b8/" target="_blank" rel="noopener noreferrer" class="qm-action" aria-label="LinkedIn (opens in a new tab)">
-        <svg width="16" height="16" viewBox="1.2 1.2 21.6 21.6" aria-hidden="true">
-          <path fill="currentColor" d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2zm-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93zM6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37z" />
-        </svg>
-      </a>
-      <button type="button" class="qm-action" data-qm-theme aria-label="Switch theme">
-        <svg class="qm-theme-sun" width="16" height="16" viewBox="-1.32 -1.32 26.64 26.64" fill="currentColor" aria-hidden="true">
-          <circle cx="12" cy="12" r="4.5" />
-          <path stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M12 2v2.5M12 19.5v2.5M4.93 4.93l1.77 1.77M17.3 17.3l1.77 1.77M2 12h2.5M19.5 12h2.5M4.93 19.07l1.77-1.77M17.3 6.7l1.77-1.77" />
-        </svg>
-        <svg class="qm-theme-moon" width="16" height="16" viewBox="1.2 1.2 21.6 21.6" fill="currentColor" aria-hidden="true">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.003 3a9 9 0 1 0 8.997 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1h.003z" />
-        </svg>
+      <div class="qm-email">
+        <span class="qm-email__text">{EMAIL}</span>
+        <button type="button" class="qm-chip" data-qm-copy aria-label={`Copy email address ${EMAIL}`}>
+          <svg class="qm-copy-idle" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="5" width="8.5" height="8.5" rx="1.5"/><path d="M3 10.5V3.5A1 1 0 0 1 4 2.5h6.5"/></svg>
+          <svg class="qm-copy-done" width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3.5 8.5l3 3 6-7"/></svg>
+        </button>
+      </div>
+      <button type="button" class="qm-square" data-qm-theme aria-label="Switch theme">
+        <svg class="qm-theme-moon" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M13 9.5A5.5 5.5 0 0 1 6.5 3a5.5 5.5 0 1 0 6.5 6.5z"/></svg>
+        <svg class="qm-theme-sun" width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" aria-hidden="true"><circle cx="8" cy="8" r="2.8"/><path d="M8 1.5v1.3M8 13.2v1.3M1.5 8h1.3M13.2 8h1.3M3.4 3.4l.9.9M11.7 11.7l.9.9M3.4 12.6l.9-.9M11.7 4.3l.9-.9"/></svg>
       </button>
     </div>
   </div>
@@ -129,28 +114,21 @@ const EMAIL = 'egbobianicyril@gmail.com';
     position: relative;
     display: grid;
     place-items: center;
-    width: 46px;
-    height: 46px;
+    width: 48px;
+    height: 48px;
     padding: 0;
     border: none;
     border-radius: 9999px;
-    /* Inverse, not the card grey it inherited from the pill. As a wordless
-       circle the old --surface-raised sat at 1.09:1 against the page — findable
-       only by its shadow. Inverse is 21:1 in both themes, and leaves teal free
-       for the one job it has: marking state, not decorating a control. */
-    background: var(--surface-inverse);
-    color: var(--text-on-inverse);
+    /* The primary button: soft dark in light mode, soft light in dark mode */
+    background: var(--btn-primary-bg);
+    color: var(--btn-primary-text);
     font-family: var(--font-sans);
-    box-shadow: 0 6px 18px -10px rgba(0, 0, 0, 0.35);
+    box-shadow: var(--shadow-btn);
     cursor: pointer;
     pointer-events: auto;
     -webkit-tap-highlight-color: transparent;
     transition: transform 160ms var(--ease-smooth-out);
     animation: qmIn 480ms cubic-bezier(0.23, 1, 0.32, 1) 150ms both;
-  }
-
-  :global([data-theme='dark']) .qm-button {
-    box-shadow: none;
   }
 
   @keyframes qmIn {
@@ -234,13 +212,14 @@ const EMAIL = 'egbobianicyril@gmail.com';
   /* ── The sheet ── */
   .qm-sheet {
     position: relative;
-    width: min(308px, calc(100vw - 32px));
-    margin-bottom: 10px;
+    width: min(300px, calc(100vw - 32px));
+    margin-bottom: 12px;
     padding: 6px;
-    border: 1px solid var(--qm-border);
-    border-radius: 20px;
-    background: var(--surface-raised);
-    box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.3);
+    box-sizing: border-box;
+    /* Card 14 = row 8 + pad 6. The float shadow is used here and nowhere else */
+    border-radius: var(--radius-menu);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-float);
     opacity: 0;
     transform: translateY(10px) scale(0.96);
     transform-origin: bottom center;
@@ -249,10 +228,6 @@ const EMAIL = 'egbobianicyril@gmail.com';
       opacity 200ms var(--ease-smooth-out),
       transform 280ms var(--ease-smooth-out),
       visibility 0s linear 280ms;
-  }
-
-  :global([data-theme='dark']) .qm-sheet {
-    box-shadow: none;
   }
 
   .qm[data-open] .qm-sheet {
@@ -267,6 +242,9 @@ const EMAIL = 'egbobianicyril@gmail.com';
   }
 
   .qm-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -294,12 +272,12 @@ const EMAIL = 'egbobianicyril@gmail.com';
   .qm-link {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
     height: 44px;
-    padding: 0 12px;
-    border-radius: 14px;
+    padding: 0 10px;
+    border-radius: var(--radius-tile);
     color: var(--text-primary);
-    font-size: var(--text-base);
+    font-size: 15px;
     font-weight: 500;
     letter-spacing: -0.01em;
     text-decoration: none;
@@ -312,39 +290,42 @@ const EMAIL = 'egbobianicyril@gmail.com';
   .qm-link__icon {
     display: grid;
     place-items: center;
-    color: var(--text-muted);
+    color: var(--text-secondary);
     transition: color 160ms var(--ease-smooth-out);
   }
 
+  /* Key chip: a tiny ring card */
   .qm-link__key {
-    display: grid;
-    place-items: center;
-    min-width: 22px;
-    height: 22px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    box-sizing: border-box;
     margin-left: auto;
-    border-radius: 6px;
-    background: var(--surface-subtle);
-    font-family: var(--font-sans);
-    font-size: 12px;
+    border-radius: 5px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    font-family: var(--font-mono);
+    font-size: 11px;
     color: var(--text-muted);
   }
 
+  /* Active row: rose tint, rose text */
   .qm-link[aria-current] {
-    background: var(--surface-interactive);
+    background: var(--brand-soft);
     color: var(--brand);
   }
 
-  .qm-link[aria-current] .qm-link__icon {
-    color: var(--brand);
-  }
-
+  .qm-link[aria-current] .qm-link__icon,
   .qm-link[aria-current] .qm-link__key {
-    background: var(--surface-raised);
+    color: var(--brand);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .qm-link:hover {
-      background: var(--surface-interactive);
+    .qm-link:not([aria-current]):hover {
+      background: var(--surface-inset);
     }
 
     .qm-link:hover .qm-link__icon {
@@ -363,81 +344,103 @@ const EMAIL = 'egbobianicyril@gmail.com';
     transform: scale(0.96);
   }
 
-  .qm-link:focus-visible,
-  .qm-action:focus-visible {
+  .qm-link:focus-visible {
     outline: 2px solid var(--brand);
     outline-offset: -2px;
   }
 
-  .qm-actions {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) 38px 38px;
-    gap: 6px;
-    margin-top: 6px;
-    padding-top: 6px;
-    border-top: 1px solid var(--border-subtle);
+  .qm-divider {
+    height: 1px;
+    margin: 4px 6px;
+    background: var(--border-subtle);
   }
 
-  .qm-action {
-    display: inline-flex;
+  /* Footer: the email in a well with a copy chip, then the theme square */
+  .qm-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 2px 4px 0;
+  }
+
+  .qm-email {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 40px;
+    padding: 0 4px 0 10px;
+    box-sizing: border-box;
+    border-radius: var(--radius-tile);
+    background: var(--surface-inset);
+  }
+
+  .qm-email__text {
+    min-width: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+
+  .qm-chip,
+  .qm-square {
+    flex-shrink: 0;
+    display: flex;
     align-items: center;
     justify-content: center;
-    gap: 7px;
-    height: 40px;
     padding: 0;
-    white-space: nowrap;
-    border: 0;
-    border-radius: 12px;
-    background: var(--surface-subtle);
+    border: none;
     color: var(--text-secondary);
-    font-family: var(--font-sans);
-    font-size: var(--text-sm);
-    font-weight: 500;
-    text-decoration: none;
     cursor: pointer;
-    transition:
-      background-color 160ms var(--ease-smooth-out),
-      color 160ms var(--ease-smooth-out),
-      transform 140ms var(--ease-smooth-out);
+    transition: color 160ms var(--ease-smooth-out), transform 140ms var(--ease-smooth-out), background-color 160ms var(--ease-smooth-out);
   }
 
-  /* Labelled actions keep breathing room around their icon and text */
-  /* Icons never get squeezed by the label beside them */
-  .qm-action svg,
-  .qm-link__icon :global(svg) {
-    flex-shrink: 0;
+  .qm-chip {
+    margin-left: auto;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--radius-inset);
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
   }
 
-  .qm-action--wide {
-    padding: 0 14px;
-    font-size: 13px;
+  .qm-square {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-tile);
+    background: var(--surface-inset);
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .qm-action:hover {
-      background: var(--surface-interactive);
-      color: var(--text-primary);
-    }
+    .qm-chip:hover,
+    .qm-square:hover { color: var(--text-primary); }
   }
 
-  .qm-action:active {
-    transform: scale(0.96);
+  .qm-chip:active,
+  .qm-square:active { transform: scale(0.94); }
+
+  .qm-chip:focus-visible,
+  .qm-square:focus-visible {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
   }
 
   .qm-copy-done,
-  .qm-action.is-copied .qm-copy-idle,
+  .qm-chip.is-copied .qm-copy-idle,
   .qm-theme-sun,
   :global([data-theme='dark']) .qm-theme-moon {
     display: none;
   }
 
-  .qm-action.is-copied .qm-copy-done,
+  .qm-chip.is-copied .qm-copy-done,
   :global([data-theme='dark']) .qm-theme-sun {
     display: block;
   }
 
-  /* Confirmation is the other place colour earns its keep */
-  .qm-action.is-copied {
+  .qm-chip.is-copied {
     background: var(--brand-soft);
     color: var(--brand);
   }
@@ -451,7 +454,8 @@ const EMAIL = 'egbobianicyril@gmail.com';
     .qm-list li,
     .qm-actions,
     .qm-link,
-    .qm-action {
+    .qm-chip,
+    .qm-square {
       transition: none !important;
       animation: none !important;
     }
@@ -475,7 +479,6 @@ const EMAIL = 'egbobianicyril@gmail.com';
     const hint = root.querySelector<HTMLElement>('[data-qm-hint]')!;
     const links = [...root.querySelectorAll<HTMLAnchorElement>('[data-qm-link]')];
     const copy = root.querySelector<HTMLButtonElement>('[data-qm-copy]');
-    const copyText = root.querySelector<HTMLElement>('[data-qm-copy-text]');
     const theme = root.querySelector<HTMLButtonElement>('[data-qm-theme]');
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -598,10 +601,10 @@ const EMAIL = 'egbobianicyril@gmail.com';
       try {
         await navigator.clipboard.writeText(EMAIL);
         copy.classList.add('is-copied');
-        if (copyText) copyText.textContent = 'Copied';
+        copy.setAttribute('aria-label', 'Email copied');
         setTimeout(() => {
           copy.classList.remove('is-copied');
-          if (copyText) copyText.textContent = 'Copy email';
+          copy.setAttribute('aria-label', `Copy email address ${EMAIL}`);
         }, 1800);
       } catch {
         window.location.href = `mailto:${EMAIL}`;

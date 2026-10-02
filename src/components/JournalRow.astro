@@ -1,9 +1,8 @@
 ---
-// JournalRow.astro — One journal entry as a wide tile: date, title, one-line
-// summary, and up to three pictures fanned on the right (they spread on hover).
-import { Image } from 'astro:assets';
-import { formatJournalDay, sourceLabel, type JournalEntry } from '../data/journal';
-import NavArrow from './NavArrow.astro';
+// JournalRow.astro — One journal entry as a hairline row: the day in mono on
+// the left, the title and one-line summary, then the read time (or where it
+// lives, for posts elsewhere) on the right.
+import { sourceLabel, type JournalEntry } from '../data/journal';
 
 interface Props {
   entry: JournalEntry;
@@ -13,40 +12,22 @@ const { entry } = Astro.props;
 const linkAttrs = entry.external
   ? { target: '_blank', rel: 'noopener noreferrer' }
   : { 'data-astro-prefetch': '' };
-const images = entry.images.slice(0, 3);
+const day = entry.date.toLocaleDateString('en-GB', { month: 'short', day: 'numeric', timeZone: 'UTC' }).toUpperCase();
 ---
 
 <li class="journal-tile-item" data-journal-source={entry.external ? 'elsewhere' : 'here'}>
-  <a href={entry.href} class="journal-tile" {...linkAttrs}>
-    <span class="journal-tile__body">
-      <span class="journal-tile__meta">
-        <time datetime={entry.date.toISOString()}>{formatJournalDay(entry.date)}</time>
-        <span aria-hidden="true">·</span>
-        {entry.external ? (
-          <span class="journal-tile__source">
-            {sourceLabel(entry.source)}
-            <NavArrow direction="up-right" size={11} />
-          </span>
-        ) : (
-          <span>{entry.readingMinutes} min read</span>
-        )}
-        {entry.draft && <span class="journal-tile__draft">Draft</span>}
+  <a href={entry.href} class="j-row" {...linkAttrs}>
+    <time class="j-row__day" datetime={entry.date.toISOString()}>{day}</time>
+    <span class="j-row__body">
+      <span class="j-row__title">
+        {entry.title}
+        {entry.draft && <span class="j-row__draft">Draft</span>}
       </span>
-      <span class="journal-tile__title">{entry.title}</span>
-      <span class="journal-tile__excerpt">{entry.excerpt}</span>
+      <span class="j-row__excerpt">{entry.excerpt}</span>
     </span>
-
-    {images.length > 0 && (
-      <span class="journal-tile__photos" aria-hidden="true">
-        {images.map((image) =>
-          typeof image === 'string' ? (
-            <img class="journal-tile__photo" src={image} alt="" width="56" height="56" loading="lazy" decoding="async" />
-          ) : (
-            <Image class="journal-tile__photo" src={image} alt="" width={56} height={56} densities={[1, 2]} loading="lazy" decoding="async" />
-          )
-        )}
-      </span>
-    )}
+    <span class="j-row__end">
+      {entry.external ? <>{sourceLabel(entry.source).toUpperCase()} ↗<span class="sr-only"> (opens in a new tab)</span></> : <>{entry.readingMinutes} MIN</>}
+    </span>
   </a>
 </li>
 
@@ -55,143 +36,78 @@ const images = entry.images.slice(0, 3);
     list-style: none;
   }
 
-  .journal-tile {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 16px;
-    padding: 14px 16px;
-    border-radius: 20px;
-    background: var(--surface-subtle);
+  .j-row {
+    display: flex;
+    align-items: baseline;
+    gap: 24px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--border-subtle);
+    color: var(--text-primary);
     text-decoration: none;
     -webkit-tap-highlight-color: transparent;
-    transition:
-      background-color 200ms var(--ease-smooth-out),
-      transform 320ms var(--ease-bounce);
   }
 
-  @media (min-width: 640px) {
-    .journal-tile {
-      gap: 20px;
-      padding: 16px 18px;
-    }
-  }
-
-  .journal-tile__body {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-    min-width: 0;
-  }
-
-  .journal-tile__meta {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-    margin-bottom: 3px;
-    font-size: var(--text-sm);
+  .j-row__day,
+  .j-row__end {
+    flex-shrink: 0;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
     color: var(--text-muted);
     font-variant-numeric: tabular-nums;
+    white-space: nowrap;
   }
 
-  .journal-tile__source {
+  .j-row__day { width: 56px; }
+
+  .j-row__body {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .j-row__title {
     display: inline-flex;
+    flex-wrap: wrap;
     align-items: center;
-    gap: 2px;
-  }
-
-  .journal-tile__title {
+    gap: 8px;
     font-size: var(--text-base);
     font-weight: 500;
-    line-height: 1.35;
-    letter-spacing: -0.02em;
-    color: var(--text-primary);
+    line-height: 1.4;
+    letter-spacing: -0.01em;
+    transition: color 160ms var(--ease-smooth-out);
+  }
+
+  .j-row__excerpt {
+    font-size: var(--text-sm);
+    line-height: 1.6;
+    color: var(--text-secondary);
     text-wrap: pretty;
   }
 
-  .journal-tile__excerpt {
-    font-size: var(--text-sm);
-    line-height: 1.5;
-    color: var(--text-secondary);
-    display: -webkit-box;
-    -webkit-line-clamp: 1;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .journal-tile__draft {
+  .j-row__draft {
     padding: 0 7px;
     border-radius: 9999px;
-    background: var(--surface-interactive);
+    background: var(--brand-soft);
     font-size: 11px;
     font-weight: 500;
     line-height: 18px;
-    color: var(--text-muted);
+    color: var(--brand);
   }
 
-  /* Pictures fanned like photos dropped on a desk */
-  .journal-tile__photos {
-    display: flex;
-    padding: 4px 10px 4px 2px;
-  }
-
-  .journal-tile__photo {
-    display: block;
-    flex: none;
-    width: 44px;
-    height: 44px;
-    margin-right: -10px;
-    border-radius: 11px;
-    object-fit: cover;
-    object-position: top;
-    background: var(--surface-interactive);
-    box-shadow: 0 0 0 2.5px var(--surface-subtle);
-    transition:
-      transform 420ms var(--ease-bounce),
-      box-shadow 200ms var(--ease-smooth-out);
-  }
-
-  .journal-tile__photo:nth-child(1) { transform: rotate(-7deg); }
-  .journal-tile__photo:nth-child(2) { transform: rotate(4deg) translateY(-2px); }
-  .journal-tile__photo:nth-child(3) { transform: rotate(-3deg); }
-
-  @media (min-width: 640px) {
-    .journal-tile__photo {
-      width: 52px;
-      height: 52px;
-      border-radius: 13px;
-    }
+  @media (max-width: 479px) {
+    .j-row { gap: 14px; }
+    .j-row__end { display: none; }
   }
 
   @media (hover: hover) and (pointer: fine) {
-    .journal-tile:hover {
-      background: var(--surface-interactive);
-      transform: translateY(-2px);
-    }
-
-    .journal-tile:hover .journal-tile__photo {
-      box-shadow: 0 0 0 2.5px var(--surface-interactive);
-    }
-
-    .journal-tile:hover .journal-tile__photo:nth-child(1) { transform: rotate(-12deg) translateX(-5px); }
-    .journal-tile:hover .journal-tile__photo:nth-child(2) { transform: rotate(0deg) translateY(-6px); }
-    .journal-tile:hover .journal-tile__photo:nth-child(3) { transform: rotate(8deg) translateX(6px); }
+    .j-row:hover .j-row__title { color: var(--brand); }
   }
 
-  .journal-tile:active {
-    transform: scale(0.99);
-  }
-
-  .journal-tile:focus-visible {
-    outline: 2px solid var(--text-primary);
+  .j-row:focus-visible {
+    outline: 2px solid var(--brand);
     outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .journal-tile,
-    .journal-tile__photo {
-      transition: none;
-    }
   }
 </style>

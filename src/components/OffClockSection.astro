@@ -1,0 +1,58 @@
+---
+// OffClockSection.astro — What I do when I'm not working, as quiet pills.
+// The pictures behind each one live on the About page.
+const things = ['Photographing Lagos', 'Arsenal', 'Cars', 'Cooking', 'Long walks', 'Singing'];
+---
+
+<section class="flex flex-col gap-5" id="off-the-clock">
+  <div class="section-head reveal-item">
+    <div class="section-head__text">
+      <h2 class="section-title">Off the clock</h2>
+    </div>
+  </div>
+
+  <ul class="pills" role="list">
+    {things.map((thing) => <li class="pill">{thing}</li>)}
+  </ul>
+
+  <a href="/about" class="more-link" data-astro-prefetch>More about me <span aria-hidden="true">→</span></a>
+</section>
+
+<style>
+  .pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .pill {
+    padding: 4px 10px;
+    border-radius: 9999px;
+    background: var(--surface-card);
+    box-shadow: var(--shadow-ring);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+
+  .more-link {
+    align-self: flex-start;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    min-height: 44px;
+    font-size: var(--text-sm);
+    color: var(--text-primary);
+    text-decoration: none;
+  }
+
+  .more-link span { transition: transform 160ms var(--ease-smooth-out); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .more-link:hover { color: var(--brand); }
+    .more-link:hover span { transform: translateX(2px); }
+  }
+</style>

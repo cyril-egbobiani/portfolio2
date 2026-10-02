@@ -1860,3 +1860,77 @@
     animation: none;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN SYSTEM v0 — the case-study kit on the shared tokens.
+   Flat grey panels become ring cards (corners 10 = 6 + 4), inner media
+   sits in the inset well, and state marks use the rose brand colour.
+   Kept as one block of overrides so the kit above stays readable.
+   ═══════════════════════════════════════════════════════════════ */
+.cs-title {
+  font-size: clamp(28px, 6vw, 36px);
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+}
+
+.cs-status::before,
+.cs-options__chosen {
+  background: var(--brand);
+}
+
+.cs-gallery__item {
+  border-radius: var(--radius-inset);
+  background: var(--surface-inset);
+  box-shadow: var(--shadow-ring);
+}
+
+.cs-design-hero,
+.cs-options,
+.cs-compare.is-portrait,
+.cs-next__card {
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-ring);
+}
+
+.cs-body .cs-map__list li {
+  border-radius: var(--radius-tile);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-ring);
+}
+
+.cs-video__frame,
+.cs-compare__stage,
+.cs-annotated__stage {
+  background: var(--surface-inset);
+}
+
+.cs-body .cs-annotated__item {
+  border-radius: var(--radius-tile);
+}
+
+.cs-body .cs-annotated__item.is-active {
+  background: var(--brand-soft);
+  color: var(--text-primary);
+}
+
+.cs-options__tabs {
+  background: var(--surface-inset);
+}
+
+.cs-options__pill {
+  background: var(--surface-card);
+  box-shadow: var(--shadow-ring);
+}
+
+.cs-next__thumb {
+  border-radius: var(--radius-inset);
+  background: var(--surface-inset);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cs-next__card:hover {
+    background: var(--surface-card);
+    transform: translateY(-2px);
+  }
+}
