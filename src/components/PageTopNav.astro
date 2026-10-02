@@ -6,12 +6,13 @@
 
 interface Props {
   backHref?: string;
+  /** One word for where the pill goes: "Home", "Work", "Journal" */
   backLabel?: string;
   /** Match the page's content column so the buttons line up with it */
   maxWidth?: number;
 }
 
-const { backHref = '/', backLabel = 'Back to home', maxWidth = 640 } = Astro.props;
+const { backHref = '/', backLabel = 'Home', maxWidth = 640 } = Astro.props;
 ---
 
 <nav class="page-top-nav" aria-label="Page navigation" style={`--nav-max: ${maxWidth}px`}>
@@ -24,7 +25,7 @@ const { backHref = '/', backLabel = 'Back to home', maxWidth = 640 } = Astro.pro
 
   <div class="page-top-nav__inner">
     <!-- Ring pill: the arrow sits in its own grey circle -->
-    <a href={backHref} class="page-top-nav__back" data-astro-prefetch>
+    <a href={backHref} class="page-top-nav__back" aria-label={`Back to ${backLabel.toLowerCase()}`} data-astro-prefetch>
       <span class="page-top-nav__arrow" aria-hidden="true">
         <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12.5 8h-9M7.5 4l-4 4 4 4"/></svg>
       </span>

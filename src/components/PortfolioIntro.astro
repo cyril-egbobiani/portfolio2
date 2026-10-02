@@ -1,10 +1,10 @@
 ---
 // PortfolioIntro.astro — Hero A from the design system.
-// A small 3D box turns beside the name (four faces, 90° every 2.5s), then the
-// two paragraphs, then the two pill buttons with the socials on the right.
+// The cube sits above the name and role, then one line about how I work,
+// then the two pill buttons with the socials on the right. The longer story
+// (the drawing) lives on the About page.
 import { Image } from 'astro:assets';
 import avatar from '../assets/images/optimized/profile-avatar.webp';
-import ieslLogo from '../assets/images/iesl-logo.png';
 
 const RESUME = 'https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view';
 
@@ -50,20 +50,7 @@ const socials = [
   </div>
 
   <p class="lede">
-    I have been drawing since I was small enough to draw on the walls. My mother eventually humbled
-    me about the walls. The drawing never stopped — it just moved to interfaces, and then into code.
-  </p>
-
-  <p class="lede">
-    These days I am a software engineer and product designer at <a
-      href="https://ieslglobal.com/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="inline-link"
-    ><Image src={ieslLogo} height={28} alt="" class="inline-link__icon" />International Energy Services Limited<span class="sr-only"> (opens in a new tab)</span></a> in Lagos,
-    where those drawings turn into compliance dashboards and audit tools nobody outside the building
-    will ever see. I am also building <a href="/projects/forge" class="inline-link" data-astro-prefetch>Forge</a>,
-    a faith app for youth communities.
+    I work with thoughtful founders to build software that does what it was always meant to do, and does it well.
   </p>
 
   <div class="hero-actions">
@@ -218,26 +205,6 @@ const socials = [
     line-height: 1.7;
     color: var(--text-secondary);
     letter-spacing: -0.01em;
-  }
-
-  .inline-link {
-    color: var(--text-primary);
-    font-weight: 500;
-    text-decoration: underline;
-    text-decoration-color: var(--border-default);
-    text-underline-offset: 3px;
-    transition: text-decoration-color 160ms var(--ease-smooth-out);
-  }
-
-  .inline-link:hover { text-decoration-color: var(--brand); }
-
-  .inline-link :global(.inline-link__icon) {
-    display: inline-block;
-    height: 14px;
-    width: auto;
-    margin-right: 5px;
-    vertical-align: -2px;
-    border-radius: 2px;
   }
 
   /* ── Actions ──────────────────────────────────────────── */

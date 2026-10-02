@@ -54,7 +54,7 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
 <Layout title={`${title} — ${kicker} | Cyril Egbobiani`} description={summary}>
   <div class="entry-progress" data-read-progress aria-hidden="true"></div>
 
-  <PageTopNav backHref={backHref} backLabel={backLabel} />
+  <PageTopNav backHref={backHref} backLabel={backLabel} maxWidth={680} />
 
   <!-- Outside <main>: the page entry animation would break position: fixed -->
   <nav class="cs-rail" data-cs-rail aria-label="Sections">
