@@ -1,0 +1,42 @@
+---
+// ScreenGrid.astro — Every screen of a project in a contained grid of ring
+// cards, three across (two on phones), each with a short mono caption.
+// `slots` adds empty, labelled cards for screens that are still to come
+// ("Church portal"), so the grid keeps its shape until the artwork lands.
+import { Image } from 'astro:assets';
+import type { GalleryItem } from './types';
+
+interface Props {
+  items: GalleryItem[];
+  slots?: string[];
+}
+
+const { items, slots = [] } = Astro.props;
+---
+
+<div class="cs-block cs-shots" data-cs-reveal>
+  {items.map((item) => (
+    <figure class="cs-shot">
+      <div class="cs-shot__frame">
+        <div class="cs-shot__well">
+          {typeof item.src === 'string' ? (
+            <img src={encodeURI(item.src)} alt={item.alt} loading="lazy" decoding="async" />
+          ) : (
+            <Image src={item.src} alt={item.alt} widths={[200, 400]} sizes="(min-width: 640px) 200px, 45vw" loading="lazy" decoding="async" />
+          )}
+        </div>
+      </div>
+      <figcaption>{item.label}</figcaption>
+    </figure>
+  ))}
+  {slots.map((label) => (
+    <figure class="cs-shot cs-shot--slot">
+      <div class="cs-shot__frame">
+        <div class="cs-shot__well" role="img" aria-label={`${label}: screenshot to come`}>
+          <span>[ {label} ]</span>
+        </div>
+      </div>
+      <figcaption>{label}</figcaption>
+    </figure>
+  ))}
+</div>

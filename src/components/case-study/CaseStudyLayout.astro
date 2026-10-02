@@ -1,11 +1,11 @@
 ---
 // CaseStudyLayout.astro — Shared shell for project and design case studies:
-// fixed top nav, section rail, intro with facts, optional hero, body, next card.
+// fixed top nav, intro with facts and two lead screens, optional hero, numbered
+// sections in one 640px column, next card. No side rail: nothing squeezes the text.
 import Layout from '../Layout.astro';
 import PageTopNav from '../PageTopNav.astro';
 import PortfolioFooter from '../PortfolioFooter.astro';
 import NextCase from './NextCase.astro';
-import Gallery from './Gallery.astro';
 import NavArrow from '../NavArrow.astro';
 import type { CaseStudyLink, GalleryItem, NextCaseProps } from './types';
 import '../../styles/article.css';
@@ -54,17 +54,10 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
 <Layout title={`${title} — ${kicker} | Cyril Egbobiani`} description={summary}>
   <div class="entry-progress" data-read-progress aria-hidden="true"></div>
 
-  <PageTopNav backHref={backHref} backLabel={backLabel} maxWidth={680} />
-
-  <!-- Outside <main>: the page entry animation would break position: fixed -->
-  <nav class="cs-rail" data-cs-rail aria-label="Sections">
-    <div class="cs-rail__track">
-      <ol class="cs-rail__list"></ol>
-    </div>
-  </nav>
+  <PageTopNav backHref={backHref} backLabel={backLabel} />
 
   <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
-    <div class="mx-auto flex w-full max-w-[680px] flex-col" data-cs>
+    <div class="mx-auto flex w-full max-w-[640px] flex-col" data-cs>
       <article class="entry" data-entry>
         <header class="cs-intro" id="intro" data-cs-intro>
           <!-- No "Case study" label: they just clicked one. Status is
@@ -78,34 +71,41 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
           <h1 class="cs-title">{title}</h1>
           <p class="cs-summary">{summary}</p>
 
-          <!-- One spec run instead of a stacked label/value form -->
-          <p class="cs-spec">
-            <span class="cs-spec__role">{role}</span>
-            <span class="cs-spec__sep" aria-hidden="true">·</span>
-            <span>{year}</span>
-            {team.length > 0 && (
-              <>
-                <span class="cs-spec__sep" aria-hidden="true">·</span>
-                <span>{team.join(', ')}</span>
-              </>
+          <!-- The facts as hairline rows: label in mono, value beside it -->
+          <dl class="cs-facts">
+            <div><dt>Role</dt><dd>{role}</dd></div>
+            <div><dt>Year</dt><dd>{year}</dd></div>
+            {team.length > 0 && <div><dt>Team</dt><dd>{team.join(', ')}</dd></div>}
+            {tools.length > 0 && <div><dt>Stack</dt><dd>{tools.map((tool) => tool.replace(/\s*\([^)]*\)/g, '')).join(', ')}</dd></div>}
+            {links.length > 0 && (
+              <div>
+                <dt>Links</dt>
+                <dd class="cs-facts__links">
+                  {links.map((link) => (
+                    <a href={link.href} target="_blank" rel="noopener noreferrer">
+                      {link.label}<NavArrow direction="up-right" size={11} /><span class="sr-only"> (opens in a new tab)</span>
+                    </a>
+                  ))}
+                </dd>
+              </div>
             )}
-            {tools.length > 0 && (
-              <>
-                <span class="cs-spec__sep" aria-hidden="true">·</span>
-                <span>{tools.join(', ')}</span>
-              </>
-            )}
-            {links.map((link) => (
-              <>
-                <span class="cs-spec__sep" aria-hidden="true">·</span>
-                <a href={link.href} target="_blank" rel="noopener noreferrer">
-                  {link.label}<NavArrow direction="up-right" size={11} /><span class="sr-only"> (opens in a new tab)</span>
-                </a>
-              </>
-            ))}
-          </p>
+          </dl>
 
-          {gallery.length > 0 && <Gallery items={gallery} device={galleryDevice} />}
+          <!-- Two screens up front; the full set lives in the Gallery section -->
+          {gallery.length > 0 && (
+            <div class:list={['cs-pair', { 'cs-pair--single': gallery.length === 1 }]}>
+              {gallery.slice(0, 2).map((item, index) => (
+                <figure class="cs-shot">
+                  <div class="cs-shot__frame">
+                    <div class={`cs-shot__well cs-shot__well--lead cs-shot__well--${galleryDevice}`}>
+                      <img src={typeof item.src === 'string' ? encodeURI(item.src) : item.src.src} alt={item.alt} loading={index === 0 ? 'eager' : 'lazy'} decoding="async" />
+                    </div>
+                  </div>
+                  <figcaption>{item.label}</figcaption>
+                </figure>
+              ))}
+            </div>
+          )}
         </header>
 
         {Astro.slots.has('hero') && (

@@ -45,11 +45,6 @@ Churches juggled separate tools to post devotionals and moderate their community
 
 A Flutter app for members, a React portal for churches, and one API behind both: live prayer over Socket.IO, sermons that keep playing in the background, and design tokens that come straight from Figma.
 
-<Figure caption="The prayer wall updates for everyone in the room as prayers come in.">
-<Phone src="/projects/forge/prayer-section.webp" alt="Real-time church prayer wall" />
-<Phone src="/projects/forge/teachings-archive.webp" alt="Forge teachings archive" />
-</Figure>
-
 <Stats>
 <Stat value={3} label="connected tiers: mobile app, admin portal, and API" />
 <Stat value={9} label="technologies across the stack" />
@@ -57,11 +52,18 @@ A Flutter app for members, a React portal for churches, and one API behind both:
 
 </Section>
 
+<Section id="gallery" label="Gallery" title="Every screen, side by side">
+
+<ScreenGrid items={props.gallery} slots={["Church portal"]} />
+
+</Section>
+
 <Section id="architecture" label="How it's built" title="Three tiers, each with one clear job">
 
 <Diagram
-  caption="How Forge fits together: app, admin portal, API, and the live pieces between them."
-  placeholder="System diagram"
+  caption="How the app, portal, API and database connect"
+  placeholder="System design image"
+  parts={["App", "Portal", "Load balancer", "API", "MongoDB", "Socket.IO"]}
 />
 
 The app and the portal both talk to one Express API. It decides who may do what, keeps everything in MongoDB, pushes new prayers over Socket.IO, and serves sermon media through a Multer pipeline on Render. The app itself is Flutter with Riverpod, Material 3 and a background audio player; the portal is React 19 with Vite and Tailwind.

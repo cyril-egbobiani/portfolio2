@@ -15,6 +15,7 @@ import Phone from './Phone.astro';
 import Quote from './Quote.astro';
 import Reason from './Reason.astro';
 import Reasons from './Reasons.astro';
+import ScreenGrid from './ScreenGrid.astro';
 import Screens from './Screens.astro';
 import Section from './Section.astro';
 import SystemMap from './SystemMap.astro';
@@ -39,6 +40,7 @@ export const caseStudyComponents = {
   Quote,
   Reason,
   Reasons,
+  ScreenGrid,
   Screens,
   Section,
   Stat,

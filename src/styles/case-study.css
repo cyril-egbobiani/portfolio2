@@ -1934,3 +1934,243 @@
     transform: translateY(-2px);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════
+   CASE STUDY A — one quiet column (design system v0)
+   Facts as hairline rows, two lead screens, numbered sections with
+   Young Serif headings, a contained screen grid and a framed diagram.
+   ═══════════════════════════════════════════════════════════════ */
+.cs-intro {
+  gap: 20px;
+  margin-bottom: 64px;
+}
+
+.cs-summary {
+  max-width: none;
+}
+
+.cs-facts {
+  margin: 0;
+  border-top: 1px solid var(--border-subtle);
+}
+
+.cs-facts > div {
+  display: flex;
+  gap: 24px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.cs-facts dt {
+  width: 72px;
+  flex-shrink: 0;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 22px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cs-facts dd {
+  margin: 0;
+  font-size: var(--text-sm);
+  line-height: 22px;
+  color: var(--text-primary);
+}
+
+.cs-facts__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+}
+
+.cs-facts__links a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--brand);
+  text-decoration: none;
+}
+
+.cs-facts__links a:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+/* Screens: ring card frame (10 = 6 + 4), grey well, mono caption */
+.cs-pair {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 8px;
+}
+
+.cs-pair--single { grid-template-columns: minmax(0, 1fr); }
+
+.cs-shots {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px 12px;
+}
+
+@media (min-width: 560px) {
+  .cs-shots { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+.cs-shot {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cs-shot__frame {
+  padding: 4px;
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-ring);
+}
+
+.cs-shot__well {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  aspect-ratio: 9 / 16;
+  overflow: hidden;
+  border-radius: var(--radius-inset);
+  background: var(--surface-inset);
+}
+
+.cs-shot__well--lead { aspect-ratio: 4 / 5; }
+.cs-shot__well--desktop { aspect-ratio: 16 / 10; }
+
+.cs-shot__well img {
+  display: block;
+  width: auto;
+  height: 90%;
+  max-width: 92%;
+  object-fit: contain;
+  border-radius: 6px;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+}
+
+.cs-shot--slot .cs-shot__well {
+  border: 1px dashed var(--border-default);
+  box-sizing: border-box;
+  padding: 12px;
+  text-align: center;
+}
+
+.cs-shot--slot .cs-shot__well span,
+.cs-shot figcaption {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Sections: numbered automatically, label in mono, claim in Young Serif */
+.cs-body {
+  counter-reset: cs-section;
+}
+
+.cs-body .cs-section {
+  counter-increment: cs-section;
+}
+
+.cs-body .cs-label {
+  margin: 0 0 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.cs-body .cs-label::before {
+  content: counter(cs-section, decimal-leading-zero) ' · ';
+}
+
+.cs-body .cs-heading {
+  margin: 0 0 16px;
+  max-width: none;
+  font-family: var(--font-title);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1.3;
+  letter-spacing: -0.01em;
+}
+
+.cs-prose > p,
+.cs-prose > ul,
+.cs-prose > ol {
+  max-width: none;
+}
+
+/* Insights: one column of hairline rows, no squeezed second column */
+.cs-card {
+  grid-template-columns: minmax(0, 1fr) !important;
+  row-gap: 4px;
+}
+
+.cs-card__text { grid-column: auto !important; }
+
+.cs-body .cs-card__title { font-size: 15px; }
+
+.cs-card__text,
+.cs-body .cs-card__text p {
+  font-size: var(--text-sm);
+}
+
+.cs-body .cs-choice__title {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* Stats: Young Serif numbers */
+.cs-stat__value {
+  font-family: var(--font-title);
+  font-weight: 400;
+  letter-spacing: -0.01em;
+}
+
+/* Diagram: a ring card, the image (or its placeholder) in the well */
+.cs-diagram__frame {
+  padding: 4px;
+  border-radius: var(--radius-card);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-ring);
+}
+
+.cs-diagram__slot {
+  flex-direction: column;
+  gap: 10px;
+  border-radius: var(--radius-inset);
+  background: var(--surface-inset);
+}
+
+.cs-diagram__slot span {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+}
+
+.cs-diagram__slot .cs-diagram__parts {
+  padding: 0 16px;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.cs-body .cs-diagram__img {
+  border-radius: var(--radius-inset);
+}
+
+.cs-diagram figcaption {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}

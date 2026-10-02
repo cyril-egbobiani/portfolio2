@@ -14,12 +14,15 @@ interface Props {
   ratio?: string;
   /** Shown inside the placeholder while the diagram is being drawn */
   placeholder?: string;
+  /** The parts the finished diagram should show, listed under the placeholder */
+  parts?: string[];
 }
 
-const { src, alt = '', caption, ratio = '16 / 9', placeholder = 'System diagram' } = Astro.props;
+const { src, alt = '', caption, ratio = '16 / 10', placeholder = 'System diagram', parts = [] } = Astro.props;
 ---
 
 <figure class="cs-block cs-diagram" data-cs-reveal>
+  <div class="cs-diagram__frame">
   {src ? (
     typeof src === 'string' ? (
       <img class="cs-diagram__img" src={encodeURI(src)} alt={alt} loading="lazy" decoding="async" />
@@ -28,8 +31,10 @@ const { src, alt = '', caption, ratio = '16 / 9', placeholder = 'System diagram'
     )
   ) : (
     <div class="cs-diagram__slot" style={`aspect-ratio: ${ratio}`} role="img" aria-label={`${placeholder} — artwork to come`}>
-      <span>{placeholder}</span>
+      <span>[ {placeholder} ]</span>
+      {parts.length > 0 && <span class="cs-diagram__parts">{parts.join(' · ')}</span>}
     </div>
   )}
+  </div>
   {caption && <figcaption>{caption}</figcaption>}
 </figure>
