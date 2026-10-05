@@ -1,12 +1,12 @@
 ---
 // src/pages/about.astro — The human half.
-// Design system: a ring-framed photo beside "Of me", the story with one line
-// pulled out as a quote, then the Off the clock gallery (Gallery A: two
-// masonry columns of ring cards with varied heights) and the contact block.
+// About V2: a wide ring-framed portrait across the top, "Of me", the story with
+// one line pulled out as a quote, then Off the clock as an even 2 × 3 grid of
+// 4:3 photos, the rewatching pills, and the contact block.
 import Layout from '../components/Layout.astro';
 import PageTopNav from '../components/PageTopNav.astro';
 import { Image } from 'astro:assets';
-import profileIntroImg from '../assets/images/optimized/profile-intro.webp';
+import profileIntroImg from '../assets/images/profile.jpg'; // full-resolution original, resized by Astro
 import photographyImg from '../assets/images/optimized/photography.webp';
 import footballImg from '../assets/images/optimized/football.webp';
 import cookingImg from '../assets/images/optimized/cooking.webp';
@@ -16,19 +16,14 @@ import musicImg from '../assets/images/optimized/soundscapes.webp';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
 
-// Two columns, each a stack; the heights vary so the gallery reads as a wall
-// of photos rather than a grid of thumbnails.
-const columns = [
-  [
-    { img: photographyImg, alt: 'Photograph of Lagos', title: 'Photography', note: 'Lagos can be a literal cinema at times.', h: 300 },
-    { img: cookingImg, alt: 'Cooking', title: 'Cooking', note: "Mum's influence here, and I'm not mad.", h: 170 },
-    { img: musicImg, alt: 'Record player and headphones', title: 'Singing', note: 'Just started.', h: 210 },
-  ],
-  [
-    { img: footballImg, alt: 'Football', title: 'Football', note: 'Come on you Gunners!', h: 170 },
-    { img: carsImg, alt: 'Cars', title: 'Cars', note: 'Dream car: the GT 63 S 4-door coupé E Performance. Yes, that one.', h: 280 },
-    { img: longWalksImg, alt: 'A long walk', title: 'Long walks', note: 'How I decompress, watch the city and think.', h: 230 },
-  ],
+// An even two-column grid of 4:3 photos, so every row lines up.
+const photos = [
+    { img: photographyImg, alt: 'Photograph of Lagos', title: 'Photography', note: 'Lagos can be a literal cinema at times.' },
+    { img: footballImg, alt: 'Football', title: 'Football', note: 'Come on you Gunners!' },
+    { img: cookingImg, alt: 'Cooking', title: 'Cooking', note: "Mum's influence here, and I'm not mad." },
+    { img: carsImg, alt: 'Cars', title: 'Cars', note: 'Dream car: the GT 63 S 4-door coupé E Performance. Yes, that one.' },
+    { img: musicImg, alt: 'Record player and headphones', title: 'Singing', note: 'Just started.' },
+    { img: longWalksImg, alt: 'A long walk', title: 'Long walks', note: 'How I decompress, watch the city and think.' },
 ];
 
 const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
@@ -41,14 +36,14 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
   <PageTopNav />
 
   <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[112px] sm:pt-[140px] pb-24 sm:pb-32 font-[var(--font-sans)] text-[var(--text-primary)] antialiased">
-    <div class="mx-auto flex w-full max-w-[640px] flex-col gap-20 sm:gap-[88px]">
+    <div class="mx-auto flex w-full max-w-[700px] flex-col gap-20 sm:gap-[88px]">
 
       <!-- Photo, title and story are one group: the heading sits just above
            the paragraphs it introduces instead of floating on its own -->
       <div class="about-intro">
       <section class="about-hero">
-        <div class="about-photo">
-          <Image src={profileIntroImg} alt="Cyril Egbobiani" width={192} height={192} class="about-photo__img" loading="eager" />
+        <div class="about-banner">
+          <Image src={profileIntroImg} alt="Cyril Egbobiani" widths={[640, 1280]} sizes="(min-width: 700px) 632px, 92vw" class="about-banner__img" loading="eager" />
         </div>
         <h1 class="about-title">Of me</h1>
       </section>
@@ -77,22 +72,18 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
         </div>
 
         <div class="gallery">
-          {columns.map((column) => (
-            <div class="gallery__col">
-              {column.map((item) => (
-                <figure class="shot">
-                  <div class="shot__frame">
-                    <div class="shot__well" style={`height: ${item.h}px`}>
-                      <Image src={item.img} alt={item.alt} widths={[320, 640]} sizes="(min-width: 640px) 312px, 45vw" class="shot__img" loading="lazy" decoding="async" />
-                    </div>
-                  </div>
-                  <figcaption class="shot__cap">
-                    <span class="shot__title">{item.title}</span>
-                    <span class="shot__note">{item.note}</span>
-                  </figcaption>
-                </figure>
-              ))}
-            </div>
+          {photos.map((item) => (
+            <figure class="shot">
+              <div class="shot__frame">
+                <div class="shot__well">
+                  <Image src={item.img} alt={item.alt} widths={[320, 640]} sizes="(min-width: 700px) 312px, 45vw" class="shot__img" loading="lazy" decoding="async" />
+                </div>
+              </div>
+              <figcaption class="shot__cap">
+                <span class="shot__title">{item.title}</span>
+                <span class="shot__note">{item.note}</span>
+              </figcaption>
+            </figure>
           ))}
         </div>
 
@@ -118,38 +109,35 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
 
   .about-hero {
     display: flex;
-    align-items: flex-end;
-    gap: 20px;
+    flex-direction: column;
+    gap: 24px;
   }
 
-  /* Ring frame: 10 = 6 + 4 */
-  .about-photo {
-    flex-shrink: 0;
-    width: 96px;
-    height: 96px;
+  /* Wide portrait in a ring frame: 10 = 6 + 4 */
+  .about-banner {
     padding: 4px;
-    box-sizing: border-box;
     border-radius: var(--radius-card);
     background: var(--surface-card);
     box-shadow: var(--shadow-ring);
   }
 
-  .about-photo :global(.about-photo__img) {
+  .about-banner :global(.about-banner__img) {
     display: block;
     width: 100%;
-    height: 100%;
+    aspect-ratio: 3 / 2;
+    height: auto;
     border-radius: var(--radius-inset);
     object-fit: cover;
-    object-position: 50% 25%;
+    object-position: 50% 62%;
   }
 
   .about-title {
     margin: 0;
     font-family: var(--font-title);
-    font-size: 28px;
+    font-size: 36px;
     font-weight: 400;
-    line-height: 1.15;
-    letter-spacing: -0.01em;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
     color: var(--text-primary);
   }
 
@@ -177,19 +165,11 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
     color: var(--text-primary);
   }
 
-  /* ── Gallery A: two masonry columns ───────────────────── */
+  /* ── Gallery: even 2 × 3 grid ─────────────────────────── */
   .gallery {
-    display: flex;
-    gap: 16px;
-    align-items: flex-start;
-  }
-
-  .gallery__col {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 24px 16px;
   }
 
   .shot {
@@ -207,6 +187,7 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
   }
 
   .shot__well {
+    aspect-ratio: 4 / 3;
     overflow: hidden;
     border-radius: var(--radius-inset);
     background: var(--surface-inset);
@@ -218,10 +199,6 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
     height: 100%;
     object-fit: cover;
     transition: transform 480ms cubic-bezier(0.23, 1, 0.32, 1);
-  }
-
-  @media (max-width: 479px) {
-    .shot__well { height: auto !important; aspect-ratio: 4 / 5; }
   }
 
   @media (hover: hover) and (pointer: fine) {

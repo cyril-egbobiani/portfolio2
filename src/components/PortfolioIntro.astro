@@ -1,10 +1,9 @@
 ---
 // PortfolioIntro.astro — Hero A from the design system.
-// The cube sits above the name and role, then one line about how I work,
+// The media slab sits above the name and role, then one line about how I work,
 // then the two pill buttons with the socials on the right. The longer story
 // (the drawing) lives on the About page.
-import { Image } from 'astro:assets';
-import avatar from '../assets/images/optimized/profile-avatar.webp';
+import MediaSlab from './MediaSlab.astro';
 
 const RESUME = 'https://drive.google.com/file/d/1XXSvad2gGp1N7c7Pc7x0WkOkr_0AUAWb/view';
 
@@ -29,19 +28,8 @@ const socials = [
 
 <section class="intro">
   <div class="hero-id">
-    <!-- The box: photo, monogram, home, and the pencil it all started with. Tap it for About. -->
-    <a href="/about" class="box" aria-label="About me" title="About me" data-astro-prefetch>
-      <div class="box__spin" aria-hidden="true">
-        <div class="box__face box__face--1">
-          <Image src={avatar} alt="" width={56} height={56} densities={[1, 2]} class="box__photo" loading="eager" />
-        </div>
-        <div class="box__face box__face--2"><span class="box__mono">CE</span></div>
-        <div class="box__face box__face--3"><span class="meta-mono box__lag">LAG</span></div>
-        <div class="box__face box__face--4">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.2-4.2L16.6 4.4a2 2 0 0 1 2.9 2.9L8.1 18.8z"/><path d="M14.8 6.2l3 3"/></svg>
-        </div>
-      </div>
-    </a>
+    <!-- The slab: a reel of pictures you scrub with the strip; key opens About -->
+    <MediaSlab />
 
     <div class="hero-id__text">
       <h1 class="hero-name">Cyril Egbobiani</h1>
@@ -80,17 +68,17 @@ const socials = [
     padding-top: 88px;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 700px) {
     .intro { padding-top: 120px; }
   }
 
   /* ── Name row ─────────────────────────────────────────── */
-  /* The cube sits above the name */
+  /* The slab sits above the name */
   .hero-id {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 20px;
+    gap: 36px;
   }
 
   .hero-id__text {
@@ -115,94 +103,6 @@ const socials = [
     color: var(--text-muted);
   }
 
-  /* ── The box ──────────────────────────────────────────── */
-  .box {
-    --cube: 56px;
-    display: block;
-    flex-shrink: 0;
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 160ms var(--ease-smooth-out);
-    width: var(--cube);
-    height: var(--cube);
-    perspective: 600px;
-  }
-
-  .box:active { transform: scale(0.95); }
-
-  .box:focus-visible {
-    outline: 2px solid var(--brand);
-    outline-offset: 4px;
-  }
-
-  /* Pause on hover so the face you're about to tap holds still */
-  @media (hover: hover) and (pointer: fine) {
-    .box:hover .box__spin { animation-play-state: paused; }
-  }
-
-  .box__spin {
-    position: relative;
-    width: var(--cube);
-    height: var(--cube);
-    transform-style: preserve-3d;
-    transform: translateZ(calc(var(--cube) / -2)) rotateY(0deg);
-    animation: box-turn 10s cubic-bezier(0.65, 0, 0.35, 1) infinite;
-  }
-
-  .box__face {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    box-sizing: border-box;
-    border: 1px solid var(--border-default);
-    background: var(--surface-card);
-    color: var(--text-primary);
-    backface-visibility: hidden;
-  }
-
-  .box__face--1 { transform: rotateY(0deg) translateZ(calc(var(--cube) / 2)); }
-  .box__face--2 { transform: rotateY(90deg) translateZ(calc(var(--cube) / 2)); }
-  .box__face--3 {
-    transform: rotateY(180deg) translateZ(calc(var(--cube) / 2));
-    background: var(--btn-primary-bg);
-    color: var(--btn-primary-text);
-  }
-  .box__face--4 {
-    transform: rotateY(270deg) translateZ(calc(var(--cube) / 2));
-    background: var(--brand-soft);
-    color: var(--brand);
-  }
-
-  .box__photo {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .box__mono {
-    font-family: var(--font-title);
-    font-size: 20px;
-    line-height: 1;
-  }
-
-  .box__lag { color: inherit; font-size: 11px; }
-
-  @keyframes box-turn {
-    0%, 20%   { transform: translateZ(calc(var(--cube) / -2)) rotateY(0deg); }
-    25%, 45%  { transform: translateZ(calc(var(--cube) / -2)) rotateY(-90deg); }
-    50%, 70%  { transform: translateZ(calc(var(--cube) / -2)) rotateY(-180deg); }
-    75%, 95%  { transform: translateZ(calc(var(--cube) / -2)) rotateY(-270deg); }
-    100%      { transform: translateZ(calc(var(--cube) / -2)) rotateY(-360deg); }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .box__spin { animation: none; }
-  }
-
-  /* ── Copy ─────────────────────────────────────────────── */
   .lede {
     margin: 0;
     font-size: var(--text-base);

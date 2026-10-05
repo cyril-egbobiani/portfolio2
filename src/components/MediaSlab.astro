@@ -1,0 +1,349 @@
+---
+// MediaSlab.astro — The hero device: a landscape matte slab with a wide screen
+// on top and one working control underneath. The screen shows a short reel of pictures (a
+// looping video can replace them later); the recessed scrub strip moves through
+// the reel, and a hard key opens About.
+// Sand in light mode, graphite in dark mode — every colour is a variable below.
+import { Image } from 'astro:assets';
+import portrait from '../assets/images/profile.jpg';
+import photography from '../assets/images/optimized/photography.webp';
+import walks from '../assets/images/optimized/long-walks.jpg';
+
+const slides = [
+  { img: portrait, alt: 'Cyril Egbobiani in Lagos', position: '50% 62%' },
+  { img: photography, alt: 'A photograph from the streets of Lagos', position: '50% 50%' },
+  { img: walks, alt: 'A long walk along a tree-lined canal', position: '50% 60%' },
+];
+---
+
+<div class="slab" data-slab>
+  <svg class="slab__defs" width="0" height="0" aria-hidden="true">
+    <filter id="slab-grain"><feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="2" /><feColorMatrix values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .2 0" /></filter>
+  </svg>
+
+  <div class="slab__body">
+    <span class="slab__grain" aria-hidden="true"></span>
+
+    <!-- Screen -->
+    <div class="slab__screen">
+      {slides.map((slide, i) => (
+        <Image
+          src={slide.img}
+          alt={slide.alt}
+          widths={[320, 640]}
+          sizes="288px"
+          class:list={['slab__img', { 'is-active': i === 0 }]}
+          style={`object-position: ${slide.position}`}
+          loading={i === 0 ? 'eager' : 'lazy'}
+          data-slab-slide={i}
+        />
+      ))}
+    </div>
+
+    <!-- Control row: strip, speaker and key share one height and one gap -->
+    <div class="slab__controls">
+    <!-- Scrub strip: a real range input under a drawn thumb -->
+    <label class="slab__strip">
+      <span class="sr-only">Choose a picture</span>
+      <span class="slab__ticks" aria-hidden="true">
+        {Array.from({ length: 21 }, (_, i) => <span class:list={['slab__tick', { 'slab__tick--major': i % 4 === 0 }]}></span>)}
+      </span>
+      <span class="slab__thumb" aria-hidden="true"><span></span><span></span><span></span></span>
+      <input type="range" min="0" max={slides.length - 1} step="1" value="0" class="slab__range" data-slab-range />
+    </label>
+
+    <!-- Speaker and the hard key -->
+    <span class="slab__grille" aria-hidden="true">
+      {Array.from({ length: 30 }, () => <span></span>)}
+    </span>
+    <a href="/about" class="slab__key slab__key--about" data-astro-prefetch><span class="slab__key-label">About</span></a>
+    </div>
+  </div>
+</div>
+
+<style>
+  /* ── Finish: sand in light mode, graphite in dark mode ── */
+  .slab {
+    --slab-body: linear-gradient(165deg, #e3ded6, #d3cdc3 55%, #c5beb2);
+    --slab-well: #bfb8ac;
+    --slab-ink: rgba(0, 0, 0, 0.42);
+    --slab-tick: rgba(0, 0, 0, 0.35);
+    --slab-hole: #9e978b;
+    --slab-thumb: linear-gradient(#f4f0e9, #d3ccc0);
+    --slab-key: linear-gradient(#f1ede6, #d5cfc4);
+    --slab-key-edge: #a9a296;
+    --slab-key-ink: #2a2723;
+    --slab-edge-hi: rgba(255, 255, 255, 0.55);
+    position: relative;
+    flex-shrink: 0;
+    width: 300px;
+    height: 202px;
+  }
+
+  /* The narrowest phones get a slightly smaller slab instead of a cramped page */
+  @media (max-width: 359px) {
+    .slab { zoom: 0.9; }
+  }
+
+  :global([data-theme='dark']) .slab {
+    --slab-body: linear-gradient(165deg, #4a4846, #3a3836 55%, #302e2c);
+    --slab-well: #262422;
+    --slab-ink: rgba(255, 255, 255, 0.38);
+    --slab-tick: rgba(255, 255, 255, 0.4);
+    --slab-hole: #1c1b1a;
+    --slab-thumb: linear-gradient(#6a6764, #45423f);
+    --slab-key: linear-gradient(#55524f, #3e3c3a);
+    --slab-key-edge: #1b1a19;
+    --slab-key-ink: #e9e4da;
+    --slab-edge-hi: rgba(255, 255, 255, 0.14);
+  }
+
+  .slab__defs { position: absolute; }
+
+  .slab__body {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 16px;
+    background: var(--slab-body);
+    box-shadow:
+      inset 0 1px 0 var(--slab-edge-hi),
+      inset 0 -1.5px 2px rgba(0, 0, 0, 0.3),
+      0 1px 1px rgba(0, 0, 0, 0.25),
+      0 26px 44px -22px rgba(0, 0, 0, 0.5);
+  }
+
+  .slab__grain {
+    position: absolute;
+    inset: 0;
+    background: #fff;
+    filter: url(#slab-grain);
+    mix-blend-mode: multiply;
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  /* ── Screen ── */
+  .slab__screen {
+    position: absolute;
+    left: 6px;
+    right: 6px;
+    top: 6px;
+    height: 158px;
+    overflow: hidden;
+    border-radius: 10px;
+    background: #0d0d0d;
+    box-shadow: 0 0 0 1px #000, inset 0 0 0 0.6px rgba(255, 255, 255, 0.06);
+  }
+
+  .slab__screen :global(.slab__img) {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0;
+    transform: scale(1.05);
+    transition: opacity 600ms ease, transform 4.2s ease-out;
+  }
+
+  .slab__screen :global(.slab__img.is-active) {
+    opacity: 1;
+    transform: none;
+  }
+
+  /* ── Scrub strip ── */
+  /* ── Control row ── */
+  .slab__controls {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 170px;
+    height: 26px;
+    display: flex;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .slab__strip {
+    position: relative;
+    flex: 1;
+    min-width: 0;
+    border-radius: 13px;
+    background: var(--slab-well);
+    box-shadow: inset 0 2px 3px rgba(0, 0, 0, 0.5), 0 0.6px 0 var(--slab-edge-hi);
+    --pos: 0;
+  }
+
+  .slab__ticks {
+    position: absolute;
+    left: 14px;
+    right: 14px;
+    top: 9.5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    pointer-events: none;
+  }
+
+  .slab__tick { width: 0.8px; height: 3.4px; background: var(--slab-tick); }
+  .slab__tick--major { height: 6.7px; }
+
+  .slab__thumb {
+    position: absolute;
+    top: 2.5px;
+    left: calc(2.5px + (100% - 37px) * var(--pos));
+    width: 32px;
+    height: 21px;
+    border-radius: 10.5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    background: var(--slab-thumb);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 2px 3px rgba(0, 0, 0, 0.4);
+    transition: left 450ms cubic-bezier(0.65, 0, 0.35, 1);
+    pointer-events: none;
+  }
+
+  .slab__thumb span { width: 1px; height: 9px; border-radius: 1px; background: rgba(0, 0, 0, 0.35); }
+
+  .slab__range {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: grab;
+  }
+
+  .slab__range:active { cursor: grabbing; }
+
+  .slab__strip:has(.slab__range:focus-visible) {
+    outline: 2px solid var(--brand);
+    outline-offset: 2px;
+  }
+
+  /* ── Speaker and keys ── */
+  .slab__grille {
+    flex-shrink: 0;
+    display: grid;
+    grid-template-columns: repeat(6, 2.4px);
+    align-content: space-between;
+    justify-content: space-between;
+    width: 32px;
+  }
+
+  .slab__grille span {
+    width: 2.4px;
+    height: 2.4px;
+    border-radius: 9999px;
+    background: var(--slab-hole);
+    box-shadow: inset 0 0.6px 0.6px #000;
+  }
+
+  .slab__key {
+    flex-shrink: 0;
+    width: 76px;
+    /* 24px face + 2px edge = the row's 26px */
+    height: 24px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px;
+    font-family: var(--font-mono);
+    font-size: 7.5px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    text-decoration: none;
+    transition: transform 120ms ease, box-shadow 120ms ease;
+  }
+
+  /* The label is trimmed to its capital letters, so flex centring puts the
+     caps in the true middle of the key. The left padding matches the trailing
+     letter-spacing so the word is centred horizontally too. */
+  .slab__key-label {
+    display: block;
+    padding-left: 0.14em;
+    text-box: trim-both cap alphabetic;
+  }
+
+  .slab__key--about {
+    background: var(--slab-key);
+    color: var(--slab-key-ink);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 0 var(--slab-key-edge);
+  }
+
+  .slab__key:active { transform: translateY(2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 0 0 transparent; }
+
+  .slab__key:focus-visible { outline: 2px solid var(--brand); outline-offset: 2px; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .slab__key--about:hover { filter: brightness(1.04); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .slab__screen :global(.slab__img),
+    .slab__thumb { transition: none; }
+  }
+</style>
+
+<script>
+  // The reel plays on its own every 4 seconds until someone touches the strip,
+  // pauses while off screen, and never auto-plays for reduced-motion users.
+  function initSlab() {
+    document.querySelectorAll<HTMLElement>('[data-slab]').forEach((root) => {
+      if (root.dataset.bound) return;
+      root.dataset.bound = 'true';
+
+      const range = root.querySelector<HTMLInputElement>('[data-slab-range]');
+      const strip = range?.closest<HTMLElement>('.slab__strip');
+      const slides = [...root.querySelectorAll<HTMLElement>('[data-slab-slide]')];
+      if (!range || !strip || slides.length === 0) return;
+
+      const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const last = slides.length - 1;
+      let index = 0;
+      let auto = !reduceMotion;
+      let visible = true;
+      let timer: number | undefined;
+
+      const show = (next: number) => {
+        index = next;
+        slides.forEach((el, i) => el.classList.toggle('is-active', i === index));
+        range.value = String(index);
+        // With no caption on screen, the strip announces the picture instead
+        range.setAttribute('aria-valuetext', slides[index].getAttribute('alt') ?? '');
+        strip.style.setProperty('--pos', String(last ? index / last : 0));
+      };
+
+      const schedule = () => {
+        window.clearTimeout(timer);
+        if (!auto || !visible) return;
+        timer = window.setTimeout(() => {
+          show(index === last ? 0 : index + 1);
+          schedule();
+        }, 4000);
+      };
+
+      range.addEventListener('input', () => {
+        auto = false;
+        window.clearTimeout(timer);
+        show(Number(range.value));
+      });
+
+      new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        schedule();
+      }).observe(root);
+
+      show(0);
+      schedule();
+    });
+  }
+
+  initSlab();
+  document.addEventListener('astro:page-load', initSlab);
+</script>

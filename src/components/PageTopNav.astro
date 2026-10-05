@@ -12,7 +12,7 @@ interface Props {
   maxWidth?: number;
 }
 
-const { backHref = '/', backLabel = 'Home', maxWidth = 640 } = Astro.props;
+const { backHref = '/', backLabel = 'Home', maxWidth = 700 } = Astro.props;
 ---
 
 <nav class="page-top-nav" aria-label="Page navigation" style={`--nav-max: ${maxWidth}px`}>
@@ -107,13 +107,13 @@ const { backHref = '/', backLabel = 'Home', maxWidth = 640 } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    max-width: var(--nav-max, 640px);
+    max-width: var(--nav-max, 700px);
     margin: 0 auto;
     padding: var(--nav-pad) 24px;
     box-sizing: content-box;
   }
 
-  @media (min-width: 640px) {
+  @media (min-width: 700px) {
     .page-top-nav__inner {
       padding-inline: 32px;
     }

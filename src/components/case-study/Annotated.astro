@@ -29,7 +29,7 @@ const uid = `cs-annotated-${Math.random().toString(36).slice(2, 8)}`;
     {typeof src === 'string' ? (
       <img src={encodeURI(src)} alt={alt} loading="lazy" decoding="async" />
     ) : (
-      <Image src={src} alt={alt} widths={[480, 960]} sizes="(min-width: 640px) 380px, 100vw" loading="lazy" decoding="async" />
+      <Image src={src} alt={alt} widths={[480, 960]} sizes="(min-width: 700px) 380px, 100vw" loading="lazy" decoding="async" />
     )}
 
     {points.map((point, index) => (

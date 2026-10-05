@@ -1,7 +1,7 @@
 ---
 // CaseStudyLayout.astro — Shared shell for project and design case studies:
 // fixed top nav, intro with facts and two lead screens, optional hero, numbered
-// sections in one 640px column, next card. No side rail: nothing squeezes the text.
+// sections in one 700px column, next card. No side rail: nothing squeezes the text.
 import Layout from '../Layout.astro';
 import PageTopNav from '../PageTopNav.astro';
 import PortfolioFooter from '../PortfolioFooter.astro';
@@ -57,7 +57,7 @@ const kicker = kind === 'Project' ? 'Case study' : 'Design case study';
   <PageTopNav backHref={backHref} backLabel={backLabel} />
 
   <main id="content" tabindex="-1" class="page-blur-entry min-h-screen bg-[var(--surface)] px-6 sm:px-8 pt-[108px] sm:pt-[124px] pb-12 sm:pb-16 text-[var(--text-primary)] antialiased">
-    <div class="mx-auto flex w-full max-w-[640px] flex-col" data-cs>
+    <div class="mx-auto flex w-full max-w-[700px] flex-col" data-cs>
       <article class="entry" data-entry>
         <header class="cs-intro" id="intro" data-cs-intro>
           <!-- No "Case study" label: they just clicked one. Status is

@@ -47,7 +47,7 @@ const cards = order.flatMap((slug) => {
               src={card.image}
               alt={`${card.title} preview`}
               widths={card.device === 'phone' ? [160, 320] : [320, 640]}
-              sizes="(min-width: 640px) 300px, 90vw"
+              sizes="(min-width: 700px) 300px, 90vw"
               class={`work-card__shot work-card__shot--${card.device}`}
               loading={index < 2 ? 'eager' : 'lazy'}
               decoding="async"
@@ -103,7 +103,7 @@ const cards = order.flatMap((slug) => {
     aspect-ratio: 4 / 3;
     overflow: hidden;
     box-sizing: border-box;
-    border: 1px solid var(--border-subtle);
+    border: 1px solid var(--border-inset);
     border-radius: var(--radius-inset);
     background: var(--surface-inset);
   }
