@@ -1,0 +1,514 @@
+---
+// Sketchbook.astro — a Hairline-style line figure for the About page.
+// A ring-bound field notebook lying open. Moving the pointer across it leafs
+// through the pages; each page holds one faint drawing (cars and made-up
+// characters), and the last page holds the first thing drawn: a rectangle.
+// Plain SVG + a small script, no dependencies. Follows the site theme through
+// [data-theme='dark'].
+interface Props {
+  label?: string;
+  /** Show the "Sketchbook · p. 04 / 10" read-out under the figure. */
+  caption?: boolean;
+}
+const {
+  label = 'A ring-bound sketchbook full of old drawings; its pages fan open toward the pointer.',
+  caption = false,
+} = Astro.props;
+---
+
+<figure class="sketchbook">
+  <div class="sketchbook__fig" data-sketchbook tabindex="0" role="img" aria-label={label}>
+    <svg viewBox="0 0 400 320" aria-hidden="true"><g data-scene></g></svg>
+  </div>
+  {caption && (
+    <figcaption class="sketchbook__read">
+      <span>Sketchbook</span>
+      <span data-read aria-live="polite"><b>p. 04</b> / 10</span>
+    </figcaption>
+  )}
+</figure>
+
+<style>
+  /* Hairline tokens, tuned to the site: the paper is the page surface, the
+     outlines are the text colour, and the interiors step down from there. */
+  .sketchbook {
+    --hairline-plate: var(--surface);
+    --hairline-hi: #232327;
+    --hairline-edge: #a4a4ac;
+    --hairline-mid: #c3c3c9;
+    --hairline-lo: #e0e0e4;
+    --hairline-stroke: 0.9;
+    margin: 0;
+    width: 100%;
+    max-width: 440px;
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  :global([data-theme='dark']) .sketchbook {
+    --hairline-hi: #ececef;
+    --hairline-edge: #6c6c74;
+    --hairline-mid: #4a4a52;
+    --hairline-lo: #2a2a30;
+  }
+
+  .sketchbook__fig {
+    width: 100%;
+    aspect-ratio: 5 / 4;
+    touch-action: pan-y;
+    border-radius: var(--radius-card);
+    outline: none;
+  }
+
+  .sketchbook__fig:focus-visible { box-shadow: 0 0 0 2px var(--brand); }
+
+  .sketchbook svg { display: block; width: 100%; height: 100%; overflow: visible; }
+
+  .sketchbook :global(path) {
+    vector-effect: non-scaling-stroke;
+    stroke-width: var(--hairline-stroke);
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .sketchbook__read {
+    display: flex;
+    justify-content: space-between;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--hairline-edge);
+  }
+
+  .sketchbook__read b { font-weight: 400; color: var(--text-secondary); }
+</style>
+
+<script>
+/*
+ * Sketchbook — a Hairline-style figure.
+ * A ring-bound sketchbook lying open. Pages pivot on the rings; the pointer's
+ * horizontal position chooses how far you have leafed through, and the pages
+ * around that point fan up and lean, like riffling with a thumb.
+ *
+ * Rules kept: one stroke width; rounded corners everywhere; vertical corners
+ * never drawn; covers get a single thickness line; bright outlines, dim
+ * interiors; no words in the figure (the name and page live in the read-out);
+ * one 700ms curve cubic-bezier(.32,.72,0,1) with a 50ms stagger; falloff
+ * 1 → .31 at 42% of the radius → .09 at the edge; designed resting state.
+ */
+  function initSketchbook(root: HTMLElement) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const fig = root;
+    const scene = root.querySelector('[data-scene]');
+    const readEl = (root.closest('.sketchbook') ?? root).querySelector('[data-read]');
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // ── Geometry (model units) ──
+    const N = 10;            // drawing pages
+    const W = 104;           // page width, away from the rings (u)
+    const D = 140;           // page depth, along the rings (v)
+    const R = 7;             // corner radius
+    const GAP = 1.15;        // page spacing in the stack
+    const COVER = 2;         // cover thickness
+    const ZC = COVER + (N + 1) * GAP / 2; // ring centre height
+    const RING_R = 7.2;    // round rings, just big enough to hold the stack
+    const RINGS = 9;
+
+    // Sheets, top to bottom: t = 0 is the front cover, 1..N the pages. The back
+    // cover is fixed and drawn separately.
+    const sheets = Array.from({ length: N + 1 }, (_, t) => ({
+      t,
+      z: COVER + (N - t + 1) * GAP + (t === 0 ? COVER : 0), // rest height
+      cover: t === 0,
+      theta: 0, from: 0, to: 0, start: 0, running: false,
+    }));
+
+    // ── Projection: isometric, viewer toward +x +y +z ──
+    const C = Math.cos(Math.PI / 6), S = 0.5;
+    const OX = 252, OY = 170; // screen origin (tuned so the open book sits centred)
+    const P = (x, y, z) => [OX + (x - y) * C, OY + (x + y) * S - z];
+
+    // Rounded rectangle in a sheet's own plane, sampled as (u, v) points.
+    function roundRect(u0, v0, u1, v1, r) {
+      const pts = [];
+      const arc = (cu, cv, a0) => { for (let k = 0; k <= 6; k++) { const a = a0 + (k / 6) * Math.PI / 2; pts.push([cu + r * Math.cos(a), cv + r * Math.sin(a)]); } };
+      arc(u1 - r, v1 - r, 0);
+      arc(u0 + r, v1 - r, Math.PI / 2);
+      arc(u0 + r, v0 + r, Math.PI);
+      arc(u1 - r, v0 + r, Math.PI * 1.5);
+      return pts;
+    }
+    const OUTLINE = roundRect(3, 0, W, D, R);
+
+    // A sheet point → world, rotating about the ring axis (x = 0, z = ZC).
+    function sheetToWorld(sh, u, v, lift = 0) {
+      const d = sh.z - ZC + lift;
+      const c = Math.cos(sh.theta), s = Math.sin(sh.theta);
+      return [u * c - d * s, v, ZC + u * s + d * c];
+    }
+    const toPath = (pts, close) => pts.map((p, i) => (i ? 'L' : 'M') + p[0].toFixed(2) + ' ' + p[1].toFixed(2)).join('') + (close ? 'Z' : '');
+
+    function el(tag, attrs) { const n = document.createElementNS(NS, tag); for (const k in attrs) n.setAttribute(k, attrs[k]); return n; }
+    const COL = { hi: 'var(--hairline-hi)', edge: 'var(--hairline-edge)', mid: 'var(--hairline-mid)', lo: 'var(--hairline-lo)', plate: 'var(--hairline-plate)' };
+
+    // ── Drawing ──
+    function drawSheet(g, sh) {
+      const face = OUTLINE.map(([u, v]) => P(...sheetToWorld(sh, u, v)));
+      if (sh.cover) {
+        // A thin plate: one thickness line under the near edges, dim.
+        const near = OUTLINE.filter(([u, v]) => u > W * 0.5 || v > D * 0.5)
+          .map(([u, v]) => P(...sheetToWorld(sh, u, v, -COVER)));
+        g.append(el('path', { d: toPath(near), fill: 'none', stroke: COL.edge }));
+      }
+      g.append(el('path', { d: toPath(face, true), fill: COL.plate, stroke: COL.hi }));
+      // The drawing on each page is the one dim interior. It shows only while
+      // the drawn side faces the viewer (normal · view > 0).
+      // A page tucked close under the one above it keeps its drawing hidden, so
+      // only the open spread and the pages fanning up show a sketch at a time.
+      // Lying pages check the sheet above them; turned pages, the sheet that
+      // would land on top of them in the left-hand pile.
+      const turned = sh.theta > Math.PI / 2;
+      const over = turned ? sheets[sh.t + 1] : sheets[sh.t - 1];
+      const open = !over || (turned ? sh.theta - over.theta > 0.5 : over.theta - sh.theta > 0.5);
+      const seen = open && Math.cos(sh.theta) - Math.sin(sh.theta) > 0.02;
+      const insideSeen = Math.cos(sh.theta) - Math.sin(sh.theta) < -0.02;
+      if (sh.cover) {
+        if (insideSeen) drawCoverInside(g, sh);
+        else if (Math.cos(sh.theta) - Math.sin(sh.theta) > 0.02) drawCoverOutside(g, sh);
+        return;
+      }
+      if (open) drawPaper(g, sh, seen);
+      if (seen && SKETCHES[sh.t]) {
+        const d = SKETCHES[sh.t]
+          .map(stroke => toPath(stroke.map(([x, y]) => P(...sheetToWorld(sh, 62 + x * 0.8, 70 - y * 1.15)))))
+          .join('');
+        g.append(el('path', { d, fill: 'none', stroke: COL.edge }));
+      }
+    }
+
+    // ── Surface detail: a field notebook. Card covers with corner guards, a
+    // pocket inside the front cover, a blank label on the outside; punched
+    // holes and a margin rule on every page. All of it is dim interior line.
+    const planePath = (sh, pts, close) => toPath(pts.map(([u, v]) => P(...sheetToWorld(sh, u, v))), close);
+    const line = (g, d, stroke = COL.mid) => g.append(el('path', { d, fill: 'none', stroke }));
+    const ringV = k => 14 + k * ((D - 28) / (RINGS - 1));
+
+    function drawPaper(g, sh, frontSeen) {
+      {
+        // Punched holes and a margin rule.
+        for (let k = 0; k < RINGS; k++) line(g, planePath(sh, circle(7, ringV(k), 1.5, 0, Math.PI * 2, 12)), COL.mid);
+        if (frontSeen) line(g, planePath(sh, [[16, 6], [16, D - 6]]), COL.lo);
+      }
+    }
+
+    // The cover's outside: seen when the book is closed (pointer far right).
+    function drawCoverOutside(g, sh) {
+      {
+        // Corner guards and a blank label plate.
+        line(g, planePath(sh, curve([W - 18, 0.5], [W - 7, 7], [W - 0.5, 18])), COL.mid);
+        line(g, planePath(sh, curve([W - 18, D - 0.5], [W - 7, D - 7], [W - 0.5, D - 18])), COL.mid);
+        line(g, planePath(sh, roundRect(W - 46, 18, W - 26, 62, 3), true), COL.mid);
+      }
+    }
+
+    function drawCoverInside(g, sh) {
+      {
+        // Corner guards on the two outer corners, and a pocket with a thumb notch.
+        line(g, planePath(sh, curve([W - 18, 0.5], [W - 7, 7], [W - 0.5, 18])), COL.mid);
+        line(g, planePath(sh, curve([W - 18, D - 0.5], [W - 7, D - 7], [W - 0.5, D - 18])), COL.mid);
+        const vp = D * 0.56;
+        line(g, planePath(sh, [[4, vp], [W * 0.42, vp], ...curve([W * 0.42, vp], [W * 0.5, vp + 9], [W * 0.58, vp]), [W - 1, vp]]), COL.mid);
+      }
+    }
+
+
+    // ── The drawings: cars and made-up comic characters, one per page ──
+    // Each sketch lives in a 100 × 80 box (x right, y up), laid on the page the
+    // way you'd draw in it: x runs away from the rings, up runs along them. Pages near the back are the oldest; the
+    // last page holds the very first drawing, a rectangle.
+    const circle = (cx, cy, r, a0 = 0, a1 = Math.PI * 2, n = 28) =>
+      Array.from({ length: n + 1 }, (_, k) => { const a = a0 + (a1 - a0) * k / n; return [cx + r * Math.cos(a), cy + r * Math.sin(a)]; });
+    const curve = (a, c, b, n = 12) =>
+      Array.from({ length: n + 1 }, (_, k) => { const t = k / n, m = 1 - t; return [m * m * a[0] + 2 * m * t * c[0] + t * t * b[0], m * m * a[1] + 2 * m * t * c[1] + t * t * b[1]]; });
+    const box = (x0, y0, x1, y1, r) => { const p = roundRect(x0, y0, x1, y1, r); return [...p, p[0]]; };
+    const mirror = s => s.map(([x, y]) => [-x, y]);
+
+    const SKETCHES = {
+      // 1 · saloon, side on
+      1: [
+        [[-44, -6], [-44, 3], [-30, 7], [-17, 19], [11, 19], [25, 8], [44, 4], [44, -6]],
+        [[-14, 8], [-9, 16], [9, 16], [18, 8]],
+        circle(-26, -7, 8.5), circle(26, -7, 8.5),
+      ],
+      // 2 · a grinning kid with sticky-out ears and three tufts
+      2: [
+        circle(0, 0, 22),
+        circle(-25, 2, 5.5, Math.PI * 0.35, Math.PI * 1.65), circle(25, 2, 5.5, -Math.PI * 0.65, Math.PI * 0.65),
+        [[-10, 20], [-7, 31], [-2, 21], [2, 33], [6, 21], [11, 29], [12, 19]],
+        circle(-8, 5, 1.6, 0, Math.PI * 2, 8), circle(8, 5, 1.6, 0, Math.PI * 2, 8),
+        [[-11, -6], [11, -6]], curve([-11, -6], [0, -20], [11, -6]),
+      ],
+      // 3 · low coupé with a wing
+      3: [
+        [[-46, -5], [-46, 2], [-24, 5], [-9, 15], [13, 15], [29, 6], [46, 3], [46, -5]],
+        [[34, 5], [39, 12], [47, 12]],
+        circle(-28, -6, 8), circle(28, -6, 8),
+      ],
+      // 4 · a pear-shaped fellow, waving
+      4: [
+        circle(0, -4, 17, 0, Math.PI * 2, 32).map(([x, y]) => [x * (1 - (y + 4) / 70), y * 1.25]),
+        circle(-6, 9, 4), circle(6, 9, 4),
+        circle(-5, 8, 1, 0, Math.PI * 2, 6), circle(7, 8, 1, 0, Math.PI * 2, 6),
+        curve([-5, -1], [0, -6], [5, -1]),
+        [[-15, -6], [-27, 5], [-30, 14]], [[15, -6], [26, -15]],
+        [[-6, -25], [-8, -34], [-13, -35]], [[6, -25], [8, -34], [13, -35]],
+      ],
+      // 5 · a wheel study
+      5: [
+        circle(0, 0, 32), circle(0, 0, 26), circle(0, 0, 7),
+        ...[0, 1, 2, 3, 4].map(k => { const a = Math.PI / 2 + k * Math.PI * 2 / 5; return [[7 * Math.cos(a), 7 * Math.sin(a)], [24 * Math.cos(a), 24 * Math.sin(a)]]; }),
+      ],
+      // 6 · a box-headed robot
+      6: [
+        box(-16, -14, 16, 14, 4),
+        [[0, 14], [0, 23]], circle(0, 26, 3),
+        circle(-7, 3, 4), circle(7, 3, 4),
+        [[-8, -7], [-4, -4], [0, -7], [4, -4], [8, -7]],
+      ],
+      // 7 · a car, head on
+      7: [
+        box(-36, -14, 36, 10, 5),
+        [[-25, 10], [-18, 25], [18, 25], [25, 10]],
+        circle(-25, -2, 5), circle(25, -2, 5),
+        [[-12, -6], [12, -6]], [[-12, -1], [12, -1]], [[-12, 4], [12, 4]],
+        [[-31, -14], [-31, -21], [-21, -21], [-21, -14]], mirror([[-31, -14], [-31, -21], [-21, -21], [-21, -14]]),
+      ],
+      // 8 · a big-nosed character, mid laugh
+      8: [
+        [[12, 30], [-5, 30], [-17, 21], [-19, 8], [-29, 2], [-21, -4], [-18, -14], [-7, -24], [12, -24]],
+        circle(-9, 10, 1.6, 0, Math.PI * 2, 8),
+        [[-18, -7], [-10, -11], [-4, -8]],
+        circle(7, 4, 5),
+        [[12, 30], [16, 22], [9, 20], [15, 12]],
+      ],
+      // 9 · a speech bubble, mid scribble — words stay out of the figure
+      9: [
+        box(-30, -2, 30, 26, 6),
+        [[-14, -2], [-20, -14], [-6, -2]],
+        [[-20, 12], [-14, 17], [-8, 8], [-2, 17], [4, 8], [10, 17], [17, 11]],
+      ],
+      // 10 · the first thing drawn: a rectangle
+      10: [box(-24, -12, 24, 12, 4)],
+    };
+
+    function drawBackCover(g) {
+      const base = { z: COVER, theta: 0 };
+      const near = OUTLINE.filter(([u, v]) => u > W * 0.5 || v > D * 0.5).map(([u, v]) => P(...sheetToWorld(base, u, v, -COVER)));
+      g.append(el('path', { d: toPath(near), fill: 'none', stroke: COL.edge }));
+      g.append(el('path', { d: toPath(OUTLINE.map(([u, v]) => P(...sheetToWorld(base, u, v))), true), fill: COL.plate, stroke: COL.hi }));
+      {
+        line(g, planePath(base, curve([W - 18, 0.5], [W - 7, 7], [W - 0.5, 18])), COL.mid);
+        line(g, planePath(base, curve([W - 18, D - 0.5], [W - 7, D - 7], [W - 0.5, D - 18])), COL.mid);
+      }
+    }
+
+    // Rings: circles in the x–z plane. The half behind the pages is drawn first.
+    function drawRings(g, back) {
+      const twin = [0];
+      const rr = RING_R;
+      for (let k = 0; k < RINGS; k++) {
+        for (const off of twin) {
+          const v = ringV(k) + off;
+          const pts = [];
+          for (let a = 0; a <= 36; a++) {
+            const ang = (back ? Math.PI / 2 : -Math.PI / 2) + (a / 36) * Math.PI;
+            pts.push(P(1.5 + rr * Math.cos(ang), v, ZC + rr * Math.sin(ang)));
+          }
+          g.append(el('path', { d: toPath(pts), fill: 'none', stroke: back ? COL.mid : COL.edge }));
+        }
+      }
+    }
+
+    function render() {
+      const g = el('g', {});
+      const flipped = sheets.filter(s => s.theta > Math.PI / 2).sort((a, b) => a.t - b.t);
+      const lying = sheets.filter(s => s.theta <= Math.PI / 2).sort((a, b) => b.t - a.t);
+      drawRings(g, true);
+      flipped.forEach(s => drawSheet(g, s));
+      drawBackCover(g);
+      lying.forEach(s => drawSheet(g, s));
+      drawRings(g, false);
+      scene.replaceChildren(g);
+    }
+
+    // ── Motion: one curve, cubic-bezier(.32,.72,0,1), 700ms, 50ms stagger ──
+    function bezier(x1, y1, x2, y2) {
+      const cx = 3 * x1, bx = 3 * (x2 - x1) - cx, ax = 1 - cx - bx;
+      const cy = 3 * y1, by = 3 * (y2 - y1) - cy, ay = 1 - cy - by;
+      const X = t => ((ax * t + bx) * t + cx) * t, Y = t => ((ay * t + by) * t + cy) * t;
+      const dX = t => (3 * ax * t + 2 * bx) * t + cx;
+      return x => { let t = x; for (let i = 0; i < 6; i++) { const e = X(t) - x, d = dX(t); if (Math.abs(e) < 1e-5 || !d) break; t -= e / d; } return Y(Math.min(1, Math.max(0, t))); };
+    }
+    const ease = bezier(.32, .72, 0, 1);
+    const DUR = 700, STAGGER = 50;
+
+    // Falloff: 1 at the pointer, .31 at 42% of the radius, .09 at the edge.
+    function falloff(d, radius) {
+      const x = Math.min(1, Math.abs(d) / radius);
+      if (x <= .42) return 1 - (1 - .31) * (x / .42);
+      return .31 - (.31 - .09) * ((x - .42) / .58);
+    }
+
+    // Where the reader is, in sheets from the top (0 = nothing turned).
+    const REST = 3.5; // designed rest: cover and a few pages over, one mid-turn
+    let position = REST;
+    const intensity = 0.5;
+
+    // The fan: the sheet at the reader stands upright; neighbours lean away by
+    // the falloff, then settle flat (or turned) just past the radius.
+    const RADIUS = 2.6;
+    const reach = x => x <= RADIUS ? falloff(x, RADIUS) : Math.max(0, .09 * (1 - (x - RADIUS) / 0.8));
+    function targets(p) {
+      return sheets.map(s => {
+        const x = p - s.t;                     // > 0: this sheet is already turned
+        const lean = 1 - reach(Math.abs(x));    // 0 at the reader, 1 far away
+        const turnedRest = Math.PI * (0.985 - 0.006 * Math.max(0, x)); // turned pile fans a touch
+        return x >= 0
+          ? Math.PI / 2 + (turnedRest - Math.PI / 2) * lean
+          : (Math.PI / 2) * (1 - lean);
+      });
+    }
+
+    function retarget(p, now) {
+      const t = targets(p);
+      const pivot = Math.round(p);
+      sheets.forEach((s, i) => {
+        if (Math.abs(t[i] - s.to) < 1e-3) return;
+        s.from = s.theta; s.to = t[i];
+        s.start = now + (s.running ? 0 : Math.abs(s.t - pivot) * STAGGER);
+        s.running = true;
+      });
+      const page = Math.max(1, Math.min(N, Math.ceil(p)));
+      if (readEl) readEl.innerHTML = `<b>p. ${String(page).padStart(2, '0')}</b> / ${N}`;
+    }
+
+    let raf = 0;
+    function tick(now) {
+      let busy = false;
+      for (const s of sheets) {
+        if (!s.running) continue;
+        const k = reduce ? 1 : Math.max(0, Math.min(1, (now - s.start) / DUR));
+        s.theta = s.from + (s.to - s.from) * ease(k);
+        if (k >= 1) { s.theta = s.to; s.running = false; } else busy = true;
+      }
+      render();
+      raf = busy ? requestAnimationFrame(tick) : 0;
+    }
+    function kick() { retarget(position, performance.now()); if (!raf) raf = requestAnimationFrame(tick); }
+
+    // Leafing one page at a time (keys and taps share these).
+    const clampPos = (p: number) => Math.min(N + 1.3, Math.max(-0.3, p));
+    const pageForward = () => { position = clampPos(Math.floor(position) + 1.5); kick(); };
+    const pageBack = () => { position = clampPos(Math.ceil(position) - 1.5); kick(); };
+
+    // Mouse: hovering further left turns more pages; leaving puts the book
+    // back at rest. Intensity sets how far the pointer can carry the reader.
+    fig.addEventListener('pointermove', e => {
+      if (e.pointerType !== 'mouse') return;
+      const r = fig.getBoundingClientRect();
+      const xn = Math.min(1, Math.max(0, (e.clientX - r.left) / r.width));
+      const raw = (1 - xn) * (N + 1.6) - 0.3;
+      const gain = Math.min(1, intensity * 2);
+      position = REST + (raw - REST) * gain;
+      kick();
+    });
+    fig.addEventListener('pointerleave', e => {
+      if (e.pointerType !== 'mouse') return;
+      position = REST; kick();
+    });
+
+    // Touch and pen: a sideways swipe leafs through and the book stays where
+    // it is left; a tap turns one page (right half forward, left half back).
+    // Vertical drags still scroll the page (touch-action: pan-y).
+    let drag: { id: number; x: number; from: number; moved: boolean } | null = null;
+    fig.addEventListener('pointerdown', e => {
+      if (e.pointerType === 'mouse') return;
+      stopIntro();
+      drag = { id: e.pointerId, x: e.clientX, from: position, moved: false };
+    });
+    fig.addEventListener('pointermove', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      const dx = e.clientX - drag.x;
+      if (Math.abs(dx) > 8) drag.moved = true;
+      if (!drag.moved) return;
+      const w = fig.getBoundingClientRect().width;
+      position = clampPos(drag.from - (dx / w) * (N + 1.6));
+      kick();
+    });
+    fig.addEventListener('pointerup', e => {
+      if (!drag || e.pointerId !== drag.id) return;
+      if (drag.moved) {
+        // Settle on the nearest spread, with one page mid-turn.
+        position = clampPos(Math.round(position - 0.5) + 0.5); kick();
+      } else {
+        const r = fig.getBoundingClientRect();
+        (e.clientX - r.left > r.width / 2 ? pageForward : pageBack)();
+      }
+      drag = null;
+    });
+    // The browser took over (a vertical scroll): keep the book where it is.
+    fig.addEventListener('pointercancel', () => { drag = null; });
+
+    // Intro riffle on touch screens: the first time the book scrolls into
+    // view, its pages fan forward and settle back once, a hint that it can be
+    // touched. Skipped for reduced motion and whenever someone touches first.
+    let introRaf = 0;
+    const stopIntro = () => { if (introRaf) cancelAnimationFrame(introRaf); introRaf = 0; };
+    function playIntro() {
+      const t0 = performance.now(), DURATION = 1800, REACH = 3.2;
+      const step = (now: number) => {
+        const k = Math.min(1, (now - t0) / DURATION);
+        position = REST + REACH * Math.sin(Math.PI * k);
+        kick();
+        introRaf = k < 1 ? requestAnimationFrame(step) : 0;
+        if (k >= 1) { position = REST; kick(); }
+      };
+      introRaf = requestAnimationFrame(step);
+    }
+    if (!reduce && matchMedia('(hover: none)').matches && 'IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([entry]) => {
+        if (!entry.isIntersecting) return;
+        io.disconnect();
+        if (!drag) setTimeout(playIntro, 250);
+      }, { threshold: 0.6 });
+      io.observe(fig);
+    }
+
+    // Keyboard: arrows leaf one page at a time.
+    fig.addEventListener('keydown', e => {
+      if (e.key === 'ArrowLeft') pageForward();
+      else if (e.key === 'ArrowRight') pageBack();
+      else return;
+      e.preventDefault();
+    });
+
+    // Start at the designed rest, already open.
+    const t0 = targets(REST);
+    sheets.forEach((s, i) => { s.theta = s.from = s.to = t0[i]; });
+    retarget(REST, performance.now());
+    render();
+  }
+
+  function initAll() {
+    document.querySelectorAll<HTMLElement>('[data-sketchbook]').forEach((root) => {
+      if (root.dataset.bound) return;
+      root.dataset.bound = 'true';
+      initSketchbook(root);
+    });
+  }
+
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>

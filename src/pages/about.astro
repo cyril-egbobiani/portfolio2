@@ -1,7 +1,7 @@
 ---
 // src/pages/about.astro — The human half.
-// About V2: a wide ring-framed portrait across the top, "Of me", the story with
-// one line pulled out as a quote, then Off the clock as an even 2 × 3 grid of
+// About V2: the Sketchbook figure across the top, "Of me", the story (the
+// rectangle line kept as plain text), then Off the clock as an even 2 × 3 grid of
 // 4:3 photos, the rewatching pills, and the contact block.
 import Layout from '../components/Layout.astro';
 import PageTopNav from '../components/PageTopNav.astro';
@@ -15,6 +15,7 @@ import longWalksImg from '../assets/images/optimized/long-walks.jpg';
 import musicImg from '../assets/images/optimized/soundscapes.webp';
 import ContactSection from '../components/ContactSection.astro';
 import PortfolioFooter from '../components/PortfolioFooter.astro';
+import Sketchbook from '../components/Sketchbook.astro';
 
 // An even two-column grid of 4:3 photos, so every row lines up.
 const photos = [
@@ -42,9 +43,9 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
            the paragraphs it introduces instead of floating on its own -->
       <div class="about-intro">
       <section class="about-hero">
-        <div class="about-banner">
-          <Image src={profileIntroImg} alt="Cyril Egbobiani" widths={[640, 1280]} sizes="(min-width: 700px) 632px, 92vw" class="about-banner__img" loading="eager" />
-        </div>
+              <Sketchbook />
+
+      
         <h1 class="about-title">Of me</h1>
       </section>
 
@@ -53,13 +54,13 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
           Drawing became a coping tool for me at a very young age. It was just me and my notebook… then it
           finished. I drew on almost anything in sight, but my mum's beating finally humbled me.
         </p>
-        <p>Then I came across tech, coding in particular.</p>
-        <blockquote class="about-quote">
-          “It was so weird seeing someone write some combination of letters just to create a rectangle.”
-        </blockquote>
+        <p>Then I stumbled into tech, coding.</p>
+        <p>
+          It was so weird (but also cool) seeing someone write some combination of letters and numbers just to create a rectangle.
+        </p>
         <p>
           I didn't really like the process, but I was a big fan of the result. As time passed, I knew I had to
-          learn how to code, and it's been an awesome rollercoaster ever since.
+          learn how to code, and it's been a rollercoaster ever since.
         </p>
       </section>
       </div>
@@ -153,16 +154,6 @@ const rewatching = ['iCarly', 'Victorious', 'Sam & Cat'];
     font-size: var(--text-base);
     line-height: 1.7;
     color: var(--text-secondary);
-  }
-
-  .about-quote {
-    margin: 0;
-    padding: 4px 0 4px 20px;
-    border-left: 1px solid var(--border-default);
-    font-family: var(--font-title);
-    font-size: 22px;
-    line-height: 1.4;
-    color: var(--text-primary);
   }
 
   /* ── Gallery: even 2 × 3 grid ─────────────────────────── */
