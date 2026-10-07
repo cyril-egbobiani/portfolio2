@@ -1,8 +1,0 @@
-
-import __ASTRO_IMAGE_IMPORT_0 from "../../assets/projects/fbdil-attendance-phone.png?astroContentImageFlag=&importer=src%2Fcontent%2Fjournal%2Fdesigning-and-building.md";
-import __ASTRO_IMAGE_IMPORT_1 from "../../assets/projects/forge-home.webp?astroContentImageFlag=&importer=src%2Fcontent%2Fjournal%2Fdesigning-and-building.md";
-import __ASTRO_IMAGE_IMPORT_2 from "../../assets/projects/gdg-babcock-home.png?astroContentImageFlag=&importer=src%2Fcontent%2Fjournal%2Fdesigning-and-building.md";
-import __ASTRO_IMAGE_IMPORT_3 from "./images/template-final.svg?astroContentImageFlag=&importer=src%2Fcontent%2Fdesigns%2Fcase-study-template.mdx";
-import __ASTRO_IMAGE_IMPORT_4 from "./images/template-sketch.svg?astroContentImageFlag=&importer=src%2Fcontent%2Fdesigns%2Fcase-study-template.mdx";
-export default new Map([["../../assets/projects/fbdil-attendance-phone.png?astroContentImageFlag=&importer=src%2Fcontent%2Fjournal%2Fdesigning-and-building.md", __ASTRO_IMAGE_IMPORT_0], ["../../assets/projects/forge-home.webp?astroContentImageFlag=&importer=src%2Fcontent%2Fjournal%2Fdesigning-and-building.md", __ASTRO_IMAGE_IMPORT_1], ["../../assets/projects/gdg-babcock-home.png?astroContentImageFlag=&importer=src%2Fcontent%2Fjournal%2Fdesigning-and-building.md", __ASTRO_IMAGE_IMPORT_2], ["./images/template-final.svg?astroContentImageFlag=&importer=src%2Fcontent%2Fdesigns%2Fcase-study-template.mdx", __ASTRO_IMAGE_IMPORT_3], ["./images/template-sketch.svg?astroContentImageFlag=&importer=src%2Fcontent%2Fdesigns%2Fcase-study-template.mdx", __ASTRO_IMAGE_IMPORT_4]]);
-		
