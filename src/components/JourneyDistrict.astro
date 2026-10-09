@@ -1,0 +1,1244 @@
+---
+// JourneyDistrict.astro — "District 01 · Art", a Hairline-style isometric
+// lot for the About page. The childhood chapter: a storybook cottage with a
+// pencil for a chimney, a giant pencil drawing an endless loop, a football
+// goal, the palette, a sculpture in progress, paintbrush trees and the open
+// sketchbook. The flip-wheel car visits: it arrives, scans, lands, taps the
+// ball into the net, drives across the paper printing rose tread, then lifts
+// off for the next district; the lot carries on until it comes round again.
+//
+// Plain SVG + one script, no dependencies. Follows the site theme through
+// [data-theme='dark']; the rose accent is --brand. Pauses off-screen and in
+// background tabs, and honours prefers-reduced-motion (a still frame).
+interface Props {
+  label?: string;
+}
+const {
+  label = 'An isometric line drawing of a childhood lot: a cottage, a giant pencil drawing on paper, a football goal, a paint palette, a sculpture and paintbrush trees. A small hovering car visits, scores a goal and drives across the paper before flying off.',
+} = Astro.props;
+---
+
+<figure class="journey">
+  <div class="journey__fig" data-journey role="img" aria-label={label}>
+    <svg viewBox="-166 -136 320 234" aria-hidden="true"><g data-scene></g></svg>
+  </div>
+  <figcaption class="journey__cap">
+    <span class="journey__name"><b>01</b> Loved art</span>
+    <button type="button" class="journey__toggle" data-journey-toggle aria-pressed="false" aria-label="Pause animation">
+      <svg viewBox="0 0 16 16" aria-hidden="true" class="journey__icon journey__icon--pause"><path d="M5.5 3.5v9M10.5 3.5v9" /></svg>
+      <svg viewBox="0 0 16 16" aria-hidden="true" class="journey__icon journey__icon--play"><path d="M5.5 3.6v8.8l7-4.4z" /></svg>
+    </button>
+  </figcaption>
+</figure>
+
+<style>
+  /* Hairline tokens, tuned to the site: the plate is the page surface, the
+     outlines are the text colour, the interiors step down, rose is --brand. */
+  .journey {
+    --hairline-plate: var(--surface);
+    --hairline-hi: #232327;
+    --hairline-edge: #a4a4ac;
+    --hairline-mid: #c3c3c9;
+    --hairline-lo: #e0e0e4;
+    --hairline-accent: var(--brand);
+    --hairline-stroke: 0.9;
+    margin: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  :global([data-theme='dark']) .journey {
+    --hairline-hi: #ececef;
+    --hairline-edge: #6c6c74;
+    --hairline-mid: #4a4a52;
+    --hairline-lo: #2a2a30;
+  }
+
+  .journey__fig {
+    width: 100%;
+    aspect-ratio: 320 / 234;
+  }
+
+  .journey__fig > svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+
+  .journey__fig :global(path) {
+    vector-effect: non-scaling-stroke;
+    stroke-width: var(--hairline-stroke);
+    stroke-linejoin: round;
+    stroke-linecap: round;
+  }
+
+  .journey__cap {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.04em;
+    color: var(--hairline-edge);
+  }
+
+  .journey__name b { font-weight: 400; color: var(--text-secondary); margin-right: 4px; }
+
+  .journey__toggle {
+    display: inline-grid;
+    place-items: center;
+    width: 32px;
+    height: 32px;
+    margin: -6px -8px -6px 0;
+    padding: 0;
+    border: 0;
+    border-radius: 9999px;
+    background: none;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+
+  .journey__toggle:focus-visible { outline: none; box-shadow: 0 0 0 2px var(--brand); }
+
+  @media (hover: hover) and (pointer: fine) {
+    .journey__toggle:hover { color: var(--text-primary); background: var(--surface-subtle); }
+  }
+
+  .journey__icon { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+  .journey__toggle[aria-pressed='true'] .journey__icon--pause,
+  .journey__toggle[aria-pressed='false'] .journey__icon--play { display: none; }
+</style>
+
+<script>
+  // @ts-nocheck — a hand-tuned drawing script; types would only add noise.
+  /*
+   * Hairline rules kept: one stroke width, bright silhouettes, dim folds and
+   * interiors, a single rose accent, no words inside the figure.
+   * Isometric projection; solids are convex polyhedra drawn with exact face
+   * visibility; things are painted far to near (x + y).
+   */
+  function initJourney(root) {
+    const NS = 'http://www.w3.org/2000/svg';
+    const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const COL = { hi: 'var(--hairline-hi)', edge: 'var(--hairline-edge)', mid: 'var(--hairline-mid)', lo: 'var(--hairline-lo)', plate: 'var(--hairline-plate)', acc: 'var(--hairline-accent)' };
+
+    // ── Projection ──
+    const C = Math.cos(Math.PI / 6), S = 0.5;
+    let FLIP = 1, ZOFF = 0;
+    let XF = { p: 0, r: 0, cz: 18 }, YAW = 0;
+    const rot = ([x, y, z], p, r, cz) => {
+      const dz = z - cz, x1 = x * Math.cos(p) - dz * Math.sin(p), z1 = dz * Math.cos(p) + x * Math.sin(p);
+      return [x1, y * Math.cos(r) - z1 * Math.sin(r), cz + y * Math.sin(r) + z1 * Math.cos(r)];
+    };
+    const W3 = (x, y, z) => { if (XF.p || XF.r) [x, y, z] = rot([x, y, z], XF.p, XF.r, XF.cz); if (YAW) [x, y] = [x * Math.cos(YAW) - y * Math.sin(YAW), x * Math.sin(YAW) + y * Math.cos(YAW)]; return [(FLIP * x - y) * C, (FLIP * x + y) * S - (z + ZOFF)]; };
+    const f = n => n.toFixed(2);
+    const p2 = (pts, close) => pts.map((p, i) => (i ? 'L' : 'M') + f(p[0]) + ' ' + f(p[1])).join('') + (close ? 'Z' : '');
+    const p3 = (pts, close) => p2(pts.map(p => W3(...p)), close);
+    let G;
+    const draw = (d, stroke, fill = 'none') => { const n = document.createElementNS(NS, 'path'); n.setAttribute('d', d); n.setAttribute('stroke', stroke); n.setAttribute('fill', fill); G.append(n); };
+    const dot = pts => pts.map(p => { const c = W3(...p); return `M${f(c[0])} ${f(c[1])}h0.01`; }).join('');
+
+    // ── Convex polyhedra ──
+    const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+    const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+    const dotv = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+    const norm = a => { const l = Math.hypot(...a) || 1; return [a[0] / l, a[1] / l, a[2] / l]; };
+    // the view direction, carried into the vehicle's own (pitched, rolled) frame
+    const view = () => { let [x, y, z] = [FLIP, 1, 1]; if (YAW) [x, y] = [x * Math.cos(YAW) + y * Math.sin(YAW), -x * Math.sin(YAW) + y * Math.cos(YAW)]; if (!(XF.p || XF.r)) return [x, y, z]; const r = -XF.r, p = -XF.p; const y1 = y * Math.cos(r) - z * Math.sin(r), z1 = y * Math.sin(r) + z * Math.cos(r); return [x * Math.cos(p) - z1 * Math.sin(p), y1, z1 * Math.cos(p) + x * Math.sin(p)]; };
+
+    // A solid: vertices and faces (index loops). Normals are made to point away
+    // from the centroid, so face winding never matters.
+    function solid(verts, faces, opts = {}) {
+      const c = verts.reduce((a, v) => [a[0] + v[0] / verts.length, a[1] + v[1] / verts.length, a[2] + v[2] / verts.length], [0, 0, 0]);
+      const fs = faces.map(ix => {
+        const p = ix.map(i => verts[i]);
+        let n = [0, 0, 0];
+        for (let i = 0; i < p.length; i++) { const a = p[i], b = p[(i + 1) % p.length]; n[0] += (a[1] - b[1]) * (a[2] + b[2]); n[1] += (a[2] - b[2]) * (a[0] + b[0]); n[2] += (a[0] - b[0]) * (a[1] + b[1]); }
+        n = norm(n);
+        const fc = p.reduce((a, v) => [a[0] + v[0] / p.length, a[1] + v[1] / p.length, a[2] + v[2] / p.length], [0, 0, 0]);
+        if (dotv(n, sub(fc, c)) < 0) n = n.map(x => -x);
+        return { ix, n };
+      });
+      return { verts, faces: fs, c, ...opts };
+    }
+    // Loft between rings of equal length ([x, y, z] points), capped both ends.
+    function loft(rings, opts) {
+      const N = rings[0].length, verts = rings.flat(), faces = [];
+      for (let r = 0; r < rings.length - 1; r++) for (let i = 0; i < N; i++) { const j = (i + 1) % N; faces.push([r * N + i, r * N + j, (r + 1) * N + j, (r + 1) * N + i]); }
+      faces.push([...Array(N).keys()]);
+      faces.push([...Array(N).keys()].map(i => (rings.length - 1) * N + i).reverse());
+      return solid(verts, faces, opts);
+    }
+    // A side profile [x, z] extruded across y, with half-width w(z) so the
+    // sides can lean in (a tumblehome).
+    function prism(profile, w, opts) {
+      const N = profile.length;
+      const L = profile.map(([x, z]) => [x, -w(z), z]), R = profile.map(([x, z]) => [x, w(z), z]);
+      const faces = [[...Array(N).keys()], [...Array(N).keys()].map(i => N + i)];
+      for (let i = 0; i < N; i++) { const j = (i + 1) % N; faces.push([i, j, N + j, N + i]); }
+      return solid([...L, ...R], faces, opts);
+    }
+    const box = (x0, x1, y0, y1, z0, z1, opts) => loft([[[x0, y0, z0], [x1, y0, z0], [x1, y1, z0], [x0, y1, z0]], [[x0, y0, z1], [x1, y0, z1], [x1, y1, z1], [x0, y1, z1]]], opts);
+
+    // Draw one solid: fill visible faces, then bright silhouette edges and dim
+    // fold edges (two visible faces meeting at an angle).
+    function render(s) {
+      const V = view();
+      const vis = s.faces.map(fc => dotv(fc.n, V) > 1e-6);
+      s.faces.forEach((fc, i) => { if (vis[i]) draw(p3(fc.ix.map(k => s.verts[k]), true), COL.plate, COL.plate); });
+      const edges = new Map();
+      s.faces.forEach((fc, fi) => fc.ix.forEach((a, k) => { const b = fc.ix[(k + 1) % fc.ix.length]; const key = a < b ? a + '_' + b : b + '_' + a; (edges.get(key) || edges.set(key, []).get(key)).push(fi); }));
+      const sil = [], fold = [];
+      for (const [key, fl] of edges) {
+        const [a, b] = key.split('_').map(Number);
+        const v = fl.filter(i => vis[i]);
+        if (!v.length) continue;
+        const seg = p3([s.verts[a], s.verts[b]]);
+        if (v.length === 1 || fl.length === 1) sil.push(seg);
+        else if (dotv(s.faces[fl[0]].n, s.faces[fl[1]].n) < 0.985) fold.push(seg);
+      }
+      if (fold.length) draw(fold.join(''), s.fold || COL.mid);
+      draw(sil.join(''), s.line || COL.hi);
+    }
+    const faceVisible = n => dotv(n, view()) > 1e-6;
+
+    // ── Wheels (shared look with the wagon, faceted rims) ──
+    function wheel(x, r, yOut, tw, phi) {
+      const side = yOut > 0 ? 1 : -1, yIn = yOut - side * tw;
+      const ring = (yy, rad, n = 28) => Array.from({ length: n }, (_, k) => { const a = k / n * Math.PI * 2; return [x + rad * Math.cos(a), yy, r + rad * Math.sin(a)]; });
+      const tyre = loft([ring(yIn, r), ring(yIn + side * 1.2, r + 0.45), ring(yOut - side * 1.2, r + 0.45), ring(yOut, r)].map(rg => rg), {});
+      render(tyre);
+      if (side < 0) return;
+      const yy = yOut - 0.4, rim = r * 0.6;
+      // tread on the visible band
+      const tr = [];
+      for (let k = 0; k < 20; k++) { const a = phi + k * Math.PI / 10; if (FLIP * Math.cos(a) + Math.sin(a) < 0.3) continue; const px = x + (r + 0.45) * Math.cos(a), pz = r + (r + 0.45) * Math.sin(a); tr.push(p3([[px, yOut - 1.2, pz], [px, yOut - tw * (k % 2 ? 0.35 : 0.6), pz]])); }
+      draw(tr.join(''), COL.mid);
+      // a hexagonal rim with six spokes
+      const hex = Array.from({ length: 6 }, (_, k) => { const a = phi + k * Math.PI / 3; return [x + rim * Math.cos(a), yy, r + rim * Math.sin(a)]; });
+      draw(p3(hex, true), COL.hi);
+      draw(hex.map(p => p3([[x + (p[0] - x) * 0.25, yy, r + (p[2] - r) * 0.25], p])).join(''), COL.mid);
+      draw(p3(Array.from({ length: 6 }, (_, k) => { const a = phi + k * Math.PI / 3 + Math.PI / 6; return [x + rim * 0.26 * Math.cos(a), yy, r + rim * 0.26 * Math.sin(a)]; }), true), COL.acc);
+    }
+
+    // ── The sketchbook, as a faceted slab on any plane ──
+    // o: origin, u/v: unit in-plane axes, n: plane normal; size su × sv, thick t.
+    function sketchbook(o, u, v, n, su, sv, t, strapAt = 0.5) {
+      const at = (a, b, h) => [o[0] + u[0] * a + v[0] * b + n[0] * h, o[1] + u[1] * a + v[1] * b + n[1] * h, o[2] + u[2] * a + v[2] * b + n[2] * h];
+      const ch = 1.2, rect = h => [[ch, 0], [su - ch, 0], [su, ch], [su, sv - ch], [su - ch, sv], [ch, sv], [0, sv - ch], [0, ch]].map(([a, b]) => at(a, b, h));
+      render(loft([rect(0), rect(t)]));
+      // ring binding down the spine edge (the u = 0 side)
+      const rs = [];
+      for (let k = 0; k < 5; k++) { const b = sv * (k + 0.8) / 5.6; rs.push(p3(Array.from({ length: 9 }, (_, i) => { const a = Math.PI * i / 8; return at(-1.1 * Math.sin(a), b, t / 2 + (t / 2 + 0.4) * Math.cos(a)); }))); }
+      draw(rs.join(''), COL.edge);
+      // the strap, across the book and down both sides
+      const s = su * strapAt;
+      draw(p3([at(s, -1.4, 0), at(s, 0, t), at(s, sv, t), at(s, sv + 1.4, 0)]), COL.acc);
+    }
+
+    // ════════════════ Flip-wheel vehicle ════════════════
+    // Drive mode: fat tyres in angular arches. Hover mode: each wheel swings out
+    // on a hinged arm and folds flat, its hub opening into a repulsor — a
+    // turbine fan with energy rings — so the wheels become four vectoring
+    // rotors around the body, quadcopter-style. One parameter K (0 drive →
+    // 1 hover) drives the whole transition.
+    const U = { w: 17, axF: 27, axR: -25, zb: 9, r: 8.6, tw: 7.8 };
+    const LOWER = [[-40, U.zb], [-40, 24.6], [30, 23.4], [44, 18.4], [46.4, 13], [43.4, U.zb]];
+    const CAB = [[-38.6, 23.6], [-38.6, 27.6], [-30, 32.2], [-8, 33.6], [26.4, 23.6]];
+    const cabW = z => 15.6 - (z - 23.6) * (5.2 / 10);
+    const roofZ = x => x < -8 ? 32.2 + (x + 30) * (1.4 / 22) : 33.6 - (x + 8) * (10 / 34.4);
+    const box8 = pts => solid(pts, [[0, 1, 2, 3], [4, 5, 6, 7], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]]);
+    const plate = (q, y0, y1) => box8([...q.map(([x, z]) => [x, y0, z]), ...q.map(([x, z]) => [x, y1, z])]);
+    const hexRing = (cx, cy, cz, rad, axis, rot = Math.PI / 6) => Array.from({ length: 6 }, (_, i) => { const a = i / 6 * Math.PI * 2 + rot; const u = rad * Math.cos(a), v = rad * Math.sin(a); return axis === 'x' ? [cx, cy + u, cz + v] : axis === 'y' ? [cx + u, cy, cz + v] : [cx + u, cy + v, cz]; });
+    const smooth = (a, b, x) => { const t = Math.min(1, Math.max(0, (x - a) / (b - a))); return t * t * (3 - 2 * t); };
+    const bump = (a, b, c, d, x) => smooth(a, b, x) * (1 - smooth(c, d, x));
+
+    // Hinge for each wheel: an axis along x at the arch crown, just outboard.
+    const HY = U.w + 0.6, HZ = U.r + 9.2;
+    // Rotate a wheel-local point about the hinge by angle ang (side-signed).
+    function foldPt([x, y, z], side, ang) {
+      const yh = side * HY, dy = y - yh, dz = z - HZ, a = side * ang;
+      return [x, yh + dy * Math.cos(a) - dz * Math.sin(a), HZ + dy * Math.sin(a) + dz * Math.cos(a)];
+    }
+
+    function flipWheel(x, side, K, phi, spin, tilt) {
+      const ang = K * Math.PI / 2 + tilt * K;
+      const r = U.r, yOut = side * (U.w + 1.6), yIn = yOut - side * U.tw, FP = p => foldPt(p, side, ang);
+      const ring = (yy, rad, n = 28) => Array.from({ length: n }, (_, k) => { const a = k / n * Math.PI * 2; return FP([x + rad * Math.cos(a), yy, r + rad * Math.sin(a)]); });
+      // the arm: from the hinge knuckle down to the hub's inner face
+      const hub = [x, yIn, r], hinge = [x, side * HY, HZ];
+      const a0 = FP([x - 1.4, hub[1] + side * 0.2, hub[2]]), a1 = FP([x + 1.4, hub[1] + side * 0.2, hub[2]]);
+      render(box8([[x - 1.4, hinge[1] - 0.8, hinge[2] - 0.6], [x + 1.4, hinge[1] - 0.8, hinge[2] - 0.6], a1, a0,
+        [x - 1.4, hinge[1] + 0.8, hinge[2] + 0.6], [x + 1.4, hinge[1] + 0.8, hinge[2] + 0.6], [a1[0], a1[1] + 1, a1[2] + 1], [a0[0], a0[1] + 1, a0[2] + 1]]));
+      // tyre: a bulging loft between its two sidewalls
+      render(loft([ring(yIn, r), ring(yIn + side * 1.2, r + 0.45), ring(yOut - side * 1.2, r + 0.45), ring(yOut, r)]));
+      // which way does the outer face look?
+      const nOut = sub(FP([x, yOut + side, r]), FP([x, yOut, r]));
+      if (!faceVisible(nOut)) return;
+      const yy = yOut + side * 0.05;
+      // drive: tread blocks on the visible band. hover: the tyre is now a duct
+      // shroud, so the tread goes smooth.
+      const tr = [];
+      for (let k = 0; k < 22; k++) {
+        const a = phi + k * Math.PI / 11, nrm = sub(FP([x + Math.cos(a), yOut - side * 3, r + Math.sin(a)]), FP([x, yOut - side * 3, r]));
+        if (!faceVisible(nrm)) continue;
+        const px = x + (r + 0.45) * Math.cos(a), pz = r + (r + 0.45) * Math.sin(a);
+        if (K < 0.5) tr.push(p3([FP([px, yOut - side * 1.2, pz]), FP([px, yOut - side * U.tw * (k % 2 ? 0.36 : 0.6), pz])]));
+      }
+      if (K < 0.5) {
+        // drive face: hexagonal rim, six spokes, a rose hub
+        const rim = Array.from({ length: 6 }, (_, k) => { const a = phi + k * Math.PI / 3; return FP([x + r * 0.6 * Math.cos(a), yy, r + r * 0.6 * Math.sin(a)]); });
+        draw(p3(rim, true), COL.hi);
+        draw(rim.map((p, k) => { const a = phi + k * Math.PI / 3; return p3([FP([x + r * 0.15 * Math.cos(a), yy, r + r * 0.15 * Math.sin(a)]), p]); }).join(''), COL.mid);
+        draw(p3(ring(yy, r * 0.15, 6), true), COL.acc);
+      } else {
+        // hover face: the hub opens into a ducted repulsor — shroud lip, nine
+        // swept turbine blades spinning, a pulsing energy ring, three motor
+        // struts to a hex hub, and vent slots round the lip
+        draw(p3(ring(yy, r * 0.86), true), COL.hi);
+        const bl = [];
+        for (let k = 0; k < 9; k++) {
+          const a = spin + k * Math.PI * 2 / 9;
+          bl.push(p3([0.2, 0.5, 0.82].map((rr, i) => FP([x + r * rr * Math.cos(a + i * 0.32), yy, r + r * rr * Math.sin(a + i * 0.32)]))));
+        }
+        draw(bl.join(''), COL.edge);
+        draw(p3(ring(yy, r * (0.6 + 0.05 * Math.sin(spin * 0.6))), true), COL.acc);
+        const sv = [];
+        for (let k = 0; k < 3; k++) { const a = k * Math.PI * 2 / 3 + Math.PI / 2; sv.push(p3([FP([x + r * 0.2 * Math.cos(a), yy + side * 0.3, r + r * 0.2 * Math.sin(a)]), FP([x + r * 0.86 * Math.cos(a), yy + side * 0.3, r + r * 0.86 * Math.sin(a)])])); }
+        draw(sv.join(''), COL.hi);
+        draw(p3(ring(yy + side * 0.3, r * 0.2, 6), true), COL.hi);
+        draw(p3(ring(yy + side * 0.3, r * 0.08, 6), true), COL.acc);
+        const vs = [];
+        for (let k = 0; k < 16; k++) { const a = k * Math.PI / 8 + 0.13; vs.push(p3([FP([x + r * 0.9 * Math.cos(a), yy, r + r * 0.9 * Math.sin(a)]), FP([x + r * 0.98 * Math.cos(a), yy, r + r * 0.98 * Math.sin(a)])])); }
+        draw(vs.join(''), COL.edge);
+      }
+    }
+
+    // Arches wrap the flip joint: seven facets, a slim trim, and the hinge
+    // knuckle housed in the crown. The inner liner shows when the wheel is out.
+    const archPts = x => [[x - 12.6, U.zb], [x - 11.6, 14.2], [x - 9, 17.8], [x - 4.4, 19.6], [x + 4.4, 19.6], [x + 9, 17.8], [x + 11.6, 14.2], [x + 12.6, U.zb]];
+    let VX = 1, VY = 1;
+    function arches(near, K) {
+      const s = near ? VY : -VY;
+      for (const x of [U.axF, U.axR]) {
+        const a = archPts(x);
+        if (near && K > 0.02) draw(p3(a.map(([px, pz]) => [x + (px - x) * 0.9, s * (U.w + 0.02), pz]).slice(1, -1)), COL.lo);
+        for (let i = 0; i < a.length - 1; i++) {
+          const [p, q] = [a[i], a[i + 1]], dx = q[0] - p[0], dz = q[1] - p[1], l = Math.hypot(dx, dz), nx = -dz / l * 1.8, nz = dx / l * 1.8;
+          render(plate([[p[0], p[1]], [q[0], q[1]], [q[0] - nx, q[1] - nz], [p[0] - nx, p[1] - nz]], s * (U.w - 0.2), s * (U.w + 1.4)));
+        }
+        // hinge knuckle at the crown
+        render(loft([hexRing(x - 3, s * HY, HZ, 1.5, 'x'), hexRing(x + 3, s * HY, HZ, 1.5, 'x')]));
+      }
+    }
+
+    // Reaction-control nozzles on the corners and two belly lifters: small
+    // hexes that flare rose when they fire.
+    function rcs(near, fire) {
+      const s = near ? VY : -VY;
+      for (const x of [40.4, -37.4]) {
+        render(loft([hexRing(x, s * U.w, 12.4, 1.6, 'y'), hexRing(x, s * (U.w + 1.4), 12.4, 1.3, 'y')]));
+        const f = x > 0 ? fire.front : fire.back;
+        if (near && f > 0.05) draw(p3([[x, s * (U.w + 1.5), 12.4], [x, s * (U.w + 1.5 + 5 * f), 12.4 - 2 * f]]), COL.acc);
+      }
+    }
+
+    // ── State ──
+    function vehicle(st) {
+      const { K, t, phi, spin, pitch, roll, thrust, front, alt, stretch, tilt } = st;
+      // ground: rose glow and ripple rings under each pad and the belly
+      const hoverH = K * (6 + alt + (reduce ? 0 : Math.sin(t * 2.2) * 0.6 + Math.sin(t * 3.7 + 1) * 0.25));
+      const padsXY = [[U.axF, -1], [U.axR, -1], [U.axF, 1], [U.axR, 1]].map(([x, s]) => [x, s * (HY + HZ - U.r)]);
+      if (K > 0.05) {
+        const rings = [], fade = [];
+        for (const [x, y] of [...padsXY, [0, 0]]) {
+          const base = x === 0 ? 7 : 5.6;
+          rings.push(p3(Array.from({ length: 28 }, (_, i) => { const a = i / 28 * Math.PI * 2; return [x + base * stretch * Math.cos(a), y + base * Math.sin(a), 0]; }), true));
+          for (let j = 0; j < 3; j++) {
+            const u = ((t * 0.7 + j / 3) % 1), rr2 = base * (1 + 1.3 * u);
+            fade.push([p3(Array.from({ length: 28 }, (_, i) => { const a = i / 28 * Math.PI * 2; return [x + rr2 * stretch * Math.cos(a), y + rr2 * Math.sin(a), 0]; }), true), (1 - u) * K]);
+          }
+        }
+        draw(rings.join(''), COL.acc);
+        // downwash: faint dashed columns from each duct to its pad
+        {
+          const top = 11 + hoverH, cols = [];
+          for (const [x, y] of padsXY) for (let k = 0; k < 4; k++) { const a = k * Math.PI / 2 + Math.PI / 4; cols.push(p3([[x + 4.6 * Math.cos(a), y + 4.6 * Math.sin(a), top], [x + 5.2 * stretch * Math.cos(a), y + 5.2 * Math.sin(a), 0]])); }
+          draw(cols.join(''), COL.acc);
+          const n = G.lastChild; n.setAttribute('stroke-opacity', (0.35 * K * (0.6 + 0.4 * thrust)).toFixed(2));
+          n.setAttribute('stroke-dasharray', '2 3'); n.setAttribute('stroke-dashoffset', (t * 14).toFixed(1));
+        }
+        for (const [d, o] of fade) { draw(d, COL.acc); G.lastChild.setAttribute('stroke-opacity', o.toFixed(2)); }
+      }
+      // the body floats on the pads and lags them a touch
+      const bodyH = K * (6 + alt + (reduce ? 0 : Math.sin((t - 0.15) * 2.2) * 0.6 + Math.sin((t - 0.15) * 3.7 + 1) * 0.25));
+      XF = { p: pitch, r: roll, cz: 18 };
+      ZOFF = bodyH;
+      { const lv0 = view(); VX = lv0[0] >= 0 ? 1 : -1; VY = lv0[1] >= 0 ? 1 : -1; }
+      const tiltFar = -tilt, tiltNear = tilt;
+      for (const x of [U.axF, U.axR]) flipWheel(x, -VY, K, phi, spin, -VY * tilt);
+      arches(false, K);
+      rcs(false, { front, back: thrust });
+      // tail thrusters (behind the tail; in the rear view they come later)
+      const thr = () => {
+        for (const s of [-1, 1]) {
+          render(loft([hexRing(-39.8, s * 7.6, 15.6, 3.6, 'x'), hexRing(-43.6, s * 7.6, 15.6, 2.9, 'x')]));
+          if (VX < 0) {
+            draw(p3(hexRing(-43.65, s * 7.6, 15.6, 1.8 + 0.4 * thrust, 'x'), true), COL.acc);
+            const L = 3 + 14 * thrust * K + 4 * thrust;
+            const lines = [];
+            for (const o of thrust > 0.5 ? [-0.6, 0, 0.6] : [0]) lines.push(p3([[-44, s * 7.6 + o, 15.6 + o * 0.5], [-44 - L, s * 7.6 + o * 1.6, 15.6 + o]]));
+            draw(lines.join(''), COL.acc);
+          }
+        }
+      };
+      if (VX > 0) thr();
+
+      const lower = prism(LOWER, () => U.w);
+      render(lower);
+      const lv = lower.faces.map(fc => faceVisible(fc.n));
+      const side = (pts, col, close) => draw(p3(pts.map(([x, z]) => [x, VY * (U.w + 0.02), z]), close), col);
+      if (lv[VY > 0 ? 1 : 0]) {
+        for (const [x, z0, z1] of [[-3, 10.6, 23.6], [-20.6, 10.6, 24.2]]) side([[x, z0], [x, z1]], COL.mid);
+        side([[-1, 20.6], [2.4, 20.6]], COL.edge); side([[-18.6, 20.8], [-15.2, 20.8]], COL.edge);
+        side([[-11.4, 10.8], [13.4, 10.8]], COL.lo);
+        for (let k = 0; k < 3; k++) side([[11 - k * 2.2, 13.6], [12.6 - k * 2.2, 17.4]], COL.mid);
+        side([[-40, 20.2], [44, 17.2]], COL.lo);
+      }
+      if (lv[5]) {
+        const np = (y, z) => [44 + (z - 18.4) / (13 - 18.4) * 2.4 + 0.05, y, z];
+        draw(p3([np(-U.w + 1, 16), np(U.w - 1, 16)]), COL.acc);
+        for (const s of [-1, 1]) draw(p3([np(s * (U.w - 2.6), 17.4), np(s * (U.w - 4.4), 14.4)]), COL.acc);
+      }
+      if (lv[6]) {
+        const ch = (y, z) => [46.4 - (13 - z) / (13 - U.zb) * 3 + 0.05, y, z];
+        draw(p3([ch(-8, 12), ch(8, 12), ch(7, 10.4), ch(-7, 10.4)], true), COL.edge);
+        // a sensor strip instead of a splitter: this thing flies
+        for (const y of [-5, -2.5, 0, 2.5, 5]) draw(p3([ch(y, 11.6), ch(y, 10.8)]), COL.mid);
+      }
+      if (lv[2]) {
+        const tp = (y, z) => [-40.05, y, z];
+        draw(p3([tp(-U.w + 1.2, 21.6), tp(U.w - 1.2, 21.6)]), COL.acc);
+        draw(p3([tp(-10.4, 19.6), tp(10.4, 19.6), tp(10.4, 23.6), tp(-10.4, 23.6)], true), COL.mid);
+        draw(p3([tp(-4, 11), tp(4, 11), tp(4, 13), tp(-4, 13)], true), COL.edge);
+      }
+      const cab = prism(CAB, cabW);
+      render(cab);
+      const cv = cab.faces.map(fc => faceVisible(fc.n));
+      const cside = (pts, col, close) => draw(p3(pts.map(([x, z]) => [x, VY * (cabW(z) + 0.02), z]), close), col);
+      if (cv[VY > 0 ? 1 : 0]) {
+        const z0 = 25.4, top = x => roofZ(x) - 2;
+        cside([[-34.4, z0], [-30.6, top(-30.6)], [-20.6, top(-20.6)], [-20.6, z0]], COL.mid, true);
+        const fx = 22.4 - (top(14) - z0) * 0.92;
+        cside([[-18.8, z0], [-18.8, top(-18.8)], [fx, top(fx)], [22.4, z0]], COL.mid, true);
+        cside([[-3, z0], [-3, top(-3)]], COL.mid);
+        render(box8([[20.6, U.w - 1, 24], [24.6, U.w - 1, 24], [24.6, U.w + 2.2, 24.6], [21.6, U.w + 2.2, 24.6], [20.6, U.w - 1, 25.8], [24.6, U.w - 1, 25.8], [24.6, U.w + 2.2, 25.4], [21.6, U.w + 2.2, 25.4]].map(([x, y, z]) => [x, VY * y, z])));
+      }
+      if (cv[5]) {
+        const ws = (tt, k) => { const x = -8 + 34.4 * tt, z = 33.6 - 10 * tt; return [x + 0.05, k * (cabW(z) - 1.8), z + 0.05]; };
+        draw(p3([ws(0.06, -1), ws(0.06, 1), ws(0.9, 1), ws(0.9, -1)], true), COL.mid);
+        draw(p3([ws(0.3, 0.2), ws(0.62, 0.7)]), COL.lo);
+      }
+      if (cv[2]) draw(p3([[-38.65, -cabW(24.8) + 2, 24.8], [-38.65, cabW(24.8) - 2, 24.8], [-38.65, cabW(27.2) - 2.2, 27.2], [-38.65, -cabW(27.2) + 2.2, 27.2]], true), COL.mid);
+      // roof: the sketchbook, and two slim stabiliser fins (no wing: it flies)
+      const parts = [];
+      const put = (x, fn) => parts.push({ k: VX * x, fn });
+      put(-17, () => sketchbook([-24, -7.2, roofZ(-24) + 0.1], norm([22, 0, 1.4]), [0, 1, 0], [0, 0, 1], 14.4, 14.4, 2.4, 0.5));
+      for (const s of [-1, 1]) put(-35 + s * 0.01, () => render(box8([
+        [-29, s * (cabW(roofZ(-29)) - 0.6), roofZ(-29)], [-38.6, s * (cabW(27.6) - 0.6), 27.6], [-42.6, s * 9.4, 35], [-37.6, s * 9.4, 35],
+        [-29, s * (cabW(roofZ(-29)) + 0.2), roofZ(-29)], [-38.6, s * (cabW(27.6) + 0.2), 27.6], [-42.6, s * 10.2, 35], [-37.6, s * 10.2, 35]])));
+      parts.sort((a, b) => a.k - b.k).forEach(p => p.fn());
+      if (VX < 0) thr();
+      rcs(true, { front, back: thrust });
+      arches(true, K);
+      for (const x of [U.axF, U.axR]) flipWheel(x, VY, K, phi, spin, VY * tilt);
+      XF = { p: 0, r: 0, cz: 18 }; ZOFF = 0; VX = 1; VY = 1;
+    }
+
+
+
+
+
+
+
+    // ════════════════ District 01 · Art (craft revision) ════════════════
+    // A lot on a faceted slab, SimCity-style: the childhood house with a pencil
+    // for a chimney, a giant pencil drawing an endless loop on a sheet of paper,
+    // an easel where the car gets sketched while it is parked, a paint palette
+    // with a brush dipping in, paintbrush trees, and the open sketchbook.
+    const add = (a, b) => [a[0] + b[0], a[1] + b[1], a[2] + b[2]];
+    const mul = (a, k) => [a[0] * k, a[1] * k, a[2] * k];
+    const lerp3 = (a, b, k) => add(a, mul(sub(b, a), k));
+    const basis = ax => { const a = norm(ax), t = Math.abs(a[2]) < 0.9 ? [0, 0, 1] : [1, 0, 0], u = norm(cross(a, t)); return [a, u, cross(a, u)]; };
+    const ringAx = (c, ax, rad, n = 6, r0 = 0) => { const [, u, v] = basis(ax); return Array.from({ length: n }, (_, i) => { const t = i / n * Math.PI * 2 + r0; return add(c, add(mul(u, rad * Math.cos(t)), mul(v, rad * Math.sin(t)))); }); };
+    // a turned part: rings at [distance along axis, radius] stations
+    const lathe = (p0, ax, st, n = 6, r0 = 0, opts) => { const a = norm(ax); return loft(st.map(([d, r]) => ringAx(add(p0, mul(a, d)), a, Math.max(r, 0.06), n, r0)), opts); };
+    const slabXY = (poly, z0, z1, opts) => loft([poly.map(([x, y]) => [x, y, z0]), poly.map(([x, y]) => [x, y, z1])], opts);
+    const flat = (pts, z = 0.05) => pts.map(([x, y]) => [x, y, z]);
+    const circ = (cx, cy, rx, ry, n = 24, z = 0.05, r0 = 0) => Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2 + r0; return [cx + rx * Math.cos(a), cy + ry * Math.sin(a), z]; });
+    function group(attrs, fn) { const g = document.createElementNS(NS, 'g'); for (const k in attrs) g.setAttribute(k, attrs[k]); const prev = G; G.append(g); G = g; fn(); G = prev; }
+    // A plane that faces the viewer square-on (its horizontal axis projects
+    // flat), optionally leaned back by `tilt`.
+    const BU = [Math.SQRT1_2, -Math.SQRT1_2, 0], BN = [Math.SQRT1_2, Math.SQRT1_2, 0], BZ = [0, 0, 1];
+    const plane = (o, tilt = 0) => { const v = add(mul(BZ, Math.cos(tilt)), mul(BN, -Math.sin(tilt))), n = add(mul(BN, Math.cos(tilt)), mul(BZ, Math.sin(tilt))); return (a, b, h = 0) => add(o, add(add(mul(BU, a), mul(v, b)), mul(n, h))); };
+    // The first `fr` of a set of strokes (by length), for things being drawn.
+    function partial(strokes, fr) {
+      const len = pts => pts.slice(1).reduce((s, p, i) => s + Math.hypot(...sub(p, pts[i])), 0);
+      let want = strokes.reduce((s, p) => s + len(p), 0) * Math.min(1, Math.max(0, fr));
+      const out = [];
+      for (const pts of strokes) {
+        if (want <= 0) break;
+        const o = [pts[0]];
+        for (let i = 1; i < pts.length && want > 0; i++) { const l = Math.hypot(...sub(pts[i], pts[i - 1])); if (want >= l) { o.push(pts[i]); want -= l; } else { o.push(lerp3(pts[i - 1], pts[i], want / l)); want = 0; } }
+        out.push(o);
+      }
+      return out;
+    }
+    const rnd = (seed => () => (seed = (seed * 16807) % 2147483647) / 2147483647)(7);
+
+    // ── Layout (world units; +x runs down-right, +y down-left) ──
+    const TILE = { x: 95, y: 75, ch: 8, th: 7 };
+    const ROAD = { y0: 46, y1: 66, yc: 56, stub: 20 };
+    // a storybook cottage: low walls, a steep roof with deep, soft overhangs
+    const HOUSE = { x0: -86, x1: -48, y0: -64, y1: -40, h: 19.5, R: 36.5, ov: 3.4, gov: 3, ym: -52 };
+    const SHEET = { x0: 2, x1: 72, y0: -63, y1: -6 };
+    const PEN = { cx: 37, cy: -37, rx: 22, ry: 12 };
+    const GOAL = { o: [-28, 0], w: 10.5, h: 9.2, d: 7, six: 5.5, spot: 14, box: 20, boxW: 18 };
+    // the goal is turned square to the lot (not to the viewer) so its depth reads
+    const GU = [1, 0, 0], GN = [0, 1, 0];
+    // goal frame: a runs along the goal line, b out of the goal toward the viewer
+    const GL = (a, b, z = 0) => add([GOAL.o[0], GOAL.o[1], z], add(mul(GU, a), mul(GN, b)));
+    const BOOK = [-80, 17];
+    const PAL = [47, 24];
+    const SCULPT = [83, 31];
+    const PAD = [-28, ROAD.yc];
+    const DOORX = -62.5;
+    const pathX = y => DOORX + 2.6 * Math.sin((y - HOUSE.y1) * 0.09);
+    const PATHX = pathX(ROAD.y0);
+    // paintbrush trees in groves: round, mop, chisel and fan tips, mixed heights
+    const TREES = [
+      { x: -38, y: -68, type: 'round', s: 1.05, ph: 0.2 }, { x: -4, y: -69, type: 'chisel', s: 1.1, ph: 1.1 }, { x: -21, y: -73, type: 'mop', s: 0.8, ph: 2.3 },
+      { x: 80, y: -68, type: 'mop', s: 1.25, ph: 0.7 }, { x: 90, y: -56, type: 'round', s: 0.8, ph: 1.9 }, { x: 69, y: -73, type: 'chisel', s: 0.9, ph: 2.8 },
+      { x: 90, y: -9, type: 'fan', s: 1.1, ph: 0.4 }, { x: 86, y: 3, type: 'round', s: 0.75, ph: 3.3 },
+      { x: -89, y: 35, type: 'mop', s: 1.15, ph: 1.4 }, { x: -81, y: 41, type: 'round', s: 0.8, ph: 2.1 }, { x: -92, y: 25, type: 'chisel', s: 0.95, ph: 0.9 },
+      { x: -29, y: -49, type: 'round', s: 0.95, ph: 3.9 }, { x: -21, y: -39, type: 'fan', s: 0.85, ph: 1.6 },
+      { x: 13, y: 31, type: 'mop', s: 0.85, ph: 2.6 },
+    ];
+    // flagstones from the door to the road, irregular and slightly meandering
+    const STONES = [];
+    for (let y = HOUSE.y1 + 5.2; y < ROAD.y0 - 2.6; y += 5.3) {
+      const cx = pathX(y) + (rnd() - 0.5) * 1.2, n = 6 + Math.floor(rnd() * 2), r = 2.2 + rnd() * 0.8, a0 = rnd() * 6;
+      STONES.push({ c: [cx, y], r, pts: Array.from({ length: n }, (_, i) => { const a = a0 + i / n * Math.PI * 2 + (rnd() - 0.5) * 0.35, rr = r * (0.84 + rnd() * 0.2); return [cx + rr * Math.cos(a) * 1.15, y + rr * Math.sin(a) * 0.92]; }) });
+    }
+    const BLOCKED = [[HOUSE.x0 - 2, HOUSE.x1 + 2, HOUSE.y0 - 2, HOUSE.y1 + 4.4], [SHEET.x0 - 1.5, SHEET.x1 + 1.5, SHEET.y0 - 1.5, SHEET.y1 + 1.5], [PAL[0] - 21, PAL[0] + 21, PAL[1] - 14, PAL[1] + 14], [BOOK[0] - 14, BOOK[0] + 15, BOOK[1] - 10, BOOK[1] + 10], [SCULPT[0] - 6, SCULPT[0] + 6, SCULPT[1] - 6, SCULPT[1] + 9], [-200, 200, ROAD.y0 - 1.5, 200]];
+    const onPitch = (x, y) => { const dx = x - GOAL.o[0], dy = y - GOAL.o[1], a = dx * GU[0] + dy * GU[1], b = dx * GN[0] + dy * GN[1]; return Math.abs(a) < GOAL.boxW + 6 && b > -GOAL.d - 2.5 && b < GOAL.box + 2; };
+    const free = (x, y, pad = 0) => !onPitch(x, y) && Math.abs(x) < TILE.x - 2.5 && Math.abs(y) < TILE.y - 2.5 && !BLOCKED.some(([a, b, c, d]) => x > a - pad && x < b + pad && y > c - pad && y < d + pad) && !STONES.some(s => Math.hypot(x - s.c[0], y - s.c[1]) < s.r * 1.15 + 0.6) && !TREES.some(tr => Math.hypot(x - tr.x, y - tr.y) < 1.8 * tr.s);
+    // lawn: grass tufts hugging the stones, the house, tree bases and the
+    // slab's edges, plus a scatter; wildflowers and clover in small patches
+    const TUFTS = [], FLOWERS = [], CLOVER = [];
+    const tuft = (x, y, h = 1) => { if (free(x, y)) TUFTS.push({ x, y, h: (1.6 + rnd() * 1.4) * h, lean: (rnd() - 0.5) * 1.6, sp: 0.5 + rnd() * 0.5 }); };
+    for (const s of STONES) for (const side of [-1, 1]) if (rnd() < 0.8) tuft(s.c[0] + side * (s.r * 1.3 + 0.9 + rnd()), s.c[1] + (rnd() - 0.5) * 3, 0.85);
+    for (let x = HOUSE.x0; x < HOUSE.x1 + 3; x += 3.2 + rnd() * 2) tuft(x, HOUSE.y1 + 4.8 + rnd() * 1.4);
+    for (let y = HOUSE.y0; y < HOUSE.y1; y += 3.2 + rnd() * 2) tuft(HOUSE.x1 + 2.6 + rnd() * 1.4, y);
+    for (const tr of TREES) for (let k = 0; k < 3; k++) { const a = rnd() * 6.3; tuft(tr.x + Math.cos(a) * (2.4 + rnd() * 2) * tr.s, tr.y + Math.sin(a) * (2.4 + rnd() * 2) * tr.s, 0.9); }
+    for (let k = -TILE.y + 4; k < ROAD.y0 - 2; k += 4 + rnd() * 4) { tuft(TILE.x - 3 - rnd() * 2, k); tuft(-TILE.x + 3 + rnd() * 2, k); }
+    for (let k = -TILE.x + 6; k < TILE.x - 6; k += 4 + rnd() * 4) tuft(k, -TILE.y + 3 + rnd() * 2);
+    for (let k = 0; k < 70; k++) tuft(-90 + rnd() * 180, -70 + rnd() * 114, 0.8);
+    const patch = (cx, cy, n) => { for (let k = 0; k < n; k++) { const x = cx + (rnd() - 0.5) * 7, y = cy + (rnd() - 0.5) * 6; if (free(x, y)) FLOWERS.push({ x, y, h: 2.2 + rnd() * 2.2, lean: (rnd() - 0.5) * 1.2, rose: rnd() < 0.45, ph: rnd() * 6 }); } };
+    [[-70, -2], [-33, -60], [58, -70], [92, -30], [-88, 2], [-70, 39], [24, 40], [60, 2], [-6, -20], [-16, 32], [-42, 30], [91, 17], [-60, -70]].forEach(([x, y]) => patch(x, y, 4 + Math.floor(rnd() * 3)));
+    for (let k = 0; k < 14; k++) { const x = -88 + rnd() * 176, y = -70 + rnd() * 112; if (free(x, y)) CLOVER.push([x, y, rnd() * 6]); }
+    // lawn items are binned by depth so they sort with everything else
+    const LAWN = new Map();
+    const bin = (k, kind, it) => { const b = Math.floor(k / 6); (LAWN.get(b) || LAWN.set(b, { tufts: [], flowers: [], clover: [] }).get(b))[kind].push(it); };
+    TUFTS.forEach(it => bin(it.x + it.y, 'tufts', it)); FLOWERS.forEach(it => bin(it.x + it.y, 'flowers', it)); CLOVER.forEach(it => bin(it[0] + it[1], 'clover', it));
+
+    // ── Ground layer ──
+    const chamfer = (x, y, ch) => [[-x + ch, -y], [x - ch, -y], [x, -y + ch], [x, y - ch], [x - ch, y], [-x + ch, y], [-x, y - ch], [-x, -y + ch]];
+    function slab() {
+      const { x, y, ch, th } = TILE, ring = (i, z) => chamfer(x - i, y - i, ch - i * 0.4).map(([a, b]) => [a, b, z]);
+      const stub = (xa, xb) => loft([[[xa, ROAD.y0, -3], [xb, ROAD.y0, -3], [xb, ROAD.y1, -3], [xa, ROAD.y1, -3]], [[xa, ROAD.y0, -0.7], [xb, ROAD.y0, -0.7], [xb, ROAD.y1, -0.7], [xa, ROAD.y1, -0.7]], [[xa, ROAD.y0 + 0.7, 0], [xb, ROAD.y0 + 0.7, 0], [xb, ROAD.y1 - 0.7, 0], [xa, ROAD.y1 - 0.7, 0]]]);
+      render(stub(-x - ROAD.stub, -x + 1));
+      // the slab, with a softened top edge
+      render(loft([ring(0, -th), ring(0, -1.2), ring(1.2, 0)]));
+      render(stub(x - 1, x + ROAD.stub));
+      draw(p3([[x, -y + ch, -th * 0.55], [x, y - ch, -th * 0.55], [x - ch, y, -th * 0.55], [-x + ch, y, -th * 0.55]]), COL.lo);
+    }
+    function groundMarks() {
+      const X = TILE.x + ROAD.stub, { y0, y1, yc } = ROAD;
+      draw(p3(flat([[-X, y0 + 0.7], [X, y0 + 0.7]])) + p3(flat([[-X, y1 - 0.7], [X, y1 - 0.7]])), COL.edge);
+      const d = []; for (let x = -X + 2; x < X - 4; x += 12) d.push(p3(flat([[x, yc], [x + 5, yc]])));
+      draw(d.join(''), COL.mid);
+      const zb = []; for (let k = -2; k <= 2; k++) zb.push(p3(flat([[PATHX + k * 2.4, y0 + 2.4], [PATHX + k * 2.4, y1 - 2.4]])));
+      draw(zb.join(''), COL.lo);
+      draw(p3(circ(PAD[0], PAD[1], 8.6, 8.6, 6, 0.05, Math.PI / 6), true) + p3(circ(PAD[0], PAD[1], 2.2, 2.2, 6, 0.05, Math.PI / 6), true), COL.mid);
+      // flagstones: thin irregular slabs with a worn line or two
+      for (const s of STONES) render(slabXY(s.pts, 0, 0.55));
+      draw(STONES.filter((_, i) => i % 2).map(s => p3([[s.c[0] - s.r * 0.5, s.c[1] - 0.3, 0.6], [s.c[0] + s.r * 0.2, s.c[1] + 0.4, 0.6]])).join(''), COL.lo);
+    }
+    // one depth bin of lawn: grass in three swept blades, flowers on bent
+    // stems with a bud, low clover; all sway with a slow wave of wind
+    function lawnBin(L, t) {
+      const lo = [], mid = [], acc = [];
+      const wind = (x, y) => Math.sin(t * 1.1 - (x + y) * 0.05) * 0.5 + Math.sin(t * 2.3 + x * 0.2) * 0.12;
+      for (const g of L.tufts) {
+        const w = wind(g.x, g.y) * g.sp;
+        for (const k of [-1, 0, 1]) {
+          const bx = g.x + k * 0.55, by = g.y - k * 0.25, hh = g.h * (k ? 0.75 : 1), lx = (g.lean + k * 0.9 + w) * hh * 0.35;
+          lo.push(p3([[bx, by, 0], [bx + lx * 0.35, by - lx * 0.1, hh * 0.55], [bx + lx, by - lx * 0.3, hh]]));
+        }
+      }
+      for (const f of L.flowers) {
+        const w = wind(f.x, f.y), lx = (f.lean + w) * 0.6, top = [f.x + lx, f.y - lx * 0.3, f.h];
+        mid.push(p3([[f.x, f.y, 0], [f.x + lx * 0.3, f.y, f.h * 0.6], top]));
+        lo.push(p3([[f.x + lx * 0.2, f.y, f.h * 0.35], [f.x + lx * 0.2 + 0.9, f.y - 0.3, f.h * 0.5]]));
+        (f.rose ? acc : mid).push(p3(ringAx(add(top, [0, 0, 0.35]), BN, 0.42, 5, f.ph), true));
+      }
+      for (const [x, y, ph] of L.clover) for (let k = 0; k < 3; k++) { const a = ph + k * 2.1; lo.push(p3(circ(x + Math.cos(a) * 0.7, y + Math.sin(a) * 0.7, 0.55, 0.55, 6, 0.1), true)); }
+      if (lo.length) draw(lo.join(''), COL.lo);
+      if (mid.length) draw(mid.join(''), COL.mid);
+      if (acc.length) draw(acc.join(''), COL.acc);
+    }
+
+    // ── The sheet and the giant pencil ──
+    const penAt = s => [PEN.cx + PEN.rx * Math.sin(s), PEN.cy + PEN.ry * Math.sin(2 * s), 0.75];
+    function sheet() {
+      const { x0, x1, y0, y1 } = SHEET, dog = 7;
+      render(slabXY([[x0, y0], [x1, y0], [x1, y1 - dog], [x1 - dog, y1], [x0, y1]], 0, 0.7));
+      // the dog-eared corner folded back over the page
+      render(slabXY([[x1, y1 - dog], [x1 - dog, y1], [x1 - dog, y1 - dog]], 0.7, 0.9));
+      // old doodles: a star and a spiral, faint
+      const star = Array.from({ length: 10 }, (_, i) => { const a = i * Math.PI / 5 - Math.PI / 2, r = i % 2 ? 2.6 : 6; return [x0 + 10 + r * Math.cos(a), y1 - 11 + r * Math.sin(a), 0.75]; });
+      const spiral = Array.from({ length: 40 }, (_, i) => { const a = i * 0.42, r = 0.4 + i * 0.16; return [x1 - 13 + r * Math.cos(a), y0 + 10 + r * Math.sin(a) * 0.9, 0.75]; });
+      draw(p3(star, true) + p3(spiral), COL.lo);
+      // ruled margin
+      draw(p3([[x0 + 4, y0 + 2, 0.75], [x0 + 4, y1 - 2, 0.75]]), COL.lo);
+    }
+    function pencilTrail(t) {
+      const s = t * 0.8, ghost = [], trail = [];
+      for (let i = 0; i <= 96; i++) ghost.push(penAt(i / 96 * Math.PI * 2));
+      for (let i = 0; i <= 30; i++) trail.push(penAt(s - 2.2 + i / 30 * 2.2));
+      draw(p3(ghost, true), COL.lo);
+      draw(p3(trail), COL.hi);
+      draw(p3(circ(...penAt(s).slice(0, 2), 1.4, 1.4, 6, 0.8), true), COL.acc);
+    }
+    function giantPencil(t) {
+      const s = t * 0.8, tip = penAt(s);
+      const vel = norm([PEN.rx * Math.cos(s), 2 * PEN.ry * Math.cos(2 * s), 0]);
+      const lean = 0.4, ax = norm([-vel[0] * Math.sin(lean), -vel[1] * Math.sin(lean), Math.cos(lean)]);
+      const r0 = t * 0.25;
+      const parts = [
+        () => render(lathe(tip, ax, [[0, 0.08], [2.6, 1.3], [8, 4.4], [50, 4.4]], 6, r0)),
+        () => { render(lathe(add(tip, mul(ax, 50)), ax, [[0, 4.75], [5, 4.75]], 12, r0)); draw([51.6, 53.4].map(d => p3(ringAx(add(tip, mul(ax, d)), ax, 4.8, 12, r0).filter(p => dotv(sub(p, add(tip, mul(ax, d))), view()) > -0.5))).join(''), COL.mid); },
+        () => render(lathe(add(tip, mul(ax, 55)), ax, [[0, 4.3], [4.2, 4.3], [5.6, 3.2], [6.2, 1.6]], 12, r0, { line: COL.acc })),
+      ];
+      (dotv(ax, view()) > 0 ? parts : parts.reverse()).forEach(fn => fn());
+    }
+
+    // ── The cottage: stone plinth, steep roof with fish-scale shingles, a
+    // rounded ridge roll and fascia, rafter tails, half-timbered gable with an
+    // oculus, an arched door, a bay window with a flower box, a bench with a
+    // jar of brushes, and the pencil chimney rising from a brick collar ──
+    const arc = (cx, cz, r, a0, a1, n = 10) => Array.from({ length: n + 1 }, (_, i) => { const a = a0 + (a1 - a0) * i / n; return [cx + r * Math.cos(a), cz + r * Math.sin(a)]; });
+    // diamond lattice in a (u, v) rectangle, mapped through m(u, v)
+    function lattice(m, u0, u1, v0, v1, step) {
+      const out = [];
+      for (const sg of [1, -1]) for (let c = -40; c <= 40; c += step) {
+        // line v - v0 = sg * (u - u0) + c, clipped to the rectangle
+        const pts = [];
+        for (const u of [u0, u1]) { const v = v0 + sg * (u - u0) + c; if (v >= v0 - 1e-6 && v <= v1 + 1e-6) pts.push([u, v]); }
+        for (const v of [v0, v1]) { const u = u0 + (v - v0 - c) * sg; if (u > u0 + 1e-6 && u < u1 - 1e-6) pts.push([u, v]); }
+        if (pts.length >= 2) out.push(p3([m(...pts[0]), m(...pts[1])]));
+      }
+      return out.join('');
+    }
+    // brick or stone courses on a wall rectangle
+    function courses(m, u0, u1, v0, v1, ch, bw) {
+      const out = [];
+      for (let v = v0 + ch, r = 0; v < v1 - 0.2; v += ch, r++) out.push(p3([m(u0, v), m(u1, v)]));
+      for (let v = v0, r = 0; v < v1 - 0.1; v += ch, r++) for (let u = u0 + (r % 2 ? bw / 2 : bw); u < u1 - 0.3; u += bw) out.push(p3([m(u, v), m(u, Math.min(v1, v + ch))]));
+      return out.join('');
+    }
+    const slopeN = (dy, dz) => { let n = norm([0, -dz, dy]); if (n[2] < 0) n = mul(n, -1); return n; };
+    function slopePlate(xa, xb, e, r, th) {
+      const n = slopeN(r[0] - e[0], r[1] - e[1]), P = (x, [y, z], k) => add([x, y, z], mul(n, k));
+      return { n, s: box8([P(xa, e, 0), P(xb, e, 0), P(xb, r, 0), P(xa, r, 0), P(xa, e, th), P(xb, e, th), P(xb, r, th), P(xa, r, th)]) };
+    }
+
+    function house(t) {
+      const { x0, x1, y0, y1, h, R, ov, gov, ym } = HOUSE, th = 1.2;
+      const fy = (x, z) => [x, y1 + 0.05, z], gx = (y, z) => [x1 + 0.05, y, z];
+      // plinth of fieldstone
+      render(slabXY([[x0 - 0.9, y0 - 0.9], [x1 + 0.9, y0 - 0.9], [x1 + 0.9, y1 + 0.9], [x0 - 0.9, y1 + 0.9]], 0, 2.6));
+      draw(courses((u, v) => [u, y1 + 0.95, v], x0 - 0.9, x1 + 0.9, 0, 2.6, 1.3, 3.4) + courses((u, v) => [x1 + 0.95, u, v], y0 - 0.9, y1 + 0.9, 0, 2.6, 1.3, 3.4), COL.lo);
+      // walls and the attic gable
+      render(slabXY([[x0, y0], [x1, y0], [x1, y1], [x0, y1]], 2.6, h));
+      render(loft([[[x0, y0, h], [x0, y1, h], [x0, ym, R - 1.2]], [[x1, y0, h], [x1, y1, h], [x1, ym, R - 1.2]]]));
+      // half-timbering and an oculus on the visible gable
+      const oc = h + 8.4;
+      draw(p3([gx(y0 + 0.3, h + 0.4), gx(y1 - 0.3, h + 0.4)]) + p3([gx(ym, h + 0.4), gx(ym, oc - 2.7)]) + p3([gx(ym, oc + 2.7), gx(ym, R - 1.6)]) + p3([gx(y0 + 3.4, h + 0.4), gx(ym - 2.4, oc - 1.6)]) + p3([gx(y1 - 3.4, h + 0.4), gx(ym + 2.4, oc - 1.6)]), COL.mid);
+      draw(p3(arc(ym, oc, 2.5, 0, Math.PI * 2, 8).map(([y, z]) => gx(y, z)), true), COL.hi);
+      draw(p3(arc(ym, oc, 1.8, 0, Math.PI * 2, 8).map(([y, z]) => gx(y, z)), true) + p3([gx(ym - 1.8, oc), gx(ym + 1.8, oc)]) + p3([gx(ym, oc - 1.8), gx(ym, oc + 1.8)]), COL.lo);
+      // gable window, arched, latticed, one casement open: the sheets fly out of it
+      const wy0 = -56, wy1 = -48, wz0 = 6, wz1 = 11.2, wc = (wy0 + wy1) / 2, wr = (wy1 - wy0) / 2;
+      const gwin = [[wy0, wz0], [wy0, wz1], ...arc(wc, wz1, wr, Math.PI, 0, 8).slice(1, -1), [wy1, wz1], [wy1, wz0]];
+      draw(p3(gwin.map(([y, z]) => gx(y, z)), true), COL.hi);
+      draw(lattice((u, v) => gx(u, v), wy0 + 0.3, wc, wz0 + 0.3, wz1, 1.6) + p3([gx(wc, wz0), gx(wc, wz1 + wr)]), COL.lo);
+      render(box8([[x1, wy0 - 0.8, wz0 - 0.9], [x1 + 1.4, wy0 - 0.8, wz0 - 0.9], [x1 + 1.4, wy1 + 0.8, wz0 - 0.9], [x1, wy1 + 0.8, wz0 - 0.9], [x1, wy0 - 0.8, wz0], [x1 + 1.4, wy0 - 0.8, wz0], [x1 + 1.4, wy1 + 0.8, wz0], [x1, wy1 + 0.8, wz0]]));
+      { const a = 1.15, hx = Math.sin(a) * wr, hy = Math.cos(a) * wr, L = (z, k) => [x1 + hx * k, wy1 - hy * k, z];
+        render(box8([L(wz0, 0), L(wz0, 1), [x1 + hx + 0.3, wy1 - hy + 0.3, wz0], [x1 + 0.3, wy1 + 0.3, wz0], L(wz1 + 1.5, 0), L(wz1 + 1.5, 1), [x1 + hx + 0.3, wy1 - hy + 0.3, wz1 + 1.5], [x1 + 0.3, wy1 + 0.3, wz1 + 1.5]]));
+        draw(p3([L((wz0 + wz1) / 2 + 0.6, 0.15), L((wz0 + wz1) / 2 + 0.6, 0.9)]), COL.lo); }
+      // front: arched door with planks, strap hinges and a rose ring pull
+      const dx0 = DOORX - 3.5, dx1 = DOORX + 3.5, dz = 9.4;
+      const door = [[dx0, 2.6], [dx0, dz], ...arc(DOORX, dz, 3.5, Math.PI, 0, 10).slice(1, -1), [dx1, dz], [dx1, 2.6]];
+      draw(p3(door.map(([x, z]) => fy(x, z))), COL.hi);
+      draw(p3(arc(DOORX, dz, 4.4, Math.PI, 0, 12).map(([x, z]) => fy(x, z))) + p3([fy(dx0 - 0.9, 2.6), fy(dx0 - 0.9, dz)]) + p3([fy(dx1 + 0.9, 2.6), fy(dx1 + 0.9, dz)]), COL.mid);
+      draw([-1.75, 0, 1.75].map(o => p3([fy(DOORX + o, 2.6), fy(DOORX + o, dz + Math.sqrt(3.5 * 3.5 - o * o) - 0.1)])).join('') + p3([fy(dx0, 4.6), fy(DOORX - 0.6, 4.6)]) + p3([fy(dx0, 8.6), fy(DOORX - 0.6, 8.6)]), COL.lo);
+      draw(p3(ringAx(fy(dx1 - 1.2, 6.2), [0, 1, 0], 0.55, 6), true), COL.acc);
+      render(slabXY([[dx0 - 1.4, y1 + 0.9], [dx1 + 1.4, y1 + 0.9], [dx1 + 1.1, y1 + 3.4], [dx0 - 1.1, y1 + 3.4]], 0, 0.9));
+      // small arched window by the door
+      const sx0 = -55.5, sx1 = -50.5, sz0 = 7.6, sz1 = 11, scx = (sx0 + sx1) / 2;
+      draw(p3([[sx0, sz0], [sx0, sz1], ...arc(scx, sz1, 2.5, Math.PI, 0, 8).slice(1, -1), [sx1, sz1], [sx1, sz0]].map(([x, z]) => fy(x, z)), true), COL.hi);
+      draw(lattice((u, v) => fy(u, v), sx0, sx1, sz0, sz1, 1.6), COL.lo);
+      render(box8([fy(sx0 - 0.6, sz0 - 0.7), fy(sx1 + 0.6, sz0 - 0.7), [sx1 + 0.6, y1 + 1.1, sz0 - 0.7], [sx0 - 0.6, y1 + 1.1, sz0 - 0.7], fy(sx0 - 0.6, sz0), fy(sx1 + 0.6, sz0), [sx1 + 0.6, y1 + 1.1, sz0], [sx0 - 0.6, y1 + 1.1, sz0]]));
+      // the bay window: three facets, sill, its own little roof, a flower box
+      const A = [-83, y1], B = [-71, y1], Cq = [-73.4, y1 + 3], D = [-80.6, y1 + 3];
+      render(slabXY([[A[0] - 0.5, y1], [B[0] + 0.5, y1], [Cq[0] + 0.3, Cq[1] + 0.6], [D[0] - 0.3, D[1] + 0.6]], 3.5, 4.3));
+      render(slabXY([A, B, Cq, D], 4.3, 13.2));
+      render(loft([[[A[0] - 0.6, y1, 13.2], [B[0] + 0.6, y1, 13.2], [Cq[0] + 0.4, Cq[1] + 0.7, 13.2], [D[0] - 0.4, D[1] + 0.7, 13.2]], [[A[0] + 0.6, y1, 15.8], [B[0] - 0.6, y1, 15.8], [B[0] - 1.2, y1 + 0.7, 15.8], [A[0] + 1.2, y1 + 0.7, 15.8]]]));
+      const bf = (u, v) => [D[0] + (Cq[0] - D[0]) * u, D[1] + 0.05, v];
+      draw(p3([bf(0.08, 5.2), bf(0.92, 5.2), bf(0.92, 12.4), bf(0.08, 12.4)], true) + p3([bf(0.08, 10.6), bf(0.92, 10.6)]), COL.hi);
+      draw(lattice((u, v) => bf(u / 7.2, v), 0.6, 6.6, 5.2, 10.6, 1.5) + p3([bf(0.5, 10.6), bf(0.5, 12.4)]), COL.lo);
+      const br = (u, v) => [B[0] + (Cq[0] - B[0]) * u + 0.04, B[1] + (Cq[1] - B[1]) * u + 0.04, v];
+      draw(p3([br(0.18, 5.2), br(0.82, 5.2), br(0.82, 12.4), br(0.18, 12.4)], true), COL.hi);
+      draw(lattice((u, v) => br(u / 3.8, v), 0.7, 3.1, 5.2, 10.6, 1.5) + p3([br(0.18, 10.6), br(0.82, 10.6)]), COL.lo);
+      render(slabXY([[D[0] + 0.4, D[1] + 0.6], [Cq[0] - 0.4, Cq[1] + 0.6], [Cq[0] - 0.4, Cq[1] + 2.2], [D[0] + 0.4, D[1] + 2.2]], 2.2, 3.4));
+      const fl = [], fa = [];
+      for (let k = 0; k < 7; k++) { const x = D[0] + 1.1 + k * 0.95, y = D[1] + 1.4, s = Math.sin(t * 1.4 + k) * 0.15, top = [x + s, y, 4.6 + (k % 3) * 0.5]; fl.push(p3([[x, y, 3.4], top])); (k % 2 ? fl : fa).push(p3(ringAx(top, BN, 0.38, 5, k), true)); }
+      draw(fl.join(''), COL.mid); draw(fa.join(''), COL.acc);
+      // the bench by the door, a jar of fine brushes on it
+      const bx0 = -57, bx1 = -49.8, by0 = y1 + 1, by1 = y1 + 3.4;
+      for (const [lx, ly] of [[bx0 + 0.4, by0 + 0.4], [bx1 - 1, by0 + 0.4], [bx0 + 0.4, by1 - 1], [bx1 - 1, by1 - 1]]) render(slabXY([[lx, ly], [lx + 0.6, ly], [lx + 0.6, ly + 0.6], [lx, ly + 0.6]], 0, 3));
+      render(slabXY([[bx0, by0], [bx1, by0], [bx1, by1], [bx0, by1]], 3, 3.7));
+      const jar = [-51.8, y1 + 2.2, 3.7];
+      const bl = [], bt = [];
+      [[-1.4, -0.5, 7.2], [-0.6, 0.4, 8.4], [0.3, -0.2, 7.8], [1.1, 0.5, 6.9], [0.2, 0.9, 8.9]].forEach(([ox, oy, zz], i) => { const top = add(jar, [ox * 1.6, oy * 1.3, zz]); bl.push(p3([add(jar, [ox * 0.4, oy * 0.4, 3]), top])); (i === 4 ? bt : bl).push(p3([top, add(top, [ox * 0.25, oy * 0.2, 1.3])])); });
+      draw(bl.join(''), COL.hi);
+      render(lathe(jar, [0, 0, 1], [[0, 0.9], [0.5, 1.35], [2, 1.55], [3.1, 1.05], [3.6, 1.2]], 8, 0.2));
+      draw(p3(ringAx(add(jar, [0, 0, 1.6]), [0, 0, 1], 1.56, 8, 0.2).filter((p, i) => i >= 0 && i <= 4)), COL.lo);
+      draw(bt.join(''), COL.acc);
+      // a lantern beside the door, its flame breathing
+      const ln = [dx1 + 2.3, y1 + 1.2, 9.6];
+      render(slabXY([[ln[0] - 0.3, y1], [ln[0] + 0.3, y1], [ln[0] + 0.3, ln[1]], [ln[0] - 0.3, ln[1]]], 11.6, 12.1));
+      render(lathe(ln, [0, 0, 1], [[0, 0.6], [0.3, 0.9], [2.2, 0.9], [2.8, 0.3]], 6));
+      // rafter tails under the front eave, rounded ends
+      for (let x = x0 - 1.4; x <= x1 + 1.6; x += 3.4) render(lathe([x, y1 + 1, h - 1.5], [0, 1, 0], [[0, 0.45], [ov + 0.9, 0.45], [ov + 1.2, 0.25]], 6, Math.PI / 6));
+      // back slope, then the chimney (it stands on the back slope), then the front
+      const eF = [y1 + ov, h - 1], eB = [y0 - ov, h - 1], rr = [ym, R];
+      render(slopePlate(x0 - gov, x1 + gov, eB, rr, th).s);
+      // brick collar and the pencil-stub chimney with its eraser
+      const cx0 = -81, cx1 = -75, cy0 = -61, cy1 = -55, cz1 = 39.5;
+      render(slabXY([[cx0, cy0], [cx1, cy0], [cx1, cy1], [cx0, cy1]], 24, cz1));
+      { const rz = y => R - (ym - y) * (R - h + 1) / (ym - eB[0]), seg = [];
+        for (let z = 25, r = 0; z < cz1 - 0.3; z += 1.1, r++) { const ya = Math.max(cy0, ym - (R - z) * (ym - eB[0]) / (R - h + 1)); if (ya < cy1) { seg.push(p3([[cx1 + 0.05, ya, z], [cx1 + 0.05, cy1, z]])); for (let y = cy0 + (r % 2 ? 1.1 : 2.2); y < cy1 - 0.2; y += 2.2) if (y > ya) seg.push(p3([[cx1 + 0.05, y, z], [cx1 + 0.05, y, Math.min(cz1, z + 1.1)]])); }
+          if (z > rz(cy1)) { seg.push(p3([[cx0, cy1 + 0.05, z], [cx1, cy1 + 0.05, z]])); for (let x = cx0 + (r % 2 ? 1.1 : 2.2); x < cx1 - 0.2; x += 2.2) seg.push(p3([[x, cy1 + 0.05, z], [x, cy1 + 0.05, Math.min(cz1, z + 1.1)]])); } }
+        draw(seg.join(''), COL.lo); }
+      render(loft([[[cx0 - 0.6, cy0 - 0.6, cz1], [cx1 + 0.6, cy0 - 0.6, cz1], [cx1 + 0.6, cy1 + 0.6, cz1], [cx0 - 0.6, cy1 + 0.6, cz1]], [[cx0 - 0.6, cy0 - 0.6, cz1 + 0.6], [cx1 + 0.6, cy0 - 0.6, cz1 + 0.6], [cx1 + 0.6, cy1 + 0.6, cz1 + 0.6], [cx0 - 0.6, cy1 + 0.6, cz1 + 0.6]], [[cx0 - 0.1, cy0 - 0.1, cz1 + 1], [cx1 + 0.1, cy0 - 0.1, cz1 + 1], [cx1 + 0.1, cy1 + 0.1, cz1 + 1], [cx0 - 0.1, cy1 + 0.1, cz1 + 1]]]));
+      const c0 = [-78, -58, cz1 + 1];
+      render(lathe(c0, [0, 0, 1], [[0, 2.3], [7.5, 2.3]], 6, 0.3));
+      render(lathe(add(c0, [0, 0, 7.5]), [0, 0, 1], [[0, 2.55], [2.2, 2.55]], 12, 0.3));
+      render(lathe(add(c0, [0, 0, 9.7]), [0, 0, 1], [[0, 2.25], [1.7, 2.25], [2.4, 1.6], [2.7, 0.8]], 12, 0.3, { line: COL.acc }));
+      // the front slope with fish-scale shingles
+      const F = slopePlate(x0 - gov, x1 + gov, eF, rr, th);
+      render(F.s);
+      const sp = (x, s) => add([x, eF[0] + (rr[0] - eF[0]) * s, eF[1] + (rr[1] - eF[1]) * s], mul(F.n, th + 0.04));
+      const sc = [];
+      for (let k = 1; k < 10; k++) { const s = k * 0.098; for (let x = x0 - gov + (k % 2 ? 1.3 : 2.6); x < x1 + gov - 1.3; x += 2.6) sc.push(p3([sp(x - 1.3, s), sp(x - 0.95, s - 0.028), sp(x, s - 0.042), sp(x + 0.95, s - 0.028), sp(x + 1.3, s)])); }
+      draw(sc.join(''), COL.lo);
+      // bargeboards on the visible gable, under each slope's end
+      for (const e of [eF, eB]) { const n = slopeN(rr[0] - e[0], rr[1] - e[1]), Q = (x, [y, z], k) => add([x, y, z], mul(n, k)), xa = x1 + gov - 0.8, xb = x1 + gov + 0.05;
+        render(box8([Q(xa, e, 0), Q(xa, rr, 0), Q(xa, rr, -1.4), Q(xa, e, -1.4), Q(xb, e, 0), Q(xb, rr, 0), Q(xb, rr, -1.4), Q(xb, e, -1.4)])); }
+      // soft edges: a fascia roll along the eave, a ridge roll, a finial
+      const fd = norm([0, rr[0] - eF[0], rr[1] - eF[1]]);
+      render(lathe(add(add([x0 - gov, eF[0], eF[1]], mul(F.n, th / 2)), mul(fd, 0.1)), [1, 0, 0], [[0, 0.78], [x1 - x0 + 2 * gov, 0.78]], 8));
+      render(lathe([x0 - gov - 0.3, ym, R + 1.05], [1, 0, 0], [[0, 1.3], [x1 - x0 + 2 * gov + 0.6, 1.3]], 8));
+      render(lathe([x1 + gov + 0.3, ym, R + 2.1], [0, 0, 1], [[0, 0.6], [1.6, 0.6], [2.3, 1], [4.2, 0.06]], 6));
+    }
+    // eraser-dust puffs rising from the chimney
+    function puffs(t) {
+      for (let k = 0; k < 3; k++) {
+        const u = (t * 0.3 + k / 3) % 1, c = [-78 + u * 5, -58 - u * 2, 47.6 + u * 8];
+        draw(p3(ringAx(c, [0, 0, 1], 1.1 + u * 2.4, 6, u * 1.4), true), COL.mid);
+        G.lastChild.setAttribute('stroke-opacity', (Math.sin(u * Math.PI) * 0.9).toFixed(2));
+      }
+    }
+
+    // ── The football corner: a goal with a net that billows, a faceted ball
+    // chipped in from the spot and rolled back out, chalk lines on a mown
+    // patch, a corner flag with a rose pennant ──
+    // a truncated icosahedron, faces found from the icosahedron's vertices
+    // (pentagons) and the dodecahedron's (hexagons)
+    const BALL = (() => {
+      const ph = (1 + Math.sqrt(5)) / 2, V = [];
+      const cyc = ([x, y, z]) => [[x, y, z], [y, z, x], [z, x, y]];
+      const signs = (p, f) => { for (const sx of p[0] ? [1, -1] : [1]) for (const sy of p[1] ? [1, -1] : [1]) for (const sz of p[2] ? [1, -1] : [1]) f([p[0] * sx, p[1] * sy, p[2] * sz]); };
+      for (const base of [[0, 1, 3 * ph], [1, 2 + ph, 2 * ph], [ph, 2, 2 * ph + 1]]) for (const c of cyc(base)) signs(c, v => V.push(v));
+      const centers = [];
+      for (const c of cyc([0, 1, ph])) signs(c, v => centers.push([v, 5]));
+      signs([1, 1, 1], v => centers.push([v, 6]));
+      for (const c of cyc([0, 1 / ph, ph])) signs(c, v => centers.push([v, 6]));
+      const faces = centers.map(([c, n]) => {
+        const cn = norm(c), d = V.map(v => dotv(v, cn)), mx = Math.max(...d);
+        const ix = d.map((x, i) => [x, i]).filter(([x]) => x > mx - 1e-6).map(([, i]) => i);
+        const [, u, w] = basis(cn);
+        ix.sort((i, j) => Math.atan2(dotv(V[i], w), dotv(V[i], u)) - Math.atan2(dotv(V[j], w), dotv(V[j], u)));
+        return { ix, pent: n === 5 };
+      });
+      const R0 = Math.hypot(...V[0]);
+      return { V: V.map(v => mul(v, 1 / R0)), faces };
+    })();
+    const rodrigues = (v, k, a) => { const c = Math.cos(a), s = Math.sin(a); return add(add(mul(v, c), mul(cross(k, v), s)), mul(k, dotv(k, v) * (1 - c))); };
+    function drawBall(c, r, q) {
+      // q: list of [axis, angle] rotations, applied in order
+      const verts = BALL.V.map(v => { let p = v; for (const [k, a] of q) p = rodrigues(p, k, a); return add(c, mul(p, r)); });
+      const s = solid(verts, BALL.faces.map(f => f.ix));
+      render(s);
+      // the pentagon patches: an inset outline on each visible one
+      const out = [];
+      BALL.faces.forEach((f, i) => { if (!f.pent || !faceVisible(s.faces[i].n)) return; const fc = f.ix.reduce((a, k) => add(a, mul(verts[k], 1 / 5)), [0, 0, 0]); out.push(p3(f.ix.map(k => lerp3(fc, verts[k], 0.62)), true)); });
+      draw(out.join(''), COL.hi);
+    }
+    // the ball's loop: rest on the spot, chip into the top corner, the net
+    // takes it, it drops and is rolled back out to the spot
+    // the ball waits on the spot; when the car taps it, it's chipped into a
+    // top corner, the net takes it, it rests there until the car has gone,
+    // then rolls back out to the spot
+    function ballState(T, kickAt, corner) {
+      const r = 1.7, spot = [0, GOAL.spot], hit = [4.6 * corner, -GOAL.d + 1.8], u = T - kickAt;
+      const ease = x => 1 - Math.pow(1 - Math.min(1, Math.max(0, x)), 3);
+      let a = 0, b = spot[1], z = r, net = 0, fly = 0, travel = 0;
+      if (u >= 0 && u < 0.9) { const k = u / 0.9; a = hit[0] * k; b = spot[1] + (hit[1] - spot[1]) * k; z = r + 7.2 * Math.sin(Math.PI * k * 0.82) + k * 0.6; fly = 1; travel = 18 * k; }
+      else if (u >= 0.9 && u < 5.3) { const k = Math.min(1, (u - 0.9) / 1.3); a = hit[0]; b = hit[1] + 0.8 * k; z = Math.max(r, (r + 6.4) * (1 - k * k)); net = u < 2.2 ? Math.exp(-k * 3) * Math.cos(k * 9) : 0; travel = 18 + 2 * k; }
+      else if (u >= 5.3 && u < 7.5) { const k = ease((u - 5.3) / 2.2); a = hit[0] * (1 - k); b = hit[1] + 0.8 + (spot[1] - hit[1] - 0.8) * k; travel = 20 + 22 * k; }
+      return { u, a, b, z, r, net, fly, hit, travel };
+    }
+    // a box goal: a flat top net, a vertical back net (it takes the ball and
+    // billows), and side nets; frame tubes are rounded
+    const HB = 0.86;
+    function netBack(st) {
+      const { w, h, d } = GOAL, hb = h * HB, out = [];
+      const bulge = (a, z) => st.net * 2.4 * Math.sin(Math.PI * Math.min(1, z / hb)) * Math.exp(-((a - st.hit[0]) ** 2) / 16);
+      const P = (a, z) => add(GL(a, -d, z), mul(GN, -bulge(a, z)));
+      for (let k = 1; k < 7; k++) { const z = hb * k / 7; out.push(p3(Array.from({ length: 13 }, (_, i) => P(-w + 2 * w * i / 12, z)))); }
+      for (let i = 1; i < 12; i++) { const a = -w + 2 * w * i / 12; out.push(p3(Array.from({ length: 8 }, (_, k) => P(a, hb * k / 7)))); }
+      draw(out.join(''), COL.edge);
+      if (st.net > 0.05) { draw(p3(ringAx(P(st.hit[0], hb * 0.6), GN, 1.2 + (1 - st.net) * 2.2, 8), true), COL.acc); G.lastChild.setAttribute('stroke-opacity', Math.min(1, st.net).toFixed(2)); }
+    }
+    function netFront() {
+      const { w, h, d } = GOAL, hb = h * HB, out = [];
+      const top = (a, b) => GL(a, b, h + (hb - h) * (-b / d));
+      for (let i = 1; i < 12; i++) { const a = -w + 2 * w * i / 12; out.push(p3([top(a, 0), top(a, -d)])); }
+      for (let k = 1; k < 4; k++) { const b = -d * k / 4; out.push(p3([top(-w, b), top(w, b)])); }
+      for (const sa of [-1, 1]) {
+        for (let k = 1; k < 4; k++) { const b = -d * k / 4; out.push(p3([GL(sa * w, b, 0), top(sa * w, b)])); }
+        for (let k = 1; k < 5; k++) { const z = hb * k / 5; out.push(p3([GL(sa * w, 0, z), GL(sa * w, -d, z)])); }
+      }
+      draw(out.join(''), COL.edge);
+    }
+    function goalFrame(part) {
+      const { w, h, d } = GOAL, hb = h * HB, r = 0.55;
+      const bar = (p, q, rr = r) => render(lathe(p, sub(q, p), [[0, rr], [Math.hypot(...sub(q, p)), rr]], 8));
+      if (part === 'back') {
+        bar(GL(-w, -d, 0), GL(w, -d, 0), 0.3);
+        for (const sa of [-1, 1]) bar(GL(sa * w, -d, 0), GL(sa * w, -d, hb), 0.3);
+        bar(GL(-w, -d, hb), GL(w, -d, hb), 0.3);
+        return;
+      }
+      for (const sa of [-1, 1]) { bar(GL(sa * w, 0, 0), GL(sa * w, -d, 0), 0.3); bar(GL(sa * w, 0, h), GL(sa * w, -d, hb), 0.3); }
+      bar(GL(-w, 0, 0), GL(-w, 0, h + r));
+      bar(GL(w, 0, 0), GL(w, 0, h + r));
+      bar(GL(-w - r, 0, h), GL(w + r, 0, h));
+    }
+    function pitchMarks() {
+      const { w, six, spot, box, boxW } = GOAL, g = (a, b) => GL(a, b, 0.05);
+      // mown bands, then chalk
+      const bands = []; for (let b = 3; b < box + 4; b += 3.4) bands.push(p3([g(-boxW - 4, b), g(boxW + 4, b)]));
+      draw(bands.join(''), COL.lo);
+      draw(p3([g(-boxW - 5, 0), g(boxW + 5, 0)]) + p3([g(-w - 4, 0), g(-w - 4, six), g(w + 4, six), g(w + 4, 0)]) + p3([g(-boxW, 0), g(-boxW, box), g(boxW, box), g(boxW, 0)]) + p3(circ(...g(0, spot).slice(0, 2), 0.5, 0.5, 6, 0.05), true)
+        + p3(Array.from({ length: 13 }, (_, i) => { const th = 0.65 + i / 12 * (Math.PI - 1.3); return g(7 * Math.cos(th), spot + 7 * Math.sin(th)); }).filter(p => true)), COL.mid);
+    }
+    function cornerFlag(t) {
+      const base = GL(GOAL.boxW + 5, 0, 0), H = 11;
+      render(lathe(base, [0, 0, 1], [[0, 0.28], [H, 0.24], [H + 0.5, 0.06]], 6));
+      const wave = (k, z) => add(add(base, [0, 0, z]), add(mul(GU, k * 5.2), mul(GN, Math.sin(t * 3 - k * 2.6) * 1.1 * k)));
+      const pts = [wave(0, H - 0.2), wave(0.5, H - 0.9), wave(1, H - 1.6), wave(0.5, H - 2.5), wave(0, H - 3.4)];
+      draw(p3(pts, true), COL.acc, COL.plate);
+      draw(p3([wave(0.08, H - 1.8), wave(0.5, H - 1.7)]), COL.acc);
+    }
+    function football(t, T, v) {
+      const st = ballState(T, v.kickAt, v.corner);
+      const c = GL(st.a, st.b, st.z);
+      // a soft shadow on the grass when the ball is up
+      if (st.z > st.r + 0.2) draw(p3(circ(...GL(st.a, st.b, 0).slice(0, 2), st.r * (1 - (st.z - st.r) / 24), st.r * 0.8 * (1 - (st.z - st.r) / 24), 12, 0.06), true), COL.lo);
+      // roll: rotation about the axis across the direction of travel
+      const travel = st.travel;
+      const q = [[norm(cross([0, 0, 1], add(mul(GN, -1), mul(GU, 0.25)))), travel / st.r], [[0, 0, 1], 0.5]];
+      goalFrame('back');
+      netBack(st);
+      const ball = () => {
+        drawBall(c, st.r, q);
+        // speed dashes behind it in flight
+        if (st.fly) { const back = norm(sub(GL(0, GOAL.spot, 1.7), c)); draw([0, 1, 2].map(i => { const o = add(c, mul(ringAx([0, 0, 0], back, 0.9, 3, i * 2.1)[0], 1)); return p3([add(o, mul(back, 2)), add(o, mul(back, 4.4 - i * 0.6))]); }).join(''), COL.acc); }
+      };
+      if (st.b < 0) { ball(); netFront(); goalFrame(); } else { netFront(); goalFrame(); ball(); }
+    }
+
+    // ── The palette, a brush dipping into rose ──
+    function palette(t) {
+      const [px, py] = PAL, rot = -0.35;
+      const R = ([a, b]) => [px + a * Math.cos(rot) - b * Math.sin(rot), py + a * Math.sin(rot) + b * Math.cos(rot)];
+      const outline = Array.from({ length: 14 }, (_, i) => { const a = i / 14 * Math.PI * 2; return R([20 * Math.cos(a), 13 * Math.sin(a)]); });
+      render(slabXY(outline, 0, 1.4));
+      draw(p3(circ(...R([-12, 4]), 2.6, 2.6, 6, 1.45), true), COL.mid);
+      const dabs = [[-7, -7], [2, -9], [10, -6], [14, 2], [6, 6]];
+      dabs.forEach(([a, b], i) => { const [x, y] = R([a, b]); render(slabXY(circ(x, y, 2.5, 2.5, 6, 0, i * 0.5).map(p => p.slice(0, 2)), 1.4, 2.2, i === 3 ? { line: COL.acc } : {})); });
+      // the brush: handle end resting on the rim, tuft dipping into the rose dab
+      const [dx, dy] = R([14, 2]), dip = 2.4 + 2.2 * Math.max(0, Math.sin(t * 1.6));
+      const tipP = [dx, dy, dip], endP = [...R([2, 19]), 1.4], ax = norm(sub(tipP, endP)), L = Math.hypot(...sub(tipP, endP));
+      render(lathe(endP, ax, [[0, 0.6], [L - 8, 0.95]], 6));
+      render(lathe(add(endP, mul(ax, L - 8)), ax, [[0, 1.15], [2.8, 1.15]], 8));
+      render(lathe(add(endP, mul(ax, L - 5.2)), ax, [[0, 1.25], [2, 1.6], [5.2, 0.08]], 6, 0, { line: COL.acc }));
+    }
+
+    // ── Paintbrush trees: round, mop, chisel and fan tips ──
+    function brushTree(tr, t) {
+      const { x, y, type, s, ph } = tr, H = 12 * s, Z = [0, 0, 1];
+      render(lathe([x, y, 0], Z, [[0, 1.35 * s], [H, 0.95 * s]], 6, ph));
+      render(lathe([x, y, H], Z, [[0, 1.6 * s], [3.8 * s, 1.6 * s], [4.6 * s, 1.3 * s]], 8, ph));
+      draw(p3(Array.from({ length: 9 }, (_, i) => { const a = -Math.PI / 4 + i / 8 * Math.PI; return [x + 1.62 * s * Math.cos(a), y + 1.62 * s * Math.sin(a), H + 1.9 * s]; })), COL.mid);
+      const b = H + 4.6 * s, sw = k => [Math.sin(t * 1.3 + ph) * 1.2 * s * k, Math.cos(t * 1.1 + ph) * 0.8 * s * k, 0];
+      const R = (z, r, k, n = 6) => ringAx(add([x, y, b + z * s], sw(k)), Z, Math.max(r * s, 0.06), n, ph);
+      if (type === 'round') render(loft([R(0, 1.9, 0), R(3, 3.3, 0.2), R(7, 3.1, 0.5), R(13.5, 0, 1)]));
+      else if (type === 'mop') render(loft([R(0, 2.1, 0, 8), R(2, 4, 0.1, 8), R(4.8, 5.2, 0.3, 8), R(8, 5, 0.5, 8), R(10.6, 3.6, 0.75, 8), R(12.4, 1.4, 0.9, 8), R(13.3, 0, 1, 8)]));
+      else if (type === 'chisel') {
+        // flat bristles squared off at an angle
+        const e = [Math.cos(ph), Math.sin(ph), 0], f = [-Math.sin(ph), Math.cos(ph), 0];
+        const rect = (z, w, d, k, slant = 0) => [[-w, -d], [w, -d], [w, d], [-w, d]].map(([u, v]) => add(add([x, y, b + (z + slant * u / w) * s], sw(k)), add(mul(e, u * s), mul(f, v * s))));
+        render(loft([rect(0, 2.1, 1.5, 0), rect(3, 3.5, 1.8, 0.2), rect(7, 3.8, 1.45, 0.5), rect(10.6, 3.7, 0.12, 0.9, 1.6)]));
+      } else {
+        // a fan brush, opened square to the viewer, with its bristle lines
+        const a = -Math.PI / 4 + 0.35 * Math.sin(ph), e = [Math.cos(a), Math.sin(a), 0], f = [-Math.sin(a), Math.cos(a), 0], tilt = Math.sin(t * 1.1 + ph) * 0.07;
+        const F = (u, w, d) => { const uu = u * Math.cos(tilt) - w * Math.sin(tilt), ww = u * Math.sin(tilt) + w * Math.cos(tilt); return add([x, y, b + ww * s], add(mul(e, uu * s), mul(f, d * s))); };
+        const prof = [[-1.4, 0], [1.4, 0], ...Array.from({ length: 11 }, (_, i) => { const g = 1.1 - i * 0.22; return [9 * Math.sin(g), 1.2 + 8.4 * Math.cos(g)]; })];
+        render(loft([prof.map(([u, w]) => F(u, w, -0.55)), prof.map(([u, w]) => F(u, w, 0.55))]));
+        const side = dotv(f, view()) > 0 ? 0.6 : -0.6;
+        draw(Array.from({ length: 9 }, (_, i) => { const g = 0.95 - i * 0.2375; return p3([F(0, 0.6, side), F(8.1 * Math.sin(g), 1.2 + 7.6 * Math.cos(g), side)]); }).join(''), COL.lo);
+      }
+    }
+
+    // ── A clothesline between two trees, swatches and sheets pegged to dry ──
+    function clothesline(t) {
+      const A = [TREES[0].x, TREES[0].y, 10.6], B = [TREES[1].x, TREES[1].y, 11], sag = 2.6;
+      const P = u => { const p = lerp3(A, B, u), k = 4 * u * (1 - u); return [p[0], p[1] + Math.sin(t * 0.9) * 0.5 * k, p[2] - sag * k]; };
+      draw(p3(Array.from({ length: 21 }, (_, i) => P(i / 20))), COL.mid);
+      [0.16, 0.33, 0.5, 0.67, 0.84].forEach((u, i) => {
+        const top = P(u), q = Math.sin(t * 1.2 + i * 1.3) * 0.2 + 0.08, hgt = i % 2 ? 4.6 : 5.6, w = 2.1;
+        const dn = [0, Math.sin(q), -Math.cos(q)], nn = [0, Math.cos(q), Math.sin(q)];
+        const S = (a, d, h = 0) => add(add(add(top, [a, 0, 0]), mul(dn, d)), mul(nn, h));
+        render(box8([S(-w, 0), S(w, 0), S(w, hgt), S(-w, hgt), S(-w, 0, 0.15), S(w, 0, 0.15), S(w, hgt, 0.15), S(-w, hgt, 0.15)]));
+        const m = (a, d) => S(a, d, 0.2);
+        if (i === 0) draw(p3([m(-1.3, 1.4), m(1.2, 1.4)]) + p3([m(-1.3, 2.6), m(0.6, 2.6)]) + p3([m(-1.3, 3.8), m(1, 3.8)]), COL.lo);
+        if (i === 1) draw(p3(Array.from({ length: 9 }, (_, k) => m(Math.cos(k / 8 * 6.283) * 1.1, 2.3 + Math.sin(k / 8 * 6.283) * 1.1))), COL.lo);
+        if (i === 2) draw(p3(Array.from({ length: 7 }, (_, k) => m(-1.4 + k * 0.47, 2.8 + (k % 2 ? -0.5 : 0.5)))), COL.acc);
+        if (i === 3) draw(p3([m(-1.5, 3.8), m(-0.4, 1.6), m(0.4, 3), m(0.9, 2.2), m(1.5, 3.8)]), COL.lo);
+        if (i === 4) draw([0, 1, 2, 3].map(k => p3([m(-1.4 + k * 0.9, 4.6), m(-0.4 + k * 0.9, 1)])).join(''), COL.lo);
+        // two pegs
+        draw(p3([m(-w + 0.6, -0.5), m(-w + 0.6, 0.8)]) + p3([m(w - 0.6, -0.5), m(w - 0.6, 0.8)]), COL.hi);
+      });
+    }
+
+    // ── Sculpture in progress: a block on a soft plinth, a form being freed
+    // from it, chisel marks, a chisel tapping, chips, a mallet on the grass ──
+    function sculpture(t) {
+      const [sx, sy] = SCULPT, rot = 0.3;
+      const sq = (r, z, ins = 0) => [[-r, -r], [r, -r], [r, r], [-r, r]].map(([a, b]) => [sx + (a - Math.sign(a) * ins) * Math.cos(rot) - (b - Math.sign(b) * ins) * Math.sin(rot), sy + (a - Math.sign(a) * ins) * Math.sin(rot) + (b - Math.sign(b) * ins) * Math.cos(rot), z]);
+      render(loft([sq(4.8, 0), sq(4.8, 2.2), sq(4.8, 2.9, 0.6)]));
+      render(loft([sq(3.4, 2.9), sq(3.4, 7.4)]));
+      const M = (a, b, z) => [sx + a * Math.cos(rot) - b * Math.sin(rot), sy + a * Math.sin(rot) + b * Math.cos(rot), z];
+      // chisel marks on the block's two visible faces
+      const cm = [];
+      for (let k = 0; k < 7; k++) { const z = 3.6 + (k * 0.61) % 3.2, a = -2.6 + (k * 0.83) % 5; cm.push(p3([M(a, 3.45, z), M(a + 0.7, 3.45, z + 0.5)]), p3([M(3.45, a, z + 0.3), M(3.45, a + 0.6, z + 0.8)])); }
+      draw(cm.join(''), COL.lo);
+      // the emerging form: a faceted egg, still rough at its base
+      render(lathe(M(0.4, 0.2, 7.4), [0.06, 0.04, 1], [[0, 2.9], [1.5, 3.5], [3.6, 3.6], [5.8, 2.8], [7.1, 1.3], [7.6, 0.2]], 7, 0.4));
+      draw(p3([M(0.6, 3.4, 9.6), M(1.6, 3.1, 10.8)]) + p3([M(2.2, 2.4, 11.6), M(2.9, 1.6, 12.4)]) + p3([M(3.3, 0.4, 9.4), M(3.4, -0.6, 10.4)]), COL.mid);
+      // the chisel, tapping every couple of seconds, a chip flying off
+      const k = (t % 2.4) / 2.4, push = k < 0.06 ? k / 0.06 : Math.max(0, 1 - (k - 0.06) / 0.2);
+      const tip = M(2.6, 2.7, 9.6), ax = norm([0.5, 0.9, 0.45]), base = add(tip, mul(ax, 0.6 + 0.6 * (1 - push)));
+      render(lathe(base, ax, [[0, 0.08], [1.4, 0.35], [3.2, 0.35]], 6, 0, { line: COL.acc }));
+      render(lathe(add(base, mul(ax, 3.2)), ax, [[0, 0.55], [3.6, 0.6], [4, 0.4]], 6));
+      if (k < 0.35) { const u = k / 0.35, c = add(tip, [u * 3, u * 4.4, 4 * u - 7 * u * u]); draw(p3([c, add(c, [0.6, 0.2, 0.3]), add(c, [0.2, 0.6, -0.2])], true), COL.mid); }
+      // chips scattered at the foot, and the mallet resting on the grass
+      draw([[5, 3], [6, -1], [-2, 6], [3, 6.5], [6.4, 4.4]].map(([a, b], i) => { const c = M(a, b, 0.1); return p3([c, add(c, [0.7, 0.2 * i, 0]), add(c, [0.2, 0.7, 0])], true); }).join(''), COL.lo);
+      const mh = M(-9.5, -2.5, 0.55);
+      render(lathe(mh, [1, 0.25, 0], [[0, 0.4], [6.4, 0.5]], 6));
+      render(lathe(add(mh, [6.6, 1.65 - 1.8, 0.75]), [-0.25, 1, 0], [[0, 1.1], [0.4, 1.3], [3.2, 1.3], [3.6, 1.1]], 8));
+    }
+
+    // ── Drifting: bristle leaves falling from the groves, ink drops dripping
+    // from two brush tips and rippling where they land ──
+    function drift(t, layer) {
+      const leaves = [[3, 0], [8, 2.3], [11, 4.1], [5, 5.6]];
+      const lv = [];
+      for (const [ti, off] of leaves) {
+        const tr = TREES[ti], u = ((t + off) % 8) / 8, fall = Math.min(1, u / 0.78);
+        const top = [tr.x, tr.y, 12 * tr.s + 10 * tr.s];
+        const c = [top[0] + fall * 7 + Math.sin(u * 14 + off) * 1.6, top[1] + fall * 5 + Math.cos(u * 11) * 1.2, top[2] * (1 - fall) + 0.2];
+        const a = u * 9 + off, e = [Math.cos(a) * 1.2, Math.sin(a) * 1.2, Math.sin(u * 12) * 0.5 * (1 - fall)], f = [-Math.sin(a) * 0.45, Math.cos(a) * 0.45, 0];
+        const op = Math.min(1, u * 8) * (u > 0.85 ? (1 - u) / 0.15 : 1);
+        lv.push([p3([add(c, mul(e, -1)), add(c, f), add(c, e), add(c, mul(f, -1))], true) + p3([add(c, mul(e, -0.8)), add(c, mul(e, 0.8))]), op]);
+      }
+      if (layer === 'air') for (const [d, o] of lv) { draw(d, COL.mid); G.lastChild.setAttribute('stroke-opacity', o.toFixed(2)); }
+      for (const [ti, off] of [[13, 0], [11, 2.7]]) {
+        const tr = TREES[ti], u = ((t + off) % 5.4) / 5.4, top = 12 * tr.s + 4.6 * tr.s + (tr.type === 'mop' ? 13.3 : 13.5) * tr.s, gx = tr.x + 1.6, gy = tr.y + 1.6;
+        if (u < 0.5) {
+          if (layer !== 'air') continue;
+          const k = u / 0.5, z = (top - 1) * (1 - k * k);
+          const P = plane([gx, gy, z]);
+          draw(p3([P(0, 0.9), P(0.45, 0.1), P(0.3, -0.35), P(0, -0.5), P(-0.3, -0.35), P(-0.45, 0.1)], true), COL.acc);
+          G.lastChild.setAttribute('stroke-opacity', Math.min(1, k * 6).toFixed(2));
+        } else {
+          if (layer !== 'ground') continue;
+          const k = (u - 0.5) / 0.5;
+          for (const j of [0, 0.35]) { const kk = k - j; if (kk <= 0) continue; draw(p3(circ(gx, gy, 0.6 + kk * 4, 0.6 + kk * 4, 16, 0.05), true), COL.acc); G.lastChild.setAttribute('stroke-opacity', ((1 - kk) * 0.8).toFixed(2)); }
+        }
+      }
+    }
+
+    // ── The open sketchbook on the grass, pages turning ──
+    function openBook(t) {
+      const [bx, by] = BOOK, W = 12, H = 17, z = 1.2;
+      render(slabXY([[bx - W - 1, by - H / 2 - 1], [bx + W + 1, by - H / 2 - 1], [bx + W + 1, by + H / 2 + 1], [bx - W - 1, by + H / 2 + 1]], 0, 0.6));
+      render(slabXY([[bx - W, by - H / 2], [bx, by - H / 2], [bx, by + H / 2], [bx - W, by + H / 2]], 0.6, z));
+      render(slabXY([[bx, by - H / 2], [bx + W, by - H / 2], [bx + W, by + H / 2], [bx, by + H / 2]], 0.6, z));
+      // scribbles on both pages, rings down the spine, the rose strap
+      const sc = []; for (let k = 0; k < 5; k++) { const yy = by - H / 2 + 3 + k * 2.6; sc.push(p3([[bx - W + 2, yy, z + 0.05], [bx - 2 - (k % 3) * 1.6, yy, z + 0.05]])); }
+      sc.push(p3(circ(bx + W / 2, by - 1, 3.4, 4.2, 16, z + 0.05), true), p3([[bx + 3, by + 5.6, z + 0.05], [bx + W - 2, by + 5.6, z + 0.05]]));
+      draw(sc.join(''), COL.mid);
+      draw(Array.from({ length: 5 }, (_, k) => p3(Array.from({ length: 7 }, (_, i) => { const a = Math.PI * i / 6; return [bx - 1.1 * Math.cos(a), by - H / 2 + 2 + k * 3.2, z + 1.1 * Math.sin(a)]; }))).join(''), COL.edge);
+      draw(p3([[bx + W + 1, by + 2, 0.6], [bx + W + 3.5, by + 3, 0], [bx + W + 5, by + 6, 0]]), COL.acc);
+      // a page turns every few seconds, on the motion curve
+      const u = (t % 3.4) / 1.1;
+      if (u < 1) {
+        const e = 1 - Math.pow(1 - u, 3), a = e * Math.PI;
+        const a2 = Math.min(Math.PI, a + 0.55 * Math.sin(a) + 0.2 * Math.sin(u * Math.PI));
+        const k1 = [bx + W * 0.5 * Math.cos(a), 0, z + W * 0.5 * Math.sin(a)];
+        const k2 = [k1[0] + W * 0.5 * Math.cos(a2), 0, k1[2] + W * 0.5 * Math.sin(a2)];
+        const seg = (p, q, n) => { const o = [-Math.sin(n) * 0.25, 0, Math.cos(n) * 0.25]; const v = (pt, yy, d) => [pt[0] + d[0], yy, pt[2] + d[2]]; const zz = [0, 0, 0];
+          return box8([v(p, by - H / 2, zz), v(q, by - H / 2, zz), v(q, by + H / 2, zz), v(p, by + H / 2, zz), v(p, by - H / 2, o), v(q, by - H / 2, o), v(q, by + H / 2, o), v(p, by + H / 2, o)]); };
+        const sp = [bx, 0, z];
+        const s1 = () => render(seg(sp, k1, a)), s2 = () => render(seg(k1, k2, a2));
+        (a < Math.PI / 2 ? [s2, s1] : [s1, s2]).forEach(fn => fn());
+      }
+    }
+
+    // ── Air layer: the speech bubble, sheets flying out of the window ──
+    function bubble(t) {
+      const P = plane([-27, -38, 59 + Math.sin(t * 1.6) * 1.2]);
+      const R = Array.from({ length: 12 }, (_, i) => { const a = i / 12 * Math.PI * 2 + Math.PI / 12; return [11 * Math.cos(a), 6.6 * Math.sin(a)]; });
+      render(loft([[P(-4, -5.6, 0.2), P(-7.6, -10.4, 0.2), P(0, -5.6, 0.2)], [P(-4, -5.6, 1.2), P(-7.6, -10.4, 1.2), P(0, -5.6, 1.2)]]));
+      render(loft([R.map(([a, b]) => P(a, b, 0)), R.map(([a, b]) => P(a, b, 1.4))]));
+      const live = Math.floor(t * 2.4) % 3;
+      [-4.5, 0, 4.5].forEach((a, i) => draw(p3(ringAx(P(a, 0, 1.45), BN, 1.1, 6), true), i === live ? COL.acc : COL.hi));
+    }
+    function sheets(t) {
+      const from = [-46, -50, 9.5], to = [-16, -18, 0.3];
+      for (let k = 0; k < 3; k++) {
+        const u = (t * 0.16 + k / 3) % 1, p = lerp3(from, to, u);
+        p[2] += Math.sin(u * Math.PI) * 18 - u * 2;
+        const a = u * 6 + k, b = Math.sin(u * 9 + k) * 0.9;
+        const q = ([x, y]) => add(p, rot([x, y, 0], b, a * 0.6, 0));
+        group({ opacity: Math.min(1, Math.sin(u * Math.PI) * 2.2).toFixed(2) }, () => {
+          render(box8([q([-3, -2.2]), q([3, -2.2]), q([3, 2.2]), q([-3, 2.2]), add(q([-3, -2.2]), [0, 0, 0.2]), add(q([3, -2.2]), [0, 0, 0.2]), add(q([3, 2.2]), [0, 0, 0.2]), add(q([-3, 2.2]), [0, 0, 0.2])]));
+          draw(p3([q([-2, -1]), q([1.6, -1])]) + p3([q([-2, 0.4]), q([0.8, 0.4])]), COL.lo);
+        });
+      }
+    }
+
+    // ── The car's visit ──
+    // A 32 s day on the lot, then a pause while the lot carries on without it:
+    //  0.0  arrives along the road, hovering        3.4  holds, scans the lot
+    //  4.6  turns in the air to face the pitch      6.0  lands on the pad
+    //  7.0  rolls up and taps the ball into the net 9.2  nods
+    // 10.4  drives the lawn to the giant pencil's sheet, its tyres printing
+    //       rose tread across the paper            19.4  pauses, looks back
+    // 20.4  lifts, climbs, turns for the exit      23.0  boosts away
+    // 25.4  gone; tracks fade; the lot breathes until the next lap.
+    // Every lap the shot goes to the other corner.
+    const CYCLE = 32, SC = 0.42, KICK = 9.2;
+    const LAND = [-28, ROAD.yc], CONTACT = GOAL.o[1] + GOAL.spot + 1.7 + 46.4 * SC;
+    // the lawn route, a smooth curve through waypoints, sampled by length
+    const ROUTE = (() => {
+      const W = [[-28, CONTACT], [-27.4, 27], [-21, 21], [-10, 19.6], [-1.5, 17.6], [3.6, 9.6], [4.4, 0], [8.4, -9.6], [18, -13], [36, -13], [54, -13]];
+      const P = [W[0], ...W, W[W.length - 1]], pts = [];
+      for (let i = 1; i < P.length - 2; i++) for (let k = 0; k < 24; k++) {
+        const u = k / 24, [p0, p1, p2, p3] = [P[i - 1], P[i], P[i + 1], P[i + 2]];
+        pts.push([0, 1].map(j => 0.5 * (2 * p1[j] + (-p0[j] + p2[j]) * u + (2 * p0[j] - 5 * p1[j] + 4 * p2[j] - p3[j]) * u * u + (-p0[j] + 3 * p1[j] - 3 * p2[j] + p3[j]) * u * u * u)));
+      }
+      pts.push(W[W.length - 1]);
+      const L = [0]; for (let i = 1; i < pts.length; i++) L.push(L[i - 1] + Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]));
+      const at = d => { d = Math.max(0, Math.min(L[L.length - 1], d)); let i = 1; while (i < L.length - 1 && L[i] < d) i++; const k = (d - L[i - 1]) / (L[i] - L[i - 1] || 1), a = pts[i - 1], b = pts[i]; return { p: [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k], yaw: Math.atan2(b[1] - a[1], b[0] - a[0]) }; };
+      return { at, len: L[L.length - 1] };
+    })();
+    const EXIT = [150, ROAD.yc + 6], EXITYAW = Math.atan2(EXIT[1] - -13, EXIT[0] - 54);
+    const easeIO = x => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
+    const lerp = (a, b, k) => a + (b - a) * k;
+    function visit(T, lap = 0) {
+      const deg = Math.PI / 180;
+      let x = LAND[0], y = LAND[1], yaw = 0, K = 1, alt = 0, pitch = 0, thrust = 0, front = 0, speed = 0, dist = 0, scan = -1, show = true;
+      const roadIn = 20.6;
+      if (T < 3.4) { const u = T / 3.4; x = LAND[0] - 122 * Math.pow(1 - u, 3); speed = Math.pow(1 - u, 2); front = speed * 0.6 + bump(2.3, 2.8, 3.2, 3.6, T); pitch = 7 * bump(2.3, 2.8, 3.2, 3.6, T); alt = 2 * bump(2.3, 2.8, 3.2, 3.6, T); }
+      else if (T < 4.6) { scan = (T - 3.4) / 1.2; const s = Math.exp(-(T - 3.4) * 2.6) * Math.cos((T - 3.4) * 7); pitch = 3 * s; alt = s; }
+      else if (T < 6.0) { yaw = -Math.PI / 2 * easeIO((T - 4.6) / 1.4); }
+      else if (T < 7.0) { yaw = -Math.PI / 2; K = 1 - easeIO(T - 6.0); }
+      else if (T < KICK) { yaw = -Math.PI / 2; K = 0; const k = easeIO((T - 7.0) / (KICK - 7.0)); y = LAND[1] - roadIn * k; dist = roadIn * k; }
+      else if (T < 10.4) { yaw = -Math.PI / 2; K = 0; y = CONTACT; dist = roadIn; const k = (T - KICK) / 1.2; pitch = -2.6 * Math.sin(k * Math.PI * 2) * (1 - k); }
+      else if (T < 20.4) {
+        K = 0; const k = easeIO((T - 10.4) / 9), d = ROUTE.len * k, r = ROUTE.at(d);
+        [x, y] = r.p; yaw = r.yaw; dist = roadIn + d;
+        if (T > 19.4) yaw += 0.12 * Math.sin((T - 19.4) * Math.PI * 2) * (1 - (T - 19.4));
+        pitch = -1.6 * bump(10.4, 11, 11.4, 12, T) + 1.4 * bump(18.6, 19.1, 19.3, 19.7, T);
+      }
+      else if (T < 25.4) {
+        [x, y] = ROUTE.at(ROUTE.len).p; dist = roadIn + ROUTE.len;
+        K = easeIO(T - 20.4);
+        alt = 12 * easeIO((T - 20.8) / 2.2);
+        yaw = EXITYAW * easeIO((T - 21.4) / 1.6);
+        if (T > 23) { const u = (T - 23) / 2.4; x = lerp(x, EXIT[0], u * u); y = lerp(y, EXIT[1], u * u); speed = Math.min(1, u * 2); }
+        const boost = bump(22.9, 23.3, 24, 24.6, T);
+        pitch = -6 * boost; thrust = Math.max(boost, speed * 0.7);
+      }
+      else show = false;
+      const parked = smooth(6.2, 6.9, T) * (1 - smooth(7.0, 7.6, T));
+      return { x, y, yaw, show, dist, scan, parked, kickAt: KICK, corner: lap % 2 ? -1 : 1, st: { K, pitch: pitch * deg, roll: 0, tilt: 0, thrust, front, alt, stretch: 1, speed } };
+    }
+    // world position of a wheel's contact point for a car at (x, y, yaw)
+    const wheelAt = (x, y, yaw, ax, side) => { const lx = ax * SC, ly = side * (U.w + 1.6 - U.tw / 2) * SC; return [x + lx * Math.cos(yaw) - ly * Math.sin(yaw), y + lx * Math.sin(yaw) + ly * Math.cos(yaw)]; };
+    // tread printed in rose where the rear tyres crossed the paper
+    function treadPrints(T) {
+      if (T < 10.4) return;
+      const k = easeIO((T - 10.4) / 9), dNow = ROUTE.len * Math.min(1, k), fade = 1 - smooth(26, 31, T);
+      if (fade <= 0) return;
+      const inSheet = ([x, y]) => x > SHEET.x0 + 0.6 && x < SHEET.x1 - 0.6 && y > SHEET.y0 + 0.6 && y < SHEET.y1 - 0.6;
+      const edge = [], tick = [];
+      for (const side of [-1, 1]) {
+        let run = [], ticks = [];
+        const flush = () => { if (run.length > 1) for (const o of [-1, 1]) edge.push(p3(run.map(([p, n]) => [p[0] + n[0] * 1.6 * o, p[1] + n[1] * 1.6 * o, 0.78]))); run = []; };
+        for (let d = 0, i = 0; d <= dNow; d += 1.3, i++) {
+          const r = ROUTE.at(d), p = wheelAt(r.p[0], r.p[1], r.yaw, U.axR, side), n = [-Math.sin(r.yaw), Math.cos(r.yaw)];
+          if (inSheet(p)) { run.push([p, n]); tick.push(p3([[p[0] - n[0] * 1.4, p[1] - n[1] * 1.4, 0.78], [p[0] + n[0] * 1.4 + Math.cos(r.yaw) * 0.5, p[1] + n[1] * 1.4 + Math.sin(r.yaw) * 0.5, 0.78]])); }
+          else flush();
+        }
+        flush();
+      }
+      if (edge.length) { draw(edge.join(''), COL.mid); G.lastChild.setAttribute('stroke-opacity', fade.toFixed(2)); }
+      if (tick.length) { draw(tick.join(''), COL.acc); G.lastChild.setAttribute('stroke-opacity', (0.85 * fade).toFixed(2)); }
+    }
+    // a calm scan pulse: two rose rings rolling out across the lot
+    function scanRings(v) {
+      if (v.scan < 0) return;
+      for (const j of [0, 0.3]) { const k = v.scan - j; if (k <= 0) continue; const r = 10 + 150 * easeIO(k), ring = circ(v.x, v.y, r, r, 96, 0.06), runs = []; let run = []; ring.concat([ring[0]]).forEach(q => { if (Math.abs(q[0]) < TILE.x - 1.5 && Math.abs(q[1]) < TILE.y - 1.5) run.push(q); else { if (run.length > 1) runs.push(p3(run)); run = []; } }); if (run.length > 1) runs.push(p3(run)); if (!runs.length) continue; draw(runs.join(''), COL.acc); G.lastChild.setAttribute('stroke-opacity', ((1 - k) * 0.55).toFixed(2)); }
+    }
+
+    // ── Compose ──
+    // Every item draws into its own group. Still things are drawn once and
+    // kept; slow things (sway, wind) refresh every few frames, round-robin;
+    // only what moves fast is redrawn each frame. Groups are re-ordered far to
+    // near each frame, so the car slots in between trees as it drives.
+    const lanternAt = () => [DOORX + 3.5 + 2.3, HOUSE.y1 + 1.2, 9.6];
+    const CACHE = new Map();
+    let FRAME = 0;
+    function district(t, phi, spin, root) {
+      const T = t % CYCLE, v = visit(T, Math.floor(t / CYCLE));
+      FRAME++;
+      const items = [
+        { id: 'ground', k: -1e9, mode: 'static', fn: () => { slab(); groundMarks(); sheet(); pitchMarks(); } },
+        { id: 'groundLive', k: -1e9 + 1, fn: () => {
+          if (v.parked > 0.02) { draw(p3(circ(PAD[0], PAD[1], 9.8, 9.8, 6, 0.05, Math.PI / 6), true), COL.acc); G.lastChild.setAttribute('stroke-opacity', v.parked.toFixed(2)); }
+          pencilTrail(t); treadPrints(T); drift(t, 'ground'); scanRings(v); } },
+        { id: 'house', k: -112, mode: 'static', fn: () => house(t) },
+        { id: 'lantern', k: -111.9, fn: () => draw(p3(ringAx(add(lanternAt(), [0, 0, 1.2]), BN, 0.32 + 0.06 * Math.sin(t * 3.1), 5), true), COL.acc) },
+        { id: 'pencil', k: PEN.cx + PEN.cy, fn: () => giantPencil(t) },
+        { id: 'football', k: GOAL.o[0] + GOAL.o[1], fn: () => { cornerFlag(t); football(t, T, v); } },
+        { id: 'book', k: BOOK[0] + BOOK[1], mode: 'slow', every: 2, fn: () => openBook(t) },
+        { id: 'palette', k: PAL[0] + PAL[1], mode: 'slow', every: 2, fn: () => palette(t) },
+        { id: 'sculpture', k: SCULPT[0] + SCULPT[1], mode: 'slow', every: 2, fn: () => sculpture(t) },
+        { id: 'line', k: TREES[1].x + TREES[1].y + 0.5, mode: 'slow', every: 3, fn: () => clothesline(t) },
+        ...TREES.map((tr, i) => ({ id: 'tree' + i, k: tr.x + tr.y, mode: 'slow', every: 4, ph: i, fn: () => brushTree(tr, t) })),
+        ...[...LAWN].map(([b, L], i) => ({ id: 'lawn' + b, k: b * 6 + 3 - 0.01, mode: 'slow', every: 6, ph: i, fn: () => lawnBin(L, t) })),
+        ...(v.show ? [{ id: 'car', k: v.x + v.y + 8, fn: () => { const [sx, sy] = W3(v.x, v.y, 0); group({ transform: `translate(${f(sx)} ${f(sy)}) scale(${SC})` }, () => { YAW = v.yaw; vehicle({ K: v.st.K, t, phi: -v.dist / (SC * U.r), spin, ...v.st }); YAW = 0; }); } }] : []),
+        { id: 'air', k: 1e9, fn: () => { drift(t, 'air'); puffs(t); sheets(t); bubble(t); } },
+      ];
+      const nodes = [];
+      for (const it of items.sort((a, b) => a.k - b.k)) {
+        let c = CACHE.get(it.id);
+        const mode = it.mode || 'fast';
+        const need = !c || mode === 'fast' || (mode === 'slow' && (FRAME + (it.ph || 0)) % it.every === 0) || root.__force;
+        if (need) { const g = document.createElementNS(NS, 'g'), prev = G; G = g; it.fn(); G = prev; if (c) c.g = g; else CACHE.set(it.id, c = { g }); }
+        nodes.push(c.g);
+      }
+      root.replaceChildren(...nodes);
+      root.__force = false;
+      return v;
+    }
+
+    // ── Player ──
+    const g = root.querySelector('[data-scene]');
+    const fig = root.closest('.journey');
+    const btn = fig && fig.querySelector('[data-journey-toggle]');
+    const lowPower = matchMedia('(hover: none)').matches;
+    let t = reduce ? 9.6 : 0, spin = 0, playing = !reduce, onScreen = false, raf = 0, last = 0, since = 0;
+    const paint = () => { FLIP = 1; district(t, 0, spin, g); };
+    function tick(now) {
+      raf = 0;
+      if (!running()) { last = 0; return; }
+      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
+      since += dt;
+      // phones and tablets draw at ~30 fps; desktops every frame
+      if (!lowPower || since >= 1 / 32) {
+        t += since;
+        const v = visit(t % CYCLE, Math.floor(t / CYCLE));
+        spin += since * (4 + 10 * v.st.thrust) * v.st.K;
+        since = 0;
+        paint();
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    const running = () => playing && onScreen && !document.hidden && root.isConnected;
+    const kick = () => { if (running() && !raf) { last = 0; raf = requestAnimationFrame(tick); } };
+    const sync = () => {
+      if (!btn) return;
+      btn.setAttribute('aria-pressed', String(!playing));
+      btn.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
+    };
+
+    paint();
+    sync();
+    if ('IntersectionObserver' in window) {
+      const io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; kick(); }, { rootMargin: '120px' });
+      io.observe(root);
+      document.addEventListener('astro:before-swap', () => { io.disconnect(); playing = false; }, { once: true });
+    } else { onScreen = true; kick(); }
+    document.addEventListener('visibilitychange', kick);
+    btn && btn.addEventListener('click', () => { playing = !playing; sync(); kick(); });
+  }
+
+  function initAll() {
+    document.querySelectorAll('[data-journey]').forEach((root) => {
+      if (root.dataset.bound) return;
+      root.dataset.bound = 'true';
+      initJourney(root);
+    });
+  }
+
+  initAll();
+  document.addEventListener('astro:page-load', initAll);
+</script>
