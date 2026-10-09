@@ -10,6 +10,10 @@
 // Plain SVG + one script, no dependencies. Follows the site theme through
 // [data-theme='dark']; the rose accent is --brand. Pauses off-screen and in
 // background tabs, and honours prefers-reduced-motion (a still frame).
+// Drawn on a <canvas>: still things are baked once into bitmaps, and each
+// frame only the small areas where something moved are repainted, at up to
+// 24 fps. On phones the whole lot stays in frame and the
+// figure runs edge to edge.
 interface Props {
   label?: string;
 }
@@ -20,7 +24,7 @@ const {
 
 <figure class="journey">
   <div class="journey__fig" data-journey role="img" aria-label={label}>
-    <svg viewBox="-166 -136 320 234" aria-hidden="true"><g data-scene></g></svg>
+    <canvas aria-hidden="true"></canvas>
   </div>
   <figcaption class="journey__cap">
     <span class="journey__name"><b>01</b> Loved art</span>
@@ -32,16 +36,17 @@ const {
 </figure>
 
 <style>
-  /* Hairline tokens, tuned to the site: the plate is the page surface, the
-     outlines are the text colour, the interiors step down, rose is --brand. */
+  /* Three colours and two switches. Paper is the page surface, ink draws the
+     outlines (the greys are tints of ink on paper), and one accent. Depth
+     shades the side faces of solids with a light tint; accent-mode keeps the
+     accent for things in motion only. */
   .journey {
-    --hairline-plate: var(--surface);
-    --hairline-hi: #232327;
-    --hairline-edge: #a4a4ac;
-    --hairline-mid: #c3c3c9;
-    --hairline-lo: #e0e0e4;
+    --hairline-paper: var(--surface);
+    --hairline-ink: #232327;
     --hairline-accent: var(--brand);
-    --hairline-stroke: 0.9;
+    --hairline-depth: 1;
+    --hairline-depth-tint: accent;
+    --hairline-accent-mode: all;
     margin: 0;
     width: 100%;
     display: flex;
@@ -50,24 +55,21 @@ const {
   }
 
   :global([data-theme='dark']) .journey {
-    --hairline-hi: #ececef;
-    --hairline-edge: #6c6c74;
-    --hairline-mid: #4a4a52;
-    --hairline-lo: #2a2a30;
+    --hairline-ink: #ececef;
   }
 
   .journey__fig {
     width: 100%;
-    aspect-ratio: 320 / 234;
+    aspect-ratio: 311 / 229;
   }
 
-  .journey__fig > svg { display: block; width: 100%; height: 100%; overflow: hidden; }
+  .journey__fig > canvas { display: block; width: 100%; height: 100%; }
 
-  .journey__fig :global(path) {
-    vector-effect: non-scaling-stroke;
-    stroke-width: var(--hairline-stroke);
-    stroke-linejoin: round;
-    stroke-linecap: round;
+  /* Phones: the whole lot stays in view, and the figure runs edge to edge
+     (out of the page padding) so it draws as large as the screen allows. */
+  @media (max-width: 640px) {
+    .journey { width: 100vw; margin-inline: calc(50% - 50vw); }
+    .journey__cap { padding-inline: 20px; }
   }
 
   .journey__cap {
@@ -78,7 +80,7 @@ const {
     font-family: var(--font-mono);
     font-size: 11px;
     letter-spacing: 0.04em;
-    color: var(--hairline-edge);
+    color: color-mix(in srgb, var(--hairline-ink) 45%, var(--hairline-paper));
   }
 
   .journey__name b { font-weight: 400; color: var(--text-secondary); margin-right: 4px; }
@@ -131,11 +133,31 @@ const {
     };
     const W3 = (x, y, z) => { if (XF.p || XF.r) [x, y, z] = rot([x, y, z], XF.p, XF.r, XF.cz); if (YAW) [x, y] = [x * Math.cos(YAW) - y * Math.sin(YAW), x * Math.sin(YAW) + y * Math.cos(YAW)]; return [(FLIP * x - y) * C, (FLIP * x + y) * S - (z + ZOFF)]; };
     const f = n => n.toFixed(2);
-    const p2 = (pts, close) => pts.map((p, i) => (i ? 'L' : 'M') + f(p[0]) + ' ' + f(p[1])).join('') + (close ? 'Z' : '');
+    // path data, also growing the bounding box of whatever is being recorded
+    // Paths stay as numbers, never text: p2 files the projected points and
+    // hands back a short token, so callers can still join paths with + and
+    // join(''), and draw() turns the tokens back into point lists. (Formatting
+    // and re-parsing path text was the single biggest cost per frame.)
+    let SEG = [];
+    const grow = (x, y) => { if (BB) { const X = TS.tx + TS.s * x, Y = TS.ty + TS.s * y; if (X < BB[0]) BB[0] = X; if (Y < BB[1]) BB[1] = Y; if (X > BB[2]) BB[2] = X; if (Y > BB[3]) BB[3] = Y; } };
+    const p2 = (pts, close) => {
+      const n = pts.length, a = new Float32Array(n * 2);
+      for (let i = 0; i < n; i++) { const x = pts[i][0], y = pts[i][1]; a[2 * i] = x; a[2 * i + 1] = y; grow(x, y); }
+      return '\u0001' + (SEG.push(a) - 1) + (close ? 'z' : 'o');
+    };
     const p3 = (pts, close) => p2(pts.map(p => W3(...p)), close);
-    let G;
-    const draw = (d, stroke, fill = 'none') => { const n = document.createElementNS(NS, 'path'); n.setAttribute('d', d); n.setAttribute('stroke', stroke); n.setAttribute('fill', fill); G.append(n); };
-    const dot = pts => pts.map(p => { const c = W3(...p); return `M${f(c[0])} ${f(c[1])}h0.01`; }).join('');
+    // a tiny display list: groups and paths, no DOM
+    let G, BB = null, TS = { tx: 0, ty: 0, s: 1 };
+    const NODE = { setAttribute(k, v) { (this.a || (this.a = {}))[k] = v; } };
+    const mkG = a => ({ a: a || null, c: [], t: null, get lastChild() { return this.c[this.c.length - 1]; } });
+    const draw = (d, stroke, fill = 'none') => {
+      const n = Object.create(NODE), segs = [];
+      for (const part of d.split('\u0001')) if (part) segs.push(SEG[parseInt(part, 10)], part.charCodeAt(part.length - 1));
+      n.d = segs; n.s = stroke; n.f = fill; n.a = null; n.p = null; G.c.push(n);
+    };
+    const dot = pts => pts.map(p => { const c = W3(...p); grow(c[0], c[1]); return '\u0001' + (SEG.push(new Float32Array([c[0], c[1], c[0] + 0.01, c[1]])) - 1) + 'o'; }).join('');
+    // point lists to a Path2D; 122 = 'z', a closed outline
+    const toPath = segs => { const P = new Path2D(); for (let i = 0; i < segs.length; i += 2) { const a = segs[i]; P.moveTo(a[0], a[1]); for (let j = 2; j < a.length; j += 2) P.lineTo(a[j], a[j + 1]); if (segs[i + 1] === 122) P.closePath(); } return P; };
 
     // ── Convex polyhedra ──
     const sub = (a, b) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
@@ -184,7 +206,7 @@ const {
     function render(s) {
       const V = view();
       const vis = s.faces.map(fc => dotv(fc.n, V) > 1e-6);
-      s.faces.forEach((fc, i) => { if (vis[i]) draw(p3(fc.ix.map(k => s.verts[k]), true), COL.plate, COL.plate); });
+      s.faces.forEach((fc, i) => { if (vis[i]) { const k = shadeOf(fc.n), c = k ? 'shade:' + k : COL.plate; draw(p3(fc.ix.map(k => s.verts[k]), true), c, c); } });
       const edges = new Map();
       s.faces.forEach((fc, fi) => fc.ix.forEach((a, k) => { const b = fc.ix[(k + 1) % fc.ix.length]; const key = a < b ? a + '_' + b : b + '_' + a; (edges.get(key) || edges.set(key, []).get(key)).push(fi); }));
       const sil = [], fold = [];
@@ -199,6 +221,16 @@ const {
       if (fold.length) draw(fold.join(''), s.fold || COL.mid);
       draw(sil.join(''), s.line || COL.hi);
     }
+    // how much a face turns away from the light (top-left): top faces stay
+    // paper, faces toward +x take the most tint, toward +y a little
+    const shadeOf = n => {
+      let m = n;
+      if (XF.p || XF.r) m = rot(m, XF.p, XF.r, 0);
+      if (YAW) m = [m[0] * Math.cos(YAW) - m[1] * Math.sin(YAW), m[0] * Math.sin(YAW) + m[1] * Math.cos(YAW), m[2]];
+      const side = (1 - Math.max(0, m[2])) * (0.8 * Math.max(0, m[0]) + 0.35 * Math.max(0, m[1]));
+      return Math.round(Math.min(1, side) * 20);
+    };
+    const Z3 = [0, 0, 1];
     const faceVisible = n => dotv(n, view()) > 1e-6;
 
     // ── Wheels (shared look with the wagon, faceted rims) ──
@@ -260,9 +292,16 @@ const {
       return [x, yh + dy * Math.cos(a) - dz * Math.sin(a), HZ + dy * Math.sin(a) + dz * Math.cos(a)];
     }
 
-    function flipWheel(x, side, K, phi, spin, tilt) {
+    // steer: the front wheels turn about their own upright axis (inner wheel a
+    // touch more than the outer, as on a real car); folded wheels don't steer
+    function flipWheel(x, side, K, phi, spin, tilt, steer = 0) {
       const ang = K * Math.PI / 2 + tilt * K;
-      const r = U.r, yOut = side * (U.w + 1.6), yIn = yOut - side * U.tw, FP = p => foldPt(p, side, ang);
+      const r = U.r, yOut = side * (U.w + 1.6), yIn = yOut - side * U.tw, yc = (yOut + yIn) / 2;
+      let st = steer * (1 - K);
+      if (Math.abs(st) > 1e-4) { const L = U.axF - U.axR, R = L / Math.tan(st); st = Math.atan(L / (R - yc)); if (Math.sign(st) !== Math.sign(steer)) st = steer; }
+      const cs = Math.cos(st), sn = Math.sin(st);
+      const SR = st ? ([px, py, pz]) => [x + (px - x) * cs - (py - yc) * sn, yc + (px - x) * sn + (py - yc) * cs, pz] : p => p;
+      const FP = p => foldPt(SR(p), side, ang);
       const ring = (yy, rad, n = 28) => Array.from({ length: n }, (_, k) => { const a = k / n * Math.PI * 2; return FP([x + rad * Math.cos(a), yy, r + rad * Math.sin(a)]); });
       // the arm: from the hinge knuckle down to the hub's inner face
       const hub = [x, yIn, r], hinge = [x, side * HY, HZ];
@@ -344,11 +383,11 @@ const {
 
     // ── State ──
     function vehicle(st) {
-      const { K, t, phi, spin, pitch, roll, thrust, front, alt, stretch, tilt } = st;
+      const { K, t, phi, spin, pitch, roll, thrust, front, alt, stretch, tilt, shadow = 1, steer = 0 } = st;
       // ground: rose glow and ripple rings under each pad and the belly
       const hoverH = K * (6 + alt + (reduce ? 0 : Math.sin(t * 2.2) * 0.6 + Math.sin(t * 3.7 + 1) * 0.25));
       const padsXY = [[U.axF, -1], [U.axR, -1], [U.axF, 1], [U.axR, 1]].map(([x, s]) => [x, s * (HY + HZ - U.r)]);
-      if (K > 0.05) {
+      if (K > 0.05 && shadow > 0.02) group({ opacity: shadow.toFixed(2) }, () => {
         const rings = [], fade = [];
         for (const [x, y] of [...padsXY, [0, 0]]) {
           const base = x === 0 ? 7 : 5.6;
@@ -368,14 +407,14 @@ const {
           n.setAttribute('stroke-dasharray', '2 3'); n.setAttribute('stroke-dashoffset', (t * 14).toFixed(1));
         }
         for (const [d, o] of fade) { draw(d, COL.acc); G.lastChild.setAttribute('stroke-opacity', o.toFixed(2)); }
-      }
+      });
       // the body floats on the pads and lags them a touch
       const bodyH = K * (6 + alt + (reduce ? 0 : Math.sin((t - 0.15) * 2.2) * 0.6 + Math.sin((t - 0.15) * 3.7 + 1) * 0.25));
       XF = { p: pitch, r: roll, cz: 18 };
       ZOFF = bodyH;
       { const lv0 = view(); VX = lv0[0] >= 0 ? 1 : -1; VY = lv0[1] >= 0 ? 1 : -1; }
       const tiltFar = -tilt, tiltNear = tilt;
-      for (const x of [U.axF, U.axR]) flipWheel(x, -VY, K, phi, spin, -VY * tilt);
+      for (const x of [U.axF, U.axR]) flipWheel(x, -VY, K, phi, spin, -VY * tilt, x === U.axF ? steer : 0);
       arches(false, K);
       rcs(false, { front, back: thrust });
       // tail thrusters (behind the tail; in the rear view they come later)
@@ -450,7 +489,7 @@ const {
       if (VX < 0) thr();
       rcs(true, { front, back: thrust });
       arches(true, K);
-      for (const x of [U.axF, U.axR]) flipWheel(x, VY, K, phi, spin, VY * tilt);
+      for (const x of [U.axF, U.axR]) flipWheel(x, VY, K, phi, spin, VY * tilt, x === U.axF ? steer : 0);
       XF = { p: 0, r: 0, cz: 18 }; ZOFF = 0; VX = 1; VY = 1;
     }
 
@@ -475,7 +514,14 @@ const {
     const slabXY = (poly, z0, z1, opts) => loft([poly.map(([x, y]) => [x, y, z0]), poly.map(([x, y]) => [x, y, z1])], opts);
     const flat = (pts, z = 0.05) => pts.map(([x, y]) => [x, y, z]);
     const circ = (cx, cy, rx, ry, n = 24, z = 0.05, r0 = 0) => Array.from({ length: n }, (_, i) => { const a = i / n * Math.PI * 2 + r0; return [cx + rx * Math.cos(a), cy + ry * Math.sin(a), z]; });
-    function group(attrs, fn) { const g = document.createElementNS(NS, 'g'); for (const k in attrs) g.setAttribute(k, attrs[k]); const prev = G; G.append(g); G = g; fn(); G = prev; }
+    function group(attrs, fn) {
+      const g = mkG(attrs), prev = G, pts = TS;
+      G.c.push(g); G = g;
+      const m = attrs.transform && /translate\(([-\d.]+) ([-\d.]+)\) scale\(([-\d.]+)\)/.exec(attrs.transform);
+      if (m) { g.t = [+m[1], +m[2], +m[3]]; TS = { tx: TS.tx + TS.s * g.t[0], ty: TS.ty + TS.s * g.t[1], s: TS.s * g.t[2] }; }
+      fn();
+      G = prev; TS = pts;
+    }
     // A plane that faces the viewer square-on (its horizontal axis projects
     // flat), optionally leaned back by `tilt`.
     const BU = [Math.SQRT1_2, -Math.SQRT1_2, 0], BN = [Math.SQRT1_2, Math.SQRT1_2, 0], BZ = [0, 0, 1];
@@ -516,12 +562,15 @@ const {
     const PATHX = pathX(ROAD.y0);
     // paintbrush trees in groves: round, mop, chisel and fan tips, mixed heights
     const TREES = [
-      { x: -38, y: -68, type: 'round', s: 1.05, ph: 0.2 }, { x: -4, y: -69, type: 'chisel', s: 1.1, ph: 1.1 }, { x: -21, y: -73, type: 'mop', s: 0.8, ph: 2.3 },
+      { x: -38, y: -68, type: 'round', s: 1.0, ph: 0.2, h: 10.5 }, { x: -4, y: -69, type: 'chisel', s: 1.0, ph: 1.1, h: 10.5 }, { x: -21, y: -73, type: 'mop', s: 0.8, ph: 2.3 },
       { x: 80, y: -68, type: 'mop', s: 1.25, ph: 0.7 }, { x: 90, y: -56, type: 'round', s: 0.8, ph: 1.9 }, { x: 69, y: -73, type: 'chisel', s: 0.9, ph: 2.8 },
-      { x: 90, y: -9, type: 'fan', s: 1.1, ph: 0.4 }, { x: 86, y: 3, type: 'round', s: 0.75, ph: 3.3 },
+      { x: 90, y: 17, type: 'fan', s: 1.1, ph: 0.4 }, { x: 86, y: 3, type: 'round', s: 0.75, ph: 3.3 },
       { x: -89, y: 35, type: 'mop', s: 1.15, ph: 1.4 }, { x: -81, y: 41, type: 'round', s: 0.8, ph: 2.1 }, { x: -92, y: 25, type: 'chisel', s: 0.95, ph: 0.9 },
       { x: -29, y: -49, type: 'round', s: 0.95, ph: 3.9 }, { x: -21, y: -39, type: 'fan', s: 0.85, ph: 1.6 },
       { x: 13, y: 31, type: 'mop', s: 0.85, ph: 2.6 },
+      // low shrubs, so every grove has a tall tree, a companion and a shrub
+      { x: -29, y: -74, type: 'shrub', s: 0.9, ph: 0.5 }, { x: 78, y: -60, type: 'shrub', s: 0.85, ph: 1.2 }, { x: 92, y: 8, type: 'shrub', s: 0.8, ph: 2.2 },
+      { x: -76, y: 36, type: 'shrub', s: 0.85, ph: 0.3 }, { x: -36, y: -42, type: 'shrub', s: 0.8, ph: 1.7 }, { x: 20, y: 36, type: 'shrub', s: 0.75, ph: 2.9 },
     ];
     // flagstones from the door to the road, irregular and slightly meandering
     const STONES = [];
@@ -612,11 +661,12 @@ const {
       // ruled margin
       draw(p3([[x0 + 4, y0 + 2, 0.75], [x0 + 4, y1 - 2, 0.75]]), COL.lo);
     }
+    function pencilGhost() {
+      draw(p3(Array.from({ length: 97 }, (_, i) => penAt(i / 96 * Math.PI * 2)), true), COL.lo);
+    }
     function pencilTrail(t) {
-      const s = t * 0.8, ghost = [], trail = [];
-      for (let i = 0; i <= 96; i++) ghost.push(penAt(i / 96 * Math.PI * 2));
+      const s = t * 0.8, trail = [];
       for (let i = 0; i <= 30; i++) trail.push(penAt(s - 2.2 + i / 30 * 2.2));
-      draw(p3(ghost, true), COL.lo);
       draw(p3(trail), COL.hi);
       draw(p3(circ(...penAt(s).slice(0, 2), 1.4, 1.4, 6, 0.8), true), COL.acc);
     }
@@ -908,35 +958,92 @@ const {
       render(lathe(add(endP, mul(ax, L - 5.2)), ax, [[0, 1.25], [2, 1.6], [5.2, 0.08]], 6, 0, { line: COL.acc }));
     }
 
-    // ── Paintbrush trees: round, mop, chisel and fan tips ──
-    function brushTree(tr, t) {
-      const { x, y, type, s, ph } = tr, H = 12 * s, Z = [0, 0, 1];
-      render(lathe([x, y, 0], Z, [[0, 1.35 * s], [H, 0.95 * s]], 6, ph));
-      render(lathe([x, y, H], Z, [[0, 1.6 * s], [3.8 * s, 1.6 * s], [4.6 * s, 1.3 * s]], 8, ph));
-      draw(p3(Array.from({ length: 9 }, (_, i) => { const a = -Math.PI / 4 + i / 8 * Math.PI; return [x + 1.62 * s * Math.cos(a), y + 1.62 * s * Math.sin(a), H + 1.9 * s]; })), COL.mid);
-      const b = H + 4.6 * s, sw = k => [Math.sin(t * 1.3 + ph) * 1.2 * s * k, Math.cos(t * 1.1 + ph) * 0.8 * s * k, 0];
-      const R = (z, r, k, n = 6) => ringAx(add([x, y, b + z * s], sw(k)), Z, Math.max(r * s, 0.06), n, ph);
-      if (type === 'round') render(loft([R(0, 1.9, 0), R(3, 3.3, 0.2), R(7, 3.1, 0.5), R(13.5, 0, 1)]));
-      else if (type === 'mop') render(loft([R(0, 2.1, 0, 8), R(2, 4, 0.1, 8), R(4.8, 5.2, 0.3, 8), R(8, 5, 0.5, 8), R(10.6, 3.6, 0.75, 8), R(12.4, 1.4, 0.9, 8), R(13.3, 0, 1, 8)]));
-      else if (type === 'chisel') {
-        // flat bristles squared off at an angle
-        const e = [Math.cos(ph), Math.sin(ph), 0], f = [-Math.sin(ph), Math.cos(ph), 0];
-        const rect = (z, w, d, k, slant = 0) => [[-w, -d], [w, -d], [w, d], [-w, d]].map(([u, v]) => add(add([x, y, b + (z + slant * u / w) * s], sw(k)), add(mul(e, u * s), mul(f, v * s))));
-        render(loft([rect(0, 2.1, 1.5, 0), rect(3, 3.5, 1.8, 0.2), rect(7, 3.8, 1.45, 0.5), rect(10.6, 3.7, 0.12, 0.9, 1.6)]));
-      } else {
-        // a fan brush, opened square to the viewer, with its bristle lines
-        const a = -Math.PI / 4 + 0.35 * Math.sin(ph), e = [Math.cos(a), Math.sin(a), 0], f = [-Math.sin(a), Math.cos(a), 0], tilt = Math.sin(t * 1.1 + ph) * 0.07;
-        const F = (u, w, d) => { const uu = u * Math.cos(tilt) - w * Math.sin(tilt), ww = u * Math.sin(tilt) + w * Math.cos(tilt); return add([x, y, b + ww * s], add(mul(e, uu * s), mul(f, d * s))); };
-        const prof = [[-1.4, 0], [1.4, 0], ...Array.from({ length: 11 }, (_, i) => { const g = 1.1 - i * 0.22; return [9 * Math.sin(g), 1.2 + 8.4 * Math.cos(g)]; })];
-        render(loft([prof.map(([u, w]) => F(u, w, -0.55)), prof.map(([u, w]) => F(u, w, 0.55))]));
-        const side = dotv(f, view()) > 0 ? 0.6 : -0.6;
-        draw(Array.from({ length: 9 }, (_, i) => { const g = 0.95 - i * 0.2375; return p3([F(0, 0.6, side), F(8.1 * Math.sin(g), 1.2 + 7.6 * Math.cos(g), side)]); }).join(''), COL.lo);
+    // ── Paintbrush trees, grown organic ──
+    // A brush that has become a tree: a tapered trunk with a root flare and a
+    // lean that grows with height, bark creases, roots; a metal ferrule
+    // collar; then a canopy of two or three overlapping soft lobes (the lower
+    // one wider and flatter), bristle tufts hanging from the lower lobes and
+    // a splayed bristle crown on top. Trees nearer the viewer are drawn a
+    // little larger; groves mix a tall tree, a companion and a low shrub.
+    // lobes: [offset x, offset y, height above the ferrule, radius, half-height]
+    const TREEFORM = {
+      // a broad, rounded crown
+      round: { H: 6.5, ferr: 1.8, rk: 1.15, lobes: [[0, 0, 2.6, 5.4, 3.0], [-2.7, 1.8, 4.4, 4.0, 2.8], [2.6, -1.5, 4.7, 3.9, 2.7], [0.3, -0.2, 6.6, 3.8, 2.8]] },
+      // a wide, clustered crown
+      mop: { H: 6, ferr: 1.8, rk: 1.2, lobes: [[-2.8, 1.1, 2.6, 4.4, 2.8], [2.6, -0.9, 2.8, 4.2, 2.8], [0, -0.2, 4.8, 4.6, 3.0], [0.7, 0.9, 6.8, 3.2, 2.6]] },
+      // columnar, cypress-like: the flat brush stood on end
+      chisel: { H: 5, ferr: 1.8, rk: 1.05, lobes: [[0, 0, 3.2, 3.7, 3.6], [0.2, -0.2, 6.7, 3.1, 3.4], [0.4, -0.3, 9.9, 2.4, 3.0], [0.5, -0.4, 12.5, 1.5, 2.2]] },
+      // a spreading umbrella, the fan brush opened out
+      fan: { H: 9, ferr: 1.6, rk: 1.1, lobes: [[-3.3, 1.5, 2.2, 4.2, 1.9], [3.3, -1.1, 2.4, 4.2, 2.0], [0, 0.2, 3.3, 4.8, 2.2], [0.4, -1.9, 4.0, 3.0, 1.7]] },
+      // low and bushy
+      shrub: { H: 1.6, ferr: 1.0, rk: 0.85, lobes: [[0, 0, 1.4, 3.6, 2.2], [1.4, -1.0, 2.6, 2.6, 2.0], [-1.5, 0.8, 2.2, 2.4, 1.8]] },
+    };
+    const treeScale = tr => tr.s * (0.88 + 0.24 * (tr.x + tr.y + 170) / 340);
+    const leanOf = tr => [Math.cos(tr.ph * 2.1), Math.sin(tr.ph * 2.1)];
+    // the trunk's centre line: it leans more the higher it goes
+    const trunkH = tr => (tr.h || TREEFORM[tr.type].H) * treeScale(tr);
+    const spineAt = (tr, z) => {
+      const s = treeScale(tr), H = trunkH(tr), [dx, dy] = leanOf(tr), L = (tr.type === 'shrub' ? 0.3 : 1.3) * s, k = Math.min(1, Math.max(0, z / H));
+      return [tr.x + dx * L * k * k, tr.y + dy * L * k * k, z];
+    };
+    const treeTop = tr => { const s = treeScale(tr), F = TREEFORM[tr.type]; return trunkH(tr) + Math.max(...F.lobes.map(l => F.ferr + l[2] + l[4])) * s; };
+    const FRONT = Math.PI / 4; // the direction that faces the viewer, in plan
+    function brushTree(tr) {
+      const s = treeScale(tr), F = TREEFORM[tr.type], H = trunkH(tr), ph = tr.ph, rk = F.rk * s;
+      const tang = z => norm(sub(spineAt(tr, z + 0.4), spineAt(tr, z)));
+      // trunk: root flare, taper, lean
+      const st = [[0, 2.0], [0.06, 1.55], [0.2, 1.2], [0.45, 1.05], [0.72, 0.96], [1, 0.9]];
+      const radius = f => { for (let i = 1; i < st.length; i++) if (f <= st[i][0]) { const [f0, r0] = st[i - 1], [f1, r1] = st[i]; return (r0 + (r1 - r0) * (f - f0) / (f1 - f0)) * rk; } return 0.9 * rk; };
+      render(loft(st.map(([f, r]) => ringAx(spineAt(tr, f * H), tang(f * H), r * rk, 7, ph)), { fold: COL.lo }));
+      // bark creases on the side we see, and roots splaying into the grass
+      const creases = [];
+      for (const [a0, f0, f1] of [[FRONT - 0.55, 0.08, 0.86], [FRONT + 0.4, 0.2, 0.7], [FRONT - 0.05, 0.5, 0.95]]) {
+        creases.push(p3(Array.from({ length: 7 }, (_, i) => { const f = f0 + (f1 - f0) * i / 6, a = a0 + 0.16 * Math.sin(f * 9 + ph), c = spineAt(tr, f * H), r = radius(f) * 0.94; return [c[0] + Math.cos(a) * r, c[1] + Math.sin(a) * r, c[2]]; })));
       }
+      if (tr.type !== 'shrub') for (const da of [-1.0, 0.1, 0.95]) {
+        const a = FRONT + da + 0.2 * Math.sin(ph * 3 + da);
+        creases.push(p3([[tr.x + Math.cos(a) * 1.5 * rk, tr.y + Math.sin(a) * 1.5 * rk, 0.7 * rk], [tr.x + Math.cos(a) * 2.5 * rk, tr.y + Math.sin(a) * 2.5 * rk, 0.15], [tr.x + Math.cos(a + 0.15) * 3.4 * rk, tr.y + Math.sin(a + 0.15) * 3.4 * rk, 0]]));
+      }
+      draw(creases.join(''), COL.mid);
+      // the ferrule: a metal collar with a crimp
+      const cF = spineAt(tr, H), aF = tang(H), fh = F.ferr * s;
+      render(lathe(cF, aF, [[0, 1.0 * rk], [0.35 * fh, 1.22 * rk], [fh, 1.28 * rk]], 12, ph));
+      const crimp = add(cF, mul(aF, 0.62 * fh));
+      draw(p3(Array.from({ length: 9 }, (_, i) => { const a = FRONT - Math.PI / 2 + i / 8 * Math.PI; return add(crimp, [Math.cos(a) * 1.27 * rk, Math.sin(a) * 1.27 * rk, 0]); })), COL.mid);
+      // the canopy: soft lobes, drawn back to front
+      const base = add(cF, mul(aF, fh)), ca = Math.cos(ph), sa = Math.sin(ph);
+      const lobes = F.lobes.map(([ox, oy, oz, R, hh], i) => ({ c: add(base, [(ox * ca - oy * sa) * s, (ox * sa + oy * ca) * s, oz * s]), R: R * s, hh: hh * s, i }));
+      lobes.sort((a, b) => (a.c[0] + a.c[1] + a.c[2]) - (b.c[0] + b.c[1] + b.c[2]));
+      const top = lobes.reduce((m, l) => (l.c[2] + l.hh > m.c[2] + m.hh ? l : m), lobes[0]);
+      // each lobe: smooth (no inner lines, the shading carries the form),
+      // flatter underneath, with a few scalloped leaf-clump marks on its face
+      const T = [-1, -0.85, -0.55, -0.2, 0.2, 0.55, 0.85, 1];
+      const zt = (L, tt) => tt < 0 ? tt * L.hh * 0.7 : tt * L.hh, rt = (L, tt) => L.R * Math.sqrt(Math.max(0.004, 1 - tt * tt));
+      const tufts = [];
+      for (const L of lobes) {
+        render(loft(T.map(tt => ringAx(add(L.c, [0, 0, zt(L, tt)]), Z3, rt(L, tt), 12, ph + L.i)), { fold: 'none' }));
+        for (let k = 0; k < 4; k++) {
+          const a = FRONT - 0.95 + k * 0.62 + 0.25 * Math.sin(ph * 2 + k + L.i), tt = 0.05 + 0.4 * ((k * 0.37 + L.i * 0.21) % 1), r = rt(L, tt) * 0.985, pc = add(L.c, [Math.cos(a) * r, Math.sin(a) * r, zt(L, tt)]);
+          const tg = [-Math.sin(a) * 0.17 * L.R, Math.cos(a) * 0.17 * L.R, 0];
+          tufts.push(p3([add(pc, mul(tg, -1)), add(pc, [tg[0] * -0.45, tg[1] * -0.45, 0.13 * L.hh]), add(pc, [0, 0, 0.17 * L.hh]), add(pc, [tg[0] * 0.45, tg[1] * 0.45, 0.13 * L.hh]), add(pc, tg)]));
+        }
+      }
+      // the bristle crown: short strokes splaying up and out of the top lobe
+      const crown = [];
+      for (let k = 0; k < 7; k++) {
+        const a = ph + k * Math.PI * 2 / 7;
+        if (Math.cos(a - FRONT) < -0.1) continue;
+        const b0 = add(top.c, [Math.cos(a) * 0.45 * top.R, Math.sin(a) * 0.45 * top.R, 0.8 * top.hh]);
+        crown.push(p3([b0, add(b0, [Math.cos(a) * 0.14 * top.R, Math.sin(a) * 0.14 * top.R, 0.2 * top.hh]), add(b0, [Math.cos(a) * 0.3 * top.R, Math.sin(a) * 0.3 * top.R, 0.28 * top.hh])]));
+      }
+      draw(tufts.join(''), COL.mid);
+      draw(crown.join(''), COL.mid);
     }
 
     // ── A clothesline between two trees, swatches and sheets pegged to dry ──
     function clothesline(t) {
-      const A = [TREES[0].x, TREES[0].y, 10.6], B = [TREES[1].x, TREES[1].y, 11], sag = 2.6;
+      const hook = tr => spineAt(tr, trunkH(tr) * 0.88);
+      const A = hook(TREES[0]), B = hook(TREES[1]), sag = 2.6;
       const P = u => { const p = lerp3(A, B, u), k = 4 * u * (1 - u); return [p[0], p[1] + Math.sin(t * 0.9) * 0.5 * k, p[2] - sag * k]; };
       draw(p3(Array.from({ length: 21 }, (_, i) => P(i / 20))), COL.mid);
       [0.16, 0.33, 0.5, 0.67, 0.84].forEach((u, i) => {
@@ -985,20 +1092,24 @@ const {
 
     // ── Drifting: bristle leaves falling from the groves, ink drops dripping
     // from two brush tips and rippling where they land ──
-    function drift(t, layer) {
+    // one drifting thing at a time (0-3 leaves, 4-5 drops), so each repaints
+    // only its own small patch of the lot
+    function drift(t, layer, only) {
       const leaves = [[3, 0], [8, 2.3], [11, 4.1], [5, 5.6]];
       const lv = [];
-      for (const [ti, off] of leaves) {
+      for (const [i, [ti, off]] of leaves.entries()) {
+        if (i !== only) continue;
         const tr = TREES[ti], u = ((t + off) % 8) / 8, fall = Math.min(1, u / 0.78);
-        const top = [tr.x, tr.y, 12 * tr.s + 10 * tr.s];
+        const sp = spineAt(tr, trunkH(tr)), top = [sp[0], sp[1], treeTop(tr) * 0.8];
         const c = [top[0] + fall * 7 + Math.sin(u * 14 + off) * 1.6, top[1] + fall * 5 + Math.cos(u * 11) * 1.2, top[2] * (1 - fall) + 0.2];
         const a = u * 9 + off, e = [Math.cos(a) * 1.2, Math.sin(a) * 1.2, Math.sin(u * 12) * 0.5 * (1 - fall)], f = [-Math.sin(a) * 0.45, Math.cos(a) * 0.45, 0];
         const op = Math.min(1, u * 8) * (u > 0.85 ? (1 - u) / 0.15 : 1);
         lv.push([p3([add(c, mul(e, -1)), add(c, f), add(c, e), add(c, mul(f, -1))], true) + p3([add(c, mul(e, -0.8)), add(c, mul(e, 0.8))]), op]);
       }
       if (layer === 'air') for (const [d, o] of lv) { draw(d, COL.mid); G.lastChild.setAttribute('stroke-opacity', o.toFixed(2)); }
-      for (const [ti, off] of [[13, 0], [11, 2.7]]) {
-        const tr = TREES[ti], u = ((t + off) % 5.4) / 5.4, top = 12 * tr.s + 4.6 * tr.s + (tr.type === 'mop' ? 13.3 : 13.5) * tr.s, gx = tr.x + 1.6, gy = tr.y + 1.6;
+      for (const [j, [ti, off]] of [[13, 0], [11, 2.7]].entries()) {
+        if (j + 4 !== only) continue;
+        const tr = TREES[ti], u = ((t + off) % 5.4) / 5.4, sp = spineAt(tr, trunkH(tr)), top = treeTop(tr) * 0.55, gx = sp[0] + 2.4, gy = sp[1] + 2.4;
         if (u < 0.5) {
           if (layer !== 'air') continue;
           const k = u / 0.5, z = (top - 1) * (1 - k * k);
@@ -1069,9 +1180,10 @@ const {
     //  4.6  turns in the air to face the pitch      6.0  lands on the pad
     //  7.0  rolls up and taps the ball into the net 9.2  nods
     // 10.4  drives the lawn to the giant pencil's sheet, its tyres printing
-    //       rose tread across the paper            19.4  pauses, looks back
-    // 20.4  lifts, climbs, turns for the exit      23.0  boosts away
-    // 25.4  gone; tracks fade; the lot breathes until the next lap.
+    //       rose tread across the paper
+    // 19.4  takes off from the sheet like a runway: folds its wheels while
+    //       rolling, climbs and accelerates away along the same line
+    // 23.4  gone; tracks fade; the lot breathes until the next lap.
     // Every lap the shot goes to the other corner.
     const CYCLE = 32, SC = 0.42, KICK = 9.2;
     const LAND = [-28, ROAD.yc], CONTACT = GOAL.o[1] + GOAL.spot + 1.7 + 46.4 * SC;
@@ -1088,12 +1200,35 @@ const {
       const at = d => { d = Math.max(0, Math.min(L[L.length - 1], d)); let i = 1; while (i < L.length - 1 && L[i] < d) i++; const k = (d - L[i - 1]) / (L[i] - L[i - 1] || 1), a = pts[i - 1], b = pts[i]; return { p: [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k], yaw: Math.atan2(b[1] - a[1], b[0] - a[0]) }; };
       return { at, len: L[L.length - 1] };
     })();
-    const EXIT = [150, ROAD.yc + 6], EXITYAW = Math.atan2(EXIT[1] - -13, EXIT[0] - 54);
+    // The car drives like a car: the rear axle runs along the route, the body
+    // points from it to the route ahead, and the front wheels turn toward
+    // wherever the front axle is heading. Past either end the route runs
+    // straight on.
+    const LR = -U.axR * SC, LF = U.axF * SC, R0 = ROUTE.at(0), R1 = ROUTE.at(ROUTE.len);
+    const along = s => { if (s >= 0 && s <= ROUTE.len) return ROUTE.at(s).p; const e = s < 0 ? R0 : R1, o = s < 0 ? s : s - ROUTE.len; return [e.p[0] + Math.cos(e.yaw) * o, e.p[1] + Math.sin(e.yaw) * o]; };
+    const heading = d => { const r = along(d - LR), a = along(d); return [r, Math.atan2(a[1] - r[1], a[0] - r[0])]; };
+    const rawSteer = d => {
+      const [r, h] = heading(d), [r1, h1] = heading(d + 0.4), F = LR + LF;
+      const fx = r1[0] + Math.cos(h1) * F - r[0] - Math.cos(h) * F, fy = r1[1] + Math.sin(h1) * F - r[1] - Math.sin(h) * F;
+      const st = Math.atan2(fy, fx) - h; return Math.max(-0.6, Math.min(0.6, Math.atan2(Math.sin(st), Math.cos(st))));
+    };
+    function carPose(d) {
+      const [r, h] = heading(d);
+      // the wheel is turned in a little ahead of each bend and unwound
+      // smoothly after it, like a driver's hands, not snapped lock to lock
+      let st = 0, wsum = 0;
+      for (let k = -3; k <= 3; k++) { const w = 4 - Math.abs(k); st += w * rawSteer(d + 1 + k * 1.4); wsum += w; }
+      return { x: r[0] + Math.cos(h) * LR, y: r[1] + Math.sin(h) * LR, yaw: h, steer: 0.92 * st / wsum };
+    }
+    // drive: ease in, then cruise; it is still rolling when it reaches the end
+    const DRIVE_START = 10.4, DRIVE_END = 19.4, EASE_A = 0.18, LIFTOFF = 0.45;
+    const CRUISE = ROUTE.len / ((DRIVE_END - DRIVE_START) * (1 - EASE_A / 2));
+    const driveDist = T => { const k = Math.min(1, Math.max(0, (T - DRIVE_START) / (DRIVE_END - DRIVE_START))); return ROUTE.len * (k < EASE_A ? k * k / (2 * EASE_A) : k - EASE_A / 2) / (1 - EASE_A / 2); };
     const easeIO = x => { x = Math.min(1, Math.max(0, x)); return x * x * (3 - 2 * x); };
     const lerp = (a, b, k) => a + (b - a) * k;
     function visit(T, lap = 0) {
       const deg = Math.PI / 180;
-      let x = LAND[0], y = LAND[1], yaw = 0, K = 1, alt = 0, pitch = 0, thrust = 0, front = 0, speed = 0, dist = 0, scan = -1, show = true;
+      let x = LAND[0], y = LAND[1], yaw = 0, K = 1, alt = 0, pitch = 0, roll = 0, steer = 0, thrust = 0, front = 0, speed = 0, dist = 0, scan = -1, show = true;
       const roadIn = 20.6;
       if (T < 3.4) { const u = T / 3.4; x = LAND[0] - 122 * Math.pow(1 - u, 3); speed = Math.pow(1 - u, 2); front = speed * 0.6 + bump(2.3, 2.8, 3.2, 3.6, T); pitch = 7 * bump(2.3, 2.8, 3.2, 3.6, T); alt = 2 * bump(2.3, 2.8, 3.2, 3.6, T); }
       else if (T < 4.6) { scan = (T - 3.4) / 1.2; const s = Math.exp(-(T - 3.4) * 2.6) * Math.cos((T - 3.4) * 7); pitch = 3 * s; alt = s; }
@@ -1101,31 +1236,37 @@ const {
       else if (T < 7.0) { yaw = -Math.PI / 2; K = 1 - easeIO(T - 6.0); }
       else if (T < KICK) { yaw = -Math.PI / 2; K = 0; const k = easeIO((T - 7.0) / (KICK - 7.0)); y = LAND[1] - roadIn * k; dist = roadIn * k; }
       else if (T < 10.4) { yaw = -Math.PI / 2; K = 0; y = CONTACT; dist = roadIn; const k = (T - KICK) / 1.2; pitch = -2.6 * Math.sin(k * Math.PI * 2) * (1 - k); }
-      else if (T < 20.4) {
-        K = 0; const k = easeIO((T - 10.4) / 9), d = ROUTE.len * k, r = ROUTE.at(d);
-        [x, y] = r.p; yaw = r.yaw; dist = roadIn + d;
-        if (T > 19.4) yaw += 0.12 * Math.sin((T - 19.4) * Math.PI * 2) * (1 - (T - 19.4));
-        pitch = -1.6 * bump(10.4, 11, 11.4, 12, T) + 1.4 * bump(18.6, 19.1, 19.3, 19.7, T);
+      else if (T < DRIVE_END) {
+        K = 0; const d = driveDist(T), P = carPose(d);
+        ({ x, y, yaw, steer } = P); dist = roadIn + d;
+        pitch = -1.6 * bump(10.4, 11, 11.4, 12, T);
+        // the body leans a little to the outside of a turn
+        roll = 2.2 * deg * (steer / 0.55) * Math.min(1, (driveDist(T + 0.05) - d) / 0.05 / CRUISE);
       }
-      else if (T < 25.4) {
-        [x, y] = ROUTE.at(ROUTE.len).p; dist = roadIn + ROUTE.len;
-        K = easeIO(T - 20.4);
-        alt = 12 * easeIO((T - 20.8) / 2.2);
-        yaw = EXITYAW * easeIO((T - 21.4) / 1.6);
-        if (T > 23) { const u = (T - 23) / 2.4; x = lerp(x, EXIT[0], u * u); y = lerp(y, EXIT[1], u * u); speed = Math.min(1, u * 2); }
-        const boost = bump(22.9, 23.3, 24, 24.6, T);
-        pitch = -6 * boost; thrust = Math.max(boost, speed * 0.7);
+      else if (T < DRIVE_END + 4) {
+        // the sheet is a runway: no stop, no turn. It keeps rolling, folds its
+        // wheels as it goes, rotates a touch nose-up, climbs clear of the
+        // trees and accelerates away along the same line
+        const u = T - DRIVE_END, end = ROUTE.at(ROUTE.len).p;
+        x = end[0] + CRUISE * u + 6 * u * u + 10 * Math.max(0, u - 1.8) ** 3; y = end[1];
+        dist = roadIn + ROUTE.len + CRUISE * u;
+        K = easeIO(u / 0.9);
+        alt = 72 * easeIO(u / 1.2); // model units: about 30 on the lot, clear of the tree tops
+        pitch = 4 * bump(0, 0.35, 0.6, 1.1, u) - 4 * bump(0.9, 1.5, 2.6, 3.4, u);
+        speed = Math.min(1, 0.4 + u * 0.4); thrust = Math.max(speed * 0.8, bump(0.9, 1.4, 2.6, 3.4, u));
       }
       else show = false;
       const parked = smooth(6.2, 6.9, T) * (1 - smooth(7.0, 7.6, T));
-      return { x, y, yaw, show, dist, scan, parked, kickAt: KICK, corner: lap % 2 ? -1 : 1, st: { K, pitch: pitch * deg, roll: 0, tilt: 0, thrust, front, alt, stretch: 1, speed } };
+      const shadow = 1 - smooth(TILE.x - 16, TILE.x, x);
+      return { x, y, yaw, show, dist, scan, parked, kickAt: KICK, corner: lap % 2 ? -1 : 1, st: { K, pitch: pitch * deg, roll, steer, tilt: 0, thrust, front, alt, stretch: 1, speed, shadow } };
     }
     // world position of a wheel's contact point for a car at (x, y, yaw)
     const wheelAt = (x, y, yaw, ax, side) => { const lx = ax * SC, ly = side * (U.w + 1.6 - U.tw / 2) * SC; return [x + lx * Math.cos(yaw) - ly * Math.sin(yaw), y + lx * Math.sin(yaw) + ly * Math.cos(yaw)]; };
     // tread printed in rose where the rear tyres crossed the paper
     function treadPrints(T) {
       if (T < 10.4) return;
-      const k = easeIO((T - 10.4) / 9), dNow = ROUTE.len * Math.min(1, k), fade = 1 - smooth(26, 31, T);
+      // prints stop where the wheels leave the paper
+      const dNow = T < DRIVE_END ? driveDist(T) : ROUTE.len + CRUISE * Math.min(LIFTOFF, T - DRIVE_END), fade = 1 - smooth(26, 31, T);
       if (fade <= 0) return;
       const inSheet = ([x, y]) => x > SHEET.x0 + 0.6 && x < SHEET.x1 - 0.6 && y > SHEET.y0 + 0.6 && y < SHEET.y1 - 0.6;
       const edge = [], tick = [];
@@ -1133,8 +1274,8 @@ const {
         let run = [], ticks = [];
         const flush = () => { if (run.length > 1) for (const o of [-1, 1]) edge.push(p3(run.map(([p, n]) => [p[0] + n[0] * 1.6 * o, p[1] + n[1] * 1.6 * o, 0.78]))); run = []; };
         for (let d = 0, i = 0; d <= dNow; d += 1.3, i++) {
-          const r = ROUTE.at(d), p = wheelAt(r.p[0], r.p[1], r.yaw, U.axR, side), n = [-Math.sin(r.yaw), Math.cos(r.yaw)];
-          if (inSheet(p)) { run.push([p, n]); tick.push(p3([[p[0] - n[0] * 1.4, p[1] - n[1] * 1.4, 0.78], [p[0] + n[0] * 1.4 + Math.cos(r.yaw) * 0.5, p[1] + n[1] * 1.4 + Math.sin(r.yaw) * 0.5, 0.78]])); }
+          const P = carPose(d), p = wheelAt(P.x, P.y, P.yaw, U.axR, side), n = [-Math.sin(P.yaw), Math.cos(P.yaw)];
+          if (inSheet(p)) { run.push([p, n]); tick.push(p3([[p[0] - n[0] * 1.4, p[1] - n[1] * 1.4, 0.78], [p[0] + n[0] * 1.4 + Math.cos(P.yaw) * 0.5, p[1] + n[1] * 1.4 + Math.sin(P.yaw) * 0.5, 0.78]])); }
           else flush();
         }
         flush();
@@ -1149,66 +1290,248 @@ const {
     }
 
     // ── Compose ──
-    // Every item draws into its own group. Still things are drawn once and
-    // kept; slow things (sway, wind) refresh every few frames, round-robin;
-    // only what moves fast is redrawn each frame. Groups are re-ordered far to
-    // near each frame, so the car slots in between trees as it drives.
+    // Drawing calls record a light display list (no DOM). Still things (the
+    // ground, lawn, cottage, trees, clothesline) are recorded once and turned
+    // into bitmaps: the ground as one layer, every other still thing as its
+    // own small sprite. Each frame, moving things are recorded only if they
+    // actually changed, and only the rectangles where something changed are
+    // repainted, in depth order, from those bitmaps. Most of the canvas is
+    // simply left alone from one frame to the next.
     const lanternAt = () => [DOORX + 3.5 + 2.3, HOUSE.y1 + 1.2, 9.6];
-    const CACHE = new Map();
-    let FRAME = 0;
-    function district(t, phi, spin, root) {
-      const T = t % CYCLE, v = visit(T, Math.floor(t / CYCLE));
-      FRAME++;
-      const items = [
-        { id: 'ground', k: -1e9, mode: 'static', fn: () => { slab(); groundMarks(); sheet(); pitchMarks(); } },
-        { id: 'groundLive', k: -1e9 + 1, fn: () => {
-          if (v.parked > 0.02) { draw(p3(circ(PAD[0], PAD[1], 9.8, 9.8, 6, 0.05, Math.PI / 6), true), COL.acc); G.lastChild.setAttribute('stroke-opacity', v.parked.toFixed(2)); }
-          pencilTrail(t); treadPrints(T); drift(t, 'ground'); scanRings(v); } },
-        { id: 'house', k: -112, mode: 'static', fn: () => house(t) },
-        { id: 'lantern', k: -111.9, fn: () => draw(p3(ringAx(add(lanternAt(), [0, 0, 1.2]), BN, 0.32 + 0.06 * Math.sin(t * 3.1), 5), true), COL.acc) },
-        { id: 'pencil', k: PEN.cx + PEN.cy, fn: () => giantPencil(t) },
-        { id: 'football', k: GOAL.o[0] + GOAL.o[1], fn: () => { cornerFlag(t); football(t, T, v); } },
-        { id: 'book', k: BOOK[0] + BOOK[1], mode: 'slow', every: 2, fn: () => openBook(t) },
-        { id: 'palette', k: PAL[0] + PAL[1], mode: 'slow', every: 2, fn: () => palette(t) },
-        { id: 'sculpture', k: SCULPT[0] + SCULPT[1], mode: 'slow', every: 2, fn: () => sculpture(t) },
-        { id: 'line', k: TREES[1].x + TREES[1].y + 0.5, mode: 'slow', every: 3, fn: () => clothesline(t) },
-        ...TREES.map((tr, i) => ({ id: 'tree' + i, k: tr.x + tr.y, mode: 'slow', every: 4, ph: i, fn: () => brushTree(tr, t) })),
-        ...[...LAWN].map(([b, L], i) => ({ id: 'lawn' + b, k: b * 6 + 3 - 0.01, mode: 'slow', every: 6, ph: i, fn: () => lawnBin(L, t) })),
-        ...(v.show ? [{ id: 'car', k: v.x + v.y + 8, fn: () => { const [sx, sy] = W3(v.x, v.y, 0); group({ transform: `translate(${f(sx)} ${f(sy)}) scale(${SC})` }, () => { YAW = v.yaw; vehicle({ K: v.st.K, t, phi: -v.dist / (SC * U.r), spin, ...v.st }); YAW = 0; }); } }] : []),
-        { id: 'air', k: 1e9, fn: () => { drift(t, 'air'); puffs(t); sheets(t); bubble(t); } },
+    function record(fn, k = 0) {
+      const g = mkG(null), prev = G;
+      G = g; BB = [1e9, 1e9, -1e9, -1e9]; TS = { tx: 0, ty: 0, s: 1 }; SEG = [];
+      fn();
+      const bb = BB; G = prev; BB = null; SEG = [];
+      return { k, g, bb };
+    }
+    const overlaps = (a, b) => a[0] < b[2] && b[0] < a[2] && a[1] < b[3] && b[1] < a[3];
+    const valid = r => r.bb[2] > r.bb[0];
+    let GROUND = null, STILL = null;
+    function recordStill() {
+      FLIP = 1;
+      // still things draw their accent through 'still-accent', so the
+      // palette can keep rose for the things that move
+      const acc = COL.acc; COL.acc = 'still-accent';
+      GROUND = record(() => { slab(); groundMarks(); sheet(); pitchMarks(); pencilGhost(); for (const L of LAWN.values()) lawnBin(L, 0); }, -1e9);
+      STILL = [
+        record(() => house(0), -112),
+        record(() => clothesline(0), TREES[1].x + TREES[1].y + 0.5),
+        ...TREES.map(tr => record(() => brushTree(tr), tr.x + tr.y)),
+      ].sort((a, b) => a.k - b.k);
+      COL.acc = acc;
+    }
+    // a moving thing is re-recorded only when its key (what it depends on)
+    // changes; otherwise last frame's recording is reused and not repainted
+    const MEMO = new Map();
+    function memo(id, key, k, fn) {
+      const m = MEMO.get(id);
+      if (m && m.key === key) { m.same = true; return m; }
+      const r = record(fn, k);
+      r.id = id; r.key = key; r.same = false;
+      MEMO.set(id, r);
+      return r;
+    }
+    const q = (x, n = 2) => (+x).toFixed(n);
+    const dropPhase = (t, i) => ((t + (i === 4 ? 0 : 2.7)) % 5.4) / 5.4;
+    function recordMoving(t, spin) {
+      const T = t % CYCLE, lap = Math.floor(t / CYCLE), v = visit(T, lap);
+      FLIP = 1;
+      const st = ballState(T, v.kickAt, v.corner), bookU = (t % 3.4) / 1.1, chis = (t % 2.4) / 2.4;
+      const printsKey = T < 10.4 || T >= 31 ? 'none' : T < DRIVE_END + LIFTOFF ? q(T) : T < 26 ? 'held' : q(T);
+      const lows = [
+        memo('pad', q(v.parked), -1e9 + 1, () => { if (v.parked > 0.02) { draw(p3(circ(PAD[0], PAD[1], 9.8, 9.8, 6, 0.05, Math.PI / 6), true), COL.acc); G.lastChild.setAttribute('stroke-opacity', v.parked.toFixed(2)); } }),
+        memo('trail', q(t, 3), -1e9 + 2, () => pencilTrail(t)),
+        memo('prints', printsKey, -1e9 + 3, () => treadPrints(T)),
+        ...[4, 5].map(j => memo('ripple' + j, dropPhase(t, j) >= 0.5 ? q(t, 3) : 'none', -1e9 + 4, () => drift(t, 'ground', j))),
+        memo('scan', v.scan < 0 ? 'none' : q(v.scan, 3), -1e9 + 5, () => scanRings(v)),
       ];
-      const nodes = [];
-      for (const it of items.sort((a, b) => a.k - b.k)) {
-        let c = CACHE.get(it.id);
-        const mode = it.mode || 'fast';
-        const need = !c || mode === 'fast' || (mode === 'slow' && (FRAME + (it.ph || 0)) % it.every === 0) || root.__force;
-        if (need) { const g = document.createElementNS(NS, 'g'), prev = G; G = g; it.fn(); G = prev; if (c) c.g = g; else CACHE.set(it.id, c = { g }); }
-        nodes.push(c.g);
-      }
-      root.replaceChildren(...nodes);
-      root.__force = false;
-      return v;
+      const items = [
+        memo('lantern', q(Math.sin(t * 3.1), 1), -111.9, () => draw(p3(ringAx(add(lanternAt(), [0, 0, 1.2]), BN, 0.32 + 0.06 * Math.sin(t * 3.1), 5), true), COL.acc)),
+        memo('pencil', q(t, 3), PEN.cx + PEN.cy, () => giantPencil(t)),
+        memo('flag', q(t, 2), GOAL.o[0] + GOAL.o[1] - 0.5, () => cornerFlag(t)),
+        memo('football', [st.a, st.b, st.z, st.net, st.travel].map(x => q(x)).join() + v.corner, GOAL.o[0] + GOAL.o[1], () => football(t, T, v)),
+        memo('book', bookU < 1 ? q(t, 3) : 'rest', BOOK[0] + BOOK[1], () => openBook(t)),
+        memo('palette', q(Math.max(0, Math.sin(t * 1.6)), 2), PAL[0] + PAL[1], () => palette(t)),
+        memo('sculpture', chis < 0.36 ? q(t, 3) : 'rest', SCULPT[0] + SCULPT[1], () => sculpture(t)),
+      ];
+      if (v.show) items.push(memo('car', [v.x, v.y, v.yaw, v.st.K, v.st.pitch, v.st.roll, v.st.steer, v.st.alt, v.dist, v.st.K > 0.01 ? spin : 0, v.st.K > 0.01 ? t : 0].map(x => q(x, 3)).join(), v.x + v.y + 8, () => {
+        const [sx, sy] = W3(v.x, v.y, 0);
+        group({ transform: `translate(${f(sx)} ${f(sy)}) scale(${SC})` }, () => { YAW = v.yaw; vehicle({ K: v.st.K, t, phi: -v.dist / (SC * U.r), spin, ...v.st }); YAW = 0; });
+      }));
+      items.sort((a, b) => a.k - b.k);
+      const airs = [
+        ...[0, 1, 2, 3, 4, 5].map(i => memo('drift' + i, i < 4 || dropPhase(t, i) < 0.5 ? q(t, 3) : 'none', 1e9, () => drift(t, 'air', i))),
+        memo('puffs', q(t, 3), 1e9 + 1, () => puffs(t)),
+        memo('sheets', q(t, 3), 1e9 + 2, () => sheets(t)),
+        memo('bubble', q(t, 2), 1e9 + 3, () => bubble(t)),
+      ];
+      return { v, lows, items, airs };
     }
 
+    // ── Painting ──
+    const INK = {};
+    // three colours in, every tone out: greys are ink mixed into paper
+    const TINT = document.createElement('canvas').getContext('2d');
+    const rgb = c => { TINT.fillStyle = '#808080'; TINT.fillStyle = c; const s = String(TINT.fillStyle); if (s[0] === '#') return [1, 3, 5].map(i => parseInt(s.slice(i, i + 2), 16)); const m = s.match(/[\d.]+/g); return m ? m.slice(0, 3).map(Number) : [128, 128, 128]; };
+    const mix = (a, b, k) => 'rgb(' + a.map((v, i) => Math.round(v + (b[i] - v) * k)).join(',') + ')';
+    function readPalette(el) {
+      const cs = getComputedStyle(el), v = n => cs.getPropertyValue('--hairline-' + n).trim();
+      const paper = rgb(v('paper') || '#fcfcfc'), ink = rgb(v('ink') || '#232327'), acc = v('accent') || '#cc2e62';
+      const dark = paper[0] + paper[1] + paper[2] < 384;
+      INK['var(--hairline-plate)'] = mix(paper, paper, 0);
+      INK['var(--hairline-hi)'] = mix(ink, ink, 0);
+      INK['var(--hairline-edge)'] = mix(paper, ink, 0.42);
+      INK['var(--hairline-mid)'] = mix(paper, ink, 0.27);
+      INK['var(--hairline-lo)'] = mix(paper, ink, 0.13);
+      INK['var(--hairline-accent)'] = acc;
+      INK['still-accent'] = v('accent-mode') === 'motion' ? INK['var(--hairline-edge)'] : acc;
+      const depth = parseFloat(v('depth')) || 0, tint = v('depth-tint') === 'accent' ? rgb(acc) : ink;
+      for (let k = 0; k <= 20; k++) INK['shade:' + k] = mix(paper, tint, depth * (k / 20) * (dark ? 0.2 : 0.16));
+    }
+    const col = c => INK[c] || c;
+    let LW = 0.9; // the hairline, in view units at scale 1 (set per size)
+    function paintNode(ctx, n, alpha, sc) {
+      if (n.c) {
+        const a = n.a; let al = alpha;
+        if (a && a.opacity != null) al *= +a.opacity;
+        if (n.t) { ctx.save(); ctx.translate(n.t[0], n.t[1]); ctx.scale(n.t[2], n.t[2]); }
+        const s2 = n.t ? sc * n.t[2] : sc;
+        for (const ch of n.c) paintNode(ctx, ch, al, s2);
+        if (n.t) ctx.restore();
+        return;
+      }
+      const p = n.p || (n.p = toPath(n.d)), a = n.a;
+      if (n.f !== 'none') { ctx.globalAlpha = alpha; ctx.fillStyle = col(n.f); ctx.fill(p); }
+      if (n.s && n.s !== 'none') {
+        ctx.globalAlpha = alpha * (a && a['stroke-opacity'] != null ? +a['stroke-opacity'] : 1);
+        ctx.strokeStyle = col(n.s);
+        ctx.lineWidth = LW / sc;
+        const dash = a && a['stroke-dasharray'];
+        if (dash) { const u = LW / 0.9 / sc; ctx.setLineDash(dash.split(' ').map(x => +x * u)); ctx.lineDashOffset = -(+(a['stroke-dashoffset'] || 0)) * u; }
+        ctx.stroke(p);
+        if (dash) ctx.setLineDash([]);
+      }
+    }
+    const paintRec = (ctx, r) => paintNode(ctx, r.g, 1, 1);
+
     // ── Player ──
-    const g = root.querySelector('[data-scene]');
-    const fig = root.closest('.journey');
-    const btn = fig && fig.querySelector('[data-journey-toggle]');
-    const lowPower = matchMedia('(hover: none)').matches;
-    let t = reduce ? 9.6 : 0, spin = 0, playing = !reduce, onScreen = false, raf = 0, last = 0, since = 0;
-    const paint = () => { FLIP = 1; district(t, 0, spin, g); };
+    const fig = root.closest('.journey') || root;
+    const btn = fig.querySelector('[data-journey-toggle]');
+    const canvas = root.querySelector('canvas');
+    const ctx = canvas.getContext('2d');
+    const VB = [-160, -132, 311, 229];
+    const groundBmp = document.createElement('canvas');
+    let W = 0, H = 0, K2 = 1, dpr = 1, SPR = [], FULL = true, PREVBB = new Map();
+    const setView = c => c.setTransform(K2, 0, 0, K2, -VB[0] * K2, -VB[1] * K2);
+    const toDev = b => { const m = 2 + LW * K2; return [Math.max(0, Math.floor((b[0] - VB[0]) * K2 - m)), Math.max(0, Math.floor((b[1] - VB[1]) * K2 - m)), Math.min(W, Math.ceil((b[2] - VB[0]) * K2 + m)), Math.min(H, Math.ceil((b[3] - VB[1]) * K2 + m))]; };
+    // the ground as one bitmap; every other still thing as its own sprite
+    function bake() {
+      groundBmp.width = W; groundBmp.height = H;
+      const c = groundBmp.getContext('2d');
+      c.lineCap = c.lineJoin = 'round';
+      setView(c);
+      paintRec(c, GROUND);
+      SPR = STILL.map(s => {
+        if (!valid(s)) return null;
+        const [x0, y0, x1, y1] = toDev(s.bb);
+        if (x1 <= x0 || y1 <= y0) return null;
+        const cv = document.createElement('canvas');
+        cv.width = x1 - x0; cv.height = y1 - y0;
+        const g = cv.getContext('2d');
+        g.lineCap = g.lineJoin = 'round';
+        g.setTransform(K2, 0, 0, K2, -VB[0] * K2 - x0, -VB[1] * K2 - y0);
+        paintRec(g, s);
+        return { k: s.k, bb: s.bb, sprite: cv, dx: x0, dy: y0 };
+      }).filter(Boolean);
+      FULL = true;
+    }
+    function resize() {
+      const w = root.clientWidth;
+      if (!w) return false;
+      dpr = Math.min(2, window.devicePixelRatio || 1);
+      const nw = Math.round(w * dpr), nh = Math.round(w * VB[3] / VB[2] * dpr);
+      if (nw === W && nh === H) return false;
+      W = canvas.width = nw; H = canvas.height = nh;
+      K2 = W / VB[2];
+      LW = 0.9 * dpr / K2;
+      bake();
+      return true;
+    }
+    // repaint one rectangle (device pixels) in depth order
+    function paintRegion(D, rec) {
+      const [x0, y0, x1, y1] = D, w = x1 - x0, h = y1 - y0;
+      // anything whose stroke can reach into the rectangle, not just its points
+      const m = (2 + LW * K2) / K2, R = [VB[0] + x0 / K2 - m, VB[1] + y0 / K2 - m, VB[0] + x1 / K2 + m, VB[1] + y1 / K2 + m];
+      ctx.save();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.beginPath(); ctx.rect(x0, y0, w, h); ctx.clip();
+      ctx.globalAlpha = 1;
+      ctx.clearRect(x0, y0, w, h);
+      ctx.drawImage(groundBmp, x0, y0, w, h, x0, y0, w, h);
+      setView(ctx);
+      for (const r of rec.lows) if (valid(r) && overlaps(r.bb, R)) paintRec(ctx, r);
+      const list = [];
+      for (const s of SPR) if (overlaps(s.bb, R)) list.push(s);
+      for (const d of rec.items) if (valid(d) && overlaps(d.bb, R)) list.push(d);
+      list.sort((a, b) => a.k - b.k);
+      for (const x of list) {
+        if (x.sprite) { ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.drawImage(x.sprite, x.dx, x.dy); setView(ctx); }
+        else paintRec(ctx, x);
+      }
+      for (const a of rec.airs) if (valid(a) && overlaps(a.bb, R)) paintRec(ctx, a);
+      ctx.restore();
+    }
+    // one frame: find what changed (where it is now and where it was), merge
+    // those rectangles, repaint only them
+    function paintFrame(rec) {
+      ctx.lineCap = ctx.lineJoin = 'round';
+      const all = [...rec.lows, ...rec.items, ...rec.airs], now = new Map();
+      let rects = [];
+      for (const r of all) {
+        if (valid(r)) now.set(r.id, r.bb);
+        if (FULL || r.same) continue;
+        if (valid(r)) rects.push(toDev(r.bb));
+        const pb = PREVBB.get(r.id); if (pb) rects.push(toDev(pb));
+      }
+      for (const [id, pb] of PREVBB) if (!now.has(id) && !FULL) rects.push(toDev(pb));
+      if (FULL) rects = [[0, 0, W, H]];
+      PREVBB = now; FULL = false;
+      // merge overlapping rectangles so nothing is painted twice
+      let merged = true;
+      while (merged) {
+        merged = false;
+        for (let i = 0; i < rects.length && !merged; i++) for (let j = i + 1; j < rects.length; j++) {
+          const a = rects[i], b = rects[j];
+          if (a[0] <= b[2] && b[0] <= a[2] && a[1] <= b[3] && b[1] <= a[3]) { rects[i] = [Math.min(a[0], b[0]), Math.min(a[1], b[1]), Math.max(a[2], b[2]), Math.max(a[3], b[3])]; rects.splice(j, 1); merged = true; break; }
+        }
+      }
+      let area = 0;
+      for (const D of rects) if (D[2] > D[0] && D[3] > D[1]) { paintRegion(D, rec); area += (D[2] - D[0]) * (D[3] - D[1]); }
+      stats.area = stats.area * 0.9 + area / (W * H || 1) * 0.1;
+    }
+
+    // Frame pacing: a calm illustration needs no more than 24 fps; if a
+    // device still takes long to draw, it drops to 15 fps.
+    const still = root.dataset.still;
+    let t = still ? +still : reduce ? 9.6 : 0, spin = 0, playing = !reduce && !still, onScreen = false, raf = 0, last = 0, since = 0, slow = false;
+    const stats = { cost: 0, area: 1, fps: 24 };
+    root.__journey = stats;
+    const draw1 = () => { const p0 = performance.now(); paintFrame(recordMoving(t, spin)); return performance.now() - p0; };
     function tick(now) {
       raf = 0;
       if (!running()) { last = 0; return; }
-      const dt = Math.min(0.05, (now - (last || now)) / 1000); last = now;
+      const dt = Math.min(0.12, (now - (last || now)) / 1000); last = now;
       since += dt;
-      // phones and tablets draw at ~30 fps; desktops every frame
-      if (!lowPower || since >= 1 / 32) {
+      if (since >= (slow ? 1 / 15 : 1 / 24) - 0.004) {
         t += since;
         const v = visit(t % CYCLE, Math.floor(t / CYCLE));
         spin += since * (4 + 10 * v.st.thrust) * v.st.K;
         since = 0;
-        paint();
+        stats.cost = stats.cost * 0.9 + draw1() * 0.1;
+        if (!slow && stats.cost > 16) slow = true;
+        else if (slow && stats.cost < 8) slow = false;
+        stats.fps = slow ? 15 : 24;
       }
       raf = requestAnimationFrame(tick);
     }
@@ -1220,15 +1543,34 @@ const {
       btn.setAttribute('aria-label', playing ? 'Pause animation' : 'Play animation');
     };
 
-    paint();
+    readPalette(fig);
+    recordStill();
+    resize();
+    draw1();
     sync();
-    if ('IntersectionObserver' in window) {
-      const io = new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; kick(); }, { rootMargin: '120px' });
-      io.observe(root);
-      document.addEventListener('astro:before-swap', () => { io.disconnect(); playing = false; }, { once: true });
-    } else { onScreen = true; kick(); }
+
+    // keep the bitmaps in step with size and theme; stop and let go of
+    // everything when the page is swapped out
+    const ro = new ResizeObserver(() => { if (resize()) draw1(); });
+    ro.observe(root);
+    const repaint = () => { readPalette(fig); bake(); MEMO.clear(); draw1(); };
+    root.addEventListener('journey:repaint', repaint);
+    const mo = new MutationObserver(repaint);
+    mo.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme', 'class'] });
+    const io = 'IntersectionObserver' in window ? new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; kick(); }, { rootMargin: '120px' }) : null;
+    if (io) io.observe(root); else { onScreen = true; kick(); }
+    const onClick = () => { playing = !playing; sync(); kick(); };
+    btn && btn.addEventListener('click', onClick);
     document.addEventListener('visibilitychange', kick);
-    btn && btn.addEventListener('click', () => { playing = !playing; sync(); kick(); });
+    document.addEventListener('astro:before-swap', () => {
+      playing = false;
+      if (raf) cancelAnimationFrame(raf);
+      ro.disconnect(); mo.disconnect(); io && io.disconnect();
+      document.removeEventListener('visibilitychange', kick);
+      btn && btn.removeEventListener('click', onClick);
+      GROUND = STILL = null; SPR = []; MEMO.clear();
+      groundBmp.width = groundBmp.height = 0;
+    }, { once: true });
   }
 
   function initAll() {
